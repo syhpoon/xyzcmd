@@ -1,0 +1,61 @@
+ЗАМЕТКИ
+-------
+
+Раскладки: горизонтальная, вертикальная
+Система подключаемых модулей
+Цветовые схемы
+Настраиваемое отображение элементов ФС
+Виртуальные вкладки (Ctrl + [0-9])
+Настраиваемые пускатели (соответствия файлов *.txt->cmd, итд)
+Настраиваемые горячие клавиши (интерактивное меню настройки)
+Создание собственных меню (F1-F9)
+На активную панель можно помещать апплеты, быстрый запуск модулей, меню
+
+Конфиги:
+	conf/layout -- Настройка внешнего вида
+	Формат файла:
+	#################
+	layout_data -> null
+	               row_def
+						layout_def
+	row_def -> row name {row_body}
+	row_body -> row_widgets
+	row_widgets -> widget [(widget_opts)];
+	               null
+
+	layout_def -> layout name {layout_body}
+	layout_body -> defined_rows
+	defined_rows -> #number row_name;
+	                null
+	#################
+
+	row menu {
+		MenuBar (width: 80%);
+		Gap (width: 1%);
+		Applet (name: Clock; width 19%);
+	}
+
+	row panels {
+		Panel-1 (width: 50%);
+		Panel-2 (width: 50%);
+	}
+
+	row status {
+		StatusBar
+	}
+
+	row cmd {
+		CommandLine
+	}
+
+	row help {
+		HelpBar
+	}
+
+	layout default {
+		#1 menu;
+		#2 panels;
+		#3 status;
+		#4 cmd;
+		#5 help;
+	}
