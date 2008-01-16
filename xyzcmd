@@ -1,0 +1,13 @@
+#!/usr/bin/env python
+#-*- coding: utf8 -*
+#
+# Max E. Kuznecov ~syhpoon <mek@mek.uz.ua> 2008
+#
+
+"""
+XYZ Commander startup wrapper
+"""
+
+from libxyz import Launcher
+
+Launcher().run()

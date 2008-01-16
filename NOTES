@@ -3,6 +3,7 @@
 
 Диспетчер!
 
+Плагин - multiline-cmd
 Раскладки: горизонтальная, вертикальная
 Система подключаемых модулей
 Цветовые схемы
@@ -89,12 +90,13 @@ Widget:
 +- Label
 +- StatusBar
 +- CmdLine
++- TextField (+password)
 +- Dialogs:
 	|
 	+- Text
 	+- Copy
 	+- Error
-	+- InputLine (password)
+	+- InputLine
 	+- YesNo
 	+- Message
 	+- Progress
