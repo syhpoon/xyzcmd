@@ -1,0 +1,4 @@
+keyword name {
+	var2 = val1
+	var2 = val2
+}

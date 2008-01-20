@@ -4,7 +4,10 @@
 #
 
 __all__ = (
+    'parser',
     'Launcher',
     )
+
+import parser
 
 from launcher import Launcher
