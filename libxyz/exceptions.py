@@ -17,3 +17,12 @@ class ParseError(XYZError):
     """
 
     pass
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class PluginError(XYZError):
+    """
+    Plugin error
+    """
+
+    pass
