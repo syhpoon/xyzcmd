@@ -15,8 +15,8 @@ class BlockParsing(unittest.TestCase):
         Parsing should raise ParseError on unterminated quotes
         """
 
-        self.assertRaises(ParseError, BlockParser("block").parse("\
-                          block {a = \"string\n}"))
+        self.assertRaises(ParseError, BlockParser("block").parse,
+                          "block {a = \"string\n}")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -25,7 +25,7 @@ class BlockParsing(unittest.TestCase):
         In STATE_INIT state only keyword is acceptable
         """
 
-        self.assertRaises(ParseError, BlockParser("block").parse("anything"))
+        self.assertRaises(ParseError, BlockParser("block").parse, "anything")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -35,8 +35,8 @@ class BlockParsing(unittest.TestCase):
         """
 
         self.assertRaises(ParseError,
-                          BlockParser("block", has_name=True).parse("\
-                          block {}"))
+                          BlockParser("block", has_name=True).parse,
+                          "block {}")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -46,8 +46,8 @@ class BlockParsing(unittest.TestCase):
         """
 
         self.assertRaises(ParseError,
-                          BlockParser("block", has_name=False).parse("\
-                          block name {}"))
+                          BlockParser("block", has_name=False).parse,
+                          "block name {}")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -57,8 +57,8 @@ class BlockParsing(unittest.TestCase):
         """
 
         self.assertRaises(ParseError,
-                          BlockParser("block", validvars=("a",)).parse("\
-                          block {b = 1}"))
+                          BlockParser("block", validvars=("a",)).parse,
+                          "block {b = 1}")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -68,8 +68,8 @@ class BlockParsing(unittest.TestCase):
         """
 
         self.assertRaises(ParseError,
-                          BlockParser("block").parse("\
-                          block {a+-; = 1}"))
+                          BlockParser("block").parse,
+                          "block {a+-; = 1}")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -79,8 +79,19 @@ class BlockParsing(unittest.TestCase):
         """
 
         self.assertRaises(ParseError,
-                          BlockParser("block", assignchar=":").parse("\
-                          block {a = 1}"))
+                          BlockParser("block", assignchar=":").parse,
+                          "block {a = 1}")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testDelimiter(self):
+        """
+        Correct delimiter should be supplied
+        """
+
+        self.assertRaises(ParseError,
+                          BlockParser("block", delimiter=";").parse,
+                          "block {a = 1\nb = 2\n}")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -89,8 +100,8 @@ class BlockParsing(unittest.TestCase):
         Check for unclosed quote upon EOF
         """
 
-        self.assertRaises(ParseError, BlockParser("block").parse("\
-                          block {a = \" string"))
+        self.assertRaises(ParseError, BlockParser("block").parse,
+                          "block {a = \"string")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -99,8 +110,8 @@ class BlockParsing(unittest.TestCase):
         Check for unclosed block upon EOF
         """
 
-        self.assertRaises(ParseError, BlockParser("block").parse("\
-                          block {a = value"))
+        self.assertRaises(ParseError, BlockParser("block").parse,
+                          "block {a = value\n")
 
 if __name__ == "__main__":
     import gettext

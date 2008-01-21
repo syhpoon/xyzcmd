@@ -12,14 +12,17 @@ import re
 
 from libxyz.exceptions import ParseError
 
+# TODO: Variable substitution
+# TODO: Escaping in quotes
+
 class BlockParser(object):
     """
     BaseParser used to parse blocked structures
     Format:
 
     block [name] {
-        var1 = val1
-        var2 = val2
+        var1 = val1 <delimiter>
+        var2 = val2 <delimiter>
         ...
         }
     """
@@ -30,11 +33,12 @@ class BlockParser(object):
     STATE_VARIABLE = 3
     STATE_ASSIGN = 4
     STATE_VALUE = 5
+    STATE_DELIM = 6
 
     error_unexpected = 1
 
     def __init__(self, keyword, has_name=False, comment="#", varre=None,
-                 assignchar="=", validvars=None):
+                 assignchar="=", delimiter="\n", validvars=None):
         """
         @param keyword: Word that indicates block start
         @type keyword: string
@@ -59,6 +63,9 @@ class BlockParser(object):
         @param assignchar: Variable-value split character.
         @type assignchar: string (single char)
 
+        @param delimiter: Character that terminates statement
+        @type delimiter: string
+
         @param validvars: List of variables valid within block
         @type delimiter: sequence
 
@@ -69,6 +76,7 @@ class BlockParser(object):
         self.comment = comment
         self.varre = varre or re.compile(r"^[\w-]+$")
         self.assignchar = assignchar
+        self.delimiter = delimiter
         self.validvars = validvars or ()
 
         self._lineno = 0
@@ -86,6 +94,7 @@ class BlockParser(object):
             self.STATE_VARIABLE: self._process_state_variable,
             self.STATE_ASSIGN: self._process_state_assign,
             self.STATE_VALUE: self._process_state_value,
+            self.STATE_DELIM: self._process_state_delim,
             }
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -111,7 +120,7 @@ class BlockParser(object):
 
         self._cleanup()
 
-        _tokens = ("{", "}", self.assignchar)
+        _tokens = ("{", "}", self.assignchar, self.delimiter)
 
         # sdata must be a list of lines
         if type(source) in types.StringTypes:
@@ -120,7 +129,6 @@ class BlockParser(object):
             sdata = source
 
         idt = []
-        quote = []
 
         for line in sdata:
             for char in line:
@@ -130,6 +138,9 @@ class BlockParser(object):
                     elif idt:
                         _put_token("".join(idt))
                         idt = []
+                        if self.delimiter == char:
+                            _put_token(char)
+
                     self._in_comment = False
                     self._lineno += 1
                     continue
@@ -140,26 +151,22 @@ class BlockParser(object):
                 if char == '"':
                     if self._in_quote:
                         self._in_quote = False
-                        _put_token("".join(quote))
                     else:
                         self._in_quote = True
 
-                    quote = []
                     continue
 
                 if self._in_quote:
-                    quote.append(char)
+                    idt.append(char)
                     continue
 
-                if char in _tokens:
-                    # Check if we finished assembling a word
+                if char in _tokens or char.isspace():
+                    # Check if we finished assembling the word
                     if idt:
                         _put_token("".join(idt))
                         idt = []
-                    _put_token(char)
-                    continue
-
-                if char.isspace():
+                    if not char.isspace():
+                        _put_token(char)
                     continue
 
                 if char == self.comment:
@@ -169,7 +176,7 @@ class BlockParser(object):
 
                 idt.append(char)
 
-        self._check_complete()
+        self._check_complete(idt)
 
         return self._result
 
@@ -184,7 +191,9 @@ class BlockParser(object):
         _pre = _("Parse error on line %d" % self._lineno)
         
         if etype == self.error_unexpected and msg and len(msg) == 2:
-            _emsg = _("Unexpected token '%s'. '%s' expected" % (msg[0], msg[1]))
+            _emsg = _("Unexpected token '%s'. Waiting for '%s'" % \
+                    (msg[0].encode("string-escape"),
+                     msg[1].encode("string-escape")))
         elif msg:
             _emsg = msg
         else:
@@ -217,7 +226,7 @@ class BlockParser(object):
             self._error(_("Block name is not allowed: %s" % word))
         else:
             self._state = self.STATE_BLOCK_OPEN
-            self._parsed_obj.set_name(word)
+            self._parsed_obj.name = word
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -259,7 +268,20 @@ class BlockParser(object):
     def _process_state_value(self, word):
         self._parsed_obj.set(self._varname, word)
         self._varname = None
-        self._state = self.STATE_VARIABLE
+        self._state = self.STATE_DELIM
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _process_state_delim(self, word):
+        if word == "}":
+            self._result.append(self._parsed_obj)
+            self._cleanup()
+            return
+        if word != self.delimiter:
+            self._error(msg=(word, self.delimiter),
+                        etype=self.error_unexpected)
+        else:
+            self._state = self.STATE_VARIABLE
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -276,7 +298,7 @@ class BlockParser(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _check_complete(self):
+    def _check_complete(self, idt):
         """
         Check state after source reaches EOF for consistency
         """
@@ -286,6 +308,9 @@ class BlockParser(object):
 
         if self._state != self.STATE_INIT:
             self._error(_("Unclosed block"))
+
+        if idt:
+            self._error()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
