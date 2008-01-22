@@ -7,6 +7,9 @@
 Launcher - all neccessary initialization
 """
 
+import libxyz.ui.display as display
+from libxyz.ui import uilib
+
 class Launcher(object):
     """
     Startup class
@@ -17,7 +20,7 @@ class Launcher(object):
         Initialization
         """
 
-        pass
+        self.ui = display.init_display()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -26,4 +29,16 @@ class Launcher(object):
         Run commander
         """
 
-        pass
+        self.ui.run_wrapper(self.__run)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __run(self):
+        canvas = uilib.TextCanvas(["XYZ Commander"])
+        self.ui.draw_screen((20, 1), canvas)
+
+        while not self.ui.get_input():
+            pass
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

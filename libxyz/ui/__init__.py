@@ -9,9 +9,7 @@ Module contains user interface widgets
 """
 
 __all__ = (
-    'Menu',
-    'Button',
+    'uilib',
 )
 
-from menu import Menu
-from button import Button
+import urwid as uilib

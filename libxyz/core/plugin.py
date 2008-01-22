@@ -7,9 +7,14 @@
 Plugins is the main way to extend xyzcmd functionality.
 Every single plugin should inherit BasePlugin interface.
 Plugin exports its public methods via 'public' dictionary of BasePlugin class.
-First plugin must be registered within xyz plugin namespace.
-After that its exported methods will be available under
-xyz.plugins.<plugin-name> namespace
+First plugin must be registered within one of xyz plugin namespaces.
+Available namespaces are:
+- ui    - User-interface related
+- vfs   - Virtual file-system related
+- misc  - Other miscellaneous
+
+After methods are exported, they will be available under
+xyz.plugins.<namespace>.<plugin-name> namespace
 """
 
 from libxyz.exceptions import PluginError
@@ -72,7 +77,7 @@ class BasePlugin(object):
         try:
             del self.public[self._build_key(method)]
         except KeyError:
-            pass:w
+            pass
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
