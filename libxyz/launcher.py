@@ -34,7 +34,8 @@ class Launcher(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __run(self):
-        canvas = uilib.TextCanvas(["XYZ Commander"])
+        self.co
+        canvas = uilib.TextCanvas(["XYZ Commander, %d, %d" % (self.ui.get_cols_rows())])
         self.ui.draw_screen((20, 1), canvas)
 
         while not self.ui.get_input():

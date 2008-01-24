@@ -1,0 +1,63 @@
+#
+# Default skin file
+#
+# Skins are used to configure visual representation of XYZ Commander
+# These include:
+# * Elements of filesystem based on:
+#    - regular expressions of filenames
+#    - filetypes
+#    - file permission bits
+#    - file owners
+# * All user interface widgets
+#
+
+# Skin name matches filename
+
+# Some meta-information
+#
+
+# author  - Author
+set author "Max E. Kuznecov <mek@mek.uz.ua>"
+
+# version - Skin version
+set version "0.1"
+
+# description - Some skin description
+set description "Default XYZ skin"
+
+##################
+# Filetype-based highlight has the lowest priority
+# Syntax is: 
+# fs.type.<type>: <FG>[,<BG>[,<M>]]
+# Here <type> is file-type, one of:
+# file       - regular file
+# block      - block special file
+# char       - character special file
+# dir        - directory
+# link       - symbolic link
+# fifo       - FIFO
+# socket     - socket.
+#
+# <FG> is foreground color.
+#      See libxyz.ui.colors.Foreground class doc for possible values.
+# <BG> is background color.
+#      See libxyz.ui.colors.Background class doc for possible values.
+#      Can be omitted. In this case background of container (Panel) is used.
+# <M>  is monochrome terminal attribute.
+#      See libxyz.ui.colors.Monochrome class doc for possible values.
+
+fs.type.file:   LIGHT_GRAY
+fs.type.dir:    WHITE
+fs.type.block:  DARK_MAGENTA
+fs.type.char:   LIGHT_MAGENTA
+fs.type.link:   LIGHT_CYAN
+fs.type.fifo:   DARK_CYAN
+fs.type.socket: DARK_RED
+
+##################
+# Regexp-based highlight has following syntax:
+# fs.regexp."<regexp>": <FG>[,<BG>[,<M>]]
+# "<regexp>" is a string containig regular expression
+# <FG>, <BG> and <M> attributes are the same as for fs.type configuration
+
+fs.regexp."*.core$": WHITE, DARK_RED
