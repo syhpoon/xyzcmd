@@ -59,7 +59,7 @@ class Monochrome(object):
     Monochrome colors
     """
 
-    default = None
+    DEFAULT = None
     BOLD = 'bold'
     UNDERLINE = 'underline'
     STANDOUT = 'standout'
