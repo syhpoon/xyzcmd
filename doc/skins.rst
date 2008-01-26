@@ -22,24 +22,23 @@ Variables
 ---------
 
 Variables could be defined and used within skin file.
-New variable definition syntax is:
-   ``set variable value``
+New variable definition syntax is: ``set variable value``.
 Variable name is any alphanumeric character plus "_".
 TODO: Value syntax
 
 There are three mandatory variables to be defined in every skin 
 and as much as necessary optional/local variables.
-To access variable's value use following construction:
-   ``%{variable}``
+To access variable's value use following construction: ``%{variable}``
 
 These are mandatory variables:
-author
+
+**author**
    Skin author name. Preferably in format: Name <author@foo.bar>
 
-version
+**version**
    Skin version
 
-description
+**description**
    Some skin description
 
 Types
@@ -57,13 +56,16 @@ Possible types:
 * socket     - socket
 
 General ruleset definition syntax::
-   FS <by> {
+
+   fs <by> {
       <fstype> = <FG>,[,<BG>][,<MA>]
       ...
    }
 
-``FS`` means that we're defining file-system object[s].
+``fs`` means that we're defining file-system object[s].
+
 ``<by>`` means that we want to highlight by file type.
+
 ``<by>`` can take following values:
 
    * type     - File type
@@ -73,6 +75,7 @@ General ruleset definition syntax::
 
 ``<fstype> = <FG>,[,<BG>][,<MA>]`` is a definition of object visual
 representation.
+
 <FG> 
    Foreground color. Possible values include:
 
@@ -117,7 +120,7 @@ representation.
 
 Example::
 
-   FS type {
+   fs type {
       file = LIGHT_GRAY
       dir = WHITE
       block = DARK_MAGENTA
@@ -132,25 +135,61 @@ other rulesets) will appear in LIGHT_GRAY color.
 
 Permission bits can be specified in following formats:
 
-   * dddd - an absolute mode in octal number.
-   * [+-]rwx - TODO: like in find -perm
+**[+]dddd**
+   Octal digit mode. If mode is preceeded by '+' this will
+   match files with any of mode bits set. Otherwise it will
+   match only files with exactly the same mode as given::
 
-   FS perm {
-      4000 = LIGHT_RED
-      +x = LIGHT_GREEN
-   }
+      # Permission-based highlighting
+      fs perm {
+         # This will highlight any set-uid file in LIGHT_RED
+         +4000 = LIGHT_RED
+         # Files with execution bits set
+         +0111 = LIGHT_GREEN
+         # Match only files with exactly set mode - 755
+         0755 = DARK_GREEN
+      }
 
-   FS owner {
+Owner/group can be specified as ``[uid][:gid]``. uid and gid both can be either
+symbolic or numeric::
+
+   fs owner {
+      # Files owned by root and group wheel
       root:wheel = LIGHT_RED
+      # Files owned by username
+      username = WHITE
+      # Files owned by group operator
+      :operator = YELLOW
+      # Files owner by user with uid 1050
+      1050 = WHITE,DARK_RED
    }
 
-Here we define that all files owned by root will be displayed
-in LIGHT_RED color.
+Regular expressions based rules use filenames as match criteria.
+Regular expression enclosed in ``//``. Character '=' must be escaped using 
+``\`` backslash to prevent interpreting it as assign character::
 
-Serching for rule in ruleset continues until first match is found.
+   fs regexp {
+      # Display .core files in DARK_RED
+      /*.core$/ = DARK_RED
+   }
+
+Order
+-----
+
+Searching for rule in ruleset continues until first match is found
+according to priorities.
 
 Applying rules priorities:
    1. By owner
    #. By permission
    #. By regular expression
    #. By file-type
+
+So if we have following rulesets defined::
+
+   fs owner { root = DARK_BLUE }
+   fs perm { +0100 = DARK_RED }
+   fs type { file = WHITE }
+
+And if there is an executable file owned by root. It will be displayed using
+DARK_BLUE, as owner rulesets have higher priority.
