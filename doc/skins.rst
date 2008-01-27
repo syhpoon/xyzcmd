@@ -18,28 +18,21 @@ is also a skin name.
 Skin-files may be located in skins subdirectory of xyzcmd main installation
 path or in user .xyz/skin directory.
 
-Variables
+Constants
 ---------
 
-Variables could be defined and used within skin file.
-New variable definition syntax is: ``set variable value``.
-Variable name is any alphanumeric character plus "_".
-TODO: Value syntax
+There are three mandatory constants to be defined in every skin.
 
-There are three mandatory variables to be defined in every skin 
-and as much as necessary optional/local variables.
-To access variable's value use following construction: ``%{variable}``
-
-These are mandatory variables:
-
-**author**
+**AUTHOR**
    Skin author name. Preferably in format: Name <author@foo.bar>
 
-**version**
+**VERSION**
    Skin version
 
-**description**
+**DESCRIPTION**
    Some skin description
+
+Constant defined using construction: ``<CONST>: VALUE``
 
 Types
 -----
@@ -171,6 +164,8 @@ Regular expression enclosed in ``//``. Character '=' must be escaped using
    fs regexp {
       # Display .core files in DARK_RED
       /*.core$/ = DARK_RED
+      # Hidden files
+      /\.+/ = LIGHT_GREY
    }
 
 Order
@@ -179,7 +174,7 @@ Order
 Searching for rule in ruleset continues until first match is found
 according to priorities.
 
-Applying rules priorities:
+Default rules priorities:
    1. By owner
    #. By permission
    #. By regular expression
@@ -187,9 +182,18 @@ Applying rules priorities:
 
 So if we have following rulesets defined::
 
-   fs owner { root = DARK_BLUE }
    fs perm { +0100 = DARK_RED }
    fs type { file = WHITE }
+   fs owner { root = DARK_BLUE }
 
 And if there is an executable file owned by root. It will be displayed using
 DARK_BLUE, as owner rulesets have higher priority.
+
+Priorities can be customized. This can be done using priority ruleset::
+
+   fs priority {
+      type = 1
+      perm = 2
+      regexp = 3
+      owner = 4
+   }

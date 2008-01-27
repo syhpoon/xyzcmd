@@ -1,47 +1,20 @@
 # Default XYZ skin
 
-# author  - Author
-set author "Max E. Kuznecov <mek@mek.uz.ua>"
+AUTHOR: "Max E. Kuznecov <mek@mek.uz.ua>"
+VERSION: "0.1"
+DESCRIPTION: "Default XYZ skin"
 
-# version - Skin version
-set version "0.1"
+fs type {
+	file = LIGHT_GRAY
+	dir = WHITE
+	block = DARK_MAGENTA
+	char = LIGHT_MAGENTA
+	link = LIGHT_CYAN
+	fifo = DARK_CYAN
+	socket = DARK_RED
+}
 
-# description - Some skin description
-set description "Default XYZ skin"
-
-##################
-# Filetype-based highlight has the lowest priority
-# Syntax is: 
-# fs.type.<type>: <FG>[,<BG>[,<M>]]
-# Here <type> is file-type, one of:
-# file       - regular file
-# block      - block special file
-# char       - character special file
-# dir        - directory
-# link       - symbolic link
-# fifo       - FIFO
-# socket     - socket.
-#
-# <FG> is foreground color.
-#      See libxyz.ui.colors.Foreground class doc for possible values.
-# <BG> is background color.
-#      See libxyz.ui.colors.Background class doc for possible values.
-#      Can be omitted. In this case background of container (Panel) is used.
-# <M>  is monochrome terminal attribute.
-#      See libxyz.ui.colors.Monochrome class doc for possible values.
-
-fs.type.file:   LIGHT_GRAY
-fs.type.dir:    WHITE
-fs.type.block:  DARK_MAGENTA
-fs.type.char:   LIGHT_MAGENTA
-fs.type.link:   LIGHT_CYAN
-fs.type.fifo:   DARK_CYAN
-fs.type.socket: DARK_RED
-
-##################
-# Regexp-based highlight has following syntax:
-# fs.regexp."<regexp>": <FG>[,<BG>[,<M>]]
-# "<regexp>" is a string containig regular expression
-# <FG>, <BG> and <M> attributes are the same as for fs.type configuration
-
-fs.regexp."*.core$": WHITE, DARK_RED
+fs regexp {
+	/*.core$/ = DARK_RED
+	/\.+/ = LIGHT_GREY
+}

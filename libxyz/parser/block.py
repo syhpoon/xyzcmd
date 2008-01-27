@@ -4,7 +4,7 @@
 #
 
 """
-BlockParser parses one block of configration
+BlockParser parses block of configration
 """
 
 import types
@@ -12,19 +12,23 @@ import re
 
 from libxyz.exceptions import ParseError
 
-# TODO: Variable substitution
-# TODO: Escaping in quotes
-
 class BlockParser(object):
     """
     BaseParser used to parse blocked structures
     Format:
 
     block [name] {
-        var1 = val1 <delimiter>
-        var2 = val2 <delimiter>
+        var1 <assign> val1 <delimiter>
+        var2 <assign> val2 <delimiter>
         ...
         }
+
+    Blank chars are usually ignored. Except from in quoting.
+    Also new-line char marks ends commented line if any.
+    Variable name parsed according to varre regexp.
+    Values can be provided as simple literals or quoted ones.
+    If value contains spaces or any other non-alphanumeric values it is better
+    to quote it or escape it using \ (backslash).
     """
 
     STATE_INIT = 0
@@ -38,7 +42,8 @@ class BlockParser(object):
     error_unexpected = 1
 
     def __init__(self, keyword, has_name=False, comment="#", varre=None,
-                 assignchar="=", delimiter="\n", validvars=None):
+                 assignchar="=", delimiter="\n", validvars=None,
+                 value_validator=None, count=0):
         """
         @param keyword: Word that indicates block start
         @type keyword: string
@@ -56,7 +61,7 @@ class BlockParser(object):
                         if found.
         @type comment: string (single char)
 
-        @param varre: Valid variable name regular expression,
+        @param varre: Valid variable name regular expression.
                       ^[\w-]+$ re is used unless given.
         @type varre: Compiled re object (L{re.compile})
 
@@ -69,6 +74,15 @@ class BlockParser(object):
         @param validvars: List of variables valid within block
         @type delimiter: sequence
 
+        @param value_validator: Value validator
+        @type value_validator:A function that takes two args var and value
+                              and validates them. In case value is invalid,
+                              ValueError must be raised. Otherwise returning
+                              True is sufficient.
+
+        @param count: How many blocks to parse. If count <= 1 will parse
+                      all available.
+        @type count: Integer
         """
 
         self.keyword = keyword
@@ -78,6 +92,8 @@ class BlockParser(object):
         self.assignchar = assignchar
         self.delimiter = delimiter
         self.validvars = validvars or ()
+        self.value_validator = value_validator
+        self.count = count
 
         self._lineno = 0
         self._state = self.STATE_INIT
@@ -86,6 +102,7 @@ class BlockParser(object):
         self._result = []
         self._in_comment = False
         self._in_quote = False
+        self._done = False
 
         self._parse_table = {
             self.STATE_INIT: self._process_state_init,
@@ -121,6 +138,7 @@ class BlockParser(object):
         self._cleanup()
 
         _tokens = ("{", "}", self.assignchar, self.delimiter)
+        _escape = '\\'
 
         # sdata must be a list of lines
         if type(source) in types.StringTypes:
@@ -129,9 +147,23 @@ class BlockParser(object):
             sdata = source
 
         idt = []
+        _escaped = False
 
         for line in sdata:
             for char in line:
+                if self._done:
+                    break
+
+                if self._state == self.STATE_VALUE:
+                    if _escaped:
+                        idt.append(char)
+                        _escaped = False
+                        continue
+
+                    if char == _escape:
+                        _escaped = True
+                        continue
+
                 if char == "\n":
                     if self._in_quote:
                         self._error(_("Unterminated quote"))
@@ -175,6 +207,9 @@ class BlockParser(object):
                     continue
 
                 idt.append(char)
+
+            if self._done:
+                break
 
         self._check_complete(idt)
 
@@ -243,6 +278,9 @@ class BlockParser(object):
             # Closing block
             self._result.append(self._parsed_obj)
             self._cleanup()
+
+            if self.count > 0 and self.count == len(self._result):
+                self._done = True
             return
         if self.validvars:
             if word not in self.validvars:
@@ -266,6 +304,12 @@ class BlockParser(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _process_state_value(self, word):
+        if self.value_validator:
+            try:
+                self.value_validator(self._varname, word)
+            except ValueError, e:
+                self._error(_("Invalid value %s: %s" % (word, str(e))))
+
         self._parsed_obj.set(self._varname, word)
         self._varname = None
         self._state = self.STATE_DELIM
@@ -276,6 +320,9 @@ class BlockParser(object):
         if word == "}":
             self._result.append(self._parsed_obj)
             self._cleanup()
+
+            if self.count > 0 and self.count == len(self._result):
+                self._done = True
             return
         if word != self.delimiter:
             self._error(msg=(word, self.delimiter),

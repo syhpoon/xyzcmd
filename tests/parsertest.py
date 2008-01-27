@@ -113,6 +113,25 @@ class BlockParsing(unittest.TestCase):
         self.assertRaises(ParseError, BlockParser("block").parse,
                           "block {a = value\n")
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testValueValidator(self):
+        """
+        Check fo value_validator raises exception
+        """
+
+        def _f(var, val):
+            if val != "CORRECT_VALUE":
+                raise ValueError("Incorrect value %s!" % val)
+
+            return True
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        self.assertRaises(ParseError, BlockParser("block",
+                          value_validator=_f).parse,
+                          "block { a = INCORRECT_VALUE }")
+
 if __name__ == "__main__":
     import gettext
     gettext.install("xyzcmd")
