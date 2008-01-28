@@ -10,9 +10,10 @@ BlockParser parses block of configration
 import types
 import re
 
+from libxyz.parser import BaseParser
 from libxyz.exceptions import ParseError
 
-class BlockParser(object):
+class BlockParser(BaseParser):
     """
     BaseParser used to parse blocked structures
     Format:
@@ -84,6 +85,8 @@ class BlockParser(object):
                       all available.
         @type count: Integer
         """
+
+        super(BlockParser, self).__init__()
 
         self.keyword = keyword
         self.has_name = has_name

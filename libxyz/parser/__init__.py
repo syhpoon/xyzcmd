@@ -7,7 +7,11 @@
 Different parsers
 """
 
-__all__ = ('BlockParser',
+__all__ = ('BaseParser',
+           'BlockParser',
+           'MultiParser',
 )
 
+from base import BaseParser
 from block import BlockParser
+from multi import MultiParser
