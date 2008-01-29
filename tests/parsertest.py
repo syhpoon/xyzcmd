@@ -132,6 +132,18 @@ class BlockParsing(unittest.TestCase):
                           value_validator=_f).parse,
                           "block { a = INCORRECT_VALUE }")
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testEscaping(self):
+        """
+        Check for proper escaping
+        """
+
+        _p = BlockParser("block")
+        _src = "block { var = a\\ \\b\\ c }"
+
+        self.assert_(len(_p.parse(_src)))
+
 if __name__ == "__main__":
     import gettext
     gettext.install("xyzcmd")
