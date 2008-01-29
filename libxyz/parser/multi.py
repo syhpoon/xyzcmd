@@ -37,6 +37,15 @@ class MultiParser(BaseParser):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def parse(self, source):
+        """
+        Begin parsing
+        """
+
+        sdata = self._get_sdata(source)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def register(self, keyword, parser):
         """
         Register new parser. If parser for keyword given already registered
@@ -55,3 +64,15 @@ class MultiParser(BaseParser):
                                   str(parsers)))
 
         self.parsers[keyword] = parser
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def unregister(self, keyword):
+        """
+        Unregister parser. Ignore if was not registered.
+        """
+
+        try:
+            del(self.parsers[keyword])
+        except KeyError:
+            pass

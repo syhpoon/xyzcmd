@@ -7,11 +7,9 @@
 BlockParser parses block of configration
 """
 
-import types
 import re
 
-from libxyz.parser import BaseParser
-from libxyz.exceptions import ParseError
+from libxyz.parser import BaseParser, ParsedData
 
 class BlockParser(BaseParser):
     """
@@ -39,8 +37,6 @@ class BlockParser(BaseParser):
     STATE_ASSIGN = 4
     STATE_VALUE = 5
     STATE_DELIM = 6
-
-    error_unexpected = 1
 
     def __init__(self, keyword, has_name=False, comment="#", varre=None,
                  assignchar="=", delimiter="\n", validvars=None,
@@ -98,14 +94,10 @@ class BlockParser(BaseParser):
         self.value_validator = value_validator
         self.count = count
 
-        self._lineno = 0
         self._state = self.STATE_INIT
         self._parsed_obj = None
         self._varname = None
         self._result = []
-        self._in_comment = False
-        self._in_quote = False
-        self._done = False
 
         self._parse_table = {
             self.STATE_INIT: self._process_state_init,
@@ -122,131 +114,36 @@ class BlockParser(BaseParser):
     def parse(self, source):
         """
         Parse block of text and return L{ParsedData} object or raise
-        L{ParseError} exception
+        L{libxyz.exceptions.ParseError} exception
 
         @param source: Parsing source
         @type block: string or file-like object
 
-        @return: List of L{ParsedBlockData} parsed objects
+        @return: List of L{libxyz.parser.ParsedData} parsed objects
         """
 
-        def _put_token(token):
-            self._parse_table[self._state](token)
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        self._lineno = 1
         self._result = []
 
         self._cleanup()
-
+        sdata = self._get_sdata(source)
         _tokens = ("{", "}", self.assignchar, self.delimiter)
-        _escape = '\\'
 
-        # sdata must be a list of lines
-        if type(source) in types.StringTypes:
-            sdata = source.splitlines(True)
-        else:
-            sdata = source
+        for _lex, _val in self.lexer(sdata, _tokens):
+            if _lex == self.TOKEN_IDT:
+                self._parse_table[self._state](_val)
 
-        idt = []
-        _escaped = False
-
-        for line in sdata:
-            for char in line:
-                if self._done:
-                    break
-
-                if self._state == self.STATE_VALUE:
-                    if _escaped:
-                        idt.append(char)
-                        _escaped = False
-                        continue
-
-                    if char == _escape:
-                        _escaped = True
-                        continue
-
-                if char == "\n":
-                    if self._in_quote:
-                        self._error(_("Unterminated quote"))
-                    elif idt:
-                        _put_token("".join(idt))
-                        idt = []
-                        if self.delimiter == char:
-                            _put_token(char)
-
-                    self._in_comment = False
-                    self._lineno += 1
-                    continue
-
-                if self._in_comment:
-                    continue
-
-                if char == '"':
-                    if self._in_quote:
-                        self._in_quote = False
-                    else:
-                        self._in_quote = True
-
-                    continue
-
-                if self._in_quote:
-                    idt.append(char)
-                    continue
-
-                if char in _tokens or char.isspace():
-                    # Check if we finished assembling the word
-                    if idt:
-                        _put_token("".join(idt))
-                        idt = []
-                    if not char.isspace():
-                        _put_token(char)
-                    continue
-
-                if char == self.comment:
-                    # skip to the EOL
-                    self._in_comment = True
-                    continue
-
-                idt.append(char)
-
-            if self._done:
-                break
-
-        self._check_complete(idt)
+        self._check_complete(self._idt)
 
         return self._result
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _error(self, msg=None, etype=None):
-        """
-        Parsing error. Raise exception
-        """
-
-        _emsg = ""
-        _pre = _("Parse error on line %d" % self._lineno)
-        
-        if etype == self.error_unexpected and msg and len(msg) == 2:
-            _emsg = _("Unexpected token '%s'. Waiting for '%s'" % \
-                    (msg[0].encode("string-escape"),
-                     msg[1].encode("string-escape")))
-        elif msg:
-            _emsg = msg
-        else:
-            _emsg = _("Syntax error")
-
-        raise ParseError("%s: %s" % (_pre, _emsg))
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     def _process_state_init(self, word):
         if word == self.keyword:
-            self._parsed_obj = ParsedBlockData()
+            self._parsed_obj = ParsedData()
             self._state = self.STATE_NAME_OR_OPEN
         else:
-            self._error(msg=(word, self.keyword),
+            self.error(msg=(word, self.keyword),
                        etype=self.error_unexpected)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -254,14 +151,14 @@ class BlockParser(BaseParser):
     def _process_state_name_or_open(self, word):
         if word == "{":
             if self.has_name:
-                 self._error(_("Block name required"))
+                 self.error(_("Block name required"))
             else:
                 self._state = self.STATE_VARIABLE
                 return
 
         # Else word is supposed to be a name of block
         if not self.has_name:
-            self._error(_("Block name is not allowed: %s" % word))
+            self.error(_("Block name is not allowed: %s" % word))
         else:
             self._state = self.STATE_BLOCK_OPEN
             self._parsed_obj.name = word
@@ -270,7 +167,7 @@ class BlockParser(BaseParser):
 
     def _process_state_block_open(self, word):
         if word != "{":
-            self._error(msg=(word, "{"), etype=self.error_unexpected)
+            self.error(msg=(word, "{"), etype=self.error_unexpected)
         else:
             self._state = self.STATE_VARIABLE
 
@@ -287,10 +184,10 @@ class BlockParser(BaseParser):
             return
         if self.validvars:
             if word not in self.validvars:
-                self._error(_("Unknown variable %s" % word))
+                self.error(_("Unknown variable %s" % word))
 
         elif self.varre.match(word) is None:
-            self._error(_("Invalid variable name: %s" % word))
+            self.error(_("Invalid variable name: %s" % word))
 
         self._varname = word
         self._state = self.STATE_ASSIGN
@@ -299,10 +196,11 @@ class BlockParser(BaseParser):
 
     def _process_state_assign(self, word):
         if word != self.assignchar:
-            self._error(msg=(word, self.assignchar),
+            self.error(msg=(word, self.assignchar),
                        etype=self.error_unexpected)
         else:
             self._state = self.STATE_VALUE
+            self._can_escape = True
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -311,11 +209,12 @@ class BlockParser(BaseParser):
             try:
                 self.value_validator(self._varname, word)
             except ValueError, e:
-                self._error(_("Invalid value %s: %s" % (word, str(e))))
+                self.error(_("Invalid value %s: %s" % (word, str(e))))
 
         self._parsed_obj.set(self._varname, word)
         self._varname = None
         self._state = self.STATE_DELIM
+        self._can_escape = False
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -328,7 +227,7 @@ class BlockParser(BaseParser):
                 self._done = True
             return
         if word != self.delimiter:
-            self._error(msg=(word, self.delimiter),
+            self.error(msg=(word, self.delimiter),
                         etype=self.error_unexpected)
         else:
             self._state = self.STATE_VARIABLE
@@ -345,6 +244,7 @@ class BlockParser(BaseParser):
         self._state = self.STATE_INIT
         self._in_comment = False
         self._in_quote = False
+        self._idt = []
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -354,44 +254,10 @@ class BlockParser(BaseParser):
         """
 
         if self._in_quote:
-            self._error(_("Unterminated quote"))
+            self.error(_("Unterminated quote"))
 
         if self._state != self.STATE_INIT:
-            self._error(_("Unclosed block"))
+            self.error(_("Unclosed block"))
 
         if idt:
-            self._error()
-
-#++++++++++++++++++++++++++++++++++++++++++++++++
-
-class ParsedBlockData(object):
-    """
-    Parsed block data
-    Provides dictionary-like access to parsed values
-    """
-
-    def __init__(self, name=None):
-        self._name = name
-        self._data = {}
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def lookup(self, var):
-        """
-        Lookup for value of variable
-        If variable does not exist, return None
-        """
-
-        if var in self._data:
-            return self._data[var]
-        else:
-            return None
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def set(self, var, val):
-        """
-        Set new value to variable
-        """
-
-        self._data[var] = val
+            self.error()

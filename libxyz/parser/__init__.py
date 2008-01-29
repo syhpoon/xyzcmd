@@ -10,8 +10,9 @@ Different parsers
 __all__ = ('BaseParser',
            'BlockParser',
            'MultiParser',
+           'ParsedData',
 )
 
-from base import BaseParser
+from base import BaseParser, ParsedData
 from block import BlockParser
 from multi import MultiParser
