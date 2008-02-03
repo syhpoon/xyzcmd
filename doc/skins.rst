@@ -16,7 +16,7 @@ Skin-definition file is a plain-text file containing skin-directives.
 Every skin has a name. Name of the file which holds skin definition
 is also a skin name.
 Skin-files may be located in skins subdirectory of xyzcmd main installation
-path or in user .xyz/skin directory.
+path or in user .xyz/skins directory.
 
 Constants
 ---------

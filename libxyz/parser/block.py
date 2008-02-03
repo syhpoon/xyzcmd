@@ -9,7 +9,7 @@ BlockParser parses block of configration
 
 import re
 
-from libxyz.parser import BaseParser, ParsedData
+from libxyz.parser import BaseParser, ParsedData, SourceData
 
 class BlockParser(BaseParser):
     """
@@ -51,12 +51,12 @@ class BlockParser(BaseParser):
         @param has_name: Does block has name
         @type has_name: boolean
 
-        @param delimiter: Character to use as delimiter between statements
-        @type delimiter: string
-
         @param comment: Comment character. Everything else ignored until EOL
                         if found.
         @type comment: string (single char)
+
+        @param delimiter: Character to use as delimiter between statements
+        @type delimiter: string
 
         @param varre: Valid variable name regular expression.
                       ^[\w-]+$ re is used unless given.
@@ -116,8 +116,9 @@ class BlockParser(BaseParser):
         Parse block of text and return L{ParsedData} object or raise
         L{libxyz.exceptions.ParseError} exception
 
-        @param source: Parsing source
-        @type block: string or file-like object
+        @param source: Parsing source. If file object is passed, it must be
+                       closed by caller function after parsing completes.
+        @type block: string, file-like object or SourceData object
 
         @return: List of L{libxyz.parser.ParsedData} parsed objects
         """
@@ -125,10 +126,15 @@ class BlockParser(BaseParser):
         self._result = []
 
         self._cleanup()
-        sdata = self._get_sdata(source)
+
+        if isinstance(source, SourceData):
+            sdata = source
+        else:
+            sdata = SourceData(source)
+
         _tokens = ("{", "}", self.assignchar, self.delimiter)
 
-        for _lex, _val in self.lexer(sdata, _tokens):
+        for _lex, _val in self.lexer(sdata, _tokens, self.comment):
             if _lex == self.TOKEN_IDT:
                 self._parse_table[self._state](_val)
 

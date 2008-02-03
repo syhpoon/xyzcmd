@@ -5,7 +5,7 @@
 
 import types
 
-from libxyz.parser import BaseParser
+from libxyz.parser import BaseParser, SourceData
 from libxyz.exceptions import XYZRuntimeError, ParseError
 
 class MultiParser(BaseParser):
@@ -26,6 +26,8 @@ class MultiParser(BaseParser):
 
         super(MultiParser, self).__init__()
 
+        self.data = {}
+
         if parsers:
             if type(parsers) != types.DictType:
                 raise XYZValueError(_("Invalid argument type %s. "\
@@ -42,7 +44,21 @@ class MultiParser(BaseParser):
         Begin parsing
         """
 
-        sdata = self._get_sdata(source)
+        result = []
+
+        if isinstance(source, SourceData):
+            sdata = source
+        else:
+            sdata = SourceData(source)
+
+        for _lex, _val in self.lexer(sdata, (), "#"):
+            if _lex == self.TOKEN_IDT:
+                if _val in self.parsers:
+                    # Push read token back
+                    sdata.unget(_val)
+                    self.data[_val] = self.parsers[_val].parse(sdata)
+                else:
+                    self.error(_("Unknown keyword: %s" % _val))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

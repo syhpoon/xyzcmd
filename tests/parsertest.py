@@ -6,8 +6,8 @@
 
 import unittest
 
-from libxyz.parser import BlockParser
-from libxyz.exceptions import ParseError
+from libxyz.parser import BlockParser, MultiParser
+from libxyz.exceptions import ParseError, XYZValueError
 
 class BlockParsing(unittest.TestCase):
     def testQuote(self):
@@ -140,9 +140,21 @@ class BlockParsing(unittest.TestCase):
         """
 
         _p = BlockParser("block")
-        _src = "block { var = a\\ \\b\\ c }"
+        _src = "block { var = a\\ b\\ c }"
 
         self.assert_(len(_p.parse(_src)))
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+class BlockParsing(unittest.TestCase):
+    def testArgs(self):
+        """
+        Check if raises on invalid arg type
+        """
+
+        self.assertRaises(XYZValueError, MultiParser, "WRONG")
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
 
 if __name__ == "__main__":
     import gettext

@@ -11,8 +11,11 @@ __all__ = ('BaseParser',
            'BlockParser',
            'MultiParser',
            'ParsedData',
+           'SourceData',
 )
 
-from base import BaseParser, ParsedData
+from parseddata import ParsedData
+from sourcedata import SourceData
+from base import BaseParser
 from block import BlockParser
 from multi import MultiParser
