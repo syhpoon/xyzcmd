@@ -50,7 +50,7 @@ Possible types:
 
 General ruleset definition syntax::
 
-   fs <by> {
+   fs.<by> {
       <fstype> = <FG>,[,<BG>][,<MA>]
       ...
    }
@@ -113,7 +113,7 @@ representation.
 
 Example::
 
-   fs type {
+   fs.type {
       file = LIGHT_GRAY
       dir = WHITE
       block = DARK_MAGENTA
@@ -134,7 +134,7 @@ Permission bits can be specified in following formats:
    match only files with exactly the same mode as given::
 
       # Permission-based highlighting
-      fs perm {
+      fs.perm {
          # This will highlight any set-uid file in LIGHT_RED
          +4000 = LIGHT_RED
          # Files with execution bits set
@@ -146,7 +146,7 @@ Permission bits can be specified in following formats:
 Owner/group can be specified as ``[uid][:gid]``. uid and gid both can be either
 symbolic or numeric::
 
-   fs owner {
+   fs.owner {
       # Files owned by root and group wheel
       root:wheel = LIGHT_RED
       # Files owned by username
@@ -161,7 +161,7 @@ Regular expressions based rules use filenames as match criteria.
 Regular expression enclosed in ``//``. Character '=' must be escaped using 
 ``\`` backslash to prevent interpreting it as assign character::
 
-   fs regexp {
+   fs.regexp {
       # Display .core files in DARK_RED
       /*.core$/ = DARK_RED
       # Hidden files
@@ -182,16 +182,16 @@ Default rules priorities:
 
 So if we have following rulesets defined::
 
-   fs perm { +0100 = DARK_RED }
-   fs type { file = WHITE }
-   fs owner { root = DARK_BLUE }
+   fs.perm { +0100 = DARK_RED }
+   fs.type { file = WHITE }
+   fs.owner { root = DARK_BLUE }
 
 And if there is an executable file owned by root. It will be displayed using
 DARK_BLUE, as owner rulesets have higher priority.
 
 Priorities can be customized. This can be done using priority ruleset::
 
-   fs priority {
+   fs.priority {
       type = 1
       perm = 2
       regexp = 3

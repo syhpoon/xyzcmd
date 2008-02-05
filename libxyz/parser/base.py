@@ -15,7 +15,8 @@ class BaseParser(object):
     error_unexpected = 1
 
     def __init__(self, *args, **kwars):
-        self._lineno = 1
+        self._sdata = None
+
         # Should be set to True when done parsing
         self._done = False
         # Should be set to True when parsing id can use escaped characters
@@ -48,7 +49,7 @@ class BaseParser(object):
         _escape = '\\'
         _escaped = False
 
-        self._lineno = 1
+        self._sdata = sdata
 
         for char in sdata:
             if self._done:
@@ -76,7 +77,6 @@ class BaseParser(object):
                         yield (self.TOKEN_IDT, char)
 
                 self._in_comment = False
-                self._lineno += 1
                 continue
 
             if self._in_comment:
@@ -118,7 +118,7 @@ class BaseParser(object):
         """
 
         _emsg = ""
-        _pre = _("Parse error on line %d" % self._lineno)
+        _pre = _("Parse error on line %d" % self._sdata.lineno)
         
         if etype == self.error_unexpected and msg and len(msg) == 2:
             _emsg = _("Unexpected token '%s'. Waiting for '%s'" % \

@@ -19,6 +19,8 @@ class SourceData(object):
         @type source: String or file-like object
         """
 
+        self.lineno = 1
+
         self._source = None
         self._index = 0
         self._next_me = None
@@ -43,10 +45,17 @@ class SourceData(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def next(self):
+        _res = None
+
         if self._buffer:
-            return self._buffer.pop()
+            _res = self._buffer.pop()
         else:
-            return self._next_me()
+            _res = self._next_me()
+
+        if _res == "\n":
+            self.lineno += 1
+
+        return _res
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -76,4 +85,4 @@ class SourceData(object):
         Put token back onto input stream
         """
 
-        self._buffer.extend(string[::-1])
+        self._buffer.extend(reversed(string))

@@ -6,7 +6,7 @@
 import types
 
 from libxyz.parser import BaseParser, SourceData
-from libxyz.exceptions import XYZRuntimeError, ParseError
+from libxyz.exceptions import XYZValueError, ParseError
 
 class MultiParser(BaseParser):
     """
@@ -14,7 +14,7 @@ class MultiParser(BaseParser):
     Usually parsers, such as BlockParser designed to parse homogeneous blocks in
     single source: file or string. But still it might be useful sometimes to
     parse multiple blocks of different syntax in single source.
-    Thus, one can register few necessary parser into MultiParser and go on.
+    Thus, one can register few necessary parsers into MultiParser and go on.
     """
 
     def __init__(self, parsers):
@@ -55,7 +55,9 @@ class MultiParser(BaseParser):
             if _lex == self.TOKEN_IDT:
                 if _val in self.parsers:
                     # Push read token back
-                    sdata.unget(_val)
+                    # Space at the end needed because it was consumed by
+                    # lexer
+                    sdata.unget(_val + " ")
                     self.data[_val] = self.parsers[_val].parse(sdata)
                 else:
                     self.error(_("Unknown keyword: %s" % _val))

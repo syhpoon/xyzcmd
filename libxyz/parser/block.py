@@ -13,7 +13,7 @@ from libxyz.parser import BaseParser, ParsedData, SourceData
 
 class BlockParser(BaseParser):
     """
-    BaseParser used to parse blocked structures
+    BaseParser is used to parse blocked structures
     Format:
 
     block [name] {
@@ -23,8 +23,8 @@ class BlockParser(BaseParser):
         }
 
     Blank chars are usually ignored. Except from in quoting.
-    Also new-line char marks ends commented line if any.
-    Variable name parsed according to varre regexp.
+    Also new-line char ends commented line if any.
+    Variable names are parsed according to varre regexp.
     Values can be provided as simple literals or quoted ones.
     If value contains spaces or any other non-alphanumeric values it is better
     to quote it or escape it using \ (backslash).
@@ -48,15 +48,11 @@ class BlockParser(BaseParser):
         @param has_name: Does block has name
         @type has_name: boolean
 
-        @param has_name: Does block has name
-        @type has_name: boolean
-
         @param comment: Comment character. Everything else ignored until EOL
-                        if found.
         @type comment: string (single char)
 
         @param delimiter: Character to use as delimiter between statements
-        @type delimiter: string
+        @type delimiter: string (single char)
 
         @param varre: Valid variable name regular expression.
                       ^[\w-]+$ re is used unless given.
@@ -77,7 +73,7 @@ class BlockParser(BaseParser):
                               ValueError must be raised. Otherwise returning
                               True is sufficient.
 
-        @param count: How many blocks to parse. If count <= 1 will parse
+        @param count: How many blocks to parse. If count < 1 will parse
                       all available.
         @type count: Integer
         """
@@ -188,10 +184,8 @@ class BlockParser(BaseParser):
             if self.count > 0 and self.count == len(self._result):
                 self._done = True
             return
-        if self.validvars:
-            if word not in self.validvars:
+        if self.validvars and word not in self.validvars:
                 self.error(_("Unknown variable %s" % word))
-
         elif self.varre.match(word) is None:
             self.error(_("Invalid variable name: %s" % word))
 

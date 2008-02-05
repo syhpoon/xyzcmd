@@ -4,7 +4,7 @@ AUTHOR: "Max E. Kuznecov <mek@mek.uz.ua>"
 VERSION: "0.1"
 DESCRIPTION: "Default XYZ skin"
 
-fs type {
+fs.type {
 	file = LIGHT_GRAY
 	dir = WHITE
 	block = DARK_MAGENTA
@@ -14,7 +14,7 @@ fs type {
 	socket = DARK_RED
 }
 
-fs regexp {
+fs.regexp {
 	/*.core$/ = DARK_RED
 	/\.+/ = LIGHT_GREY
 }
