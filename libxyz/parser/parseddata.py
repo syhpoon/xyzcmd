@@ -15,6 +15,16 @@ class ParsedData(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def __str__(self):
+        return "ParsedData object: %s" % str(self._data)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __repr(self):
+        return __str__()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def lookup(self, var):
         """
         Lookup for value of variable

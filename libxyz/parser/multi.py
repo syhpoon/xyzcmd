@@ -26,8 +26,6 @@ class MultiParser(BaseParser):
 
         super(MultiParser, self).__init__()
 
-        self.data = {}
-
         if parsers:
             if type(parsers) != types.DictType:
                 raise XYZValueError(_("Invalid argument type %s. "\
@@ -37,6 +35,8 @@ class MultiParser(BaseParser):
         else:
             self.parsers = {}
 
+        self._result = []
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def parse(self, source):
@@ -44,7 +44,7 @@ class MultiParser(BaseParser):
         Begin parsing
         """
 
-        result = []
+        self._result = []
 
         if isinstance(source, SourceData):
             sdata = source
@@ -58,9 +58,11 @@ class MultiParser(BaseParser):
                     # Space at the end needed because it was consumed by
                     # lexer
                     sdata.unget(_val + " ")
-                    self.data[_val] = self.parsers[_val].parse(sdata)
+                    self._result.extend(self.parsers[_val].parse(sdata))
                 else:
                     self.error(_("Unknown keyword: %s" % _val))
+
+        return self._result
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

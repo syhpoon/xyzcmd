@@ -7,6 +7,10 @@
 BlockParser parses block of configration
 """
 
+#TODO: убрать has_name, оставить только блоки с именем
+#TODO: list values,
+#TODO: args in  __init__ - dict{}
+
 import re
 
 from libxyz.parser import BaseParser, ParsedData, SourceData
@@ -21,13 +25,6 @@ class BlockParser(BaseParser):
         var2 <assign> val2 <delimiter>
         ...
         }
-
-    Blank chars are usually ignored. Except from in quoting.
-    Also new-line char ends commented line if any.
-    Variable names are parsed according to varre regexp.
-    Values can be provided as simple literals or quoted ones.
-    If value contains spaces or any other non-alphanumeric values it is better
-    to quote it or escape it using \ (backslash).
     """
 
     STATE_INIT = 0
@@ -38,57 +35,60 @@ class BlockParser(BaseParser):
     STATE_VALUE = 5
     STATE_DELIM = 6
 
-    def __init__(self, keyword, has_name=False, comment="#", varre=None,
-                 assignchar="=", delimiter="\n", validvars=None,
-                 value_validator=None, count=0):
+    DEFAULT_OPT = {
+                   "has_name": False,
+                   "comment": "#",
+                   "varre": re.compile(r"^[\w-]+$"),
+                   "assignchar": "=",
+                   "delimiter": "\n",
+                   "validvars": (),
+                   "value_validator": None,
+                   "count": 0,
+                   }
+
+    def __init__(self, keyword, opt=None):
         """
         @param keyword: Word that indicates block start
         @type keyword: string
 
-        @param has_name: Does block has name
-        @type has_name: boolean
+        @param opt: Parser options.
+        @type opt: dict
 
-        @param comment: Comment character. Everything else ignored until EOL
-        @type comment: string (single char)
-
-        @param delimiter: Character to use as delimiter between statements
-        @type delimiter: string (single char)
-
-        @param varre: Valid variable name regular expression.
-                      ^[\w-]+$ re is used unless given.
-        @type varre: Compiled re object (L{re.compile})
-
-        @param assignchar: Variable-value split character.
-        @type assignchar: string (single char)
-
-        @param delimiter: Character that terminates statement
-        @type delimiter: string
-
-        @param validvars: List of variables valid within block
-        @type delimiter: sequence
-
-        @param value_validator: Value validator
-        @type value_validator:A function that takes two args var and value
-                              and validates them. In case value is invalid,
-                              ValueError must be raised. Otherwise returning
-                              True is sufficient.
-
-        @param count: How many blocks to parse. If count < 1 will parse
-                      all available.
-        @type count: Integer
+        Available options:
+            - has_name: Does block has name.
+              Type: I{boolean}
+            - comment: Comment character.
+              Everything else ignored until EOL.
+              Type: I{string (single char)}
+            - delimiter: Character to use as delimiter between statements.
+              Type: I{string (single char)}
+            - varre : Valid variable
+              name regular expression. ^[\w-]+$ re is used unless given.
+              Type: I{Compiled re object (L{re.compile})}
+            - assignchar (I{string (single char)}): Variable-value split
+              character.
+            - delimiter: Character that terminates statement.
+              Type: I{string}
+            - validvars: List of variables valid within block.
+              Type: I{sequence}
+            - value_validator: Value validator
+              Type: A function that takes two args var and value
+                    and validates them. In case value is invalid,
+                    ValueError must be raised. Otherwise returning
+                    True is sufficient.
+            - count: How many blocks to parse. If count < 1 - will parse
+                     all available.
+                     Type: integer
         """
 
         super(BlockParser, self).__init__()
 
+        self.opt = opt or self.DEFAULT_OPT
+        
         self.keyword = keyword
-        self.has_name = has_name
-        self.comment = comment
-        self.varre = varre or re.compile(r"^[\w-]+$")
-        self.assignchar = assignchar
-        self.delimiter = delimiter
-        self.validvars = validvars or ()
-        self.value_validator = value_validator
-        self.count = count
+
+        for _opt in self.DEFAULT_OPT.keys():
+            setattr(self, _opt, self.opt.get(_opt, self.DEFAULT_OPT[_opt]))
 
         self._state = self.STATE_INIT
         self._parsed_obj = None
@@ -239,6 +239,7 @@ class BlockParser(BaseParser):
         Set all neccessary variables to initial state
         """
 
+        self._done = False
         self._parsed_obj = None
         self._varname = None
         self._state = self.STATE_INIT

@@ -20,6 +20,28 @@ class BlockParsing(unittest.TestCase):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def testXQuote(self):
+        """
+        Test extending qutes
+        """
+
+        _p = BlockParser("block")
+        self.assert_(len(_p.parse(
+                     "block { x = ``` ssaf \t \n ; \" ' `` ; & }``` }")))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testComments(self):
+        """
+        Test proper commenting
+        """
+
+        _p = BlockParser("block")
+        self.assert_(len(_p.parse(
+                     "# \tComment 1\n#Comment 2 ``` = }{\n block {}")))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def testInit(self):
         """
         In STATE_INIT state only keyword is acceptable
@@ -34,8 +56,9 @@ class BlockParsing(unittest.TestCase):
         If has_name is True, block name must be defined
         """
 
+        _opt = {"has_name": True}
         self.assertRaises(ParseError,
-                          BlockParser("block", has_name=True).parse,
+                          BlockParser("block", _opt).parse,
                           "block {}")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -45,9 +68,9 @@ class BlockParsing(unittest.TestCase):
         If has_name is False, block name is not allowed
         """
 
+        _opt = {"has_name": False}
         self.assertRaises(ParseError,
-                          BlockParser("block", has_name=False).parse,
-                          "block name {}")
+                          BlockParser("block", _opt).parse, "block name {}")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -56,9 +79,9 @@ class BlockParsing(unittest.TestCase):
         Variable not in valid list is not allowed
         """
 
+        _opt = {"validvars": ("a",)}
         self.assertRaises(ParseError,
-                          BlockParser("block", validvars=("a",)).parse,
-                          "block {b = 1}")
+                          BlockParser("block", _opt).parse, "block {b = 1}")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -68,8 +91,7 @@ class BlockParsing(unittest.TestCase):
         """
 
         self.assertRaises(ParseError,
-                          BlockParser("block").parse,
-                          "block {a+-; = 1}")
+                          BlockParser("block").parse, "block {a+-; = 1}")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -78,9 +100,9 @@ class BlockParsing(unittest.TestCase):
         Test for assign character
         """
 
+        _opt = {"assignchar": ":"}
         self.assertRaises(ParseError,
-                          BlockParser("block", assignchar=":").parse,
-                          "block {a = 1}")
+                          BlockParser("block", _opt).parse, "block {a = 1}")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -89,8 +111,9 @@ class BlockParsing(unittest.TestCase):
         Correct delimiter should be supplied
         """
 
+        _opt = {"delimiter": ";"}
         self.assertRaises(ParseError,
-                          BlockParser("block", delimiter=";").parse,
+                          BlockParser("block", _opt).parse,
                           "block {a = 1\nb = 2\n}")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -128,8 +151,9 @@ class BlockParsing(unittest.TestCase):
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        self.assertRaises(ParseError, BlockParser("block",
-                          value_validator=_f).parse,
+        _opt = {"value_validator": _f}
+
+        self.assertRaises(ParseError, BlockParser("block", _opt).parse,
                           "block { a = INCORRECT_VALUE }")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -146,7 +170,7 @@ class BlockParsing(unittest.TestCase):
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-class BlockParsing(unittest.TestCase):
+class MultiParsing(unittest.TestCase):
     def testArgs(self):
         """
         Check if raises on invalid arg type

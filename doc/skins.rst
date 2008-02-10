@@ -158,14 +158,14 @@ symbolic or numeric::
    }
 
 Regular expressions based rules use filenames as match criteria.
-Regular expression enclosed in ``//``. Character '=' must be escaped using 
-``\`` backslash to prevent interpreting it as assign character::
+Regular expressions must use x-quoting: ```<re>```.
 
+::
    fs.regexp {
       # Display .core files in DARK_RED
-      /*.core$/ = DARK_RED
+      ```*.core$``` = DARK_RED
       # Hidden files
-      /\.+/ = LIGHT_GREY
+      ```\.+``` = LIGHT_GREY
    }
 
 Order
