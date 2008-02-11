@@ -10,12 +10,21 @@ from libxyz.parser import BlockParser, MultiParser
 from libxyz.exceptions import ParseError, XYZValueError
 
 class BlockParsing(unittest.TestCase):
+    def testOptType(self):
+        """
+        Raise error on wrong opt type
+        """
+
+        self.assertRaises(XYZValueError, BlockParser, 1)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def testQuote(self):
         """
         Parsing should raise ParseError on unterminated quotes
         """
 
-        self.assertRaises(ParseError, BlockParser("block").parse,
+        self.assertRaises(ParseError, BlockParser().parse,
                           "block {a = \"string\n}")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -25,9 +34,9 @@ class BlockParsing(unittest.TestCase):
         Test extending qutes
         """
 
-        _p = BlockParser("block")
+        _p = BlockParser()
         self.assert_(len(_p.parse(
-                     "block { x = ``` ssaf \t \n ; \" ' `` ; & }``` }")))
+                     "block { x = ''' ssaf \t \n ; \" ' '' ; & }''' }")))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -36,9 +45,9 @@ class BlockParsing(unittest.TestCase):
         Test proper commenting
         """
 
-        _p = BlockParser("block")
+        _p = BlockParser()
         self.assert_(len(_p.parse(
-                     "# \tComment 1\n#Comment 2 ``` = }{\n block {}")))
+                     "# \tComment 1\n#Comment 2 ''' = }{\n block {}")))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -47,30 +56,7 @@ class BlockParsing(unittest.TestCase):
         In STATE_INIT state only keyword is acceptable
         """
 
-        self.assertRaises(ParseError, BlockParser("block").parse, "anything")
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def testHasBlockName(self):
-        """
-        If has_name is True, block name must be defined
-        """
-
-        _opt = {"has_name": True}
-        self.assertRaises(ParseError,
-                          BlockParser("block", _opt).parse,
-                          "block {}")
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def testHasNoBlockName(self):
-        """
-        If has_name is False, block name is not allowed
-        """
-
-        _opt = {"has_name": False}
-        self.assertRaises(ParseError,
-                          BlockParser("block", _opt).parse, "block name {}")
+        self.assertRaises(ParseError, BlockParser().parse, "anything")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -81,7 +67,7 @@ class BlockParsing(unittest.TestCase):
 
         _opt = {"validvars": ("a",)}
         self.assertRaises(ParseError,
-                          BlockParser("block", _opt).parse, "block {b = 1}")
+                          BlockParser(_opt).parse, "block {b = 1}")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -91,7 +77,7 @@ class BlockParsing(unittest.TestCase):
         """
 
         self.assertRaises(ParseError,
-                          BlockParser("block").parse, "block {a+-; = 1}")
+                          BlockParser().parse, "block {a+-; = 1}")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -102,7 +88,7 @@ class BlockParsing(unittest.TestCase):
 
         _opt = {"assignchar": ":"}
         self.assertRaises(ParseError,
-                          BlockParser("block", _opt).parse, "block {a = 1}")
+                          BlockParser(_opt).parse, "block {a = 1}")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -113,8 +99,7 @@ class BlockParsing(unittest.TestCase):
 
         _opt = {"delimiter": ";"}
         self.assertRaises(ParseError,
-                          BlockParser("block", _opt).parse,
-                          "block {a = 1\nb = 2\n}")
+                          BlockParser(_opt).parse, "block {a = 1\nb = 2\n}")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -123,7 +108,7 @@ class BlockParsing(unittest.TestCase):
         Check for unclosed quote upon EOF
         """
 
-        self.assertRaises(ParseError, BlockParser("block").parse,
+        self.assertRaises(ParseError, BlockParser().parse,
                           "block {a = \"string")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -133,7 +118,7 @@ class BlockParsing(unittest.TestCase):
         Check for unclosed block upon EOF
         """
 
-        self.assertRaises(ParseError, BlockParser("block").parse,
+        self.assertRaises(ParseError, BlockParser().parse,
                           "block {a = value\n")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -153,7 +138,7 @@ class BlockParsing(unittest.TestCase):
 
         _opt = {"value_validator": _f}
 
-        self.assertRaises(ParseError, BlockParser("block", _opt).parse,
+        self.assertRaises(ParseError, BlockParser(_opt).parse,
                           "block { a = INCORRECT_VALUE }")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -163,20 +148,20 @@ class BlockParsing(unittest.TestCase):
         Check for proper escaping
         """
 
-        _p = BlockParser("block")
+        _p = BlockParser()
         _src = "block { var = a\\ b\\ c }"
 
         self.assert_(len(_p.parse(_src)))
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-class MultiParsing(unittest.TestCase):
-    def testArgs(self):
-        """
-        Check if raises on invalid arg type
-        """
+#class MultiParsing(unittest.TestCase):
+#    def testArgs(self):
+#        """
+#        Check if raises on invalid arg type
+#        """
 
-        self.assertRaises(XYZValueError, MultiParser, "WRONG")
+#        self.assertRaises(XYZValueError, MultiParser, "WRONG")
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 

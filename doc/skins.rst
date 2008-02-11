@@ -158,14 +158,13 @@ symbolic or numeric::
    }
 
 Regular expressions based rules use filenames as match criteria.
-Regular expressions must use x-quoting: ```<re>```.
+Regular expressions must use x-quoting: ``'''<re>'''``::
 
-::
    fs.regexp {
       # Display .core files in DARK_RED
-      ```*.core$``` = DARK_RED
+      '''*.core$''' = DARK_RED
       # Hidden files
-      ```\.+``` = LIGHT_GREY
+      '''\.+''' = LIGHT_GREY
    }
 
 Order
@@ -186,8 +185,8 @@ So if we have following rulesets defined::
    fs.type { file = WHITE }
    fs.owner { root = DARK_BLUE }
 
-And if there is an executable file owned by root. It will be displayed using
-DARK_BLUE, as owner rulesets have higher priority.
+And if there is an executable file owned by root, it will be displayed using
+DARK_BLUE, as owner ruleset has higher priority.
 
 Priorities can be customized. This can be done using priority ruleset::
 

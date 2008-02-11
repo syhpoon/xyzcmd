@@ -13,9 +13,9 @@ class BaseParser(object):
     -----------
     * Blank chars are usually ignored. Except from in quoting.
     * Quote can be one-line: "quoted value", or multiline:
-      ```quoted value1,
+      '''quoted value1,
          quoted value2,
-      ```
+      '''
     * New-line char ends commented line if any.
     * Variable names are validated according to varre regexp.
     * Values can be provided as simple literals or quoted ones.
@@ -31,7 +31,7 @@ class BaseParser(object):
     def __init__(self, *args, **kwars):
         self._sdata = None
         self._escapechar = "\\"
-        self._xqchar = "`"
+        self._xqchar = "'"
         self._xqcount = 3
         self._xqtotal = 0
         self._skip_next = 0
@@ -178,3 +178,8 @@ class BaseParser(object):
             _emsg = _("Syntax error")
 
         raise ParseError("%s: %s" % (_pre, _emsg))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_idt(self):
+        return self._idt

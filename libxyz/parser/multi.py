@@ -17,11 +17,26 @@ class MultiParser(BaseParser):
     Thus, one can register few necessary parsers into MultiParser and go on.
     """
 
-    def __init__(self, parsers):
+    DEFAULT_OPT = {
+                   "comment": "#",
+                   "tokens": (),
+                   }
+
+    def __init__(self, parsers, opt=None):
         """
         @param parsers: dictionary containing keyword as key and *Parser object
                         as value.
         @type parsers: dictionary
+
+        @param opt: Options
+
+        Available options:
+            - comment: Comment character.
+              Everything else ignored until EOL.
+              Type: I{string (single char)}
+
+            - tokens: List of tokens.
+              Type: I{list}
         """
 
         super(MultiParser, self).__init__()
@@ -35,7 +50,12 @@ class MultiParser(BaseParser):
         else:
             self.parsers = {}
 
-        self._result = []
+        self.opt = opt or self.DEFAULT_OPT
+
+        for _opt in self.DEFAULT_OPT.keys():
+            setattr(self, _opt, self.opt.get(_opt, self.DEFAULT_OPT[_opt]))
+
+        self._result = {}
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -44,21 +64,22 @@ class MultiParser(BaseParser):
         Begin parsing
         """
 
-        self._result = []
+        self._result = {}
 
         if isinstance(source, SourceData):
             sdata = source
         else:
             sdata = SourceData(source)
 
-        for _lex, _val in self.lexer(sdata, (), "#"):
+        for _lex, _val in self.lexer(sdata, self.opt["tokens"],
+                                     self.opt["comment"]):
             if _lex == self.TOKEN_IDT:
                 if _val in self.parsers:
                     # Push read token back
                     # Space at the end needed because it was consumed by
                     # lexer
                     sdata.unget(_val + " ")
-                    self._result.extend(self.parsers[_val].parse(sdata))
+                    self._result[_val] = self.parsers[_val].parse(sdata)
                 else:
                     self.error(_("Unknown keyword: %s" % _val))
 

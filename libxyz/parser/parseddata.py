@@ -9,8 +9,8 @@ class ParsedData(object):
     Provides dictionary-like access to parsed values
     """
 
-    def __init__(self, name=None):
-        self._name = name
+    def __init__(self, name):
+        self.name = name
         self._data = {}
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

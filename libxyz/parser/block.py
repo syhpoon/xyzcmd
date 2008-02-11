@@ -7,20 +7,20 @@
 BlockParser parses block of configration
 """
 
-#TODO: убрать has_name, оставить только блоки с именем
 #TODO: list values,
-#TODO: args in  __init__ - dict{}
 
 import re
+import types
 
 from libxyz.parser import BaseParser, ParsedData, SourceData
+from libxyz.exceptions import XYZValueError
 
 class BlockParser(BaseParser):
     """
     BaseParser is used to parse blocked structures
     Format:
 
-    block [name] {
+    name {
         var1 <assign> val1 <delimiter>
         var2 <assign> val2 <delimiter>
         ...
@@ -28,15 +28,13 @@ class BlockParser(BaseParser):
     """
 
     STATE_INIT = 0
-    STATE_NAME_OR_OPEN = 1
-    STATE_BLOCK_OPEN = 2
-    STATE_VARIABLE = 3
-    STATE_ASSIGN = 4
-    STATE_VALUE = 5
-    STATE_DELIM = 6
+    STATE_BLOCK_OPEN = 1
+    STATE_VARIABLE = 2
+    STATE_ASSIGN = 3
+    STATE_VALUE = 4
+    STATE_DELIM = 5
 
     DEFAULT_OPT = {
-                   "has_name": False,
                    "comment": "#",
                    "varre": re.compile(r"^[\w-]+$"),
                    "assignchar": "=",
@@ -46,24 +44,19 @@ class BlockParser(BaseParser):
                    "count": 0,
                    }
 
-    def __init__(self, keyword, opt=None):
+    def __init__(self, opt=None):
         """
-        @param keyword: Word that indicates block start
-        @type keyword: string
-
         @param opt: Parser options.
         @type opt: dict
 
         Available options:
-            - has_name: Does block has name.
-              Type: I{boolean}
             - comment: Comment character.
               Everything else ignored until EOL.
               Type: I{string (single char)}
             - delimiter: Character to use as delimiter between statements.
               Type: I{string (single char)}
-            - varre : Valid variable
-              name regular expression. ^[\w-]+$ re is used unless given.
+            - varre: Valid variable name regular expression.
+              ^[\w-]+$ re is used unless given.
               Type: I{Compiled re object (L{re.compile})}
             - assignchar (I{string (single char)}): Variable-value split
               character.
@@ -73,19 +66,21 @@ class BlockParser(BaseParser):
               Type: I{sequence}
             - value_validator: Value validator
               Type: A function that takes two args var and value
-                    and validates them. In case value is invalid,
-                    ValueError must be raised. Otherwise returning
-                    True is sufficient.
+              and validates them. In case value is invalid,
+              ValueError must be raised. Otherwise returning
+              True is sufficient.
             - count: How many blocks to parse. If count < 1 - will parse
-                     all available.
-                     Type: integer
+              all available.
+              Type: integer
         """
 
         super(BlockParser, self).__init__()
 
+        if opt and type(opt) != types.DictType:
+            raise XYZValueError(_("Invalid opt type: %s. "\
+                                  "Dictionary expected." % type(opt)))
+
         self.opt = opt or self.DEFAULT_OPT
-        
-        self.keyword = keyword
 
         for _opt in self.DEFAULT_OPT.keys():
             setattr(self, _opt, self.opt.get(_opt, self.DEFAULT_OPT[_opt]))
@@ -93,11 +88,10 @@ class BlockParser(BaseParser):
         self._state = self.STATE_INIT
         self._parsed_obj = None
         self._varname = None
-        self._result = []
+        self._result = {}
 
         self._parse_table = {
             self.STATE_INIT: self._process_state_init,
-            self.STATE_NAME_OR_OPEN: self._process_state_name_or_open,
             self.STATE_BLOCK_OPEN: self._process_state_block_open,
             self.STATE_VARIABLE: self._process_state_variable,
             self.STATE_ASSIGN: self._process_state_assign,
@@ -119,7 +113,7 @@ class BlockParser(BaseParser):
         @return: List of L{libxyz.parser.ParsedData} parsed objects
         """
 
-        self._result = []
+        self._result = {}
 
         self._cleanup()
 
@@ -134,36 +128,15 @@ class BlockParser(BaseParser):
             if _lex == self.TOKEN_IDT:
                 self._parse_table[self._state](_val)
 
-        self._check_complete(self._idt)
+        self._check_complete()
 
         return self._result
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _process_state_init(self, word):
-        if word == self.keyword:
-            self._parsed_obj = ParsedData()
-            self._state = self.STATE_NAME_OR_OPEN
-        else:
-            self.error(msg=(word, self.keyword),
-                       etype=self.error_unexpected)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _process_state_name_or_open(self, word):
-        if word == "{":
-            if self.has_name:
-                 self.error(_("Block name required"))
-            else:
-                self._state = self.STATE_VARIABLE
-                return
-
-        # Else word is supposed to be a name of block
-        if not self.has_name:
-            self.error(_("Block name is not allowed: %s" % word))
-        else:
-            self._state = self.STATE_BLOCK_OPEN
-            self._parsed_obj.name = word
+        self._parsed_obj = ParsedData(word)
+        self._state = self.STATE_BLOCK_OPEN
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -178,7 +151,8 @@ class BlockParser(BaseParser):
     def _process_state_variable(self, word):
         if word == "}":
             # Closing block
-            self._result.append(self._parsed_obj)
+            if self._parsed_obj:
+                self._result[self._parsed_obj.name] = self._parsed_obj
             self._cleanup()
 
             if self.count > 0 and self.count == len(self._result):
@@ -220,7 +194,8 @@ class BlockParser(BaseParser):
 
     def _process_state_delim(self, word):
         if word == "}":
-            self._result.append(self._parsed_obj)
+            if self._parsed_obj:
+                self._result[self._parsed_obj.name] = self._parsed_obj
             self._cleanup()
 
             if self.count > 0 and self.count == len(self._result):
@@ -245,11 +220,10 @@ class BlockParser(BaseParser):
         self._state = self.STATE_INIT
         self._in_comment = False
         self._in_quote = False
-        self._idt = []
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _check_complete(self, idt):
+    def _check_complete(self):
         """
         Check state after source reaches EOF for consistency
         """
@@ -260,5 +234,5 @@ class BlockParser(BaseParser):
         if self._state != self.STATE_INIT:
             self.error(_("Unclosed block"))
 
-        if idt:
+        if self.get_idt():
             self.error()
