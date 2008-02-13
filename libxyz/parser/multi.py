@@ -36,7 +36,7 @@ class MultiParser(BaseParser):
               Type: I{string (single char)}
 
             - tokens: List of tokens.
-              Type: I{list}
+              Type: I{sequence}
         """
 
         super(MultiParser, self).__init__()

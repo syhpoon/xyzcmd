@@ -25,6 +25,16 @@ class ParsedData(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def __getitem__(self, var):
+        return self.lookup(var)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __setitem__(self, var, val):
+        self.set(var, val)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def lookup(self, var):
         """
         Lookup for value of variable
@@ -34,7 +44,7 @@ class ParsedData(object):
         if var in self._data:
             return self._data[var]
         else:
-            return None
+            raise KeyError()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -7,8 +7,6 @@
 BlockParser parses block of configration
 """
 
-#TODO: list values,
-
 import re
 import types
 
@@ -22,7 +20,7 @@ class BlockParser(BaseParser):
 
     name {
         var1 <assign> val1 <delimiter>
-        var2 <assign> val2 <delimiter>
+        var2 <assign> val2 [,val3,...] <delimiter>
         ...
         }
     """
@@ -33,6 +31,7 @@ class BlockParser(BaseParser):
     STATE_ASSIGN = 3
     STATE_VALUE = 4
     STATE_DELIM = 5
+    STATE_LIST_VALUE = 6
 
     DEFAULT_OPT = {
                    "comment": "#",
@@ -42,6 +41,7 @@ class BlockParser(BaseParser):
                    "validvars": (),
                    "value_validator": None,
                    "count": 0,
+                   "list_separator": ",",
                    }
 
     def __init__(self, opt=None):
@@ -58,8 +58,8 @@ class BlockParser(BaseParser):
             - varre: Valid variable name regular expression.
               ^[\w-]+$ re is used unless given.
               Type: I{Compiled re object (L{re.compile})}
-            - assignchar (I{string (single char)}): Variable-value split
-              character.
+            - assignchar: Variable-value split character.
+              Type: I{string (single char)}
             - delimiter: Character that terminates statement.
               Type: I{string}
             - validvars: List of variables valid within block.
@@ -72,6 +72,8 @@ class BlockParser(BaseParser):
             - count: How many blocks to parse. If count < 1 - will parse
               all available.
               Type: integer
+            - list_separator: Character to separate elements in list
+              Type: I{string (single char)}
         """
 
         super(BlockParser, self).__init__()
@@ -88,7 +90,9 @@ class BlockParser(BaseParser):
         self._state = self.STATE_INIT
         self._parsed_obj = None
         self._varname = None
+        self._sdata = None
         self._result = {}
+        self._current_list = []
 
         self._parse_table = {
             self.STATE_INIT: self._process_state_init,
@@ -96,6 +100,7 @@ class BlockParser(BaseParser):
             self.STATE_VARIABLE: self._process_state_variable,
             self.STATE_ASSIGN: self._process_state_assign,
             self.STATE_VALUE: self._process_state_value,
+            self.STATE_LIST_VALUE: self._process_state_list_value,
             self.STATE_DELIM: self._process_state_delim,
             }
 
@@ -118,14 +123,23 @@ class BlockParser(BaseParser):
         self._cleanup()
 
         if isinstance(source, SourceData):
-            sdata = source
+            self._sdata = source
         else:
-            sdata = SourceData(source)
+            self._sdata = SourceData(source)
 
-        _tokens = ("{", "}", self.assignchar, self.delimiter)
+        _tokens = ("{", "}",
+                   self.assignchar,
+                   self.delimiter,
+                   self.list_separator,
+                  )
 
-        for _lex, _val in self.lexer(sdata, _tokens, self.comment):
-            if _lex == self.TOKEN_IDT:
+        for _lex, _val in self.lexer(self._sdata, _tokens, self.comment):
+            # We're only interested in LF in DELIM or LIST_VALUE
+            # states
+            if _val == "\n" and \
+               self._state not in (self.STATE_DELIM, self.STATE_LIST_VALUE):
+                continue
+            else:
                 self._parse_table[self._state](_val)
 
         self._check_complete()
@@ -178,17 +192,37 @@ class BlockParser(BaseParser):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _process_state_value(self, word):
+    def _process_state_list_value(self, word):
+        if word == self.list_separator:
+            self._state = self.STATE_VALUE
+            return
+
+        # Else combine value
         if self.value_validator:
             try:
-                self.value_validator(self._varname, word)
+                for _el in self._current_list:
+                    self.value_validator(self._varname, _el)
             except ValueError, e:
-                self.error(_("Invalid value %s: %s" % (word, str(e))))
+                self.error(_("Invalid value %s: %s" % (_el, str(e))))
 
-        self._parsed_obj.set(self._varname, word)
+        if len(self._current_list) == 1:
+            _value = self._current_list[0]
+        else:
+            _value = tuple(self._current_list)
+
+        self._current_list = []
+
+        self._parsed_obj[self._varname] = _value
         self._varname = None
-        self._state = self.STATE_DELIM
         self._can_escape = False
+        self._state = self.STATE_DELIM
+        self._sdata.unget(word)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _process_state_value(self, word):
+        self._current_list.append(word)
+        self._state = self.STATE_LIST_VALUE
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -216,10 +250,12 @@ class BlockParser(BaseParser):
 
         self._done = False
         self._parsed_obj = None
+        self._sdata = None
         self._varname = None
         self._state = self.STATE_INIT
         self._in_comment = False
         self._in_quote = False
+        self._current_list = []
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -228,11 +264,20 @@ class BlockParser(BaseParser):
         Check state after source reaches EOF for consistency
         """
 
+        _err = False
+        _msg = None
+
         if self._in_quote:
-            self.error(_("Unterminated quote"))
+            _err, _msg = True, _("Unterminated quote")
 
         if self._state != self.STATE_INIT:
-            self.error(_("Unclosed block"))
+            if self._state != self.STATE_BLOCK_OPEN:
+                _err, _msg = True, _("Unclosed block")
+            else:
+                _err, _msg = True, None
 
         if self.get_idt():
-            self.error()
+            _err, _msg = True, None
+
+        if _err:
+            self.error(_msg)

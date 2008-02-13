@@ -21,6 +21,7 @@ class BaseParser(object):
     * Values can be provided as simple literals or quoted ones.
     * If value contains spaces or any other non-alphanumeric values it is better
       to quote it or escape it using escapechar.
+    * Variable can take list of values, separated by comma
     * Escaping can only be used in rval position.
     """
 
@@ -122,10 +123,9 @@ class BaseParser(object):
                     self.error(_("Unterminated quote"))
                 elif self._idt:
                     yield (self.TOKEN_IDT, "".join(self._idt))
-
                     self._idt = []
-                    if char in tokens:
-                        yield (self.TOKEN_IDT, char)
+                if char in tokens:
+                    yield (self.TOKEN_IDT, char)
 
                 self._in_comment = False
                 continue
@@ -157,6 +157,10 @@ class BaseParser(object):
                 continue
 
             self._idt.append(char)
+
+        if self._idt:
+            yield (self.TOKEN_IDT, "".join(self._idt))
+            self._idt = []
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

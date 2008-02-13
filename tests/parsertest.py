@@ -153,15 +153,39 @@ class BlockParsing(unittest.TestCase):
 
         self.assert_(len(_p.parse(_src)))
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testListValue(self):
+        """
+        Check for proper list values parsing
+        """
+
+        import types
+
+        _p = BlockParser()
+        _src = "block { var = l, i, s ,t }"
+
+        _r = _p.parse(_src)
+        self.assert_(type(_r["block"]["var"]) == types.TupleType)
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#class MultiParsing(unittest.TestCase):
-#    def testArgs(self):
-#        """
-#        Check if raises on invalid arg type
-#        """
+class MultiParsing(unittest.TestCase):
+    def testArgs(self):
+        """
+        Check if raises on invalid arg type
+        """
 
-#        self.assertRaises(XYZValueError, MultiParser, "WRONG")
+        self.assertRaises(XYZValueError, MultiParser, "WRONG")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testUnknownKeyword(self):
+        """
+        Test for unknown keyword
+        """
+
+        self.assertRaises(ParseError, MultiParser({}).parse, "keyword")
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
