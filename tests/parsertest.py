@@ -6,7 +6,7 @@
 
 import unittest
 
-from libxyz.parser import BlockParser, MultiParser
+from libxyz.parser import BlockParser, MultiParser, FlatParser
 from libxyz.exceptions import ParseError, XYZValueError
 
 class BlockParsing(unittest.TestCase):
@@ -186,6 +186,47 @@ class MultiParsing(unittest.TestCase):
         """
 
         self.assertRaises(ParseError, MultiParser({}).parse, "keyword")
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class FlatParsing(unittest.TestCase):
+    def testComments(self):
+        """
+        Test for source type
+        """
+
+        _opt = {"comment": "*"}
+        _p = FlatParser(_opt)
+
+        self.assert_(len(_p.parse(
+                     "* \tComment 1\n*Comment 2 ''' = }{\n A: B")))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testAssignChar(self):
+        """
+        Test for assign character
+        """
+
+        self.assertRaises(ParseError, FlatParser().parse, "X = Y")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testDelimChar(self):
+        """
+        Test for delimiter character
+        """
+
+        self.assertRaises(ParseError, FlatParser().parse, "X = Y; Y = X")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testComplete(self):
+        """
+        Check for complete expression
+        """
+
+        self.assertRaises(ParseError, FlatParser().parse, "X:")
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 

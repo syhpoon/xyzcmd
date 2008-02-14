@@ -20,4 +20,4 @@ from sourcedata import SourceData
 from base import BaseParser
 from block import BlockParser
 from multi import MultiParser
-#from flat import FlatParser
+from flat import FlatParser

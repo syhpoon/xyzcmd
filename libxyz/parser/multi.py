@@ -51,9 +51,7 @@ class MultiParser(BaseParser):
             self.parsers = {}
 
         self.opt = opt or self.DEFAULT_OPT
-
-        for _opt in self.DEFAULT_OPT.keys():
-            setattr(self, _opt, self.opt.get(_opt, self.DEFAULT_OPT[_opt]))
+        self.set_opt(self.DEFAULT_OPT, self.opt)
 
         self._result = {}
 
@@ -71,8 +69,7 @@ class MultiParser(BaseParser):
         else:
             sdata = SourceData(source)
 
-        for _lex, _val in self.lexer(sdata, self.opt["tokens"],
-                                     self.opt["comment"]):
+        for _lex, _val in self.lexer(sdata, self.tokens, self.comment):
             if _lex == self.TOKEN_IDT:
                 if _val in self.parsers:
                     # Push read token back

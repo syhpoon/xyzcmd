@@ -187,3 +187,27 @@ class BaseParser(object):
 
     def get_idt(self):
         return self._idt
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def escaping_on(self):
+        """
+        Enable escaping
+        """
+
+        self._can_escape = True
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def escaping_off(self):
+        """
+        Disable escaping
+        """
+
+        self._can_escape = False
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def set_opt(self, default, opt):
+        for _opt in default.keys():
+            setattr(self, _opt, opt.get(_opt, default[_opt]))

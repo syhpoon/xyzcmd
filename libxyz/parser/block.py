@@ -83,9 +83,7 @@ class BlockParser(BaseParser):
                                   "Dictionary expected." % type(opt)))
 
         self.opt = opt or self.DEFAULT_OPT
-
-        for _opt in self.DEFAULT_OPT.keys():
-            setattr(self, _opt, self.opt.get(_opt, self.DEFAULT_OPT[_opt]))
+        self.set_opt(self.DEFAULT_OPT, self.opt)
 
         self._state = self.STATE_INIT
         self._parsed_obj = None
@@ -188,7 +186,7 @@ class BlockParser(BaseParser):
                        etype=self.error_unexpected)
         else:
             self._state = self.STATE_VALUE
-            self._can_escape = True
+            self.escaping_on()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -214,7 +212,7 @@ class BlockParser(BaseParser):
 
         self._parsed_obj[self._varname] = _value
         self._varname = None
-        self._can_escape = False
+        self.escaping_off()
         self._state = self.STATE_DELIM
         self._sdata.unget(word)
 
@@ -256,6 +254,7 @@ class BlockParser(BaseParser):
         self._in_comment = False
         self._in_quote = False
         self._current_list = []
+        self.escaping_off()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
