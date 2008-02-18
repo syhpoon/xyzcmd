@@ -10,8 +10,11 @@ BlockParser parses block of configration
 import re
 import types
 
-from libxyz.parser import BaseParser, ParsedData, SourceData
+from libxyz.parser import Lexer
+from libxyz.parser import BaseParser
+from libxyz.parser import ParsedData
 from libxyz.exceptions import XYZValueError
+from libxyz.exceptions import LexerError
 
 class BlockParser(BaseParser):
     """
@@ -91,6 +94,7 @@ class BlockParser(BaseParser):
         self._sdata = None
         self._result = {}
         self._current_list = []
+        self._lexer = None
 
         self._parse_table = {
             self.STATE_INIT: self._process_state_init,
@@ -109,21 +113,12 @@ class BlockParser(BaseParser):
         Parse block of text and return L{ParsedData} object or raise
         L{libxyz.exceptions.ParseError} exception
 
-        @param source: Parsing source. If file object is passed, it must be
-                       closed by caller function after parsing completes.
-        @type block: string, file-like object or SourceData object
-
-        @return: List of L{libxyz.parser.ParsedData} parsed objects
+        @param source: Source data
         """
 
         self._result = {}
 
         self._cleanup()
-
-        if isinstance(source, SourceData):
-            self._sdata = source
-        else:
-            self._sdata = SourceData(source)
 
         _tokens = ("{", "}",
                    self.assignchar,
@@ -131,14 +126,27 @@ class BlockParser(BaseParser):
                    self.list_separator,
                   )
 
-        for _lex, _val in self.lexer(self._sdata, _tokens, self.comment):
-            # We're only interested in LF in DELIM or LIST_VALUE
-            # states
-            if _val == "\n" and \
-               self._state not in (self.STATE_DELIM, self.STATE_LIST_VALUE):
-                continue
-            else:
-                self._parse_table[self._state](_val)
+        self._lexer = Lexer(source, _tokens, self.comment)
+        self._sdata = self._lexer.sdata
+
+        try:
+            while True:
+                _res = self._lexer.lexer()
+
+                if _res is None:
+                    break
+                else:
+                    _lex, _val = _res
+
+                # We're only interested in LF in DELIM or LIST_VALUE
+                # states
+                if _val == "\n" and \
+                   self._state not in (self.STATE_DELIM, self.STATE_LIST_VALUE):
+                    continue
+                else:
+                    self._parse_table[self._state](_val)
+        except LexerError, e:
+            self.error(str(e))
 
         self._check_complete()
 
@@ -168,7 +176,7 @@ class BlockParser(BaseParser):
             self._cleanup()
 
             if self.count > 0 and self.count == len(self._result):
-                self._done = True
+                self._lexer.done()
             return
         if self.validvars and word not in self.validvars:
                 self.error(_("Unknown variable %s" % word))
@@ -186,7 +194,7 @@ class BlockParser(BaseParser):
                        etype=self.error_unexpected)
         else:
             self._state = self.STATE_VALUE
-            self.escaping_on()
+            self._lexer.escaping_on()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -211,10 +219,10 @@ class BlockParser(BaseParser):
         self._current_list = []
 
         self._parsed_obj[self._varname] = _value
+        self._lexer.escaping_off()
         self._varname = None
-        self.escaping_off()
         self._state = self.STATE_DELIM
-        self._sdata.unget(word)
+        self._lexer.unget(word)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -231,7 +239,7 @@ class BlockParser(BaseParser):
             self._cleanup()
 
             if self.count > 0 and self.count == len(self._result):
-                self._done = True
+                self._lexer.done()
             return
         if word != self.delimiter:
             self.error(msg=(word, self.delimiter),
@@ -246,15 +254,12 @@ class BlockParser(BaseParser):
         Set all neccessary variables to initial state
         """
 
-        self._done = False
         self._parsed_obj = None
-        self._sdata = None
         self._varname = None
         self._state = self.STATE_INIT
         self._in_comment = False
         self._in_quote = False
         self._current_list = []
-        self.escaping_off()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -275,7 +280,7 @@ class BlockParser(BaseParser):
             else:
                 _err, _msg = True, None
 
-        if self.get_idt():
+        if self._lexer.get_idt():
             _err, _msg = True, None
 
         if _err:

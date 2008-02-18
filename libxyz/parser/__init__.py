@@ -7,7 +7,9 @@
 Different parsers
 """
 
-__all__ = ('BaseParser',
+__all__ = (
+           'Lexer',
+           'BaseParser',
            'BlockParser',
            'MultiParser',
            'FlatParser',
@@ -17,6 +19,7 @@ __all__ = ('BaseParser',
 
 from parseddata import ParsedData
 from sourcedata import SourceData
+from lexer import Lexer
 from base import BaseParser
 from block import BlockParser
 from multi import MultiParser

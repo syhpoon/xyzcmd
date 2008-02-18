@@ -5,8 +5,14 @@
 
 import types
 
-from libxyz.parser import BaseParser, SourceData
-from libxyz.exceptions import XYZValueError, ParseError
+from libxyz.parser import Lexer
+from libxyz.parser import BaseParser
+from libxyz.parser import SourceData
+from libxyz.exceptions import XYZValueError
+from libxyz.exceptions import LexerError
+from libxyz.exceptions import ParseError
+
+#TODO:  Сделать ключ parsers списком или кортежом
 
 class MultiParser(BaseParser):
     """
@@ -53,6 +59,7 @@ class MultiParser(BaseParser):
         self.opt = opt or self.DEFAULT_OPT
         self.set_opt(self.DEFAULT_OPT, self.opt)
 
+        self._lexer = None
         self._result = {}
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -63,22 +70,26 @@ class MultiParser(BaseParser):
         """
 
         self._result = {}
+        self._lexer = Lexer(source, self.tokens, self.comment)
 
-        if isinstance(source, SourceData):
-            sdata = source
-        else:
-            sdata = SourceData(source)
+        try:
+            while True:
+                _res = self._lexer.lexer()
 
-        for _lex, _val in self.lexer(sdata, self.tokens, self.comment):
-            if _lex == self.TOKEN_IDT:
+                if _res is None:
+                    break
+                else:
+                    _lex, _val = _res
+
                 if _val in self.parsers:
                     # Push read token back
-                    # Space at the end needed because it was consumed by
-                    # lexer
-                    sdata.unget(_val + " ")
-                    self._result[_val] = self.parsers[_val].parse(sdata)
+                    self._lexer.unget(_val)
+                    self._result[_val] = \
+                        self.parsers[_val].parse(self._lexer.sdata)
                 else:
                     self.error(_("Unknown keyword: %s" % _val))
+        except LexerError, e:
+            self.error(str(e))
 
         return self._result
 

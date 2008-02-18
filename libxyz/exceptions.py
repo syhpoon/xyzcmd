@@ -12,35 +12,24 @@ class XYZError(Exception):
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 class XYZRuntimeError(XYZError):
-    """
-    Runtime error
-    """
-
     pass
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 class XYZValueError(XYZError):
-    """
-    Value error
-    """
-
     pass
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 class ParseError(XYZError):
-    """
-    Parsing error
-    """
+    pass
 
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class LexerError(XYZError):
     pass
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 class PluginError(XYZError):
-    """
-    Plugin error
-    """
-
     pass

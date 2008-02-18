@@ -81,25 +81,47 @@ class BlockParsing(unittest.TestCase):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def testAssignChar(self):
+    def testAssignChar1(self):
         """
         Test for assign character
         """
 
         _opt = {"assignchar": ":"}
-        self.assertRaises(ParseError,
-                          BlockParser(_opt).parse, "block {a = 1}")
+        _p = BlockParser(_opt)
+        self.assert_(len(_p.parse("block {a: 1}")))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def testDelimiter(self):
+    def testAssignChar2(self):
+        """
+        Test for assign character
+        """
+
+        _opt = {"assignchar": ":"}
+        _p = BlockParser(_opt)
+        self.assert_(len(_p.parse("block {a: 1}")))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testDelimiter1(self):
         """
         Correct delimiter should be supplied
         """
 
         _opt = {"delimiter": ";"}
-        self.assertRaises(ParseError,
-                          BlockParser(_opt).parse, "block {a = 1\nb = 2\n}")
+        _p = BlockParser(_opt)
+        self.assertRaises(ParseError, _p.parse, "block {a = 1\nb = 2\n}")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testDelimiter2(self):
+        """
+        Correct delimiter should be supplied
+        """
+
+        _opt = {"delimiter": ";"}
+        _p = BlockParser(_opt)
+        self.assert_(len(_p.parse("block {a = 1;b = 2} block2 {x=y;y=x}")))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -123,7 +145,7 @@ class BlockParsing(unittest.TestCase):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def testValueValidator(self):
+    def testValueValidator1(self):
         """
         Check fo value_validator raises exception
         """
@@ -138,8 +160,30 @@ class BlockParsing(unittest.TestCase):
 
         _opt = {"value_validator": _f}
 
-        self.assertRaises(ParseError, BlockParser(_opt).parse,
-                          "block { a = INCORRECT_VALUE }")
+        _p = BlockParser(_opt)
+
+        self.assertRaises(ParseError, _p.parse, "block { a = INCORRECT_VALUE }")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testValueValidator2(self):
+        """
+        Check fo value_validator raises exception
+        """
+
+        def _f(var, val):
+            if val != "CORRECT_VALUE":
+                raise ValueError("Incorrect value %s!" % val)
+
+            return True
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        _opt = {"value_validator": _f}
+
+        _p = BlockParser(_opt)
+
+        self.assert_(len(_p.parse("block { a = CORRECT_VALUE }")))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -187,6 +231,56 @@ class MultiParsing(unittest.TestCase):
 
         self.assertRaises(ParseError, MultiParser({}).parse, "keyword")
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testParsing(self):
+        """
+        Try to parse some real config file
+        """
+
+        src = """\
+AUTHOR: "Max E. Kuznecov <mek@mek.uz.ua>"
+VERSION: "0.1"
+DESCRIPTION: "Default XYZ skin"
+
+fs.type {
+	file = LIGHT_GRAY
+	dir = WHITE
+	block = DARK_MAGENTA
+	char = LIGHT_MAGENTA
+	link = LIGHT_CYAN
+	fifo = DARK_CYAN
+	socket = DARK_RED
+}
+
+fs.regexp {
+	'''*.core$''' = DARK_RED
+	'''\.+''' = LIGHT_GREY
+}
+
+"""
+        import re
+
+        _opt = {"count": 1}
+
+        _type = BlockParser(_opt)
+        _flat = FlatParser(_opt)
+        _opt["varre"] = re.compile(".+")
+        _regexp = BlockParser(_opt)
+
+        _parsers = {"fs.type": _type,
+                    "fs.regexp": _regexp,
+                    "AUTHOR": _flat,
+                    "VERSION": _flat,
+                    "DESCRIPTION": _flat,
+                    }
+
+        _opt2 = {"tokens": (":",)}
+        multi = MultiParser(_parsers, _opt2)
+
+        data = multi.parse(src)
+        self.assert_(data)
+
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 class FlatParsing(unittest.TestCase):
@@ -212,12 +306,22 @@ class FlatParsing(unittest.TestCase):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def testDelimChar(self):
+    def testDelimChar1(self):
         """
         Test for delimiter character
         """
 
         self.assertRaises(ParseError, FlatParser().parse, "X = Y; Y = X")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testDelimChar(self):
+        """
+        Test for delimiter character
+        """
+
+        _p = FlatParser({"delimiter": ";"})
+        self.assert_(len(_p.parse("X: Y; Y: X")))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

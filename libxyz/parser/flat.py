@@ -3,8 +3,11 @@
 # Max E. Kuznecov ~syhpoon <mek@mek.uz.ua> 2008
 #
 
-from libxyz.parser import BaseParser, SourceData
-from libxyz.exceptions import XYZValueError, ParseError
+from libxyz.parser import Lexer
+from libxyz.parser import BaseParser
+from libxyz.exceptions import XYZValueError
+from libxyz.exceptions import ParseError
+from libxyz.exceptions import LexerError
 
 class FlatParser(BaseParser):
     """
@@ -46,6 +49,8 @@ class FlatParser(BaseParser):
 
         super(FlatParser, self).__init__()
 
+        self._lexer = None
+
         self.opt = opt or self.DEFAULT_OPT
         self.set_opt(self.DEFAULT_OPT, self.opt)
 
@@ -68,16 +73,22 @@ class FlatParser(BaseParser):
         self._cleanup()
 
         _tokens = (self.assignchar, self.delimiter)
+        self._lexer = Lexer(source, _tokens, self.comment)
 
-        if isinstance(source, SourceData):
-            sdata = source
-        else:
-            sdata = SourceData(source)
+        try:
+            while True:
+                _res = self._lexer.lexer()
 
-        for _lex, _val in self.lexer(sdata, _tokens, self.comment):
-            if _val == "\n" and self._state != self.STATE_DELIM:
-                continue
-            self._parse_table[self._state](_val)
+                if _res is None:
+                    break
+                else:
+                    _lex, _val = _res
+
+                if _val == "\n" and self._state != self.STATE_DELIM:
+                    continue
+                self._parse_table[self._state](_val)
+        except LexerError, e:
+            self.error(str(e))
 
         self._check_complete()
 
@@ -87,7 +98,7 @@ class FlatParser(BaseParser):
 
     def _process_state_variable(self, word):
         if self.count > 0 and self.count == len(self._result):
-            self._done = True
+            self._lexer.done()
             return
 
         self._varname = word
@@ -101,19 +112,23 @@ class FlatParser(BaseParser):
                        etype=self.error_unexpected)
         else:
             self._state = self.STATE_VALUE
-            self.escaping_on()
+            self._lexer.escaping_on()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _process_state_value(self, word):
         self._result[self._varname] = word
         self._varname = None
-        self.escaping_off()
+        self._lexer.escaping_off()
         self._state = self.STATE_DELIM
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _process_state_delim(self, word):
+        if self.count > 0 and self.count == len(self._result):
+            self._lexer.done()
+            return
+
         if word != self.delimiter:
             self.error(msg=(word, self.delimiter),
                        etype=self.error_unexpected)
@@ -126,7 +141,6 @@ class FlatParser(BaseParser):
         self._result = {}
         self._state = self.STATE_VARIABLE
         self._varname = None
-        self.escaping_off()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
