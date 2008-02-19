@@ -2,7 +2,7 @@
 Skins
 =====
 
-Skins are used to configure visual representation of XYZ Commander.
+Skins are used to configure visual representation of |XYZ|.
 Customizable elements are:
 
 * Elements of filesystem based on:

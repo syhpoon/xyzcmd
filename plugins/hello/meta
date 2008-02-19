@@ -1,0 +1,35 @@
+#
+# This is plugin metainformation file.
+# It provides some important information of plugin.
+#
+
+#
+# AUTHOR: Author name
+#
+AUTHOR: "Max E. Kuznecov ~syhpoon <mek@mek.uz.ua>"
+
+#
+# VERSION: Plugin version
+#
+VERSION: "0.1"
+
+#
+# Brief one line description
+#
+BRIEF_DESCRIPTION: "Simple hello plugin"
+
+#
+# Full plugin description
+#
+FULL_DESCRIPTION: '''Hello plugin is an example of XYZCommander plugin.
+It shows main aspects and structure of plugin creation.
+Functionality is limited to single method: SayHello
+which shows greeting pop-up dialog.'''
+
+#
+# NAMESPACE: Plugin namespace. For detailed information about
+#            namespaces see Plugins chapter of XYZCommander user manual.
+#            So full namespace path to method is:
+#            xyz:plugins:misc:hello:SayHello
+#
+NAMESPACE: misc

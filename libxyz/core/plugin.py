@@ -14,7 +14,7 @@ Available namespaces are:
 - misc  - Other miscellaneous
 
 After methods are exported, they will be available under
-xyz.plugins.<namespace>.<plugin-name> namespace
+xyz:plugins:<namespace>:<plugin-name> namespace
 """
 
 from libxyz.exceptions import PluginError
@@ -24,23 +24,10 @@ class BasePlugin(object):
     Parent class for all xyz-plugins
     """
 
-    def __init__(self, name, version, author, bdescription, description,
-                 *args, **kwargs):
+    def __init__(self, name, meta, *args, **kwargs):
         """
         @param name: Plugin name
         @type name: string
-
-        @param version: String and integer plugin version
-        @type version: tuple (strver, intver)
-
-        @param author: Author name
-        @type author: string: name <email>
-
-        @param bdescription: Brief, on-line plugin description
-        @type bdescription: string
-
-        @param description: Full plugin description
-        @param description: string
         """
 
         self.name = name
