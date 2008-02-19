@@ -93,7 +93,7 @@ representation.
 <BG>
    Background color. Possible values include:
 
-      * BLACK = 'black'
+      * BLACK
       * BROWN
       * DEFAULT
       * DARK_RED

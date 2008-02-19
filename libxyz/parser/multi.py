@@ -12,15 +12,13 @@ from libxyz.exceptions import XYZValueError
 from libxyz.exceptions import LexerError
 from libxyz.exceptions import ParseError
 
-#TODO:  Сделать ключ parsers списком или кортежом
-
 class MultiParser(BaseParser):
     """
     MultiParser is a simple container for any other parsers
     Usually parsers, such as BlockParser designed to parse homogeneous blocks in
     single source: file or string. But still it might be useful sometimes to
     parse multiple blocks of different syntax in single source.
-    Thus, one can register few necessary parsers into MultiParser and go on.
+    Thus, one can register some necessary parsers into MultiParser and go on.
     """
 
     DEFAULT_OPT = {
@@ -30,19 +28,19 @@ class MultiParser(BaseParser):
 
     def __init__(self, parsers, opt=None):
         """
-        @param parsers: dictionary containing keyword as key and *Parser object
-                        as value.
-        @type parsers: dictionary
+        @param parsers: dictionary containing string or list of keywords as key
+                        and *Parser object as value.
+        @type parsers: dictionary with string or sequence keys
 
         @param opt: Options
 
         Available options:
-            - comment: Comment character.
-              Everything else ignored until EOL.
-              Type: I{string (single char)}
+        - comment: Comment character.
+          Everything else ignored until EOL.
+          Type: I{string (single char)}
 
-            - tokens: List of tokens.
-              Type: I{sequence}
+        - tokens: List of tokens.
+          Type: I{sequence}
         """
 
         super(MultiParser, self).__init__()
@@ -69,6 +67,21 @@ class MultiParser(BaseParser):
         Begin parsing
         """
 
+        def _get_parser(val):
+            _p = None
+
+            for _key in self.parsers:
+                if type(_key) in types.StringTypes and _key == val:
+                    _p = self.parsers[_key]
+                    break
+                elif hasattr(_key, "__contains__") and val in _key:
+                    _p = self.parsers[_key]
+                    break
+
+            return _p
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         self._result = {}
         self._lexer = Lexer(source, self.tokens, self.comment)
 
@@ -81,11 +94,12 @@ class MultiParser(BaseParser):
                 else:
                     _lex, _val = _res
 
-                if _val in self.parsers:
+                _parser = _get_parser(_val)
+
+                if _parser:
                     # Push read token back
                     self._lexer.unget(_val)
-                    self._result[_val] = \
-                        self.parsers[_val].parse(self._lexer.sdata)
+                    self._result[_val] = _parser.parse(self._lexer.sdata)
                 else:
                     self.error(_("Unknown keyword: %s" % _val))
         except LexerError, e:

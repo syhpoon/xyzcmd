@@ -4,7 +4,7 @@
 #
 
 """
-Plugins is the main way to extend xyzcmd functionality.
+Plugin is the main way to extend xyzcmd functionality.
 Every single plugin should inherit BasePlugin interface.
 Plugin exports its public methods via 'public' dictionary of BasePlugin class.
 First plugin must be registered within one of xyz plugin namespaces.

@@ -270,9 +270,7 @@ fs.regexp {
 
         _parsers = {"fs.type": _type,
                     "fs.regexp": _regexp,
-                    "AUTHOR": _flat,
-                    "VERSION": _flat,
-                    "DESCRIPTION": _flat,
+                    ("AUTHOR", "VERSION", "DESCRIPTION"): _flat,
                     }
 
         _opt2 = {"tokens": (":",)}
