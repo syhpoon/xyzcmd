@@ -14,3 +14,24 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+from libxyz.ui import lowui
+from libxyz.ui import align
+
+class MessageBox(lowui.WidgetWrap):
+    """
+    Simple box is used to display any kind of text messages
+    Show the message until any key pressed
+    """
+
+    def __init__(self, screen, body, message, title=None):
+        """
+        @param screen: Display instance
+        @param body: ???
+        @param message: Message
+        @param title: Box title
+        """
+
+        _msg = lowui.AttrWrap(lowui.Filler(lowui.Padding(lowui.Text(message), align.CENTER, 20)), 'bg')
+        _overlay = lowui.Overlay(_msg, body, align.CENTER, 15, align.MIDDLE, 5)
+
+        super(MessageBox, self).__init__(_overlay)

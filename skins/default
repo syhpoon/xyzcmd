@@ -15,6 +15,6 @@ fs.type {
 }
 
 fs.regexp {
-	```*.core$``` = DARK_RED
-	```\.+``` = LIGHT_GREY
+	'''*.core$''' = DARK_RED
+	'''\.+''' = LIGHT_GREY
 }

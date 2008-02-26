@@ -1,6 +1,6 @@
 #
-# This is plugin metainformation file.
-# It provides some important information of plugin.
+# This is plugin meta-information file.
+# It provides some important information.
 #
 
 #
@@ -22,7 +22,7 @@ BRIEF_DESCRIPTION: "Simple hello plugin"
 # Full plugin description
 #
 FULL_DESCRIPTION: '''Hello plugin is an example of XYZCommander plugin.
-It shows main aspects and structure of plugin creation.
+It shows main aspects of plugin creation.
 Functionality is limited to single method: SayHello
 which shows greeting pop-up dialog.'''
 

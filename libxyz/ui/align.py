@@ -14,3 +14,9 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+CENTER = "center"
+LEFT = "left"
+RIGHT = "right"
+TOP = "top"
+MIDDLE = "middle"
+BOTTOM = "bottom"

@@ -162,7 +162,7 @@ Regular expressions must use x-quoting: ``'''<re>'''``::
 
    fs.regexp {
       # Display .core files in DARK_RED
-      '''*.core$''' = DARK_RED
+      '''.+\.core$''' = DARK_RED
       # Hidden files
       '''\.+''' = LIGHT_GREY
    }
