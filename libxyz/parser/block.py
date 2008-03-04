@@ -15,14 +15,14 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 """
-BlockParser parses block of configration
+BlockParser parses configuration block[s]
 """
 
 import re
 import types
 
-from libxyz.parser import Lexer
 from libxyz.parser import BaseParser
+from libxyz.parser import Lexer
 from libxyz.parser import ParsedData
 from libxyz.exceptions import XYZValueError
 from libxyz.exceptions import LexerError
@@ -34,7 +34,7 @@ class BlockParser(BaseParser):
 
     name {
         var1 <assign> val1 <delimiter>
-        var2 <assign> val2 [,val3,...] <delimiter>
+        var2 <assign> val2 [<list_separator>val3...] <delimiter>
         ...
         }
     """
@@ -74,16 +74,14 @@ class BlockParser(BaseParser):
               Type: I{Compiled re object (L{re.compile})}
             - assignchar: Variable-value split character.
               Type: I{string (single char)}
-            - delimiter: Character that terminates statement.
-              Type: I{string}
             - validvars: List of variables valid within block.
               Type: I{sequence}
             - value_validator: Value validator
               Type: A function that takes two args var and value
               and validates them. In case value is invalid,
-              ValueError must be raised. Otherwise returning
-              True is sufficient.
-            - count: How many blocks to parse. If count < 1 - will parse
+              ValueError must be raised. Otherwise function must return
+              required value, possibly modified.
+            - count: How many blocks to parse. If count <= 0 - will parse
               all available.
               Type: integer
             - list_separator: Character to separate elements in list
@@ -152,7 +150,7 @@ class BlockParser(BaseParser):
                 # We're only interested in LF in DELIM or LIST_VALUE
                 # states
                 if _val == "\n" and \
-                   self._state not in (self.STATE_DELIM, self.STATE_LIST_VALUE):
+                self._state not in (self.STATE_DELIM, self.STATE_LIST_VALUE):
                     continue
                 else:
                     self._parse_table[self._state](_val)
@@ -214,19 +212,22 @@ class BlockParser(BaseParser):
             self._state = self.STATE_VALUE
             return
 
+        _list = self._current_list
+
         # Else combine value
         if self.value_validator:
             try:
-                for _el in self._current_list:
-                    self.value_validator(self._varname, _el)
+                _list = [self.value_validator(self._varname, val)
+                         for val in self._current_list]
             except ValueError, e:
-                self.error(_("Invalid value %s: %s" % (_el, str(e))))
+                self.error(_("Invalid value: %s" % str(e)))
 
-        if len(self._current_list) == 1:
-            _value = self._current_list[0]
+        if len(_list) == 1:
+            _value = _list[0]
         else:
-            _value = tuple(self._current_list)
+            _value = tuple(_list)
 
+        del(_list)
         self._current_list = []
 
         self._parsed_obj[self._varname] = _value
