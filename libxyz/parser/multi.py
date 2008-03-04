@@ -15,6 +15,7 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 import types
+import re
 
 from libxyz.parser import Lexer
 from libxyz.parser import BaseParser
@@ -39,7 +40,8 @@ class MultiParser(BaseParser):
 
     def __init__(self, parsers, opt=None):
         """
-        @param parsers: dictionary containing string or list of keywords as key
+        @param parsers: dictionary containing string, list or
+                        compiled regexp of keywords as key
                         and *Parser object as value.
         @type parsers: dictionary with string or sequence keys
 
@@ -55,6 +57,8 @@ class MultiParser(BaseParser):
         """
 
         super(MultiParser, self).__init__()
+
+        self._rx = re.compile("")
 
         if parsers:
             if type(parsers) != types.DictType:
@@ -83,6 +87,9 @@ class MultiParser(BaseParser):
 
             for _key in self.parsers:
                 if type(_key) in types.StringTypes and _key == val:
+                    _p = self.parsers[_key]
+                    break
+                elif type(_key) == type(self._rx) and _key.match(val):
                     _p = self.parsers[_key]
                     break
                 elif hasattr(_key, "__contains__") and val in _key:
