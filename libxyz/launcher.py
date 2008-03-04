@@ -30,8 +30,7 @@ class Launcher(object):
         Initialization
         """
 
-        self.ui = uilib.display.init_display()
-        self.ui.register_palette([('bg', 'white', 'dark red')])
+        self.screen = None
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -41,20 +40,37 @@ class Launcher(object):
         """
 
         #self.parse_args()
-        #self.parse_configs()
-        self.ui.run_wrapper(self.__run)
+        self.parse_configs()
+
+        self.screen.run_wrapper(self.__run)
+
+        self.screen = uilib.display.init_display()
+        self.screen.register_palette([('box', 'white', 'dark red'),
+                                      ('mount', 'yellow', 'dark green'),
+                                      ('title', 'yellow', 'dark blue')])
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __run(self):
-        _dim = self.ui.get_cols_rows()
+        _dim = self.screen.get_cols_rows()
         self._top = uilib.lowui.Filler(uilib.lowui.Text(""))
 
-        _msg = uilib.MessageBox(self.ui, self._top, "XYZCommander", "KAGDILA?")
-        self.ui.draw_screen(_dim, _msg.render(_dim, True))
+        _str = """XYZCommander"""
+        _title = "KAGDILA?"
 
-        while not self.ui.get_input():
+        _msg = uilib.MessageBox(self.screen, self._top, _str, _title)
+        self.screen.draw_screen(_dim, _msg.render(_dim, True))
+
+        while not self.screen.get_input():
             pass
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def parse_configs(self):
+        """
+        Parse configuration
+        """
+
+        # ... parsing configs
+
+        self.skin_mgr = ???

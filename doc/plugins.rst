@@ -10,12 +10,12 @@ Plugins are being held in one of two directories:
 - System plugins: subdirectory of main |XYZ| installation path 
   (usually /usr/local/share/xyzcmd/plugins). All base system plugins are held
   here.
-- User plugins: Any other per-user plugins are held in ~/.xyzcmd/plugins.
+- User plugins: Any other third-party plugins are held in ~/.xyzcmd/plugins.
 
 For every installed plugin a directory created in an appropriate path with name
 matching plugin-name.
 
-Plugins usually contain a bunch of files:
+Plugins usually contain following files:
 
 - meta_:              Plugin meta-information. Mandatory.
 - conf:              Plugin configuration. Optional.
@@ -45,9 +45,30 @@ Here is a full list of available variables:
 **NAMESPACE**
    Plugin namespace. See Namespaces_
 
-All of these variables are required to be defined in meta-file.
+All these variables are mandatory.
+Also some optional variables can be defined:
+
+**MIN_XYZ_VERSION**
+   Minimal |XYZ| version the plugin can be used with.
+   If none defined, plugin will be available to use with any |XYZ| version.
 
 Namespaces
 ----------
 Namespaces are used to hierarchically organize exported methods and
-to prevent method-names collisions.
+to prevent method-names collisions. Стоит обратить внимание на то, что
+иерархический путь плагина это не то-же самое что путь к python-модулю
+его реализующему.
+Типичный полный путь плагина выглядит так:
+``xyz:plugins:<namespace>:<plugin-name>``
+
+Здесь ``<namespace>`` - один из доступных типов плагина.
+Доступны следующие типы:
+
+-- 
+Every single plugin should inherit BasePlugin interface.
+Plugin exports its public methods via 'public' dictionary of BasePlugin class.
+Plugin must be registered within one of xyz plugin namespaces.
+Available namespaces are:
+- ui    - User-interface related
+- vfs   - Virtual file-system related
+- misc  - Other miscellaneous

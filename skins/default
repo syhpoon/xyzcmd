@@ -4,6 +4,8 @@ AUTHOR: "Max E. Kuznecov <mek@mek.uz.ua>"
 VERSION: "0.1"
 DESCRIPTION: "Default XYZ skin"
 
+# Filesystem objects
+
 fs.type {
 	file = LIGHT_GRAY
 	dir = WHITE
@@ -15,6 +17,22 @@ fs.type {
 }
 
 fs.regexp {
-	'''*.core$''' = DARK_RED
+	'''.+\.core$''' = DARK_RED,WHITE
 	'''\.+''' = LIGHT_GREY
+}
+
+fs.priority {
+	type = 1
+   perm = 2
+   regexp = 3
+   owner = 4
+}
+
+# User interface objects
+
+## For all box widgets
+ui.box {
+	mount = YELLOW, DARK_GREEN
+	box =  WHITE, DARK_RED
+	title = YELLOW, DARK_BLUE
 }

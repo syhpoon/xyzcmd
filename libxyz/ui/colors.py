@@ -74,3 +74,13 @@ class Monochrome(object):
     BOLD = 'bold'
     UNDERLINE = 'underline'
     STANDOUT = 'standout'
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class Palette(object):
+    """
+    Wrapper for palette
+    """
+
+    def __init__(self, fg, bg, ma=None):
+        pass

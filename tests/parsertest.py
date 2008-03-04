@@ -147,14 +147,14 @@ class BlockParsing(unittest.TestCase):
 
     def testValueValidator1(self):
         """
-        Check fo value_validator raises exception
+        Check if value_validator raises exception
         """
 
         def _f(var, val):
             if val != "CORRECT_VALUE":
                 raise ValueError("Incorrect value %s!" % val)
 
-            return True
+            return val
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -168,14 +168,15 @@ class BlockParsing(unittest.TestCase):
 
     def testValueValidator2(self):
         """
-        Check fo value_validator raises exception
+        Check for value_validator correct value
         """
 
         def _f(var, val):
             if val != "CORRECT_VALUE":
                 raise ValueError("Incorrect value %s!" % val)
 
-            return True
+            # Returning modified value
+            return 1
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -235,7 +236,7 @@ class MultiParsing(unittest.TestCase):
 
     def testParsing(self):
         """
-        Try to parse some real config file
+        Try to parse some dummy config file
         """
 
         src = """\
@@ -254,8 +255,18 @@ fs.type {
 }
 
 fs.regexp {
-	'''*.core$''' = DARK_RED
+	'''.+\.core$''' = DARK_RED
 	'''\.+''' = LIGHT_GREY
+}
+
+ui.block1 {
+    a = 1
+    b = 2
+}
+
+ui.block2 {
+    c = 1
+    d = 2
 }
 
 """
@@ -265,12 +276,14 @@ fs.regexp {
 
         _type = BlockParser(_opt)
         _flat = FlatParser(_opt)
+        _ui = BlockParser(_opt)
         _opt["varre"] = re.compile(".+")
         _regexp = BlockParser(_opt)
 
         _parsers = {"fs.type": _type,
                     "fs.regexp": _regexp,
                     ("AUTHOR", "VERSION", "DESCRIPTION"): _flat,
+                    re.compile("^ui\.(\w+)$"): _ui,
                     }
 
         _opt2 = {"tokens": (":",)}
@@ -313,7 +326,7 @@ class FlatParsing(unittest.TestCase):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def testDelimChar(self):
+    def testDelimChar2(self):
         """
         Test for delimiter character
         """

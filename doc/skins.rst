@@ -34,8 +34,8 @@ There are three mandatory constants to be defined in every skin.
 
 Constant defined using construction: ``<CONST>: VALUE``
 
-Types
------
+Filesystem types
+----------------
 
 File object can be highlighted depending on its type.
 Possible types:
@@ -48,10 +48,10 @@ Possible types:
 * fifo       - FIFO
 * socket     - socket
 
-General ruleset definition syntax::
+General fs ruleset definition syntax::
 
-   fs.<by> {
-      <fstype> = <FG>,[,<BG>][,<MA>]
+   <fs>.<by> {
+      <var> = <FG>[,<BG>][,<MA>]
       ...
    }
 
@@ -66,7 +66,7 @@ General ruleset definition syntax::
    * owner    - Owner
    * regexp   - Regular expression
 
-``<fstype> = <FG>,[,<BG>][,<MA>]`` is a definition of object visual
+``<var> = <FG>,[,<BG>][,<MA1>[,<MA2>,...]]`` is a definition of object visual
 representation.
 
 <FG> 
@@ -168,7 +168,7 @@ Regular expressions must use x-quoting: ``'''<re>'''``::
    }
 
 Order
------
+~~~~~
 
 Searching for rule in ruleset continues until first match is found
 according to priorities.
@@ -196,3 +196,45 @@ Priorities can be customized. This can be done using priority ruleset::
       regexp = 3
       owner = 4
    }
+
+User interface (UI) widgets
+---------------------------
+
+Allmost all aspects of UI look-n-feel can be customized using ``ui.*`` skin
+rulesets.
+
+Every widget defines a member called ``resolution`` which contains
+a sequence of rulesets in decreasing priority.
+So, for instance, a MessageBox widget defines a member::
+
+   resolution = ("message_box", "box", "widget")
+
+According to this definition, SkinManager will first look for ``message_box``
+ruleset, next for ``box`` and at last for ``widget`` ruleset.
+Searching stops when first of defined rulesets is found.
+
+A ruleset contains resources required by widget.
+For detailed list of all required resources for every widget, see
+the API documentation.
+For example the MessageBox widget requires three resources to be defined:
+
+- title
+- mount
+- box
+
+So ruleset may look as::
+
+   ui.message_box {
+      mount = YELLOW, DARK_GREEN
+      box =  WHITE, DARK_RED
+      title = YELLOW, DARK_BLUE
+   }
+
+In case such a ruleset exists in skin file, SkinManager will load above
+definitions and will use it for every message_box widget.
+Otherwise SkinManager will look for next ruleset defined in ``resolution``,
+in our case it is ``box``. And so on.
+
+Here the following question may arise: what if some of the rulesets will not
+define all the resources required? The answer is simple: all missing resources
+take a DEFAULT color value.
