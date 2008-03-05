@@ -77,10 +77,10 @@ class BlockParser(BaseParser):
             - validvars: List of variables valid within block.
               Type: I{sequence}
             - value_validator: Value validator
-              Type: A function that takes two args var and value
-              and validates them. In case value is invalid,
-              XYZValueError must be raised. Otherwise function must return
-              required value, possibly modified.
+              Type: A function that takes three args:
+              current block, var and value and validates them.
+              In case value is invalid, XYZValueError must be raised.
+              Otherwise function must return required value, possibly modified.
             - count: How many blocks to parse. If count <= 0 - will parse
               all available.
               Type: integer
@@ -217,8 +217,8 @@ class BlockParser(BaseParser):
         # Else combine value
         if self.value_validator:
             try:
-                _list = [self.value_validator(self._varname, val)
-                         for val in self._current_list]
+                _list = [self.value_validator(self._parsed_obj.name,
+                         self._varname, val) for val in self._current_list]
             except XYZValueError, e:
                 self.error(_("Invalid value: %s" % str(e)))
 

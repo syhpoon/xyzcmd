@@ -16,15 +16,18 @@
 
 import os
 import re
+import types
 
+from libxyz.exceptions import ParseError, SkinError
 from libxyz.parser import BlockParser
 from libxyz.parser import FlatParser
+from libxyz.parser import MultiParser
 
 import libxyz.ui as uilib
 
-class SkinManager(object):
+class Skin(object):
     """
-    Skin manager. Provides simple interface to defined skin rulesets.
+    Skin object. Provides simple interface to defined skin rulesets.
     """
 
     def __init__(self, path):
@@ -37,44 +40,56 @@ class SkinManager(object):
         else:
             self.path = path
 
-        def palette_validator(var, val):
+        self.author = None
+        self.version = None
+        self.description = None
+
+        self._default_palette = "default"
+
+        # 1. Parse
+        self._data = self._parse()
+
+        # 2. Order parsed data
+        self._order()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _parse(self):
+        def palette_validator(block, var, val):
             """
             Make urwid-compatible attributes tuple
             """
 
-            def get_color(cl, val):
-                try:
-                    return getattr(cl, val)
-                except AttributeError:
-                    raise ValueError(_("Invalid atrribute definition: %s" % s))
+            _fg = uilib.colors.Foreground("DEFAULT")
+            _bg = uilib.colors.Background("DEFAULT")
+            _ma = uilib.colors.Monochrome("DEFAULT")
 
-            #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            if type(val) in types.StringTypes:
+                _val = (val,)
+            else:
+                _val = [x.strip() for x in val]
 
-            _fg = colors.Foreground.DEFAULT
-            _bg = colors.Background.DEFAULT
-            _ma = None
+            _fg = uilib.colors.Foreground(_val[0])
 
-            _atrrs = [x.strip() for x in val.split(",")]
+            if len(_val) > 1:
+                _bg = uilib.colors.Background(_val[1])
+            if len(_val) > 2:
+                _ma = tuple([color.Monochrome(x) for x in _val[2:]])
 
-            _fg = get_color(colors.Foreground, _atrrs[0])
-
-            if len(_atrrs) > 1:
-                _bg = get_color(colors.Background, _atrrs[1])
-            if len(_atrrs) > 2:
-                _ma = tuple(
-                      [get_color(color.Monochrome, x) for x in _atrrs[2:]]
-                      )
-
-            return colors.Palette(_fg, _bg, _ma)
+            return uilib.colors.Palette(self._make_name(block, var), _fg, _bg,
+                                        _ma)
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        def priority_validator(var, val):
+        def priority_validator(block, var, val):
             """
             Validator for priority values (int)
             """
 
-            return int(val)
+            try:
+                return int(val)
+            except ValueError, e:
+                raise XYZValueError(_("Invalid literal"))
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -85,49 +100,111 @@ class SkinManager(object):
                         "validvars": ("file", "dir", "block", "char",
                                       "link", "fifo", "socket"),
                         }
-        self._fs_type_p = BlockParser(_fs_type_opt)
+        _fs_type_p = BlockParser(_fs_type_opt)
 
         _fs_perm_opt = {"count": 1,
                         "value_validator": palette_validator,
                         "varre": re.compile("\+?\d{4}"),
                        }
-        self._fs_perm_p = BlockParser(_fs_perm_opt)
+        _fs_perm_p = BlockParser(_fs_perm_opt)
 
         _fs_owner_opt = {"count": 1,
                          "value_validator": palette_validator,
                          "varre": re.compile("(\w+)?(:(\w+))?$"),
                          }
-        self._fs_owner_p = BlockParser(_fs_owner_opt)
+        _fs_owner_p = BlockParser(_fs_owner_opt)
 
         _fs_regexp_opt = {"count": 1,
                          "value_validator": palette_validator,
                          "varre": re.compile(".+"),
                          }
-        self._fs_regexp_p = BlockParser(_fs_regexp_opt)
+        _fs_regexp_p = BlockParser(_fs_regexp_opt)
 
         _fs_priority_opt = {"count": 1,
                             "value_validator": priority_validator,
                             "validvars": ("type", "perm", "regexp", "owner"),
-        self._fs_priority_p = BlockParser(_fs_priority_opt)
+                            }
+        _fs_priority_p = BlockParser(_fs_priority_opt)
 
         _ui_opt = {"count": 1,
                    "value_validator": palette_validator,
                    }
-        self._ui_p = BlockParser(_ui_opt)
+        _ui_p = BlockParser(_ui_opt)
 
         _flat_opt = {"count": 1}
-        self._flat_p = FlatParser(_flat_opt)
+        _flat_p = FlatParser(_flat_opt)
 
-        _parsers = {"fs.type": self._fs_type_p,
-                    "fs.perm": self._fs_perm_p,
-                    "fs.owner": self._fs_owner_p,
-                    "fs.regexp": self._fs_regexp_p,
-                    "fs.priority": self._fs_priority_p,
-                    re.compile("ui\.(\w)+"), self._ui_p,
-                    ("AUTHOR", "VERSION", "DESCRIPTION"): self._flat_p,
+        _parsers = {"fs.type": _fs_type_p,
+                    "fs.perm": _fs_perm_p,
+                    "fs.owner": _fs_owner_p,
+                    "fs.regexp": _fs_regexp_p,
+                    "fs.priority": _fs_priority_p,
+                    re.compile("ui\.(\w)+"): _ui_p,
+                    ("AUTHOR", "VERSION", "DESCRIPTION"): _flat_p,
                     }
 
         _multi_opt = {"tokens": (":",)}
-        multi = MultiParser(_parsers, _multi_opt)
+        _multi_p = MultiParser(_parsers, _multi_opt)
 
-        self._data = multi.parse(src)
+        _skinfile = open(self.path, "r")
+
+        try:
+            _data = _multi_p.parse(_skinfile)
+        except ParseError, e:
+            raise SkinError(_("Error parsing skin file: %s" % str(e)))
+        finally:
+            _skinfile.close()
+
+        return _data
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _make_name(self, block, resource):
+        return "%s@%s" % (block, resource)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _order(self):
+        try:
+            self.author = self._data["AUTHOR"]
+            self.description = self._data["DESCRIPTION"]
+            self.version = self._data["VERSION"]
+        except KeyError, e:
+            raise SkinError(_("Missing required variable: %s" % str(e)))
+        else:
+            del(self._data["AUTHOR"])
+            del(self._data["DESCRIPTION"])
+            del(self._data["VERSION"])
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_palette_list(self):
+        """
+        Return list of defined palettes.
+        It is usually passed to register_palette() function
+        """
+
+        _list = []
+
+        for _name, _pdata in self._data.iteritems():
+            for _var, _val in _pdata.iteritems():
+                if isinstance(_val, uilib.colors.Palette):
+                    _list.append(_val.get_palette())
+
+        return _list
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    
+    def find(self, resolution, name):
+        """
+        Search for first matching palette according to resolution
+        @return: Registered palette name in format name@block
+        """
+
+        for _el in resolution:
+            if _el in self._data and name in self._data[_el]:
+                return self._make_name(el, self._data[_el].name)
+
+        # If none found return default
+        return self._default_palette

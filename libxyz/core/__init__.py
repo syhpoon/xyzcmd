@@ -13,3 +13,9 @@
 # GNU Lesser Public License for more details.
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
+
+__all__ = (
+    'Skin',
+    )
+
+from skin import Skin

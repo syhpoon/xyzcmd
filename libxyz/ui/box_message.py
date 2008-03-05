@@ -26,16 +26,17 @@ class MessageBox(lowui.WidgetWrap):
     # Skin rulesets resolution order
     resolution = ("message_box", "box", "widget")
 
-    def __init__(self, screen, body, message, title="", width=60):
+    def __init__(self, xyz, body, message, title="", width=60):
         """
-        @param screen: Display instance
+        @param xyz: XYZ dictionary
         @param body: Top-level widget
         @param message: Message to display
         @param title: Box title
         @param width: Box width (including mount box)
         """
 
-        self.screen = screen
+        self.screen = xyz["screen"]
+        self.skin = xyz["skin"]
         self.rowspan = 3
         self.mount_span = {"vertical": 2, "horizontal": 2}
         self.full_width = width
@@ -43,12 +44,14 @@ class MessageBox(lowui.WidgetWrap):
         self.box_height = self._rows(message)
         self.full_height = self.box_height + self.mount_span["vertical"]
 
-        _title = lowui.Text(('title', " %s "  % title.replace("\n", "")),
-                            align.CENTER)
-        _mount = lowui.AttrWrap(lowui.Filler(_title, align.TOP), 'mount')
+        _title = lowui.Text((self._attr('title'),
+                             " %s "  % title.replace("\n", "")), align.CENTER)
+
+        _mount = lowui.AttrWrap(lowui.Filler(_title, align.TOP),
+                                self._attr('mount'))
 
         _text = lowui.Text(message, align.CENTER)
-        _box = lowui.AttrWrap(lowui.Filler(_text), 'box')
+        _box = lowui.AttrWrap(lowui.Filler(_text), self._attr('box'))
 
         _mount = lowui.Overlay(_mount, body, align.CENTER, self.full_width,
                              align.MIDDLE, self.full_height)
@@ -57,6 +60,15 @@ class MessageBox(lowui.WidgetWrap):
                              align.MIDDLE, self.box_height)
 
         super(MessageBox, self).__init__(_box)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _attr(self, name):
+        """
+        Find palette
+        """
+
+        return self.skin.find(self.resolution, name)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

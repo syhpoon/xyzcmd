@@ -26,6 +26,11 @@ class ParsedData(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def iteritems(self):
+        return self._data.iteritems()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def __str__(self):
         return "ParsedData object: %s" % str(self._data)
 

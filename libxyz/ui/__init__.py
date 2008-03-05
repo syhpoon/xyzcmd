@@ -23,6 +23,7 @@ __all__ = (
     'lowui',
     'display',
     'align',
+    'colors',
     'MessageBox',
 )
 
@@ -30,5 +31,6 @@ import urwid as lowui
 
 import display
 import align
+import colors
 
 from box_message import MessageBox

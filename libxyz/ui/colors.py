@@ -15,65 +15,102 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 
-"""
-Define colors as constants
-"""
+from libxyz.exceptions import XYZValueError
 
-class Foreground(object):
+class Color(object):
     """
-    Foreground colors
+    Base color
     """
 
-    BLACK = 'black'
-    BROWN = 'brown'
-    YELLOW = 'yellow'
-    WHITE = 'white'
-    DEFAULT = 'default'
+    colors = {}
+    ctype = "base"
 
-    DARK_BLUE = 'dark blue'
-    DARK_MAGENTA = 'dark magenta'
-    DARK_CYAN = 'dark cyan'
-    DARK_RED = 'dark red'
-    DARK_GREEN = 'dark green',
-    DARK_GRAY = 'dark gray'
+    def __init__(self, color):
+        if color not in self.colors:
+            raise XYZValueError(_("Invalid %s color: %s" % \
+            (self.ctype, str(color))))
 
-    LIGHT_GRAY = 'light gray'
-    LIGHT_RED = 'light red'
-    LIGHT_GREEN = 'light green'
-    LIGHT_BLUE = 'light blue'
-    LIGHT_MAGENTA = 'light magenta'
-    LIGHT_CYAN = 'light cyan'
+        self.color = self.colors[color]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __str__(self):
+        return "<%s color: %s>" % (self.ctype, str(self.color))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __repr__(self):
+        return self.__str__()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-class Background(object):
+class Foreground(Color):
     """
-    Background colors
+    Foreground color
     """
 
-    BLACK = 'black'
-    BROWN = 'brown'
-    DEFAULT = 'default'
+    colors = {
+              "BLACK": "black",
+              "BROWN": "brown",
+              "YELLOW": "yellow",
+              "WHITE": "white",
+              "DEFAULT": "default",
 
-    DARK_RED = 'dark red',
-    DARK_GREEN = 'dark green'
-    DARK_BLUE = 'dark blue'
-    DARK_MAGENTA = 'dark magenta'
-    DARK_CYAN = 'dark cyan'
+              "DARK_BLUE": "dark blue",
+              "DARK_MAGENTA": "dark magenta",
+              "DARK_CYAN": "dark cyan",
+              "DARK_RED": "dark red",
+              "DARK_GREEN": "dark green",
+              "DARK_GRAY": "dark gray",
 
-    LIGHT_CYAN = 'light gray'
+              "LIGHT_GRAY": "light gray",
+              "LIGHT_RED": "light red",
+              "LIGHT_GREEN": "light green",
+              "LIGHT_BLUE": "light blue",
+              "LIGHT_MAGENTA": "light magenta",
+              "LIGHT_CYAN": "light cyan",
+              }
+
+    ctype = "foreground"
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-class Monochrome(object):
+class Background(Color):
     """
-    Monochrome colors
+    Background color
     """
 
-    DEFAULT = None
-    BOLD = 'bold'
-    UNDERLINE = 'underline'
-    STANDOUT = 'standout'
+    colors = {
+              "BLACK": "black",
+              "BROWN": "brown",
+              "DEFAULT": "default",
+
+              "DARK_RED": "dark red",
+              "DARK_GREEN": "dark green",
+              "DARK_BLUE": "dark blue",
+              "DARK_MAGENTA": "dark magenta",
+              "DARK_CYAN": "dark cyan",
+
+              "LIGHT_CYAN": "light gray",
+              }
+
+    ctype = "background"
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class Monochrome(Color):
+    """
+    Monochrome color
+    """
+
+    colors = {
+              "DEFAULT": None,
+              "BOLD": "bold",
+              "UNDERLINE": "underline",
+              "STANDOUT": "standout",
+              }
+
+    ctype = "monochrome"
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -82,5 +119,17 @@ class Palette(object):
     Wrapper for palette
     """
 
-    def __init__(self, fg, bg, ma=None):
-        pass
+    def __init__(self, name, fg, bg, ma=None):
+        self.name = name
+        self.fg = fg
+        self.bg = bg
+        self.ma = ma
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_palette(self):
+        """
+        Return urwid-compatible palette tuple
+        """
+
+        return (self.name, self.fg, self.bg, self.ma)

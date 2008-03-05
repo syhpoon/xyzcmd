@@ -44,3 +44,8 @@ class LexerError(XYZError):
 
 class PluginError(XYZError):
     pass
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class SkinError(XYZError):
+    pass

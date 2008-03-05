@@ -16,11 +16,13 @@
 
 __all__ = (
     'parser',
+    'core',
     'ui',
     'Launcher',
     )
 
 import parser
+import core
 import ui
 
 from launcher import Launcher

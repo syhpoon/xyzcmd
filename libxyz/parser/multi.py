@@ -117,7 +117,7 @@ class MultiParser(BaseParser):
                 if _parser:
                     # Push read token back
                     self._lexer.unget(_val)
-                    self._result[_val] = _parser.parse(self._lexer.sdata)
+                    self._result.update(_parser.parse(self._lexer.sdata))
                 else:
                     self.error(_("Unknown keyword: %s" % _val))
         except LexerError, e:

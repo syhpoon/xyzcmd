@@ -20,6 +20,8 @@ Launcher - all neccessary initialization
 
 import libxyz.ui as uilib
 
+from libxyz.core import Skin
+
 class Launcher(object):
     """
     Startup class
@@ -30,7 +32,12 @@ class Launcher(object):
         Initialization
         """
 
-        self.screen = None
+        import gettext
+        gettext.install("xyzcmd")
+
+        self.xyz = {"screen": None,
+                    "skin": None,
+        }
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -42,26 +49,25 @@ class Launcher(object):
         #self.parse_args()
         self.parse_configs()
 
-        self.screen.run_wrapper(self.__run)
-
-        self.screen = uilib.display.init_display()
-        self.screen.register_palette([('box', 'white', 'dark red'),
-                                      ('mount', 'yellow', 'dark green'),
-                                      ('title', 'yellow', 'dark blue')])
+        self.xyz["screen"] = uilib.display.init_display()
+        import pprint
+        pprint.pprint(self.xyz["skin"].get_palette_list())
+        self.xyz["screen"].register_palette(self.xyz["skin"].get_palette_list())
+        self.xyz["screen"].run_wrapper(self._run)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def __run(self):
-        _dim = self.screen.get_cols_rows()
+    def _run(self):
+        _dim = self.xyz["screen"].get_cols_rows()
         self._top = uilib.lowui.Filler(uilib.lowui.Text(""))
 
         _str = """XYZCommander"""
         _title = "KAGDILA?"
 
-        _msg = uilib.MessageBox(self.screen, self._top, _str, _title)
-        self.screen.draw_screen(_dim, _msg.render(_dim, True))
+        _msg = uilib.MessageBox(self.xyz, self._top, _str, _title)
+        self.xyz["screen"].draw_screen(_dim, _msg.render(_dim, True))
 
-        while not self.screen.get_input():
+        while not self.xyz["screen"].get_input():
             pass
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -71,6 +77,6 @@ class Launcher(object):
         Parse configuration
         """
 
-        # ... parsing configs
+        # TODO: ... parsing configs
 
-        self.skin_mgr = ???
+        self.xyz["skin"] = Skin("/tmp/skins/default")

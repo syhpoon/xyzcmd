@@ -150,9 +150,9 @@ class BlockParsing(unittest.TestCase):
         Check if value_validator raises exception
         """
 
-        def _f(var, val):
+        def _f(block, var, val):
             if val != "CORRECT_VALUE":
-                raise ValueError("Incorrect value %s!" % val)
+                raise XYZValueError("Incorrect value %s!" % val)
 
             return val
 
@@ -171,9 +171,9 @@ class BlockParsing(unittest.TestCase):
         Check for value_validator correct value
         """
 
-        def _f(var, val):
+        def _f(block, var, val):
             if val != "CORRECT_VALUE":
-                raise ValueError("Incorrect value %s!" % val)
+                raise XYZValueError("Incorrect value %s!" % val)
 
             # Returning modified value
             return 1
