@@ -79,7 +79,7 @@ class BlockParser(BaseParser):
             - value_validator: Value validator
               Type: A function that takes two args var and value
               and validates them. In case value is invalid,
-              ValueError must be raised. Otherwise function must return
+              XYZValueError must be raised. Otherwise function must return
               required value, possibly modified.
             - count: How many blocks to parse. If count <= 0 - will parse
               all available.
@@ -219,7 +219,7 @@ class BlockParser(BaseParser):
             try:
                 _list = [self.value_validator(self._varname, val)
                          for val in self._current_list]
-            except ValueError, e:
+            except XYZValueError, e:
                 self.error(_("Invalid value: %s" % str(e)))
 
         if len(_list) == 1:
