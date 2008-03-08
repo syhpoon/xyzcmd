@@ -212,24 +212,21 @@ class BlockParser(BaseParser):
             self._state = self.STATE_VALUE
             return
 
-        _list = self._current_list
+        self._current_list
 
-        # Else combine value
+        if len(self._current_list) == 1:
+            _value = self._current_list[0]
+        else:
+            _value = tuple(self._current_list)
+
         if self.value_validator:
             try:
-                _list = [self.value_validator(self._parsed_obj.name,
-                         self._varname, val) for val in self._current_list]
+                _value = self.value_validator(self._parsed_obj.name,
+                                              self._varname, _value)
             except XYZValueError, e:
                 self.error(_("Invalid value: %s" % str(e)))
 
-        if len(_list) == 1:
-            _value = _list[0]
-        else:
-            _value = tuple(_list)
-
-        del(_list)
         self._current_list = []
-
         self._parsed_obj[self._varname] = _value
         self._lexer.escaping_off()
         self._varname = None

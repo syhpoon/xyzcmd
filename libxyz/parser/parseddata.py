@@ -51,6 +51,11 @@ class ParsedData(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def __contains__(self, key):
+        return key in self._data
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def lookup(self, var):
         """
         Lookup for value of variable

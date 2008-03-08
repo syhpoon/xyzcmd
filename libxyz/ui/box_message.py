@@ -68,7 +68,7 @@ class MessageBox(lowui.WidgetWrap):
         Find palette
         """
 
-        return self.skin.find(self.resolution, name)
+        return self.skin.attr(self.resolution, name)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

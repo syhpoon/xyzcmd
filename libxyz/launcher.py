@@ -50,8 +50,6 @@ class Launcher(object):
         self.parse_configs()
 
         self.xyz["screen"] = uilib.display.init_display()
-        import pprint
-        pprint.pprint(self.xyz["skin"].get_palette_list())
         self.xyz["screen"].register_palette(self.xyz["skin"].get_palette_list())
         self.xyz["screen"].run_wrapper(self._run)
 
@@ -61,8 +59,8 @@ class Launcher(object):
         _dim = self.xyz["screen"].get_cols_rows()
         self._top = uilib.lowui.Filler(uilib.lowui.Text(""))
 
-        _str = """XYZCommander"""
-        _title = "KAGDILA?"
+        _str = "Welcome!"
+        _title = "XYZCommander"
 
         _msg = uilib.MessageBox(self.xyz, self._top, _str, _title)
         self.xyz["screen"].draw_screen(_dim, _msg.render(_dim, True))

@@ -17,7 +17,7 @@ fs.type {
 }
 
 fs.regexp {
-	'''.+\.core$''' = DARK_RED,WHITE
+	'''.+\.core$''' = DARK_RED,BROWN
 	'''\.+''' = LIGHT_GRAY
 }
 
@@ -30,9 +30,9 @@ fs.priority {
 
 # User interface objects
 
-## For all box widgets
+# Base box widgets
 ui.box {
-	mount = YELLOW, DARK_GREEN
-	box =  WHITE, DARK_RED
-	title = YELLOW, DARK_BLUE
+	title = LIGHT_CYAN, DARK_BLUE
+	box = WHITE, DARK_BLUE
+	mount = DEFAULT, DARK_CYAN
 }

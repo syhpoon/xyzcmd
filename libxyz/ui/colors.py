@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+import copy
 
 from libxyz.exceptions import XYZValueError
 
@@ -91,7 +92,7 @@ class Background(Color):
               "DARK_MAGENTA": "dark magenta",
               "DARK_CYAN": "dark cyan",
 
-              "LIGHT_CYAN": "light gray",
+              "LIGHT_GRAY": "light gray",
               }
 
     ctype = "background"
@@ -132,4 +133,13 @@ class Palette(object):
         Return urwid-compatible palette tuple
         """
 
-        return (self.name, self.fg, self.bg, self.ma)
+        return (self.name, self.fg.color, self.bg.color, self.ma.color)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def copy(self):
+        """
+        Return copy of Palette object
+        """
+
+        return copy.deepcopy(self)
