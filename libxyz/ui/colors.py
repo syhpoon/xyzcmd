@@ -133,7 +133,14 @@ class Palette(object):
         Return urwid-compatible palette tuple
         """
 
-        return (self.name, self.fg.color, self.bg.color, self.ma.color)
+        if self.ma is None:
+            _ma = None
+        elif type(self.ma) == type(()):
+            _ma = tuple([x.color for x in self.ma])
+        else: # Color object
+            _ma = self.ma.color
+
+        return (self.name, self.fg.color, self.bg.color, _ma)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

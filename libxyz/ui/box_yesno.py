@@ -17,14 +17,13 @@
 from libxyz.ui import lowui
 from libxyz.ui import align
 
-class MessageBox(lowui.WidgetWrap):
+class YesNoBox(lowui.WidgetWrap):
     """
-    Simple box is used to display any kind of text messages
-    Show the message until any key pressed
+    Yes/No box. Shows a message and waits for Yes or No button pressed
     """
 
     # Skin rulesets resolution order
-    resolution = ("message_box", "box", "widget")
+    resolution = ("yesno_box", "box", "widget")
 
     def __init__(self, xyz, body, message, title="", width=60):
         """
@@ -41,8 +40,12 @@ class MessageBox(lowui.WidgetWrap):
         self.mount_span = {"vertical": 2, "horizontal": 2}
         self.full_width = width
         self.box_width = width - self.mount_span["horizontal"]
-        self.box_height = self._rows(message)
+        self.box_height = self._rows(message) + 1 # buttons
         self.full_height = self.box_height + self.mount_span["vertical"]
+        
+        _b_yes = lowui.Button(_("Yes"))
+        _b_no = lowui.Button(_("No"))
+        _bgrid = lowui.GridFlow([_b_yes, _b_no], 10, 2, 0, align.CENTER)
 
         _title = lowui.Text((self._attr('title'),
                              " %s "  % title.replace("\n", "")), align.CENTER)
@@ -50,8 +53,12 @@ class MessageBox(lowui.WidgetWrap):
         _mount = lowui.AttrWrap(lowui.Filler(_title, align.TOP),
                                 self._attr('mount'))
 
+        _buttons = lowui.AttrWrap(lowui.Filler(_bgrid, align.BOTTOM),
+                                  self._attr('box'))
+
         _text = lowui.Text(message, align.CENTER)
-        _box = lowui.AttrWrap(lowui.Filler(_text), self._attr('box'))
+        _text = lowui.AttrWrap(lowui.Filler(_text), self._attr('box'))
+        _box = lowui.Pile([_text, _buttons])
 
         _mount = lowui.Overlay(_mount, body, align.CENTER, self.full_width,
                              align.MIDDLE, self.full_height)
@@ -59,7 +66,7 @@ class MessageBox(lowui.WidgetWrap):
         _box = lowui.Overlay(_box, _mount, align.CENTER, self.box_width,
                              align.MIDDLE, self.box_height)
 
-        super(MessageBox, self).__init__(_box)
+        super(YesNoBox, self).__init__(_box)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

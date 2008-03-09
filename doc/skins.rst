@@ -14,7 +14,7 @@ Customizable elements are:
 
 Skin-definition file is a plain-text file containing skin-directives.
 Every skin has a name. Name of the file which holds skin definition
-is also a skin name.
+is a skin name.
 Skin-files may be located in skins subdirectory of xyzcmd main installation
 path or in user .xyz/skins directory.
 
@@ -51,20 +51,20 @@ Possible types:
 General fs ruleset definition syntax::
 
    <fs>.<by> {
-      <var> = <FG>[,<BG>][,<MA>]
+      <var> = <FG>[,<BG>][,<MA1>[,<MA2>]...]
       ...
    }
 
-``fs`` means that we're defining file-system object[s].
+``fs`` means that we're defining file-system ruleset.
 
-``<by>`` means that we want to highlight by file type.
+``<by>`` means that we want to highlight some filesystem objects.
 
 ``<by>`` can take following values:
 
-   * type     - File type
-   * perm     - Permission bits
-   * owner    - Owner
-   * regexp   - Regular expression
+* type     - File type
+* perm     - Permission bits
+* owner    - Owner
+* regexp   - Regular expression
 
 ``<var> = <FG>,[,<BG>][,<MA1>[,<MA2>,...]]`` is a definition of object visual
 representation.
@@ -111,6 +111,8 @@ representation.
       * STANDOUT
       * DEFAULT
 
+   Monochrome attribute can hold more than one value.
+
 Example::
 
    fs.type {
@@ -120,11 +122,14 @@ Example::
       char = LIGHT_MAGENTA
       link = LIGHT_CYAN
       fifo = DARK_CYAN
-      socket = DARK_RED
+      socket = DARK_RED,LIGHT_GRAY,BOLD,UNDERLINE
    }
 
 Here ``file = LIGHT_GRAY`` means that all regular files (if not covered by
 other rulesets) will appear in LIGHT_GRAY color.
+``socket = DARK_RED,LIGHT_GRAY,BOLD,UNDERLINE`` means that socket objects
+will appear in dark red text on light gray background using bold and underline
+attributes.
 
 Permission bits can be specified in following formats:
 
@@ -204,7 +209,7 @@ Allmost all aspects of UI look-n-feel can be customized using ``ui.*`` skin
 rulesets.
 
 Every widget defines a member called ``resolution`` which contains
-a sequence of rulesets in decreasing priority.
+a sequence of ruleset names in decreasing priority.
 So, for instance, a MessageBox widget defines a member::
 
    resolution = ("message_box", "box", "widget")
@@ -212,6 +217,7 @@ So, for instance, a MessageBox widget defines a member::
 According to this definition, SkinManager will first look for ``message_box``
 ruleset, next for ``box`` and at last for ``widget`` ruleset.
 Searching stops when first of defined rulesets is found.
+Default palette returned unless defined ruleset found.
 
 A ruleset contains resources required by widget.
 For detailed list of all required resources for every widget, see
@@ -236,5 +242,5 @@ Otherwise SkinManager will look for next ruleset defined in ``resolution``,
 in our case it is ``box``. And so on.
 
 Here the following question may arise: what if some of the rulesets will not
-define all the resources required? The answer is simple: all missing resources
-take a DEFAULT color value.
+have defined all the resources required?
+The answer is simple: all missing resources take a DEFAULT color value.

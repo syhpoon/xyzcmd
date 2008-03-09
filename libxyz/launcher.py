@@ -21,6 +21,7 @@ Launcher - all neccessary initialization
 import libxyz.ui as uilib
 
 from libxyz.core import Skin
+from libxyz.core import XYZData
 
 class Launcher(object):
     """
@@ -35,9 +36,12 @@ class Launcher(object):
         import gettext
         gettext.install("xyzcmd")
 
-        self.xyz = {"screen": None,
-                    "skin": None,
-        }
+        self.xyz = XYZData(
+                            {
+                            "screen": None,
+                            "skin": None,
+                            }
+                          )
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -49,23 +53,23 @@ class Launcher(object):
         #self.parse_args()
         self.parse_configs()
 
-        self.xyz["screen"] = uilib.display.init_display()
-        self.xyz["screen"].register_palette(self.xyz["skin"].get_palette_list())
-        self.xyz["screen"].run_wrapper(self._run)
+        self.xyz.screen = uilib.display.init_display()
+        self.xyz.screen.register_palette(self.xyz.skin.get_palette_list())
+        self.xyz.screen.run_wrapper(self._run)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _run(self):
-        _dim = self.xyz["screen"].get_cols_rows()
+        _dim = self.xyz.screen.get_cols_rows()
         self._top = uilib.lowui.Filler(uilib.lowui.Text(""))
 
-        _str = "Welcome!"
+        _str = "Welcome!\nAAAA\nBBBB\nCCCC"
         _title = "XYZCommander"
 
-        _msg = uilib.MessageBox(self.xyz, self._top, _str, _title)
-        self.xyz["screen"].draw_screen(_dim, _msg.render(_dim, True))
+        _msg = uilib.YesNoBox(self.xyz, self._top, _str, _title)
+        self.xyz.screen.draw_screen(_dim, _msg.render(_dim, True))
 
-        while not self.xyz["screen"].get_input():
+        while not self.xyz.screen.get_input():
             pass
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -77,4 +81,4 @@ class Launcher(object):
 
         # TODO: ... parsing configs
 
-        self.xyz["skin"] = Skin("/tmp/skins/default")
+        self.xyz.skin = Skin("/tmp/skins/default")

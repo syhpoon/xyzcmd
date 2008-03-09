@@ -14,10 +14,23 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-__all__ = (
-    'Skin',
-    'XYZData',
-    )
+class XYZData(object):
+    """
+    XYZ system data container
+    """
 
-from skin import Skin
-from xyzdata import XYZData
+    def __init__(self, data=None):
+        self._data = data or {}
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __getattr__(self, attr):
+        try:
+            return self._data[attr]
+        except KeyError:
+            raise AttributeError()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __setattr__(self, attr, val):
+        object.__setattr__(self, attr, val)

@@ -25,6 +25,7 @@ __all__ = (
     'align',
     'colors',
     'MessageBox',
+    'YesNoBox',
 )
 
 import urwid as lowui
@@ -34,3 +35,4 @@ import align
 import colors
 
 from box_message import MessageBox
+from box_yesno import YesNoBox

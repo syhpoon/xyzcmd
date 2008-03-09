@@ -122,13 +122,13 @@ class Skin(object):
 
         _fs_perm_opt = {"count": 1,
                         "value_validator": palette_validator,
-                        "varre": re.compile("\+?\d{4}"),
+                        "varre": re.compile("^\+?\d{4}$"),
                        }
         _fs_perm_p = BlockParser(_fs_perm_opt)
 
         _fs_owner_opt = {"count": 1,
                          "value_validator": palette_validator,
-                         "varre": re.compile("(\w+)?(:(\w+))?$"),
+                         "varre": re.compile("^(\w+)?(:(\w+))?$"),
                          }
         _fs_owner_p = BlockParser(_fs_owner_opt)
 
@@ -178,7 +178,7 @@ class Skin(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _make_name(self, block, resource):
-        return "%s@%s" % (block, resource)
+        return "%s@%s" % (resource, block)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
