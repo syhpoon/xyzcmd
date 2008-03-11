@@ -20,7 +20,7 @@ Plugins usually contain following files:
 - meta_:             Plugin meta-information. Mandatory.
 - conf:              Plugin configuration. Optional.
 - <pluginname>.py:   Main plugin file. Mandatory.
-- any other needed files...
+- any other needed files... Optional.
 
 .. _meta:
 
