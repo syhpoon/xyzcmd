@@ -24,7 +24,7 @@ class MessageBox(lowui.WidgetWrap):
     """
 
     # Skin rulesets resolution order
-    resolution = ("message_box", "box", "widget")
+    resolution = (u"message_box", u"box", u"widget")
 
     def __init__(self, xyz, body, message, title="", width=60):
         """
@@ -38,20 +38,20 @@ class MessageBox(lowui.WidgetWrap):
         self.screen = xyz.screen
         self.skin = xyz.skin
         self.rowspan = 3
-        self.mount_span = {"vertical": 2, "horizontal": 2}
+        self.mount_span = {u"vertical": 2, u"horizontal": 2}
         self.full_width = width
-        self.box_width = width - self.mount_span["horizontal"]
+        self.box_width = width - self.mount_span[u"horizontal"]
         self.box_height = self._rows(message)
-        self.full_height = self.box_height + self.mount_span["vertical"]
+        self.full_height = self.box_height + self.mount_span[u"vertical"]
 
-        _title = lowui.Text((self._attr('title'),
-                             " %s "  % title.replace("\n", "")), align.CENTER)
+        _title = lowui.Text((self._attr(u"title"),
+                             " %s "  % title.replace(u"\n", u"")), align.CENTER)
 
         _mount = lowui.AttrWrap(lowui.Filler(_title, align.TOP),
-                                self._attr('mount'))
+                                self._attr(u"mount"))
 
         _text = lowui.Text(message, align.CENTER)
-        _box = lowui.AttrWrap(lowui.Filler(_text), self._attr('box'))
+        _box = lowui.AttrWrap(lowui.Filler(_text), self._attr(u"box"))
 
         _mount = lowui.Overlay(_mount, body, align.CENTER, self.full_width,
                              align.MIDDLE, self.full_height)
@@ -79,7 +79,7 @@ class MessageBox(lowui.WidgetWrap):
 
         # 2 for two rows: on top and bottom
         _maxrows = self.screen.get_cols_rows()[1] - \
-                   2 - self.mount_span["vertical"]
+                   2 - self.mount_span[u"vertical"]
         _lines = msg.count("\n")
 
         if _lines + self.rowspan > _maxrows:

@@ -17,7 +17,7 @@ matching plugin-name.
 
 Plugins usually contain following files:
 
-- meta_:              Plugin meta-information. Mandatory.
+- meta_:             Plugin meta-information. Mandatory.
 - conf:              Plugin configuration. Optional.
 - <pluginname>.py:   Main plugin file. Mandatory.
 - any other needed files...
@@ -65,7 +65,7 @@ to prevent method-names collisions. Стоит обратить внимание
 Доступны следующие типы:
 
 -- 
-Every single plugin should inherit BasePlugin interface.
+Every single plugin should inherit libxyz.core.BasePlugin interface.
 Plugin exports its public methods via 'public' dictionary of BasePlugin class.
 Plugin must be registered within one of xyz plugin namespaces.
 Available namespaces are:

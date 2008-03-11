@@ -24,7 +24,7 @@ class BaseParser(object):
     error_unexpected = 1
 
     def parse(self, *args, **kwargs):
-        raise NotImplementedError(_("Must be implemented in child class"))
+        raise NotImplementedError(_(u"Must be implemented in child class"))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -36,18 +36,18 @@ class BaseParser(object):
         _emsg = ""
         if self._lexer:
             _lineno = self._lexer.sdata.lineno
-            _pre = _("Parse error on line %d" % _lineno)
+            _pre = _(u"Parse error on line %d" % _lineno)
         else:
-            _pre = _("Parse error")
+            _pre = _(u"Parse error")
 
         if etype == self.error_unexpected and msg and len(msg) == 2:
-            _emsg = _("Unexpected token '%s'. Waiting for '%s'" % \
-                    (msg[0].encode("string-escape"),
-                     msg[1].encode("string-escape")))
+            _emsg = _(u"Unexpected token '%s'. Waiting for '%s'" % \
+                    (msg[0].encode("unicode-escape"),
+                     msg[1].encode("unicode-escape")))
         elif msg:
             _emsg = msg
         else:
-            _emsg = _("Syntax error")
+            _emsg = _(u"Syntax error")
 
         raise ParseError("%s: %s" % (_pre, _emsg))
 

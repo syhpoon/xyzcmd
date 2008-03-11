@@ -37,10 +37,10 @@ class FlatParser(BaseParser):
     STATE_DELIM = 3
 
     DEFAULT_OPT = {
-                   "comment": "#",
-                   "assignchar": ":",
-                   "delimiter": "\n",
-                   "count": 0,
+                   u"comment": u"#",
+                   u"assignchar": u":",
+                   u"delimiter": u"\n",
+                   u"count": 0,
                    }
 
     def __init__(self, opt=None):
@@ -95,7 +95,7 @@ class FlatParser(BaseParser):
                 else:
                     _lex, _val = _res
 
-                if _val == "\n" and self._state != self.STATE_DELIM:
+                if _val == u"\n" and self._state != self.STATE_DELIM:
                     continue
                 self._parse_table[self._state](_val)
         except LexerError, e:
@@ -157,4 +157,4 @@ class FlatParser(BaseParser):
 
     def _check_complete(self):
         if self._state not in (self.STATE_VARIABLE, self.STATE_DELIM):
-            self.error(_("Unterminated expression"))
+            self.error(_(u"Unterminated expression"))

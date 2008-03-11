@@ -63,7 +63,7 @@ class SourceData(object):
         else:
             _res = self._next_me()
 
-        if _res == "\n":
+        if _res == u"\n":
             self.lineno += 1
 
         return _res

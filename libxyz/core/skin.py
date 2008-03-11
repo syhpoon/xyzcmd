@@ -45,10 +45,10 @@ class Skin(object):
         self._data = {}
 
         # Default fallback palette
-        self._default = uilib.colors.Palette("default",
-                        uilib.colors.Foreground("DEFAULT"),
-                        uilib.colors.Background("DEFAULT"),
-                        uilib.colors.Monochrome("DEFAULT"))
+        self._default = uilib.colors.Palette(u"default",
+                        uilib.colors.Foreground(u"DEFAULT"),
+                        uilib.colors.Background(u"DEFAULT"),
+                        uilib.colors.Monochrome(u"DEFAULT"))
 
         # 1. Parse
         self._data = self._parse()
@@ -59,7 +59,7 @@ class Skin(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __str__(self):
-        return "<Skin object: %s>" % str(self.path)
+        return u"<Skin object: %s>" % str(self.path)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -107,61 +107,62 @@ class Skin(object):
             try:
                 return int(val)
             except ValueError, e:
-                raise XYZValueError(_("Invalid literal for number"))
+                raise XYZValueError(_(u"Invalid literal for number"))
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         # Prepare parsers
 
-        _fs_type_opt = {"count": 1,
-                        "value_validator": palette_validator,
-                        "validvars": ("file", "dir", "block", "char",
-                                      "link", "fifo", "socket"),
+        _fs_type_opt = {u"count": 1,
+                        u"value_validator": palette_validator,
+                        u"validvars": (u"file", u"dir", u"block", u"char",
+                                       u"link", u"fifo", u"socket"),
                         }
         _fs_type_p = BlockParser(_fs_type_opt)
 
-        _fs_perm_opt = {"count": 1,
-                        "value_validator": palette_validator,
-                        "varre": re.compile("^\+?\d{4}$"),
+        _fs_perm_opt = {u"count": 1,
+                        u"value_validator": palette_validator,
+                        u"varre": re.compile(r"^\+?\d{4}$"),
                        }
         _fs_perm_p = BlockParser(_fs_perm_opt)
 
-        _fs_owner_opt = {"count": 1,
-                         "value_validator": palette_validator,
-                         "varre": re.compile("^(\w+)?(:(\w+))?$"),
+        _fs_owner_opt = {u"count": 1,
+                         u"value_validator": palette_validator,
+                         u"varre": re.compile(r"^(\w+)?(:(\w+))?$"),
                          }
         _fs_owner_p = BlockParser(_fs_owner_opt)
 
-        _fs_regexp_opt = {"count": 1,
-                         "value_validator": palette_validator,
-                         "varre": re.compile(".+"),
+        _fs_regexp_opt = {u"count": 1,
+                          u"value_validator": palette_validator,
+                          u"varre": re.compile(r".+"),
                          }
         _fs_regexp_p = BlockParser(_fs_regexp_opt)
 
-        _fs_priority_opt = {"count": 1,
-                            "value_validator": priority_validator,
-                            "validvars": ("type", "perm", "regexp", "owner"),
+        _fs_priority_opt = {u"count": 1,
+                            u"value_validator": priority_validator,
+                            u"validvars": (u"type",
+                                           u"perm", u"regexp", u"owner"),
                             }
         _fs_priority_p = BlockParser(_fs_priority_opt)
 
-        _ui_opt = {"count": 1,
-                   "value_validator": palette_validator,
+        _ui_opt = {u"count": 1,
+                   u"value_validator": palette_validator,
                    }
         _ui_p = BlockParser(_ui_opt)
 
-        _flat_opt = {"count": 1}
+        _flat_opt = {u"count": 1}
         _flat_p = FlatParser(_flat_opt)
 
-        _parsers = {"fs.type": _fs_type_p,
-                    "fs.perm": _fs_perm_p,
-                    "fs.owner": _fs_owner_p,
-                    "fs.regexp": _fs_regexp_p,
-                    "fs.priority": _fs_priority_p,
-                    re.compile("ui\.(\w)+"): _ui_p,
-                    ("AUTHOR", "VERSION", "DESCRIPTION"): _flat_p,
+        _parsers = {u"fs.type": _fs_type_p,
+                    u"fs.perm": _fs_perm_p,
+                    u"fs.owner": _fs_owner_p,
+                    u"fs.regexp": _fs_regexp_p,
+                    u"fs.priority": _fs_priority_p,
+                    re.compile(r"ui\.(\w)+"): _ui_p,
+                    (u"AUTHOR", u"VERSION", u"DESCRIPTION"): _flat_p,
                     }
 
-        _multi_opt = {"tokens": (":",)}
+        _multi_opt = {u"tokens": (":",)}
         _multi_p = MultiParser(_parsers, _multi_opt)
 
         _skinfile = open(self.path, "r")
@@ -169,7 +170,7 @@ class Skin(object):
         try:
             _data = _multi_p.parse(_skinfile)
         except ParseError, e:
-            raise SkinError(_("Error parsing skin file: %s" % str(e)))
+            raise SkinError(_(u"Error parsing skin file: %s" % str(e)))
         finally:
             _skinfile.close()
 
@@ -183,9 +184,9 @@ class Skin(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _check(self):
-        for _required in ("AUTHOR", "DESCRIPTION", "VERSION"):
+        for _required in (u"AUTHOR", u"DESCRIPTION", u"VERSION"):
             if _required not in self._data:
-                raise SkinError(_("Missing required variable: %s" % _required))
+                raise SkinError(_(u"Missing required variable: %s" % _required))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -217,8 +218,8 @@ class Skin(object):
 
         for _el in resolution:
             # Normalize name
-            if not _el.startswith("ui."):
-                _el = "ui.%s" % _el
+            if not _el.startswith(u"ui."):
+                _el = u"ui.%s" % _el
 
             if _el in self._data and (name in self._data[_el]):
                 return self._data[_el][name].name

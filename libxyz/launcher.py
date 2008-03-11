@@ -34,12 +34,12 @@ class Launcher(object):
         """
 
         import gettext
-        gettext.install("xyzcmd")
+        gettext.install(u"xyzcmd")
 
         self.xyz = XYZData(
                             {
-                            "screen": None,
-                            "skin": None,
+                            u"screen": None,
+                            u"skin": None,
                             }
                           )
 
@@ -63,8 +63,8 @@ class Launcher(object):
         _dim = self.xyz.screen.get_cols_rows()
         self._top = uilib.lowui.Filler(uilib.lowui.Text(""))
 
-        _str = "Welcome!\nAAAA\nBBBB\nCCCC"
-        _title = "XYZCommander"
+        _str = u"Welcome!\nAAAA\nBBBB\nCCCC"
+        _title = u"XYZCommander"
 
         _msg = uilib.YesNoBox(self.xyz, self._top, _str, _title)
         self.xyz.screen.draw_screen(_dim, _msg.render(_dim, True))
@@ -81,4 +81,5 @@ class Launcher(object):
 
         # TODO: ... parsing configs
 
-        self.xyz.skin = Skin("/tmp/skins/default")
+        # TODO: real skin path from configs
+        self.xyz.skin = Skin(u"/tmp/skins/default")

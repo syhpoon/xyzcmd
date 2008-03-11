@@ -34,8 +34,8 @@ class MultiParser(BaseParser):
     """
 
     DEFAULT_OPT = {
-                   "comment": "#",
-                   "tokens": (),
+                   u"comment": u"#",
+                   u"tokens": (),
                    }
 
     def __init__(self, parsers, opt=None):
@@ -62,8 +62,8 @@ class MultiParser(BaseParser):
 
         if parsers:
             if type(parsers) != types.DictType:
-                raise XYZValueError(_("Invalid argument type %s. "\
-                                      "Dictionary expected" % str(parsers)))
+                raise XYZValueError(_(u"Invalid argument type %s. "\
+                                      u"Dictionary expected" % str(parsers)))
             else:
                 self.parsers = parsers
         else:
@@ -119,7 +119,7 @@ class MultiParser(BaseParser):
                     self._lexer.unget(_val)
                     self._result.update(_parser.parse(self._lexer.sdata))
                 else:
-                    self.error(_("Unknown keyword: %s" % _val))
+                    self.error(_(u"Unknown keyword: %s" % _val))
         except LexerError, e:
             self.error(str(e))
 
@@ -140,8 +140,8 @@ class MultiParser(BaseParser):
         """
 
         if not isinstance(parser, BaseParser):
-            raise XYZValueError(_("Invalid argument type %s. "\
-                                  "BaseParser or subclassed expected" % \
+            raise XYZValueError(_(u"Invalid argument type %s. "\
+                                  u"BaseParser or subclassed expected" % \
                                   str(parsers)))
 
         self.parsers[keyword] = parser

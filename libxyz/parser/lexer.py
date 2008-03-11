@@ -59,8 +59,8 @@ class Lexer(object):
         self.tokens = tokens
         self.comment = comment
 
-        self._escapechar = "\\"
-        self._xqchar = "'"
+        self._escapechar = u"\\"
+        self._xqchar = u"'"
         self._xqcount = 3
         self._xqtotal = 0
         self._skip_next = 0
@@ -90,7 +90,7 @@ class Lexer(object):
                 self.unget(char)
                 return None
 
-            if self._in_comment and char != "\n":
+            if self._in_comment and char != u"\n":
                 continue
 
             if self._skip_next == 0:
@@ -136,14 +136,14 @@ class Lexer(object):
                     self._escaped = True
                     continue
 
-            if char == "\n":
+            if char == u"\n":
                 if self._in_quote:
-                    raise LexerError(_("Unterminated quote"))
+                    raise LexerError(_(u"Unterminated quote"))
 
                 _token = None
 
                 if self._idt:
-                    _token = "".join(self._idt)
+                    _token = u"".join(self._idt)
                     self._idt = []
                 else:
                     self._in_comment = False
@@ -159,7 +159,7 @@ class Lexer(object):
                 else:
                     continue
 
-            if char == '"':
+            if char == u'"':
                 if self._in_quote:
                     self._in_quote = False
                 else:
@@ -176,7 +176,7 @@ class Lexer(object):
 
                 # Check if we finished assembling the token
                 if self._idt:
-                    _token = "".join(self._idt)
+                    _token = u"".join(self._idt)
                     self._idt = []
                 if not char.isspace():
                     if _token:
@@ -197,7 +197,7 @@ class Lexer(object):
             self._idt.append(char)
 
         if self._idt:
-            _token = "".join(self._idt)
+            _token = u"".join(self._idt)
             self._idt = []
             return (self.TOKEN_IDT, _token)
 

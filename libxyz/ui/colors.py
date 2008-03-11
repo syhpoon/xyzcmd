@@ -24,11 +24,11 @@ class Color(object):
     """
 
     colors = {}
-    ctype = "base"
+    ctype = u"base"
 
     def __init__(self, color):
         if color not in self.colors:
-            raise XYZValueError(_("Invalid %s color: %s" % \
+            raise XYZValueError(_(u"Invalid %s color: %s" % \
             (self.ctype, str(color))))
 
         self.color = self.colors[color]
@@ -36,7 +36,7 @@ class Color(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __str__(self):
-        return "<%s color: %s>" % (self.ctype, str(self.color))
+        return u"<%s color: %s>" % (self.ctype, str(self.color))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -51,28 +51,28 @@ class Foreground(Color):
     """
 
     colors = {
-              "BLACK": "black",
-              "BROWN": "brown",
-              "YELLOW": "yellow",
-              "WHITE": "white",
-              "DEFAULT": "default",
+              u"BLACK": u"black",
+              u"BROWN": u"brown",
+              u"YELLOW": u"yellow",
+              u"WHITE": u"white",
+              u"DEFAULT": u"default",
 
-              "DARK_BLUE": "dark blue",
-              "DARK_MAGENTA": "dark magenta",
-              "DARK_CYAN": "dark cyan",
-              "DARK_RED": "dark red",
-              "DARK_GREEN": "dark green",
-              "DARK_GRAY": "dark gray",
+              u"DARK_BLUE": u"dark blue",
+              u"DARK_MAGENTA": u"dark magenta",
+              u"DARK_CYAN": u"dark cyan",
+              u"DARK_RED": u"dark red",
+              u"DARK_GREEN": u"dark green",
+              u"DARK_GRAY": u"dark gray",
 
-              "LIGHT_GRAY": "light gray",
-              "LIGHT_RED": "light red",
-              "LIGHT_GREEN": "light green",
-              "LIGHT_BLUE": "light blue",
-              "LIGHT_MAGENTA": "light magenta",
-              "LIGHT_CYAN": "light cyan",
+              u"LIGHT_GRAY": u"light gray",
+              u"LIGHT_RED": u"light red",
+              u"LIGHT_GREEN": u"light green",
+              u"LIGHT_BLUE": u"light blue",
+              u"LIGHT_MAGENTA": u"light magenta",
+              u"LIGHT_CYAN": u"light cyan",
               }
 
-    ctype = "foreground"
+    ctype = u"foreground"
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -82,20 +82,20 @@ class Background(Color):
     """
 
     colors = {
-              "BLACK": "black",
-              "BROWN": "brown",
-              "DEFAULT": "default",
+              u"BLACK": u"black",
+              u"BROWN": u"brown",
+              u"DEFAULT": u"default",
 
-              "DARK_RED": "dark red",
-              "DARK_GREEN": "dark green",
-              "DARK_BLUE": "dark blue",
-              "DARK_MAGENTA": "dark magenta",
-              "DARK_CYAN": "dark cyan",
+              u"DARK_RED": u"dark red",
+              u"DARK_GREEN": u"dark green",
+              u"DARK_BLUE": u"dark blue",
+              u"DARK_MAGENTA": u"dark magenta",
+              u"DARK_CYAN": u"dark cyan",
 
-              "LIGHT_GRAY": "light gray",
+              u"LIGHT_GRAY": u"light gray",
               }
 
-    ctype = "background"
+    ctype = u"background"
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -105,13 +105,13 @@ class Monochrome(Color):
     """
 
     colors = {
-              "DEFAULT": None,
-              "BOLD": "bold",
-              "UNDERLINE": "underline",
-              "STANDOUT": "standout",
+              u"DEFAULT": None,
+              u"BOLD": u"bold",
+              u"UNDERLINE": u"underline",
+              u"STANDOUT": u"standout",
               }
 
-    ctype = "monochrome"
+    ctype = u"monochrome"
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 

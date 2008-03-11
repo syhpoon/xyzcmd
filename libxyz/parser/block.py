@@ -48,14 +48,14 @@ class BlockParser(BaseParser):
     STATE_LIST_VALUE = 6
 
     DEFAULT_OPT = {
-                   "comment": "#",
-                   "varre": re.compile(r"^[\w-]+$"),
-                   "assignchar": "=",
-                   "delimiter": "\n",
-                   "validvars": (),
-                   "value_validator": None,
-                   "count": 0,
-                   "list_separator": ",",
+                   u"comment": u"#",
+                   u"varre": re.compile(r"^[\w-]+$"),
+                   u"assignchar": u"=",
+                   u"delimiter": u"\n",
+                   u"validvars": (),
+                   u"value_validator": None,
+                   u"count": 0,
+                   u"list_separator": u",",
                    }
 
     def __init__(self, opt=None):
@@ -91,8 +91,8 @@ class BlockParser(BaseParser):
         super(BlockParser, self).__init__()
 
         if opt and type(opt) != types.DictType:
-            raise XYZValueError(_("Invalid opt type: %s. "\
-                                  "Dictionary expected." % type(opt)))
+            raise XYZValueError(_(u"Invalid opt type: %s. "\
+                                  u"Dictionary expected." % type(opt)))
 
         self.opt = opt or self.DEFAULT_OPT
         self.set_opt(self.DEFAULT_OPT, self.opt)
@@ -104,6 +104,8 @@ class BlockParser(BaseParser):
         self._result = {}
         self._current_list = []
         self._lexer = None
+        self._openbracket = u"{"
+        self._closebracket = u"}"
 
         self._parse_table = {
             self.STATE_INIT: self._process_state_init,
@@ -129,7 +131,7 @@ class BlockParser(BaseParser):
 
         self._cleanup()
 
-        _tokens = ("{", "}",
+        _tokens = (self._openbracket, self._closebracket,
                    self.assignchar,
                    self.delimiter,
                    self.list_separator,
@@ -170,15 +172,16 @@ class BlockParser(BaseParser):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _process_state_block_open(self, word):
-        if word != "{":
-            self.error(msg=(word, "{"), etype=self.error_unexpected)
+        if word != self._openbracket:
+            self.error(msg=(word, self._openbracket),
+                       etype=self.error_unexpected)
         else:
             self._state = self.STATE_VARIABLE
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _process_state_variable(self, word):
-        if word == "}":
+        if word == self._closebracket:
             # Closing block
             if self._parsed_obj:
                 self._result[self._parsed_obj.name] = self._parsed_obj
@@ -188,9 +191,9 @@ class BlockParser(BaseParser):
                 self._lexer.done()
             return
         if self.validvars and word not in self.validvars:
-                self.error(_("Unknown variable %s" % word))
+                self.error(_(u"Unknown variable %s" % word))
         elif self.varre.match(word) is None:
-            self.error(_("Invalid variable name: %s" % word))
+            self.error(_(u"Invalid variable name: %s" % word))
 
         self._varname = word
         self._state = self.STATE_ASSIGN
@@ -224,7 +227,7 @@ class BlockParser(BaseParser):
                 _value = self.value_validator(self._parsed_obj.name,
                                               self._varname, _value)
             except XYZValueError, e:
-                self.error(_("Invalid value: %s" % str(e)))
+                self.error(_(u"Invalid value: %s" % str(e)))
 
         self._current_list = []
         self._parsed_obj[self._varname] = _value
@@ -242,7 +245,7 @@ class BlockParser(BaseParser):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _process_state_delim(self, word):
-        if word == "}":
+        if word == self._closebracket:
             if self._parsed_obj:
                 self._result[self._parsed_obj.name] = self._parsed_obj
             self._cleanup()
@@ -281,11 +284,11 @@ class BlockParser(BaseParser):
         _msg = None
 
         if self._in_quote:
-            _err, _msg = True, _("Unterminated quote")
+            _err, _msg = True, _(u"Unterminated quote")
 
         if self._state != self.STATE_INIT:
             if self._state != self.STATE_BLOCK_OPEN:
-                _err, _msg = True, _("Unclosed block")
+                _err, _msg = True, _(u"Unclosed block")
             else:
                 _err, _msg = True, None
 

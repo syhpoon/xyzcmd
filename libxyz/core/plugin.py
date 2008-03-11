@@ -47,7 +47,7 @@ class BasePlugin(object):
         """
 
         if not callable(method):
-            raise PluginError(_("Callable method required"))
+            raise PluginError(_(u"Callable method required"))
 
         self.public[self._build_key(method)] = method
 
@@ -70,4 +70,4 @@ class BasePlugin(object):
         Build full ierarchical method path
         """
 
-        return ".".join(("xyz", self._name_internal, method.__name__))
+        return ".".join((u"xyz", self._name_internal, method.__name__))
