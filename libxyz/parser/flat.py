@@ -40,6 +40,8 @@ class FlatParser(BaseParser):
                    u"comment": u"#",
                    u"assignchar": u":",
                    u"delimiter": u"\n",
+                   u"validvars": (),
+                   u"value_validator": None,
                    u"count": 0,
                    }
 
@@ -56,6 +58,16 @@ class FlatParser(BaseParser):
               Type: I{string (single char)}
             - delimiter: Character to use as delimiter between statements.
               Type: I{string (single char)}
+            - validvars: List of variables valid within block.
+              Type: I{sequence}
+            - value_validator: Value validator
+              Type: A function that takes two args:
+              variable and value and validates them.
+              In case value is invalid, XYZValueError must be raised.
+              Otherwise function must return required value, possibly modified.
+            - count: How many blocks to parse. If count <= 0 - will parse
+              all available.
+              Type: integer
         """
 
         super(FlatParser, self).__init__()
@@ -112,8 +124,11 @@ class FlatParser(BaseParser):
             self._lexer.done()
             return
 
-        self._varname = word
-        self._state = self.STATE_ASSIGN
+        if self.validvars and word not in self.validvars:
+                self.error(_(u"Unknown variable %s" % word))
+        else:
+            self._varname = word
+            self._state = self.STATE_ASSIGN
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -128,7 +143,15 @@ class FlatParser(BaseParser):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _process_state_value(self, word):
-        self._result[self._varname] = word
+        _value = word
+
+        if self.value_validator:
+            try:
+                _value = self.value_validator(self._varname, word)
+            except XYZValueError, e:
+                self.error(_(u"Invalid value: %s" % str(e)))
+
+        self._result[self._varname] = _value
         self._varname = None
         self._lexer.escaping_off()
         self._state = self.STATE_DELIM
