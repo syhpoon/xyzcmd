@@ -343,6 +343,68 @@ class FlatParsing(unittest.TestCase):
 
         self.assertRaises(ParseError, FlatParser().parse, "X:")
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testUnknownVar1(self):
+        """
+        Variable not in valid list is not allowed
+        """
+
+        _opt = {"validvars": ("A",)}
+        self.assertRaises(ParseError, FlatParser(_opt).parse, "X: Y")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testUnknownVar2(self):
+        """
+        Variable in valid list is allowed
+        """
+
+        _opt = {"validvars": ("A",)}
+        self.assert_(FlatParser(_opt).parse("A: Y"))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testValueValidator1(self):
+        """
+        Check if value_validator raises exception
+        """
+
+        def _f(var, val):
+            if val != "CORRECT_VALUE":
+                raise XYZValueError("Incorrect value %s!" % val)
+
+            return val
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        _opt = {"value_validator": _f}
+
+        _p = FlatParser(_opt)
+
+        self.assertRaises(ParseError, _p.parse, "A: INCORRECT_VALUE")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testValueValidator2(self):
+        """
+        Check if value_validator accepts correct value
+        """
+
+        def _f(var, val):
+            if val != "CORRECT_VALUE":
+                raise XYZValueError("Incorrect value %s!" % val)
+
+            return val
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        _opt = {"value_validator": _f}
+
+        _p = FlatParser(_opt)
+
+        self.assert_(_p.parse("A: CORRECT_VALUE"))
+
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 if __name__ == "__main__":
