@@ -14,11 +14,12 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+import sys
 import re
 import os
 import os.path
 
-from libxyz.exceptions import PluginError
+from libxyz.exceptions import PluginError, XYZValueError
 from libxyz.parser import FlatParser
 
 class PluginManager(object):
@@ -31,112 +32,61 @@ class PluginManager(object):
     """
 
     NAMESPACES = (u"misc", u"ui", u"vfs")
-    PLUGIN_EXT = (re.compile(u"\.zip$", re.U),
-                       re.compile(u"\.tar$", re.U),
-                       re.compile(u"\.tar\.gz$", re.U),
-                       re.compile(u"\.tar\.bz2$", re.U),
-                      )
 
     def __init__(self, dirs):
         """
         @param dirs: Plugin directories list
-        @type dirs: sequence
+        @type dirs: list
         """
 
-        self.metafile = u"meta"
-        self._raw_plugin_list = []
+        if type(dirs) != type([]):
+            raise XYZValueError(_(u"Invalid argument type %s. List expected" %
+                                  type(dirs)))
+        else:
+            self.dirs = dirs
+            sys.path.extend(dirs)
 
-        _meta_opt = {u"validvars": (u"AUTHOR",
-                                    u"VERSION",
-                                    u"BRIEF_DESCRIPTION",
-                                    u"FULL_DESCRIPTION",
-                                    u"MIN_XYZ_VERSION",
-                                    ),
-                    }
+        self.required_metavars = (u"AUTHOR",
+                                  u"VERSION",
+                                  u"BRIEF_DESCRIPTION",
+                                  u"FULL_DESCRIPTION",
+                                  )
 
-        self._meta_parser = FlatParser(_meta_opt)
+        self.optional_metavars = (u"MIN_XYZ_VERSION",)
 
-        # First scan for available plugins
-        for _dir in dirs:
-            self._raw_plugin_list.extend(self._scan(_dir))
+        self.metavars = []
+        self.metavars.extend(self.required_metavars)
+        self.metavars.extend(self.optional_metavars)
 
-        # Next try to load all activated plugins
-        self._load(self._raw_plugin_list)
+        # Try to load all activated plugins
+        self._load(self._activated_plugins)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _scan(self, pdir):
-        """
-        Scan directory for plugins
-        Return list of plugin derectories and archives inside
-        It doesn't check for plugin validity, only for matching criteria
-        of directory/archive to be recognized as plugin.
-        """
-
-        _result = []
-
-        # The directory to be recognized as plugin must contain:
-        # 1) file named `meta'
-        # 2) file named as directory it's being held inside with .py extension
-
-        # Also all supported archives are recognized as plugins
-
-        # Searching is performed in subdirectories of supplied directory
-        # named according to available namespaces.
-
-        for _nsdir in [os.path.join(pdir, _ns) for _ns in self.NAMESPACES]:
-            _walk = os.walk(_nsdir)
-            try:
-                _root, _dirs, _files = _walk.next()
-            except StopIteration:
-                continue
-
-            for _dir in _dirs:
-                _basedir = os.path.join(_nsdir, _dir)
-
-                _pluginfile = os.path.join(_basedir, u"%s.py" % _dir)
-                _metafile = os.path.join(_basedir, self.metafile)
-
-                if os.access(_metafile, os.R_OK) and \
-                os.access(_pluginfile, os.R_OK):
-                    _result.append(_basedir)
-
-            # Add matchin archives
-            _result.extend([
-                            os.path.join(_nsdir, _file) for _file in _files
-                            if len(filter(None,
-                                [
-                                  regexp.search(_file)
-                                  for regexp in self.PLUGIN_EXT
-                                ]))
-                            ])
-
-        return _result
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _load(self, raw_list):
+    def _load(self, active_list):
         """
         Try to load plugins
         """
 
-        for _plugin in raw_list:
+        for _plugin in active_list:
             if os.path.isdir(_plugin):
                 self._load_plugin_dir(_plugin)
-            elif os.path.isfile(_plugin):
-                self._load_plugin_file(_plugin)
             else: # WTF?
                 raise PluginError(_(u"Unable to load plugin: %s" % _plugin))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _load_plugin_dir(self, plugin):
+        # Import plugin's main
         try:
-            _meta_file = open(os.path.join(plugin, self.metafile), "r")
-        except IOError, e:
-            raise PluginError(_(u"Unable to open meta-file: %s" % e))
+            _loaded = __import__(plugin, globals(), locals(), ["main"])
+        except ImportError, e:
+            raise PluginError(_(u"Unable to load plugin %s: %s" % (plugin, e))
 
-        try:
-            self._meta_parser.parse(_meta_file)
-        except ParseError,e :
-            raise PluginError(_(u"Error parsing meta-file: %s" % e))
+        for _required in self.required_metavars:
+            if _required not in _parsed:
+                raise PluginError(_(u"Required variable not defined in "\
+                                    u"meta-file: %s" % _required))
+
+        # 4. Import plugin module
+        module = __import__()

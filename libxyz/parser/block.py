@@ -14,10 +14,6 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-"""
-BlockParser parses configuration block[s]
-"""
-
 import re
 import types
 
@@ -131,7 +127,8 @@ class BlockParser(BaseParser):
 
         self._cleanup()
 
-        _tokens = (self._openbracket, self._closebracket,
+        _tokens = (self._openbracket,
+                   self._closebracket,
                    self.assignchar,
                    self.delimiter,
                    self.list_separator,
@@ -185,6 +182,7 @@ class BlockParser(BaseParser):
             # Closing block
             if self._parsed_obj:
                 self._result[self._parsed_obj.name] = self._parsed_obj
+
             self._cleanup()
 
             if self.count > 0 and self.count == len(self._result):
@@ -214,8 +212,6 @@ class BlockParser(BaseParser):
         if word == self.list_separator:
             self._state = self.STATE_VALUE
             return
-
-        self._current_list
 
         if len(self._current_list) == 1:
             _value = self._current_list[0]

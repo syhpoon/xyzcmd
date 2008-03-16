@@ -28,11 +28,13 @@ class BasePlugin(object):
         """
 
         self.name = name
-        self.version = version[0]
-        self.intversion = version[1]
-        self.author = author
-        self.bdescription = bdescription
-        self.description = description
+        # Integer module version (for possible comparison)
+        self.intversion = 0
+
+        self.version = None
+        self.author = None
+        self.bdescription = None
+        self.description = None
 
         # List of exported public methods
         self.public = {}
