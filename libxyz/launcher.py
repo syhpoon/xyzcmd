@@ -22,6 +22,7 @@ import libxyz.ui as uilib
 
 from libxyz.core import Skin
 from libxyz.core import XYZData
+from libxyz.core.plugins import PluginManager
 
 class Launcher(object):
     """
@@ -52,6 +53,8 @@ class Launcher(object):
 
         #self.parse_args()
         self.parse_configs()
+        # TODO: real plugins path from config
+        self.xyz.pm = PluginManager(self.xyz, ['/tmp/plugins',])
 
         self.xyz.screen = uilib.display.init_display()
         self.xyz.screen.register_palette(self.xyz.skin.get_palette_list())
@@ -66,8 +69,10 @@ class Launcher(object):
         _str = u"Welcome!\nAAAA\nBBBB\nCCCC"
         _title = u"XYZCommander"
 
-        _msg = uilib.YesNoBox(self.xyz, self._top, _str, _title)
-        self.xyz.screen.draw_screen(_dim, _msg.render(_dim, True))
+        #_msg = uilib.YesNoBox(self.xyz, self._top, _str, _title)
+        #self.xyz.screen.draw_screen(_dim, _msg.render(_dim, True))
+        say_hello = self.xyz.pm.from_load(u":misc:hello", u"SayHello")
+        say_hello(self._top)
 
         while not self.xyz.screen.get_input():
             pass

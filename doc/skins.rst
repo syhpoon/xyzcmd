@@ -214,7 +214,7 @@ So, for instance, a MessageBox widget defines a member::
 
    resolution = ("message_box", "box", "widget")
 
-According to this definition, SkinManager will first look for ``message_box``
+According to this definition, skin manager will first look for ``message_box``
 ruleset, next for ``box`` and at last for ``widget`` ruleset.
 Searching stops when first of defined rulesets is found.
 Default palette returned unless defined ruleset found.
@@ -236,10 +236,10 @@ So ruleset may look as::
       title = YELLOW, DARK_BLUE
    }
 
-In case such a ruleset exists in skin file, SkinManager will load above
+In case such a ruleset exists in skin file, skin manager will load above
 definitions and will use it for every message_box widget.
-Otherwise SkinManager will look for next ruleset defined in ``resolution``,
-in our case it is ``box``. And so on.
+Otherwise skin manager will look for next ruleset defined in ``resolution``,
+in our case it is ``box``. And so forth.
 
 Here the following question may arise: what if some of the rulesets will not
 have defined all the resources required?

@@ -1,4 +1,2 @@
-keyword name {
-	var2 = val1
-	var2 = val2
-}
+from :misc:hello load SayHello
+load :misc:hello

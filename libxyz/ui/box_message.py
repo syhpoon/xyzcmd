@@ -28,7 +28,7 @@ class MessageBox(lowui.WidgetWrap):
 
     def __init__(self, xyz, body, message, title="", width=60):
         """
-        @param xyz: XYZ dictionary
+        @param xyz: XYZ data
         @param body: Top-level widget
         @param message: Message to display
         @param title: Box title

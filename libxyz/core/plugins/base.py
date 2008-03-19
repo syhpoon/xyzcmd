@@ -21,55 +21,51 @@ class BasePlugin(object):
     Parent class for all xyz-plugins
     """
 
-    def __init__(self, name, meta, *args, **kwargs):
-        """
-        @param name: Plugin name
-        @type name: string
-        """
+    # AUTHOR: Author name
+    AUTHOR = None
 
-        self.name = name
+    # VERSION: Plugin version
+    VERSION = None
+
+    # Brief one line description
+    BRIEF_DESCRIPTION = None
+
+    # Full plugin description
+    FULL_DESCRIPTION = None
+
+    # NAMESPACE: Plugin namespace. For detailed information about
+    #            namespaces see Plugins chapter of XYZCommander user manual.
+    #            Full namespace path to method is:
+    #            xyz:plugins:misc:hello:SayHello
+    NAMESPACE = None
+
+    # MIN_XYZ_VERSION: Minimal XYZCommander version
+    #                  the plugin is compatible with
+    MIN_XYZ_VERSION = None
+
+    def __init__(self, xyz, *args, **kwargs):
+        self.xyz = xyz
+
         # Integer module version (for possible comparison)
         self.intversion = 0
-
-        self.version = None
-        self.author = None
-        self.bdescription = None
-        self.description = None
 
         # List of exported public methods
         self.public = {}
 
-        self._name_internal = self.__class__.__name__
-
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def add_method(self, method):
+    def prepare(self, *args, **kwargs):
         """
-        Add method to public
+        Plugin constructor
         """
 
-        if not callable(method):
-            raise PluginError(_(u"Callable method required"))
-
-        self.public[self._build_key(method)] = method
+        pass
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def remove_method(self, name):
+    
+    def finalize(self, *args, **kwargs):
         """
-        Remove method from public
-        """
-
-        try:
-            del self.public[self._build_key(method)]
-        except KeyError:
-            pass
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _build_key(self, method):
-        """
-        Build full ierarchical method path
+        Plugin destructor
         """
 
-        return ".".join((u"xyz", self._name_internal, method.__name__))
+        pass

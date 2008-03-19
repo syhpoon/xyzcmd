@@ -3,7 +3,7 @@
 # Max E. Kuznecov ~syhpoon <mek@mek.uz.ua> 2008
 #
 
-from libxyz.core.plugin import BasePlugin
+from libxyz.core.plugins import BasePlugin
 from libxyz.ui import MessageBox
 from libxyz.version import Version
 
@@ -26,10 +26,12 @@ class XYZPlugin(BasePlugin):
 
     # Full plugin description
 
-    FULL_DESCRIPTION = u"Hello plugin is an example of XYZCommander plugin."\
-                       u"It shows main aspects of plugin creation."\
-                       u"Functionality is limited to single method: SayHello "\
-                       u"which shows greeting message box."
+    FULL_DESCRIPTION = u"""\
+Hello plugin is an example of XYZCommander plugin.
+It shows main aspects of plugin creation.
+Functionality is limited to single method: SayHello
+which shows greeting message box.\
+"""
 
     # NAMESPACE: Plugin namespace. For detailed information about
     #            namespaces see Plugins chapter of XYZCommander user manual.
@@ -39,21 +41,33 @@ class XYZPlugin(BasePlugin):
     NAMESPACE = "misc"
 
     def __init__(self, xyz):
-        self.xyz = xyz
+        super(XYZPlugin, self).__init__(xyz)
+
         self.public[u"SayHello"] = self._say_hello
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    def prepare(self):
+        pass
 
-    def _say_hello(self):
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def finalize(self):
+        pass
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _say_hello(self, top):
         """
         Exported method
         Shows simple greeting dialog
         """
 
         _msg = self.FULL_DESCRIPTION
+        _dim = self.xyz.screen.get_cols_rows()
         _title = u"XYZCommander version %s" % Version.version
 
-        _box = MessageBox(self.xyz.screen, _msg, _title)
+        _box = MessageBox(self.xyz, top, _msg, _title)
         self.xyz.screen.draw_screen(_dim, _box.render(_dim, True))
 
         return self.xyz.screen.get_input()

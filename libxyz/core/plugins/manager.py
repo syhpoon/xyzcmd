@@ -26,15 +26,13 @@ class PluginManager(object):
     """
     Plugin manager class
     It is supposed to:
-    - Scan for plugin dirs
-    - Load and parse found plugins
-    - Provide easy access to plugins data
+    - Load found plugins
+    - Provide easy access to plugin data
     """
 
-    NAMESPACES = (u"misc", u"ui", u"vfs")
-
-    def __init__(self, dirs):
+    def __init__(self, xyz, dirs):
         """
+        @param xyz: XYZ data
         @param dirs: Plugin directories list
         @type dirs: list
         """
@@ -46,47 +44,116 @@ class PluginManager(object):
             self.dirs = dirs
             sys.path.extend(dirs)
 
-        self.required_metavars = (u"AUTHOR",
-                                  u"VERSION",
-                                  u"BRIEF_DESCRIPTION",
-                                  u"FULL_DESCRIPTION",
-                                  )
+        self.xyz = xyz
 
-        self.optional_metavars = (u"MIN_XYZ_VERSION",)
+        self.abs_ns = "xyz:plugins:"
 
-        self.metavars = []
-        self.metavars.extend(self.required_metavars)
-        self.metavars.extend(self.optional_metavars)
-
-        # Try to load all activated plugins
-        self._load(self._activated_plugins)
+        self._loaded = {}
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _load(self, active_list):
+    def load(self, plugin, *initargs, **initkwargs):
         """
-        Try to load plugins
+        Load and initiate required plugin
+        @param plugin: Absoulute or relative plugin namespace path
+        @param initargs: Necessary arguments to initiate plugin
+        @param initkwargs: Necessary kw arguments to initiate plugin
         """
 
-        for _plugin in active_list:
-            if os.path.isdir(_plugin):
-                self._load_plugin_dir(_plugin)
-            else: # WTF?
-                raise PluginError(_(u"Unable to load plugin: %s" % _plugin))
+        _plugin = self.normalize_ns_path(plugin)
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        if self.is_loaded(_plugin):
+            return self.get_loaded(_plugin)
 
-    def _load_plugin_dir(self, plugin):
-        # Import plugin's main
+        _path = u".".join((_plugin, u"main"))
+
+        # Import plugin
+        # Plugin entry-point is XYZPlugin class in a main.py file
         try:
-            _loaded = __import__(plugin, globals(), locals(), ["main"])
+            _loaded = __import__(_path, globals(), locals(), [u"XYZPlugin"])
         except ImportError, e:
-            raise PluginError(_(u"Unable to load plugin %s: %s" % (plugin, e))
+            raise PluginError(_(u"Unable to load plugin %s: %s" % (plugin, e)))
 
-        for _required in self.required_metavars:
-            if _required not in _parsed:
-                raise PluginError(_(u"Required variable not defined in "\
-                                    u"meta-file: %s" % _required))
+        try:
+            _loaded = getattr(_loaded, u"XYZPlugin")
+        except AttributeError, e:
+            raise PluginError(_(u"Unable to find required XYZPlugin class"))
 
-        # 4. Import plugin module
-        module = __import__()
+        # Initiate plugin
+        _obj = _loaded(self.xyz, *initargs, **initkwargs)
+
+        # Run prepare (constructor)
+        _obj.prepare()
+
+        self.set_loaded(_plugin, _obj)
+
+        return _obj
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def from_load(self, plugin, method):
+        """
+        Load method from plugin
+        """
+
+        _plugin = self.normalize_ns_path(plugin)
+
+        if not self.is_loaded(_plugin):
+            _obj = self.load(plugin)
+        else:
+            _obj = self.get_loaded(_plugin)
+
+        if method not in _obj.public:
+            raise PluginError(_(u"%s plugin instance does not export "\
+                                u"%s method" % (plugin, method)))
+        else:
+            return _obj.public[method]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def is_loaded(self, plugin):
+        """
+        Check if plugin already loaded
+        @param plugin: Normalized plugin path
+        """
+
+        return plugin in self._loaded
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_loaded(self, plugin):
+        """
+        Return loaded and initiated inistance of plugin
+        @param plugin: Normalized plugin path
+        """
+
+        return self._loaded[plugin]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def set_loaded(self, plugin, inst):
+        """
+        Set loaded and initiated inistance of plugin
+        @param plugin: Normalized plugin path
+        @param inst: Plugin instance
+        """
+
+        self._loaded[plugin] = inst
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def normalize_ns_path(self, path):
+        """
+        Normalize plugin namespace path to relative.
+        """
+
+        _path = path
+
+        if _path.startswith(self.abs_ns):
+            _path = path.replace(self.abs_ns, u"")
+        elif _path.startswith(u":"):
+            _path = _path[1:]
+        else:
+            raise PluginError(_(u"Invalid plugin namespace path %s" % _path))
+
+        return _path.replace(u":", u".")
