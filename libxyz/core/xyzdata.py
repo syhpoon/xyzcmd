@@ -20,7 +20,7 @@ class XYZData(object):
     """
 
     def __init__(self, data=None):
-        self._data = data or {}
+        object.__setattr__(self, "_data", data or {})
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -33,4 +33,7 @@ class XYZData(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __setattr__(self, attr, val):
-        object.__setattr__(self, attr, val)
+        if not self._data.has_key(attr):
+            raise AttributeError(_(u"Invalid attribute: %s" % attr))
+
+        self._data[attr] = val

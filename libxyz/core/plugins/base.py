@@ -35,8 +35,6 @@ class BasePlugin(object):
 
     # NAMESPACE: Plugin namespace. For detailed information about
     #            namespaces see Plugins chapter of XYZCommander user manual.
-    #            Full namespace path to method is:
-    #            xyz:plugins:misc:hello:SayHello
     NAMESPACE = None
 
     # MIN_XYZ_VERSION: Minimal XYZCommander version
@@ -51,6 +49,18 @@ class BasePlugin(object):
 
         # List of exported public methods
         self.public = {}
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __getattr__(self, method):
+        """
+        Provide transparent access to public methods
+        """
+
+        if method in self.public:
+            return self.public[method]
+        else:
+            raise AttributeError(_(u"%s is not a public method" % method))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

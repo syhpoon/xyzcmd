@@ -1,0 +1,9 @@
+#
+# Main configuration file
+#
+
+# Enabled plugins
+
+plugins {
+	:misc:hello = ENABLE
+}

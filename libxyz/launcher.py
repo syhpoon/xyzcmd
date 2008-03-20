@@ -18,6 +18,8 @@
 Launcher - all neccessary initialization
 """
 
+import gettext
+
 import libxyz.ui as uilib
 
 from libxyz.core import Skin
@@ -34,13 +36,13 @@ class Launcher(object):
         Initialization
         """
 
-        import gettext
         gettext.install(u"xyzcmd")
 
         self.xyz = XYZData(
                             {
                             u"screen": None,
                             u"skin": None,
+                            u"pm": None,
                             }
                           )
 
@@ -51,7 +53,7 @@ class Launcher(object):
         Run commander
         """
 
-        #self.parse_args()
+        self.parse_args()
         self.parse_configs()
         # TODO: real plugins path from config
         self.xyz.pm = PluginManager(self.xyz, ['/tmp/plugins',])
@@ -71,11 +73,24 @@ class Launcher(object):
 
         #_msg = uilib.YesNoBox(self.xyz, self._top, _str, _title)
         #self.xyz.screen.draw_screen(_dim, _msg.render(_dim, True))
-        say_hello = self.xyz.pm.from_load(u":misc:hello", u"SayHello")
-        say_hello(self._top)
+
+        #say_hello = self.xyz.pm.from_load(u":misc:hello", u"SayHello")
+        hello = self.xyz.pm.load(u":misc:hello")
+        hello.say_hello(self._top)
 
         while not self.xyz.screen.get_input():
             pass
+
+        self.finalize()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def parse_args(self):
+        """
+        Parse command line arguments
+        """
+
+        pass
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -88,3 +103,12 @@ class Launcher(object):
 
         # TODO: real skin path from configs
         self.xyz.skin = Skin(u"/tmp/skins/default")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def finalize(self):
+        """
+        Perform shutdown procedures
+        """
+
+        self.xyz.pm.shutdown()

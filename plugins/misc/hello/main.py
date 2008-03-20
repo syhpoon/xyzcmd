@@ -43,7 +43,7 @@ which shows greeting message box.\
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 
-        self.public[u"SayHello"] = self._say_hello
+        self.public[u"say_hello"] = self._say_hello
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     

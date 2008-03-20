@@ -5,30 +5,21 @@ Plugins
 Plugins are the primary way to extend |XYZ| functionality.
 In fact even base functionality is implemented mainly via plugins.
 
-Plugins are being held in one of two directories:
+Plugins are being held in one of the following directories:
 
 - System plugins: subdirectory of main |XYZ| installation path 
   (usually /usr/local/share/xyzcmd/plugins). All base system plugins are held
   here.
 - User plugins: Any other third-party plugins are held in ~/.xyzcmd/plugins.
 
-For every installed plugin a directory created in an appropriate path with name
-matching plugin-name.
+In these directories namespace subdirectories are created (see below for
+more details).
 
-Plugins usually contain following files:
+Plugin entry-point is a main.py file inside plugin directory.
+This file should contain class named ``XYZPlugin`` sublclassed from 
+libxyz.core.plugins.BasePlugin class.
 
-- meta_:             Plugin meta-information. Mandatory.
-- conf:              Plugin configuration. Optional.
-- <pluginname>.py:   Main plugin file. Mandatory.
-- any other needed files... Optional.
-
-.. _meta:
-
-Meta-information
-----------------
-File 'meta' contains important plugin information.
-File syntax is simple: ``value: variable``
-Here is a full list of available variables:
+XYZPlugin class should define following mandatory attributes:
 
 **AUTHOR**
    Plugin author name. Preferably in format ``Name <foo@bar>``.
@@ -45,8 +36,7 @@ Here is a full list of available variables:
 **NAMESPACE**
    Plugin namespace. See Namespaces_
 
-All these variables are mandatory.
-Also some optional variables can be defined:
+Also some optional attributes can be defined:
 
 **MIN_XYZ_VERSION**
    Minimal |XYZ| version the plugin can be used with.
@@ -55,20 +45,36 @@ Also some optional variables can be defined:
 Namespaces
 ----------
 Namespaces are used to hierarchically organize exported methods and
-to prevent method-names collisions. Стоит обратить внимание на то, что
-иерархический путь плагина это не то-же самое что путь к python-модулю
-его реализующему.
-Типичный полный путь плагина выглядит так:
-``xyz:plugins:<namespace>:<plugin-name>``
+to prevent method-names collisions. Namespace path can be specified
+either in absolute or in minimal form.
 
-Здесь ``<namespace>`` - один из доступных типов плагина.
-Доступны следующие типы:
+Typical absolute namespace path is::
 
--- 
-Every single plugin should inherit libxyz.core.BasePlugin interface.
+   xyz:plugins:<namespace>:<plugin-name>
+
+Minimal path can be specified as following::
+   
+   :<namespace>:<plugin-name>
+
+Here ``<namespace>`` is one of the available namespaces::
+
+   - ui    - User-interface related
+   - vfs   - Virtual file-system related
+   - misc  - Other miscellaneous
+
 Plugin exports its public methods via 'public' dictionary of BasePlugin class.
-Plugin must be registered within one of xyz plugin namespaces.
-Available namespaces are:
-- ui    - User-interface related
-- vfs   - Virtual file-system related
-- misc  - Other miscellaneous
+
+Managment
+---------
+All plugin management is performed using PluginManger instance, accessible as 
+``pm`` attribute of ``libxyz.core.XYZData`` object named ``xyz``.
+
+PluginManger supports two main procedures:
+   
+**load <plugin>**
+   Search for <plugin>, load it, instanciate, prepare (run prepare()) and return
+
+**from <plugin> load <method>**
+   Load public method <method> from <plugin>.
+
+In both cases <plugin> is a plugin namespace path.

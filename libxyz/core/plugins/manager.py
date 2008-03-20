@@ -22,13 +22,37 @@ import os.path
 from libxyz.exceptions import PluginError, XYZValueError
 from libxyz.parser import FlatParser
 
+def normalize_ns_path(method):
+    """
+    Normalize plugin namespace path decorator
+    """
+
+    def _norm(instance, *args, **kwargs):
+        _path, _rest = args[0],args[1:]
+
+        if _path.startswith(instance.ABS_NS_PREFIX):
+            _path = path.replace(instance.ABS_NS_PREFIX, u"")
+        elif _path.startswith(u":"):
+            _path = _path[1:]
+
+        # Else suppose it is already normalized
+
+        _path = _path.replace(u":", u".")
+
+        return method(instance, _path, *_rest, **kwargs)
+
+    return _norm
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
 class PluginManager(object):
     """
     Plugin manager class
-    It is supposed to:
-    - Load found plugins
-    - Provide easy access to plugin data
+    It is supposed to provide easy access to plugin data
     """
+
+    ABS_NS_PREFIX = u"xyz:plugins:"
+    PLUGIN_CLASS = u"XYZPlugin"
 
     def __init__(self, xyz, dirs):
         """
@@ -45,13 +69,11 @@ class PluginManager(object):
             sys.path.extend(dirs)
 
         self.xyz = xyz
-
-        self.abs_ns = "xyz:plugins:"
-
         self._loaded = {}
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    @normalize_ns_path
     def load(self, plugin, *initargs, **initkwargs):
         """
         Load and initiate required plugin
@@ -60,24 +82,23 @@ class PluginManager(object):
         @param initkwargs: Necessary kw arguments to initiate plugin
         """
 
-        _plugin = self.normalize_ns_path(plugin)
+        if self.is_loaded(plugin):
+            return self.get_loaded(plugin)
 
-        if self.is_loaded(_plugin):
-            return self.get_loaded(_plugin)
-
-        _path = u".".join((_plugin, u"main"))
+        _path = u".".join((plugin, u"main"))
 
         # Import plugin
         # Plugin entry-point is XYZPlugin class in a main.py file
         try:
-            _loaded = __import__(_path, globals(), locals(), [u"XYZPlugin"])
+            _loaded = __import__(_path, globals(), locals(),[self.PLUGIN_CLASS])
         except ImportError, e:
             raise PluginError(_(u"Unable to load plugin %s: %s" % (plugin, e)))
 
         try:
-            _loaded = getattr(_loaded, u"XYZPlugin")
+            _loaded = getattr(_loaded, self.PLUGIN_CLASS)
         except AttributeError, e:
-            raise PluginError(_(u"Unable to find required XYZPlugin class"))
+            raise PluginError(_(u"Unable to find required %s class" % \
+                              self.PLUGIN_CLASS))
 
         # Initiate plugin
         _obj = _loaded(self.xyz, *initargs, **initkwargs)
@@ -85,23 +106,26 @@ class PluginManager(object):
         # Run prepare (constructor)
         _obj.prepare()
 
-        self.set_loaded(_plugin, _obj)
+        self.set_loaded(plugin, _obj)
 
         return _obj
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    @normalize_ns_path
     def from_load(self, plugin, method):
         """
-        Load method from plugin
+        Load method from plugin.
+        If plugin was not loaded before, load and initiate it first.
+
+        @param plugin: Absoulute or relative plugin namespace path
+        @param method: Public method name
         """
 
-        _plugin = self.normalize_ns_path(plugin)
-
-        if not self.is_loaded(_plugin):
+        if not self.is_loaded(plugin):
             _obj = self.load(plugin)
         else:
-            _obj = self.get_loaded(_plugin)
+            _obj = self.get_loaded(plugin)
 
         if method not in _obj.public:
             raise PluginError(_(u"%s plugin instance does not export "\
@@ -111,30 +135,33 @@ class PluginManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    @normalize_ns_path
     def is_loaded(self, plugin):
         """
         Check if plugin already loaded
-        @param plugin: Normalized plugin path
+        @param plugin: Absoulute or relative plugin namespace path
         """
 
         return plugin in self._loaded
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    @normalize_ns_path
     def get_loaded(self, plugin):
         """
         Return loaded and initiated inistance of plugin
-        @param plugin: Normalized plugin path
+        @param plugin: Absoulute or relative plugin namespace path
         """
 
         return self._loaded[plugin]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    @normalize_ns_path
     def set_loaded(self, plugin, inst):
         """
         Set loaded and initiated inistance of plugin
-        @param plugin: Normalized plugin path
+        @param plugin: Absoulute or relative plugin namespace path
         @param inst: Plugin instance
         """
 
@@ -142,18 +169,13 @@ class PluginManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def normalize_ns_path(self, path):
+    def shutdown(self):
         """
-        Normalize plugin namespace path to relative.
+        Run destructors on all loaded plugins
         """
 
-        _path = path
-
-        if _path.startswith(self.abs_ns):
-            _path = path.replace(self.abs_ns, u"")
-        elif _path.startswith(u":"):
-            _path = _path[1:]
-        else:
-            raise PluginError(_(u"Invalid plugin namespace path %s" % _path))
-
-        return _path.replace(u":", u".")
+        for plugin_name in self._loaded:
+            try:
+                self._loaded[plugin_name].finalize()
+            except StandardError:
+                pass
