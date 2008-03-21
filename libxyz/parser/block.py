@@ -25,7 +25,7 @@ from libxyz.exceptions import LexerError
 
 class BlockParser(BaseParser):
     """
-    BaseParser is used to parse blocked structures
+    BaseParser is used to parse block structures
     Format:
 
     name {
@@ -63,25 +63,32 @@ class BlockParser(BaseParser):
             - comment: Comment character.
               Everything else ignored until EOL.
               Type: I{string (single char)}
+              Default: #
             - delimiter: Character to use as delimiter between statements.
               Type: I{string (single char)}
+              Default: \\n
             - varre: Valid variable name regular expression.
-              ^[\w-]+$ re is used unless given.
               Type: I{Compiled re object (L{re.compile})}
+              Default: ^[\w-]+$
             - assignchar: Variable-value split character.
               Type: I{string (single char)}
+              Default: =
             - validvars: List of variables valid within block.
               Type: I{sequence}
+              Default: ()
             - value_validator: Value validator
               Type: A function that takes three args:
               current block, var and value and validates them.
               In case value is invalid, XYZValueError must be raised.
               Otherwise function must return required value, possibly modified.
+              Default: None
             - count: How many blocks to parse. If count <= 0 - will parse
               all available.
               Type: integer
+              Default: 0
             - list_separator: Character to separate elements in list
               Type: I{string (single char)}
+              Default: ,
         """
 
         super(BlockParser, self).__init__()

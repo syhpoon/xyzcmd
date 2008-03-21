@@ -133,7 +133,7 @@ class MultiParser(BaseParser):
         replace it with new one.
 
         @param keyword: Keyword that will trigger the parser.
-        @type keyword: string
+        @type keyword: string, sequence or compiled regular expression
 
         @param param: Any *Parser instance. Must be subclassed
                       from L{BaseParser}.

@@ -24,11 +24,11 @@ from libxyz.parser import FlatParser
 
 def normalize_ns_path(method):
     """
-    Normalize plugin namespace path decorator
+    Normalize plugin namespace path
     """
 
     def _norm(instance, *args, **kwargs):
-        _path, _rest = args[0],args[1:]
+        _path, _rest = args[0], args[1:]
 
         if _path.startswith(instance.ABS_NS_PREFIX):
             _path = path.replace(instance.ABS_NS_PREFIX, u"")

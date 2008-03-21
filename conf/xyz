@@ -3,7 +3,9 @@
 #
 
 # Enabled plugins
+# Syntax is:
+#   {plugin_ns_path} > ENABLE | DISABLE
 
 plugins {
-	:misc:hello = ENABLE
+	:misc:hello > ENABLE
 }
