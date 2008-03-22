@@ -9,3 +9,6 @@
 plugins {
 	:misc:hello > ENABLE
 }
+
+# Skin to use
+#skin = default

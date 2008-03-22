@@ -37,8 +37,7 @@ class Skin(object):
         """
 
         if not os.access(path, os.R_OK):
-            # TODO:
-            self.path = DEFAULT_SKIN_PATH
+            raise SkinError(_(u"Unable to open skin file for reading"))
         else:
             self.path = path
 
@@ -64,7 +63,7 @@ class Skin(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __repr__(self):
-        return __str__()
+        return self.__str__()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

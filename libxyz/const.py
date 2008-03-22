@@ -17,8 +17,23 @@
 # Software name
 PROG = u"XYZCommander"
 
-# Directory with configuration files
-CONF_DIR = u"/tmp/conf"
+# User directory
+USER_DIR = ".xyzcmd"
+
+# System directory
+SYSTEM_DIR = u"/tmp"
+
+# Subdirectory with configuration files
+CONF_DIR = u"conf"
+
+# Plugins sudbirectory
+PLUGINS_DIR = u"plugins"
+
+# Skins sudbirectory
+SKINS_DIR = u"skins"
 
 # Main configuration file name
 XYZ_CONF_FILE = u"xyz"
+
+# Default fallback skin name
+DEFAULT_SKIN = u"default"

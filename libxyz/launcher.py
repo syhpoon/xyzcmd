@@ -22,6 +22,7 @@ import sys
 import gettext
 import getopt
 import re
+import os
 import os.path
 
 import libxyz.ui as uilib
@@ -32,8 +33,11 @@ from libxyz.core import Skin
 from libxyz.core import XYZData
 from libxyz.core.plugins import PluginManager
 from libxyz.parser import BlockParser
+from libxyz.parser import FlatParser
 from libxyz.parser import MultiParser
 from libxyz.exceptions import XYZValueError
+from libxyz.exceptions import XYZRuntimeError
+from libxyz.exceptions import ParseError
 
 class Launcher(object):
     """
@@ -53,9 +57,11 @@ class Launcher(object):
                             u"screen": None,
                             u"skin": None,
                             u"pm": None,
+                            u"conf": {},
                             }
                           )
 
+        self._path_sel = PathSelector()
         self._conf_dir = None
 
         self._init_default()
@@ -77,12 +83,16 @@ class Launcher(object):
         """
 
         self.parse_args()
+        # TODO: set default config values
         self.parse_configs()
 
-        # TODO: real skin path from configs
-        self.xyz.skin = Skin(u"/tmp/skins/default")
-        # TODO: real plugins path from config
-        self.xyz.pm = PluginManager(self.xyz, ['/tmp/plugins',])
+        _skin = self._path_sel.get_skin(self.xyz.conf[u"xyz"][u"skin"])
+        # Skin specified in config not found, load default
+        if not _skin:
+            _skin = self._path_sel.get_skin(const.DEFAULT_SKIN)
+
+        self.xyz.skin = Skin(_skin)
+        self.xyz.pm = PluginManager(self.xyz, self._path_sel.get_plugins_dir())
 
         self.xyz.screen = uilib.display.init_display()
         self.xyz.screen.register_palette(self.xyz.skin.get_palette_list())
@@ -140,7 +150,8 @@ class Launcher(object):
         Parse configuration
         """
 
-        self._parse_conf_xyz()
+        _xyzdata = self._parse_conf_xyz()
+        self.xyz.conf[u"xyz"] = _xyzdata
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -155,25 +166,49 @@ class Launcher(object):
             elif val == u"DISABLE":
                 return False
             else:
-                raise XYZValueError(_(u"Invalid value %s. "\
-                                      u"Available are: ENABLED or DISABLE"))
+                raise XYZValueError(_(u"Invalid value %s.\n"\
+                                      u"Available values are: "\
+                                      u"ENABLED, DISABLE" % val))
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         _plugins_opts = {
-                         "varre": re.compile("^[\w:-]+$"),
-                         "assignchar": ">",
-                         "value_validator": _validate,
+                         u"count": 1,
+                         u"varre": re.compile("^[\w:-]+$"),
+                         u"assignchar": ">",
+                         u"value_validator": _validate,
                         }
+        _plugins_p = BlockParser(_plugins_opts)
 
-        _block_plugins_p = BlockParser(_plugins_opts)
+        _flat_vars = (u"skin",
+                     )
+        _flat_opts = {
+                      u"count": 1,
+                      u"assignchar": u"=",
+                      u"validvars": _flat_vars,
+                     }
+        _flat_p = FlatParser(_flat_opts)
 
         _parser = MultiParser({})
-        _parser.register("plugins", _block_plugins_p)
+        _parser.register(u"plugins", _plugins_p)
+        _parser.register(_flat_vars, _flat_p)
 
-        _path = os.path.join(self._conf_dir, const.XYZ_CONF_FILE)
-        _file = open(_path, "r")
-        _data = _parser.parse(_file)
+        _path = self._path_sel.get_conf(const.XYZ_CONF_FILE)
+
+        try:
+            _file = open(_path, "r")
+        except IOError, e:
+            self.error(_(u"Unable to open configuration file %s: %s" %\
+                       (_path, e)))
+
+        try:
+            _data = _parser.parse(_file)
+        except ParseError, e:
+            self.error(str(e))
+        finally:
+            _file.close()
+
+        return _data
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -210,9 +245,83 @@ Usage: %s [-c dir][-vh]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def error(self, msg, quit=True):
+        """
+        Print error message and optionally quit
+        """
+
+        print msg
+
+        if quit:
+            self.quit()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def finalize(self):
         """
         Perform shutdown procedures
         """
 
         self.xyz.pm.shutdown()
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class PathSelector(object):
+    """
+    Class is used to select first appropriate path.
+    Common rule is to load system file unless found in user ~/.xyzcmd
+    """
+
+    def __init__(self):
+        self.user_dir = os.path.join(os.path.expanduser("~"), const.USER_DIR)
+        self.system_dir = const.SYSTEM_DIR
+        self.conf_dir = const.CONF_DIR
+        self.skins_dir = const.SKINS_DIR
+        self.plugins_dir = const.PLUGINS_DIR
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_conf(self, conf):
+        """
+        Return first found conf path
+        """
+
+        return self._get(self.conf_dir, conf)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    def get_skin(self, skin):
+        """
+        Return first found skin path
+        """
+
+        return self._get(self.skins_dir, skin)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _get(self, subdir, obj):
+        _userpath = os.path.join(self.user_dir, subdir, obj)
+        _systempath = os.path.join(self.system_dir, subdir, obj)
+
+        return self.get_first_of((_userpath, _systempath))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_first_of(self, files):
+        """
+        Return first existing file from supplied files or False in none exist
+        """
+
+        for _file in files:
+            if os.access(_file, os.R_OK):
+                return _file
+
+        return False
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_plugins_dir(self):
+        _userpath = os.path.join(self.user_dir, self.plugins_dir)
+        _systempath = os.path.join(self.system_dir, self.plugins_dir)
+
+        return [_userpath, _systempath]

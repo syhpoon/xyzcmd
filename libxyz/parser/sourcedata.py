@@ -97,3 +97,6 @@ class SourceData(object):
         """
 
         self._buffer.extend(reversed(string))
+
+        # Decrease lineno if needed
+        self.lineno -= string.count(u"\n")

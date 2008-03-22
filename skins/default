@@ -28,7 +28,7 @@ fs.priority {
    owner = 4
 }
 
-# User interface objects
+### User interface objects
 
 # Base box widgets
 ui.box {
