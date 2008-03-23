@@ -45,7 +45,7 @@ class FlatParser(BaseParser):
                    u"count": 0,
                    }
 
-    def __init__(self, opt=None):
+    def __init__(self, opt=None, default_data=None):
         """
         @param opt: Options
         @type opt: dict
@@ -68,16 +68,20 @@ class FlatParser(BaseParser):
             - count: How many blocks to parse. If count <= 0 - will parse
               all available.
               Type: integer
+
+        @param default_data: Dictionary with default values.
         """
 
         super(FlatParser, self).__init__()
 
+        self.default_data = default_data
+
+        self._parsed = 0
+        self._result = {}
         self._lexer = None
 
         self.opt = opt or self.DEFAULT_OPT
         self.set_opt(self.DEFAULT_OPT, self.opt)
-
-        self._cleanup()
 
         self._parse_table = {
             self.STATE_VARIABLE: self._process_state_variable,
@@ -120,7 +124,7 @@ class FlatParser(BaseParser):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _process_state_variable(self, word):
-        if self.count > 0 and self.count == len(self._result):
+        if self.count > 0 and self.count == self._parsed:
             self._lexer.done()
             return
 
@@ -152,6 +156,7 @@ class FlatParser(BaseParser):
                 self.error(_(u"Invalid value: %s" % str(e)))
 
         self._result[self._varname] = _value
+        self._parsed += 1
         self._varname = None
         self._lexer.escaping_off()
         self._state = self.STATE_DELIM
@@ -159,7 +164,7 @@ class FlatParser(BaseParser):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _process_state_delim(self, word):
-        if self.count > 0 and self.count == len(self._result):
+        if self.count > 0 and self.count == self._parsed:
             self._lexer.done()
             return
 
@@ -172,7 +177,10 @@ class FlatParser(BaseParser):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _cleanup(self):
-        self._result = {}
+        if self.default_data and type(self.default_data) == type({}):
+            self._result = self.default_data.copy()
+
+        self._parsed = 0
         self._state = self.STATE_VARIABLE
         self._varname = None
 

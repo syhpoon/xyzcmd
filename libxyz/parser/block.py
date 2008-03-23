@@ -54,7 +54,7 @@ class BlockParser(BaseParser):
                    u"list_separator": u",",
                    }
 
-    def __init__(self, opt=None):
+    def __init__(self, opt=None, default_data=None):
         """
         @param opt: Parser options.
         @type opt: dict
@@ -89,6 +89,9 @@ class BlockParser(BaseParser):
             - list_separator: Character to separate elements in list
               Type: I{string (single char)}
               Default: ,
+
+        @param default_data: Dictionary containing L{libxyz.parser.ParsedData}
+                             objects with default values.
         """
 
         super(BlockParser, self).__init__()
@@ -100,6 +103,7 @@ class BlockParser(BaseParser):
         self.opt = opt or self.DEFAULT_OPT
         self.set_opt(self.DEFAULT_OPT, self.opt)
 
+        self._default_data = default_data
         self._state = self.STATE_INIT
         self._parsed_obj = None
         self._varname = None
@@ -170,7 +174,11 @@ class BlockParser(BaseParser):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _process_state_init(self, word):
-        self._parsed_obj = ParsedData(word)
+        if self._default_data and word in self._default_data:
+            self._parsed_obj = self._default_data[word]
+        else:
+            self._parsed_obj = ParsedData(word)
+
         self._state = self.STATE_BLOCK_OPEN
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
