@@ -17,7 +17,9 @@
 __all__ = (
     'BasePlugin',
     'PluginManager',
+    'normalize_ns_path',
 )
 
 from base import BasePlugin
 from manager import PluginManager
+from manager import normalize_ns_path

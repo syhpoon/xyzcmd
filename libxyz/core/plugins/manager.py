@@ -22,22 +22,36 @@ import os.path
 from libxyz.exceptions import PluginError, XYZValueError
 from libxyz.parser import FlatParser
 
-def normalize_ns_path(method):
+ABS_NS_PREFIX = u"xyz:plugins:"
+
+def normalize_ns_path(path):
     """
     Normalize plugin namespace path
     """
 
+    _path = path
+
+    if _path.startswith(ABS_NS_PREFIX):
+        _path = _path.replace(ABS_NS_PREFIX, u"")
+    elif _path.startswith(u":"):
+        _path = _path[1:]
+
+    # Else suppose it is already normalized
+
+    _path = _path.replace(u":", u".")
+
+    return _path
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+def dec_normalize(method):
+    """
+    Normalize decorator
+    """
+
     def _norm(instance, *args, **kwargs):
         _path, _rest = args[0], args[1:]
-
-        if _path.startswith(instance.ABS_NS_PREFIX):
-            _path = path.replace(instance.ABS_NS_PREFIX, u"")
-        elif _path.startswith(u":"):
-            _path = _path[1:]
-
-        # Else suppose it is already normalized
-
-        _path = _path.replace(u":", u".")
+        _path = normalize_ns_path(_path)
 
         return method(instance, _path, *_rest, **kwargs)
 
@@ -51,7 +65,6 @@ class PluginManager(object):
     It is supposed to provide easy access to plugin data
     """
 
-    ABS_NS_PREFIX = u"xyz:plugins:"
     PLUGIN_CLASS = u"XYZPlugin"
 
     def __init__(self, xyz, dirs):
@@ -65,15 +78,18 @@ class PluginManager(object):
             raise XYZValueError(_(u"Invalid argument type %s. List expected" %
                                   type(dirs)))
         else:
-            self.dirs = dirs
             sys.path.extend(dirs)
 
         self.xyz = xyz
+
+        self.enabled = self._enabled_list()
+        # Do not load all the enabled plugin at once
+        # Do it on demand
         self._loaded = {}
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    @normalize_ns_path
+    @dec_normalize
     def load(self, plugin, *initargs, **initkwargs):
         """
         Load and initiate required plugin
@@ -81,6 +97,10 @@ class PluginManager(object):
         @param initargs: Necessary arguments to initiate plugin
         @param initkwargs: Necessary kw arguments to initiate plugin
         """
+
+        if plugin not in self.enabled:
+            raise PluginError(_(u"Plugin %s is disabled or does not exists" %
+                                plugin))
 
         if self.is_loaded(plugin):
             return self.get_loaded(plugin)
@@ -112,7 +132,7 @@ class PluginManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    @normalize_ns_path
+    @dec_normalize
     def from_load(self, plugin, method):
         """
         Load method from plugin.
@@ -135,7 +155,7 @@ class PluginManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    @normalize_ns_path
+    @dec_normalize
     def is_loaded(self, plugin):
         """
         Check if plugin already loaded
@@ -146,7 +166,7 @@ class PluginManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    @normalize_ns_path
+    @dec_normalize
     def get_loaded(self, plugin):
         """
         Return loaded and initiated inistance of plugin
@@ -157,7 +177,7 @@ class PluginManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    @normalize_ns_path
+    @dec_normalize
     def set_loaded(self, plugin, inst):
         """
         Set loaded and initiated inistance of plugin
@@ -179,3 +199,13 @@ class PluginManager(object):
                 self._loaded[plugin_name].finalize()
             except StandardError:
                 pass
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _enabled_list(self):
+        """
+        Make list of enabled plugins
+        """
+
+        _data = self.xyz.conf[u"xyz"][u"plugins"]
+        return [normalize_ns_path(_pname) for _pname in _data if _data[_pname]]

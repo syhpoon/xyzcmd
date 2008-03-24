@@ -56,6 +56,11 @@ class ParsedData(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def __iter__(self):
+        return self._data.__iter__()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def lookup(self, var):
         """
         Lookup for value of variable

@@ -29,7 +29,7 @@ class XYZPlugin(BasePlugin):
     FULL_DESCRIPTION = u"""\
 Hello plugin is an example of XYZCommander plugin.
 It shows main aspects of plugin creation.
-Functionality is limited to single method: SayHello
+Functionality is limited to single method: say_hello
 which shows greeting message box.\
 """
 

@@ -100,12 +100,13 @@ class Launcher(object):
         _str = u"Welcome!\nAAAA\nBBBB\nCCCC"
         _title = u"XYZCommander"
 
-        #_msg = uilib.YesNoBox(self.xyz, self._top, _str, _title)
-        #self.xyz.screen.draw_screen(_dim, _msg.render(_dim, True))
+        _msg = uilib.YesNoBox(self.xyz, self._top, _str, _title)
+        self.xyz.screen.draw_screen(_dim, _msg.render(_dim, True))
 
-        #say_hello = self.xyz.pm.from_load(u":misc:hello", u"SayHello")
-        hello = self.xyz.pm.load(u":misc:hello")
-        hello.say_hello(self._top)
+        #say_hello = self.xyz.pm.from_load(u":misc:hello", u"say_hello")
+        #hello = self.xyz.pm.load(u":misc:hello")
+        #hello.say_hello(self._top)
+        #say_hello(self._top)
 
         while not self.xyz.screen.get_input():
             pass
@@ -143,8 +144,7 @@ class Launcher(object):
         Parse configuration
         """
 
-        _xyzdata = self._parse_conf_xyz()
-        self.xyz.conf[u"xyz"] = _xyzdata
+        self.xyz.conf[u"xyz"] = self._parse_conf_xyz()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -162,6 +162,18 @@ class Launcher(object):
                 raise XYZValueError(_(u"Invalid value %s.\n"\
                                       u"Available values are: "\
                                       u"ENABLED, DISABLE" % val))
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        def _set_default(data):
+            for _required in (
+                              (u"skin", const.DEFAULT_SKIN),
+                              (u"plugins", ParsedData(u"plugins")),
+                             ):
+                if _required[0] not in data:
+                    data[_required[0]] = _required[1]
+
+            return data
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -200,6 +212,9 @@ class Launcher(object):
             self.error(str(e))
         finally:
             _file.close()
+
+        # Set default values if needed
+        _dat = _set_default(_data)
 
         return _data
 
