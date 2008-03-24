@@ -14,8 +14,6 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-import types
-
 class SourceData(object):
     """
     Source data iterator class
@@ -40,7 +38,7 @@ class SourceData(object):
 
         self._source = source
 
-        if type(source) in types.StringTypes:
+        if isinstance(source, basestring):
             self._type = self.STRING
             self._next_me = self._next_string
             self._len = len(self._source)

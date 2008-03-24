@@ -16,7 +16,6 @@
 
 import os
 import re
-import types
 
 from libxyz.exceptions import ParseError, SkinError, XYZValueError
 from libxyz.parser import BlockParser
@@ -80,7 +79,7 @@ class Skin(object):
 
             _p = self._default.copy()
 
-            if type(val) in types.StringTypes:
+            if isinstance(val, basestring):
                 _val = (val,)
             else:
                 _val = [x.strip() for x in val]

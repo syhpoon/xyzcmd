@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-import types
 import re
 
 from libxyz.parser import Lexer
@@ -86,7 +85,7 @@ class MultiParser(BaseParser):
             _p = None
 
             for _key in self.parsers:
-                if type(_key) in types.StringTypes and _key == val:
+                if isinstance(_key, basestring) and _key == val:
                     _p = self.parsers[_key]
                     break
                 elif type(_key) == type(self._rx) and _key.match(val):
