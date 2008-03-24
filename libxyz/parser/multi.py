@@ -61,7 +61,7 @@ class MultiParser(BaseParser):
         self._rx = re.compile("")
 
         if parsers:
-            if type(parsers) != types.DictType:
+            if type(parsers) != dict:
                 raise XYZValueError(_(u"Invalid argument type %s. "\
                                       u"Dictionary expected" % str(parsers)))
             else:

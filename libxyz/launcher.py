@@ -35,6 +35,7 @@ from libxyz.core.plugins import PluginManager
 from libxyz.parser import BlockParser
 from libxyz.parser import FlatParser
 from libxyz.parser import MultiParser
+from libxyz.parser import ParsedData
 from libxyz.exceptions import XYZValueError
 from libxyz.exceptions import XYZRuntimeError
 from libxyz.exceptions import ParseError
@@ -52,14 +53,7 @@ class Launcher(object):
         gettext.install(u"xyzcmd")
 
         self.cmdopts = "c:vh"
-        self.xyz = XYZData(
-                            {
-                            u"screen": None,
-                            u"skin": None,
-                            u"pm": None,
-                            u"conf": {},
-                            }
-                          )
+        self.xyz = XYZData()
 
         self._path_sel = PathSelector()
         self._conf_dir = None
@@ -83,7 +77,6 @@ class Launcher(object):
         """
 
         self.parse_args()
-        # TODO: set default config values
         self.parse_configs()
 
         _skin = self._path_sel.get_skin(self.xyz.conf[u"xyz"][u"skin"])

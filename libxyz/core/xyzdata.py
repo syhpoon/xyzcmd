@@ -19,21 +19,14 @@ class XYZData(object):
     XYZ system data container
     """
 
-    def __init__(self, data=None):
-        object.__setattr__(self, "_data", data or {})
+    __slots__ = ["screen",
+                 "skin",
+                 "pm",
+                 "conf",
+                 ]
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def __getattr__(self, attr):
-        try:
-            return self._data[attr]
-        except KeyError:
-            raise AttributeError()
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def __setattr__(self, attr, val):
-        if not self._data.has_key(attr):
-            raise AttributeError(_(u"Invalid attribute: %s" % attr))
-
-        self._data[attr] = val
+    def __init__(self):
+        self.screen = None
+        self.skin = None
+        self.pm = None
+        self.conf = {}

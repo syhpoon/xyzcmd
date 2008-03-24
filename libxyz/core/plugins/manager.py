@@ -61,7 +61,7 @@ class PluginManager(object):
         @type dirs: list
         """
 
-        if type(dirs) != type([]):
+        if type(dirs) != list:
             raise XYZValueError(_(u"Invalid argument type %s. List expected" %
                                   type(dirs)))
         else:

@@ -1,2 +1,3 @@
 from :misc:hello load SayHello
-load :misc:hello
+
+bind CTRL-R |:misc:hello:SayHello

@@ -15,7 +15,6 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 import re
-import types
 
 from libxyz.parser import BaseParser
 from libxyz.parser import Lexer
@@ -96,7 +95,7 @@ class BlockParser(BaseParser):
 
         super(BlockParser, self).__init__()
 
-        if opt and type(opt) != types.DictType:
+        if opt and type(opt) != dict:
             raise XYZValueError(_(u"Invalid opt type: %s. "\
                                   u"Dictionary expected." % type(opt)))
 

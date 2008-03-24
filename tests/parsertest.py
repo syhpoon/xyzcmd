@@ -205,13 +205,11 @@ class BlockParsing(unittest.TestCase):
         Check for proper list values parsing
         """
 
-        import types
-
         _p = BlockParser()
         _src = "block { var = l, i, s ,t }"
 
         _r = _p.parse(_src)
-        self.assert_(type(_r["block"]["var"]) == types.TupleType)
+        self.assert_(type(_r["block"]["var"]) == tuple)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
