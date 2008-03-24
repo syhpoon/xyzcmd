@@ -177,7 +177,7 @@ class FlatParser(BaseParser):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _cleanup(self):
-        if self.default_data and type(self.default_data) == dict:
+        if self.default_data and isinstance(self.default_data, dict):
             self._result = self.default_data.copy()
 
         self._parsed = 0

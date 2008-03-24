@@ -95,7 +95,7 @@ class BlockParser(BaseParser):
 
         super(BlockParser, self).__init__()
 
-        if opt and type(opt) != dict:
+        if opt and not isinstance(opt, dict):
             raise XYZValueError(_(u"Invalid opt type: %s. "\
                                   u"Dictionary expected." % type(opt)))
 

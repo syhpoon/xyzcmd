@@ -60,7 +60,7 @@ class MultiParser(BaseParser):
         self._rx = re.compile("")
 
         if parsers:
-            if type(parsers) != dict:
+            if not isinstance(parsers, dict):
                 raise XYZValueError(_(u"Invalid argument type %s. "\
                                       u"Dictionary expected" % str(parsers)))
             else:
@@ -88,7 +88,7 @@ class MultiParser(BaseParser):
                 if isinstance(_key, basestring) and _key == val:
                     _p = self.parsers[_key]
                     break
-                elif type(_key) == type(self._rx) and _key.match(val):
+                elif type(_key) is type(self._rx) and _key.match(val):
                     _p = self.parsers[_key]
                     break
                 elif hasattr(_key, "__contains__") and val in _key:

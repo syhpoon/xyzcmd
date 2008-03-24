@@ -209,7 +209,7 @@ class BlockParsing(unittest.TestCase):
         _src = "block { var = l, i, s ,t }"
 
         _r = _p.parse(_src)
-        self.assert_(type(_r["block"]["var"]) == tuple)
+        self.assert_(isinstance(_r["block"]["var"], tuple))
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

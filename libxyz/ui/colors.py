@@ -135,7 +135,7 @@ class Palette(object):
 
         if self.ma is None:
             _ma = None
-        elif type(self.ma) == tuple:
+        elif isinstance(self.ma, tuple):
             _ma = tuple([x.color for x in self.ma])
         else: # Color object
             _ma = self.ma.color
