@@ -34,5 +34,6 @@ fs.priority {
 ui.box {
 	title = LIGHT_CYAN, DARK_BLUE
 	box = WHITE, DARK_BLUE
+	button = DARK_CYAN, DARK_BLUE
 	mount = DEFAULT, DARK_CYAN
 }

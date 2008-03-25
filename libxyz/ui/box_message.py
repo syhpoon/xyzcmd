@@ -33,6 +33,8 @@ class MessageBox(lowui.WidgetWrap):
         @param message: Message to display
         @param title: Box title
         @param width: Box width (including mount box)
+
+        Required resources: title, box, mount
         """
 
         self.screen = xyz.screen
@@ -60,6 +62,18 @@ class MessageBox(lowui.WidgetWrap):
                              align.MIDDLE, self.box_height)
 
         super(MessageBox, self).__init__(_box)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def show(self, dim):
+        """
+        Show box
+        """
+
+        self.screen.draw_screen(dim, self.render(dim, True))
+
+        while not self.screen.get_input():
+            pass
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

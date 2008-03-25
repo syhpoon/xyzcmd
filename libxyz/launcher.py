@@ -28,6 +28,7 @@ import os.path
 import libxyz.ui as uilib
 import libxyz.const as const
 
+from libxyz.ui import lowui
 from libxyz.version import Version
 from libxyz.core import Skin
 from libxyz.core import XYZData
@@ -95,21 +96,14 @@ class Launcher(object):
 
     def _run(self):
         _dim = self.xyz.screen.get_cols_rows()
-        self._top = uilib.lowui.Filler(uilib.lowui.Text(""))
+        self._top = lowui.Frame(lowui.Filler(lowui.Text("")))
 
-        _str = u"Welcome!\nAAAA\nBBBB\nCCCC"
+        _str = u"Welcome!"
         _title = u"XYZCommander"
 
+        #_msg = uilib.MessageBox(self.xyz, self._top, _str, _title)
         _msg = uilib.YesNoBox(self.xyz, self._top, _str, _title)
-        self.xyz.screen.draw_screen(_dim, _msg.render(_dim, True))
-
-        #say_hello = self.xyz.pm.from_load(u":misc:hello", u"say_hello")
-        #hello = self.xyz.pm.load(u":misc:hello")
-        #hello.say_hello(self._top)
-        #say_hello(self._top)
-
-        while not self.xyz.screen.get_input():
-            pass
+        _msg.show(_dim)
 
         self.finalize()
 

@@ -7,10 +7,10 @@ In fact even base functionality is implemented mainly via plugins.
 
 Plugins are being held in one of the following directories:
 
+- User plugins: Any other third-party plugins are held in ~/.xyzcmd/plugins.
 - System plugins: subdirectory of main |XYZ| installation path 
   (usually /usr/local/share/xyzcmd/plugins). All base system plugins are held
   here.
-- User plugins: Any other third-party plugins are held in ~/.xyzcmd/plugins.
 
 In these directories namespace subdirectories are created (see below for
 more details).
@@ -62,19 +62,59 @@ Here ``<namespace>`` is one of the available namespaces::
    - vfs   - Virtual file-system related
    - misc  - Other miscellaneous
 
-Plugin exports its public methods via 'public' dictionary of BasePlugin class.
-
 Managment
 ---------
 All plugin management is performed using PluginManger instance, accessible as 
 ``pm`` attribute of ``libxyz.core.XYZData`` object named ``xyz``.
 
-PluginManger supports two main procedures:
+PluginManger supports following methods:
    
 **load <plugin>**
    Search for <plugin>, load it, instanciate, prepare (run prepare()) and return
+
+**reload <plugin>**
+   Force [re]loading <plugin> even if it is already stored in cache.
 
 **from <plugin> load <method>**
    Load public method <method> from <plugin>.
 
 In both cases <plugin> is a plugin namespace path.
+
+Once loaded plugin is stored in cache, so subsequent calls will simply return
+it from cache. If reloading needed ``reload`` method is used.
+
+Lifecycle
+---------
+Only enabled plugins can be loaded and used. List of enabled plugins must
+be defined in `xyz configuration file`_. Plugins are usually loaded by
+first request. 
+
+After plugin gets loaded for first time following actions take place:
+
+- An instance of XYZPlugin class created 
+- A prepare() method is run
+
+Plugin exports its public methods via 'public' dictionary of BasePlugin class.
+Access to public methods can be performed as:
+
+   - ``plugin.public[u"method"]()``
+   - ``plugin.method()``
+
+Second variant is simpler, cleaner and therefore preferable.
+
+Following is an example of typical plugin usage in python code
+(other cases will be described later)::
+
+   # Load plugin
+   hello = self.xyz.pm.load(u":misc:hello")
+
+   # Call public method say_hello() directly
+   hello.say_hello()
+
+   # Or load only the method itself using from_load
+   say_hello = self.xyz.pm.from_load(u":misc:hello", u"say_hello")
+
+   # And then call
+   say_hello()
+
+
