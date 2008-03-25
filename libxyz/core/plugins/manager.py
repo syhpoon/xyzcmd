@@ -133,6 +133,19 @@ class PluginManager(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @dec_normalize
+    def reload(self, plugin, *initargs, **initkwargs):
+        """
+        Force load plugin if it's already in cache.
+        """
+
+        if self.is_loaded(plugin):
+            self.del_loaded(plugin)
+
+        return self.load(plugin, *initargs, **initkwargs)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @dec_normalize
     def from_load(self, plugin, method):
         """
         Load method from plugin.
@@ -186,6 +199,20 @@ class PluginManager(object):
         """
 
         self._loaded[plugin] = inst
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @dec_normalize
+    def del_loaded(self, plugin):
+        """
+        Delete loaded instance from cache
+        @param plugin: Absoulute or relative plugin namespace path
+        """
+
+        try:
+            del(self._loaded[plugin])
+        except KeyError:
+            pass
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
