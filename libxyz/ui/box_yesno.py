@@ -16,6 +16,7 @@
 
 from libxyz.ui import lowui
 from libxyz.ui import align
+from libxyz.ui import Keys
 
 class YesNoBox(lowui.WidgetWrap):
     """
@@ -36,6 +37,7 @@ class YesNoBox(lowui.WidgetWrap):
         Required resources: title, box, mount, button
         """
 
+        self.keys = Keys()
         self.screen = xyz.screen
         self.skin = xyz.skin
         self.rowspan = 3
@@ -76,9 +78,15 @@ class YesNoBox(lowui.WidgetWrap):
         """
 
         while True:
-            self.screen.draw_screen(dim, self.render(dim, True))
+            try:
+                self.screen.draw_screen(dim, self.render(dim, True))
 
-            keys = self.screen.get_input()
+                _keys = self.screen.get_input()
+
+                if self.keys.KEY_LEFT in _keys:
+                    pass
+            except KeyboardInterrupt:
+                continue
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

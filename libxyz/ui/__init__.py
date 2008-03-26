@@ -24,6 +24,7 @@ __all__ = (
     'display',
     'align',
     'colors',
+    'Keys',
     'MessageBox',
     'YesNoBox',
 
@@ -34,6 +35,8 @@ import urwid as lowui
 import display
 import align
 import colors
+
+from keys import Keys
 
 from box_message import MessageBox
 from box_yesno import YesNoBox
