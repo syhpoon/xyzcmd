@@ -127,8 +127,8 @@ class BlockParser(BaseParser):
 
     def parse(self, source):
         """
-        Parse block of text and return L{ParsedData} object or raise
-        L{libxyz.exceptions.ParseError} exception
+        Parse blocks of text and return a dict of L{ParsedData} objects
+        or raise L{libxyz.exceptions.ParseError} exception
 
         @param source: Source data
         """
@@ -193,14 +193,7 @@ class BlockParser(BaseParser):
 
     def _process_state_variable(self, word):
         if word == self._closebracket:
-            # Closing block
-            if self._parsed_obj:
-                self._result[self._parsed_obj.name] = self._parsed_obj
-
-            self._cleanup()
-
-            if self.count > 0 and self.count == len(self._result):
-                self._lexer.done()
+            self._complete_block()
             return
         if self.validvars and word not in self.validvars:
                 self.error(_(u"Unknown variable %s" % word))
@@ -256,18 +249,24 @@ class BlockParser(BaseParser):
 
     def _process_state_delim(self, word):
         if word == self._closebracket:
-            if self._parsed_obj:
-                self._result[self._parsed_obj.name] = self._parsed_obj
-            self._cleanup()
-
-            if self.count > 0 and self.count == len(self._result):
-                self._lexer.done()
+            self._complete_block()
             return
         if word != self.delimiter:
             self.error(msg=(word, self.delimiter),
                         etype=self.error_unexpected)
         else:
             self._state = self.STATE_VARIABLE
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _complete_block(self):
+        if self._parsed_obj:
+            self._result[self._parsed_obj.name] = self._parsed_obj
+
+        self._cleanup()
+
+        if self.count > 0 and self.count == len(self._result):
+            self._lexer.done()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
