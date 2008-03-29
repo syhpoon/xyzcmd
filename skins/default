@@ -37,3 +37,9 @@ ui.box {
 	button = DARK_CYAN, DARK_BLUE
 	mount = DEFAULT, DARK_CYAN
 }
+
+ui.error_box {
+	title = WHITE, DARK_RED
+	box = WHITE, DARK_RED
+	mount = WHITE, DARK_MAGENTA
+}

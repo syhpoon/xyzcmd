@@ -16,14 +16,16 @@
 
 from libxyz.ui import lowui
 from libxyz.ui import align
+from libxyz.ui import Box
 
-class MessageBox(lowui.WidgetWrap):
+import libxyz.ui
+
+class MessageBox(Box):
     """
     Simple box is used to display any kind of text messages
     Show the message until any key pressed
     """
 
-    # Skin rulesets resolution order
     resolution = (u"message_box", u"box", u"widget")
 
     def __init__(self, xyz, body, message, title="", width=60):
@@ -37,14 +39,7 @@ class MessageBox(lowui.WidgetWrap):
         Required resources: title, box, mount
         """
 
-        self.screen = xyz.screen
-        self.skin = xyz.skin
-        self.rowspan = 3
-        self.mount_span = {u"vertical": 2, u"horizontal": 2}
-        self.full_width = width
-        self.box_width = width - self.mount_span[u"horizontal"]
-        self.box_height = self._rows(message)
-        self.full_height = self.box_height + self.mount_span[u"vertical"]
+        super(MessageBox, self).__init__(xyz, body, message, title, width)
 
         _title = lowui.Text((self._attr(u"title"),
                              " %s "  % title.replace(u"\n", u"")), align.CENTER)
@@ -61,44 +56,4 @@ class MessageBox(lowui.WidgetWrap):
         _box = lowui.Overlay(_box, _mount, align.CENTER, self.box_width,
                              align.MIDDLE, self.box_height)
 
-        super(MessageBox, self).__init__(_box)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def show(self, dim):
-        """
-        Show box
-        """
-
-        self.screen.draw_screen(dim, self.render(dim, True))
-
-        while not self.screen.get_input():
-            pass
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _attr(self, name):
-        """
-        Find palette
-        """
-
-        return self.skin.attr(self.resolution, name)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _rows(self, msg):
-        """
-        Calculate required rows
-        """
-
-        # 2 for two rows: on top and bottom
-        _maxrows = self.screen.get_cols_rows()[1] - \
-                   2 - self.mount_span[u"vertical"]
-        _lines = msg.count("\n")
-
-        if _lines + self.rowspan > _maxrows:
-            _rows = _maxrows
-        else:
-            _rows = _lines + self.rowspan
-
-        return _rows
+        self.parent_init(_box)

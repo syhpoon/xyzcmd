@@ -16,9 +16,11 @@
 
 from libxyz.ui import lowui
 from libxyz.ui import align
-from libxyz.ui import Keys
+from libxyz.ui import Box
 
-class YesNoBox(lowui.WidgetWrap):
+import libxyz.ui
+
+class YesNoBox(Box):
     """
     Yes/No box. Shows a message and waits for Yes or No button pressed
     """
@@ -37,17 +39,15 @@ class YesNoBox(lowui.WidgetWrap):
         Required resources: title, box, mount, button
         """
 
-        self.keys = Keys()
-        self.screen = xyz.screen
-        self.skin = xyz.skin
-        self.rowspan = 3
-        self.mount_span = {"vertical": 2, "horizontal": 2}
-        self.full_width = width
-        self.box_width = width - self.mount_span["horizontal"]
-        self.box_height = self._rows(message)
-        self.full_height = self.box_height + self.mount_span["vertical"]
+        super(YesNoBox, self).__init__(xyz, body, message, title, width)
 
-        _buttons = self._init_buttons()
+        self.keys = libxyz.ui.Keys()
+
+        self._yes_txt = _(u"Yes")
+        self._no_txt = _(u"No")
+        self._value = False
+
+        self._buttons = self._init_buttons()
 
         _title = lowui.Text((self._attr(u"title"),
                              " %s "  % title.replace("\n", "")), align.CENTER)
@@ -61,72 +61,93 @@ class YesNoBox(lowui.WidgetWrap):
         _mount = lowui.Overlay(_mount, body, align.CENTER, self.full_width,
                              align.MIDDLE, self.full_height)
 
-        _widgets = [_text, _blank, _buttons]
+        _widgets = [_text, _blank, self._buttons]
         _box = lowui.AttrWrap(lowui.Filler(lowui.Pile(_widgets)),
                               self._attr(u"box"))
         _box = lowui.Overlay(_box, _mount, align.CENTER, self.box_width,
                              align.MIDDLE, self.box_height)
 
-        super(YesNoBox, self).__init__(_box)
+        self.parent_init(_box)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def show(self, dim):
+    def show(self, dim=None):
         """
         Show box and return pressed button.
         True if YES pressed, False if NO
         """
 
+        if dim is None:
+            dim = self.screen.get_cols_rows()
         while True:
             try:
                 self.screen.draw_screen(dim, self.render(dim, True))
 
                 _keys = self.screen.get_input()
 
-                if self.keys.KEY_LEFT in _keys:
-                    pass
+                if [x for x in (self.keys.KEY_LEFT,
+                                self.keys.KEY_RIGHT,
+                                self.keys.KEY_UP,
+                                self.keys.KEY_DOWN,
+                                ) if x in _keys]:
+                    self._change_focus(_keys)
+
+                if self.keys.KEY_ESC in _keys:
+                    return False
+
+                if self.keys.KEY_ENTER in _keys:
+                    _button = self._buttons.focus_cell.get_w()
+                    self._pressed(_button)
+                    return self._value
             except KeyboardInterrupt:
                 continue
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _attr(self, name):
-        """
-        Find palette
-        """
-
-        return self.skin.attr(self.resolution, name)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _rows(self, msg):
-        """
-        Calculate required rows
-        """
-
-        # 2 for two rows: on top and bottom +
-        _maxrows = self.screen.get_cols_rows()[1] - \
-                   2 - self.mount_span["vertical"]
-        _lines = msg.count("\n")
-
-        if _lines + self.rowspan > _maxrows:
-            _rows = _maxrows
-        else:
-            _rows = _lines + self.rowspan
-
-        return _rows
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     def _init_buttons(self):
-        _yes_txt = _(u"Yes")
-        _no_txt = _(u"No")
-        _yes_len = len(_yes_txt)
-        _no_len = len(_no_txt)
+        _yes_len = len(self._yes_txt)
+        _no_len = len(self._no_txt)
         _b_attr = self._attr("button")
         _b_size = max(_yes_len, _no_len) + 4 # < ... >
 
-        _b_yes = lowui.AttrWrap(lowui.Button(_yes_txt), _b_attr)
-        _b_no = lowui.AttrWrap(lowui.Button(_no_txt), _b_attr)
+        self._b_yes = lowui.AttrWrap(libxyz.ui.XYZButton(self._yes_txt),_b_attr)
+        self._b_no = lowui.AttrWrap(libxyz.ui.XYZButton(self._no_txt),_b_attr)
 
-        return lowui.GridFlow([_b_yes, _b_no], _b_size, 2, 0, align.CENTER)
+        return lowui.GridFlow([self._b_yes, self._b_no], _b_size, 2, 0,
+                              align.CENTER)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _change_focus(self, keys):
+        """
+        Move focus
+        """
+
+        for key in keys:
+            _widget = None
+
+            # Move right
+            if key in (self.keys.KEY_RIGHT, self.keys.KEY_UP):
+                _widget = 1 # index
+            # Move left
+            elif key in (self.keys.KEY_LEFT, self.keys.KEY_DOWN):
+                _widget = 0
+            else:
+                pass
+
+            if _widget is not None:
+                self._buttons.set_focus(_widget)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _pressed(self, button):
+        """
+        Button pressed
+        """
+
+        _label = button.get_label()
+
+        if _label == self._yes_txt:
+            self._value = True
+        else:
+            self._value = False

@@ -14,34 +14,8 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-"""
-Module contains user interface widgets
+from libxyz.ui import lowui
 
-"""
-
-__all__ = (
-    'lowui',
-    'display',
-    'align',
-    'colors',
-    'Keys',
-    'XYZButton',
-    'Box',
-    'MessageBox',
-    'YesNoBox',
-    'ErrorBox',
-)
-
-import urwid as lowui
-
-import display
-import align
-import colors
-
-from keys import Keys
-
-from xyzbutton import XYZButton
-from box import Box
-from box_message import MessageBox
-from box_yesno import YesNoBox
-from box_error import ErrorBox
+class XYZButton(lowui.Button):
+    button_left = lowui.Text("[")
+    button_right = lowui.Text("]")

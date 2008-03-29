@@ -17,7 +17,9 @@
 import os
 import re
 
-from libxyz.exceptions import ParseError, SkinError, XYZValueError
+from libxyz.exceptions import ParseError
+from libxyz.exceptions import SkinError
+from libxyz.exceptions import XYZValueError
 from libxyz.parser import BlockParser
 from libxyz.parser import FlatParser
 from libxyz.parser import MultiParser
@@ -44,9 +46,9 @@ class Skin(object):
 
         # Default fallback palette
         self._default = uilib.colors.Palette(u"default",
-                        uilib.colors.Foreground(u"DEFAULT"),
-                        uilib.colors.Background(u"DEFAULT"),
-                        uilib.colors.Monochrome(u"DEFAULT"))
+                           uilib.colors.Foreground(u"DEFAULT"),
+                           uilib.colors.Background(u"DEFAULT"),
+                           uilib.colors.Monochrome(u"DEFAULT"))
 
         # 1. Parse
         self._data = self._parse()

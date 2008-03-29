@@ -71,11 +71,9 @@ BackScreen (subshell)
 Widget:
 |
 +- Menu
-+- Button
 +- Checkbox
 +- Gauge
 +- Spin
-+- Label
 +- StatusBar
 +- CmdLine
 +- TextField (+password)
@@ -83,13 +81,10 @@ Widget:
 	|
 	+- Text
 	+- Copy
-	+- Error
 	+- InputLine
-	+- YesNo
 	+- Progress
 	+- Choice
 	+- Calendar
 +- Containers:
 	|
-	+- Frame
 	+- Panel

@@ -14,34 +14,15 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-"""
-Module contains user interface widgets
+from libxyz.ui import MessageBox
 
-"""
+class ErrorBox(MessageBox):
+    """
+    Error message box
+    """
 
-__all__ = (
-    'lowui',
-    'display',
-    'align',
-    'colors',
-    'Keys',
-    'XYZButton',
-    'Box',
-    'MessageBox',
-    'YesNoBox',
-    'ErrorBox',
-)
+    resolution = (u"error_box", u"box", u"widget")
 
-import urwid as lowui
-
-import display
-import align
-import colors
-
-from keys import Keys
-
-from xyzbutton import XYZButton
-from box import Box
-from box_message import MessageBox
-from box_yesno import YesNoBox
-from box_error import ErrorBox
+    def __init__(self, xyz, body, message, title="", width=60):
+        title = title or _(u"Error")
+        super(ErrorBox, self).__init__(xyz, body, message, title, width)

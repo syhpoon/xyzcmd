@@ -19,6 +19,10 @@ class Keys(object):
     Keys abstractions
     """
 
+    KEY_CONTROL = "ctrl"
+    KEY_META = "meta"
+    KEY_ESC = "esc"
+    KEY_SHIFT = "shift"
     KEY_UP = 'up'
     KEY_DOWN = 'down'
     KEY_RIGHT = 'right'
@@ -60,92 +64,21 @@ class Keys(object):
     KEY_F19 = 'f19'
     KEY_F20 = 'f20'
 
-    KEY_SLASH = '/'
-    KEY_ASTERISK = '*'
-    KEY_MINUS = '-'
-    KEY_PLUS = '+'
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    KEY_SHIFT_TAB = 'shift tab'
-    KEY_SHIFT_UP = 'shift up'
-    KEY_SHIFT_DOWN = 'shift down'
-    KEY_SHIFT_RIGHT = 'shift right'
-    KEY_SHIFT_LEFT = 'shift left'
-    KEY_SHIFT_END = 'shift end'
-    KEY_SHIFT_HOME = 'shift home'
+    def shortcut(self, *keys):
+        """
+        Make a shortcut
+        """
 
-    KEY_CTRL_UP = 'ctrl up'
-    KEY_CTRL_DOWN = 'ctrl down'
-    KEY_CTRL_RIGHT = 'ctrl right'
-    KEY_CTRL_LEFT = 'ctrl left'
-    KEY_CTRL_END = 'ctrl end'
-    KEY_CTRL_HOME = 'ctrl end'
+        _keys = []
 
-    KEY_SHIFT_CTRL_UP = 'shift ctrl up'
-    KEY_SHIFT_CTRL_DOWN = 'shift ctrl down'
-    KEY_SHIFT_CTRL_RIGHT = 'shift ctrl right'
-    KEY_SHIFT_CTRL_LEFT = 'shift ctrl left'
-    KEY_SHIFT_CTRL_END = 'shift ctrl end'
-    KEY_SHIFT_CTRL_HOME = 'shift ctrl home'
+        for key in keys:
+            try:
+                key = getattr(self, key)
+            except AttributeError:
+                pass
 
-    KEY_SHIFT_F1 = 'shift f1'
-    KEY_SHIFT_F2 = 'shift f2'
-    KEY_SHIFT_F3 = 'shift f3'
-    KEY_SHIFT_F4 = 'shift f4'
-    KEY_SHIFT_F5 = 'shift f5'
-    KEY_SHIFT_F6 = 'shift f6'
-    KEY_SHIFT_F7 = 'shift f7'
-    KEY_SHIFT_F8 = 'shift f8'
-    KEY_SHIFT_F9 = 'shift f9'
-    KEY_SHIFT_F10 = 'shift f10'
-    KEY_SHIFT_F11 = 'shift f11'
-    KEY_SHIFT_F12 = 'shift f12'
-    KEY_SHIFT_F13 = 'shift f13'
-    KEY_SHIFT_F14 = 'shift f14'
-    KEY_SHIFT_F15 = 'shift f15'
-    KEY_SHIFT_F16 = 'shift f16'
-    KEY_SHIFT_F17 = 'shift f17'
-    KEY_SHIFT_F18 = 'shift f18'
-    KEY_SHIFT_F19 = 'shift f19'
-    KEY_SHIFT_F20 = 'shift f20'
+            _keys.append(key)
 
-    KEY_CTRL_F1 = 'ctrl f1'
-    KEY_CTRL_F2 = 'ctrl f2'
-    KEY_CTRL_F3 = 'ctrl f3'
-    KEY_CTRL_F4 = 'ctrl f4'
-    KEY_CTRL_F5 = 'ctrl f5'
-    KEY_CTRL_F6 = 'ctrl f6'
-    KEY_CTRL_F7 = 'ctrl f7'
-    KEY_CTRL_F8 = 'ctrl f8'
-    KEY_CTRL_F9 = 'ctrl f9'
-    KEY_CTRL_F10 = 'ctrl f10'
-    KEY_CTRL_F11 = 'ctrl f11'
-    KEY_CTRL_F12 = 'ctrl f12'
-    KEY_CTRL_F13 = 'ctrl f13'
-    KEY_CTRL_F14 = 'ctrl f14'
-    KEY_CTRL_F15 = 'ctrl f15'
-    KEY_CTRL_F16 = 'ctrl f16'
-    KEY_CTRL_F17 = 'ctrl f17'
-    KEY_CTRL_F18 = 'ctrl f18'
-    KEY_CTRL_F19 = 'ctrl f19'
-    KEY_CTRL_F20 = 'ctrl f20'
-
-    KEY_SHIFT_CTRL_F1 = 'shift ctrl f1'
-    KEY_SHIFT_CTRL_F2 = 'shift ctrl f2'
-    KEY_SHIFT_CTRL_F3 = 'shift ctrl f3'
-    KEY_SHIFT_CTRL_F4 = 'shift ctrl f4'
-    KEY_SHIFT_CTRL_F5 = 'shift ctrl f5'
-    KEY_SHIFT_CTRL_F6 = 'shift ctrl f6'
-    KEY_SHIFT_CTRL_F7 = 'shift ctrl f7'
-    KEY_SHIFT_CTRL_F8 = 'shift ctrl f8'
-    KEY_SHIFT_CTRL_F9 = 'shift ctrl f9'
-    KEY_SHIFT_CTRL_F10 = 'shift ctrl f10'
-    KEY_SHIFT_CTRL_F11 = 'shift ctrl f11'
-    KEY_SHIFT_CTRL_F12 = 'shift ctrl f12'
-    KEY_SHIFT_CTRL_F13 = 'shift ctrl f13'
-    KEY_SHIFT_CTRL_F14 = 'shift ctrl f14'
-    KEY_SHIFT_CTRL_F15 = 'shift ctrl f15'
-    KEY_SHIFT_CTRL_F16 = 'shift ctrl f16'
-    KEY_SHIFT_CTRL_F17 = 'shift ctrl f17'
-    KEY_SHIFT_CTRL_F18 = 'shift ctrl f18'
-    KEY_SHIFT_CTRL_F19 = 'shift ctrl f19'
-    KEY_SHIFT_CTRL_F20 = 'shift ctrl f20'
+        return " ".join(_keys)

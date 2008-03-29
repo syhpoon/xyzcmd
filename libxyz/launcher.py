@@ -101,9 +101,15 @@ class Launcher(object):
         _str = u"Welcome!"
         _title = u"XYZCommander"
 
-        #_msg = uilib.MessageBox(self.xyz, self._top, _str, _title)
         _msg = uilib.YesNoBox(self.xyz, self._top, _str, _title)
-        _msg.show(_dim)
+        x = _msg.show()
+        if x:
+            _xxx = u"True"
+        else:
+            _xxx = u"False"
+
+        _msg = uilib.ErrorBox(self.xyz, self._top, _xxx, width=20)
+        _msg.show()
 
         self.finalize()
 
