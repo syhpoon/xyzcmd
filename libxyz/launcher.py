@@ -98,18 +98,11 @@ class Launcher(object):
         _dim = self.xyz.screen.get_cols_rows()
         self._top = lowui.Frame(lowui.Filler(lowui.Text("")))
 
-        _str = u"Welcome!"
-        _title = u"XYZCommander"
+        w = lowui.Filler(uilib.Panel(self.xyz))
+        self.xyz.screen.draw_screen(_dim, w.render(_dim, True))
 
-        _msg = uilib.YesNoBox(self.xyz, self._top, _str, _title)
-        x = _msg.show()
-        if x:
-            _xxx = u"True"
-        else:
-            _xxx = u"False"
-
-        _msg = uilib.ErrorBox(self.xyz, self._top, _xxx, width=20)
-        _msg.show()
+        while not self.xyz.screen.get_input():
+            pass
 
         self.finalize()
 

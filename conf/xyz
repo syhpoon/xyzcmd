@@ -3,7 +3,6 @@
 #
 
 # Enabled plugins
-# All of the enabled plugins will be loaded upon startup
 # Syntax is:
 #   {plugin_ns_path} > ENABLE | DISABLE
 

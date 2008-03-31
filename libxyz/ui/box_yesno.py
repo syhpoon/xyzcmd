@@ -26,7 +26,7 @@ class YesNoBox(Box):
     """
 
     # Skin rulesets resolution order
-    resolution = ("yesno_box", "box", "widget")
+    resolution = (u"yesno_box", u"box", u"widget")
 
     def __init__(self, xyz, body, message, title="", width=60):
         """
