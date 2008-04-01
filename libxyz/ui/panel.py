@@ -15,23 +15,43 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 from libxyz.ui import lowui
+from libxyz.ui import align
 
 class Panel(lowui.WidgetWrap):
     """
     Panel is used to display filesystem hierarchy
     """
 
-    resolution = (u"box", u"widget")
-    #resolution = (u"panel", u"widget")
+    resolution = (u"panel", u"widget")
 
     def __init__(self, xyz):
         self.xyz = xyz
 
         self._blank = lowui.Text("")
-        self._block = lowui.AttrWrap(lowui.BoxAdapter(lowui.ListBox([self._blank]), 15), self._attr(u"box"))
+        self._xx0 = lowui.Text(" ..")
+        self._xx1 = lowui.Text(" kernel")
+        self._xx2 = lowui.AttrWrap(lowui.Text(" file2"), self._attr(u"cursor"))
+        self._xx3 = lowui.Text(" file3")
+        self._xx4 = lowui.Text(" file4")
+        self._xx5 = lowui.Text(" file5")
+        self._xx6 = lowui.Text(" file6")
+        self._core = lowui.AttrWrap(lowui.Text(" xyzcmd.core"), self._attr(u"core"))
 
-        self._block.box_widget.body = lowui.Button("AAA")
-        self._widget = lowui.Pile([self._blank, self._block, self._blank])
+        _title1 = lowui.Text((self._attr(u"cwdtitle"), u" /var/lib/tmp/bin "), align.CENTER)
+        _block1_mount = lowui.AttrWrap(lowui.Filler(_title1, align.TOP),
+                                self._attr(u"mount"))
+        self._block1 = lowui.AttrWrap(lowui.ListBox([self._xx0, self._xx1, self._xx4, self._xx3, self._core, self._xx2, self._xx5, self._xx6]), self._attr(u"panel"))
+        self._block1 = lowui.BoxAdapter(lowui.Overlay(self._block1, _block1_mount, align.CENTER, 38, align.MIDDLE, 20), 22)
+
+
+        _title2 = lowui.Text((self._attr(u"cwdtitle"), u" /boot/kernel "), align.CENTER)
+        _block2_mount = lowui.AttrWrap(lowui.Filler(_title2, align.TOP),
+                                self._attr(u"mount"))
+        self._block2 = lowui.AttrWrap(lowui.ListBox([self._blank]), self._attr(u"panel"))
+        self._block2 = lowui.BoxAdapter(lowui.Overlay(self._block2, _block2_mount, align.CENTER, 38, align.MIDDLE, 20), 22)
+
+        columns = lowui.Columns([self._block1, self._block2], 0)
+        self._widget = lowui.Pile([self._blank, columns, self._blank])
 
         super(Panel, self).__init__(self._widget)
 

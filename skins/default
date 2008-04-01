@@ -43,3 +43,12 @@ ui.error_box {
 	box = WHITE, DARK_RED
 	mount = WHITE, DARK_MAGENTA
 }
+
+ui.panel {
+	mount = DEFAULT, DARK_CYAN
+	cwdtitle = DEFAULT, DARK_BLUE
+	panel = WHITE, DARK_BLUE
+	cursor = BLACK, LIGHT_GRAY
+	# :-)
+	core = DARK_RED, DARK_BLUE
+}

@@ -102,6 +102,7 @@ representation.
       * DARK_MAGENTA
       * DARK_CYAN
       * LIGHT_CYAN
+      * LIGHT_GRAY
 
 <MA>
    Monochrome terminal attributes. Possible values include:
