@@ -43,7 +43,7 @@ which shows greeting message box.\
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 
-        self.public[u"say_hello"] = self._say_hello
+        self.public = {u"say_hello": self._say_hello}
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
@@ -68,6 +68,5 @@ which shows greeting message box.\
         _title = u"XYZCommander version %s" % Version.version
 
         _box = MessageBox(self.xyz, top, _msg, _title)
-        self.xyz.screen.draw_screen(_dim, _box.render(_dim, True))
 
-        return self.xyz.screen.get_input()
+        return _box.show()

@@ -14,12 +14,12 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-import urwid.raw_display
-import urwid
+import urwid.raw_display as display
+#import urwid.curses_display as display
 
 def init_display():
     """
     Create main ui object
     """
 
-    return urwid.raw_display.Screen()
+    return display.Screen()

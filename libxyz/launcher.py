@@ -96,7 +96,8 @@ class Launcher(object):
 
     def _run(self):
         _dim = self.xyz.screen.get_cols_rows()
-        self._top = lowui.Frame(lowui.Filler(lowui.Text("")))
+        #self._top = lowui.Frame(lowui.Filler(lowui.Text("")))
+        self._top = lowui.Filler(lowui.Text(""))
 
         w = lowui.Filler(uilib.Panel(self.xyz))
         self.xyz.screen.draw_screen(_dim, w.render(_dim, True))
