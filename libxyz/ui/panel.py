@@ -28,19 +28,13 @@ class Panel(lowui.WidgetWrap):
         self.xyz = xyz
 
         self._blank = lowui.Text("")
-        self._xx0 = lowui.Text(" ..")
-        self._xx1 = lowui.Text(" kernel")
-        self._xx2 = lowui.AttrWrap(lowui.Text(" file2"), self._attr(u"cursor"))
-        self._xx3 = lowui.Text(" file3")
-        self._xx4 = lowui.Text(" file4")
-        self._xx5 = lowui.Text(" file5")
-        self._xx6 = lowui.Text(" file6")
-        self._core = lowui.AttrWrap(lowui.Text(" xyzcmd.core"), self._attr(u"core"))
+        #self.block1 = self._init_panel3()
+        #self.block2 = self._init_panel3()
+        self.block1 = Block(self._attr)
+        self.block2 = Block(self._attr)
 
-        self._block1 = self._init_panel3()
-        self._block2 = self._init_panel3()
-
-        columns = lowui.Columns([self._block1, self._block2], 0)
+        #columns = lowui.Columns([self.block1, self.block2], 0)
+        columns = lowui.Columns([self.block1.block, self.block2.block], 0)
         _status = lowui.Text("Status bar")
         _cmd = lowui.Text("# uname -a")
         self._widget = lowui.Pile([columns, _status, _cmd])
@@ -56,49 +50,50 @@ class Panel(lowui.WidgetWrap):
 
         return self.xyz.skin.attr(self.resolution, name)
 
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class Block(object):
+    """
+    Single block
+    """
+
+    def __init__(self, attr_func):
+        """
+        @param res: Dictionary of defined resources
+        """
+
+        self.attr = attr_func
+
+        self._xx0 = lowui.Text(" ..")
+        self._xx1 = lowui.Text(" kernel")
+        self._xx2 = lowui.AttrWrap(lowui.Text(" file2"), self.attr(u"cursor"))
+        self._xx3 = lowui.Text(" file3")
+        self._xx4 = lowui.Text(" file4")
+        self._xx5 = lowui.Text(" file5")
+        self._xx6 = lowui.Text(" file6")
+        self._core = lowui.AttrWrap(lowui.Text(" xyzcmd.core"), self.attr(u"core"))
+
+        self.title = lowui.Text((self.attr(u"cwdtitle"), u" ~ "), align.CENTER)
+
+        self.info = lowui.Text(u"-rwx-rx-rx (1.5M) file2 ")
+        self.info = lowui.Padding(self.info, align.LEFT, 38)
+        self.info = lowui.AttrWrap(self.info, self.attr(u"info"))
+
+        self.block_mount = lowui.Filler(lowui.Text(u""))
+        self.block_mount = lowui.AttrWrap(self.block_mount, self.attr(u"mount"))
+
+        self.block_cont = lowui.ListBox([self._xx0, self._xx1, self._xx4,
+                                         self._xx3, self._core, self._xx2,
+                                         self._xx5, self._xx6])
+
+        self.block = lowui.AttrWrap(self.block_cont, self.attr(u"panel"))
+        self.block = lowui.Frame(self.block, self.title, self.info)
+        self.block = lowui.AttrWrap(self.block, self.attr(u"mount"))
+        self.block = lowui.Overlay(self.block, self.block_mount,
+                                   align.CENTER, 38, align.MIDDLE, 22)
+        self.block = lowui.BoxAdapter(self.block, 22)
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _init_panel(self):
-        _title = lowui.Text((self._attr(u"cwdtitle"), u" ~ "), align.CENTER)
-        _title = lowui.Filler(_title, align.TOP)
-        _info = lowui.Text((self._attr(u"cwdtitle"), u" -rwx-r-x-r-x "),
-                           align.LEFT)
-        _info = lowui.Filler(_info)
-
-        _block_mount = lowui.AttrWrap(_title, self._attr(u"mount"))
-
-        _block_cont = lowui.ListBox([self._xx0, self._xx1, self._xx4,
-                                     self._xx3, self._core, self._xx2,
-                                     self._xx5, self._xx6])
-        _block = lowui.AttrWrap(_block_cont, self._attr(u"panel"))
-
-        _block = lowui.Overlay(_block, _block_mount, align.CENTER, 38,
-                               align.MIDDLE, 20)
-        _block = lowui.BoxAdapter(_block, 22)
-
-        return _block
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _init_panel3(self):
-        _title = lowui.Text((self._attr(u"cwdtitle"), u" ~ "), align.CENTER)
-        _info = lowui.Text((self._attr(u"cwdtitle"), u" -rwx-r-x-r-x "),
-                           align.LEFT)
-
-        _block_mount = lowui.AttrWrap(lowui.Filler(lowui.Text(u"")), self._attr(u"mount"))
-
-        _block_cont = lowui.ListBox([self._xx0, self._xx1, self._xx4,
-                                     self._xx3, self._core, self._xx2,
-                                     self._xx5, self._xx6])
-        _block = lowui.AttrWrap(_block_cont, self._attr(u"panel"))
-
-        #_block = lowui.Overlay(_block, _block_mount, align.CENTER, 38,
-        #                       align.MIDDLE, 20)
-        #_block = lowui.BoxAdapter(_block, 22)
-
-        _block = lowui.AttrWrap(lowui.Frame(_block, _title, _info), self._attr(u"mount"))
-        _block = lowui.Overlay(_block, _block_mount, align.CENTER, 38,
-                               align.MIDDLE, 22)
-        _block = lowui.BoxAdapter(_block, 22)
-
-        return _block
+    def get_block(self):
+        return self.block

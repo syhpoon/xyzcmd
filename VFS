@@ -1,0 +1,11 @@
+Методы:
+open
+close
+readdir
+
+VFSObject(url)
+open()
+close()
+read()
+write()
+readdir()

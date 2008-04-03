@@ -101,7 +101,6 @@ representation.
       * DARK_BLUE
       * DARK_MAGENTA
       * DARK_CYAN
-      * LIGHT_CYAN
       * LIGHT_GRAY
 
 <MA>
