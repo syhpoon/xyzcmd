@@ -16,6 +16,7 @@
 
 from libxyz.ui import lowui
 from libxyz.ui import align
+from libxyz.ui import Border
 
 class Panel(lowui.WidgetWrap):
     """
@@ -28,12 +29,9 @@ class Panel(lowui.WidgetWrap):
         self.xyz = xyz
 
         self._blank = lowui.Text("")
-        #self.block1 = self._init_panel3()
-        #self.block2 = self._init_panel3()
         self.block1 = Block(self._attr)
         self.block2 = Block(self._attr)
 
-        #columns = lowui.Columns([self.block1, self.block2], 0)
         columns = lowui.Columns([self.block1.block, self.block2.block], 0)
         _status = lowui.Text("Status bar")
         _cmd = lowui.Text("# uname -a")
@@ -59,7 +57,6 @@ class Block(object):
 
     def __init__(self, attr_func):
         """
-        @param res: Dictionary of defined resources
         """
 
         self.attr = attr_func
@@ -71,26 +68,21 @@ class Block(object):
         self._xx4 = lowui.Text(" file4")
         self._xx5 = lowui.Text(" file5")
         self._xx6 = lowui.Text(" file6")
-        self._core = lowui.AttrWrap(lowui.Text(" xyzcmd.core"), self.attr(u"core"))
 
-        self.title = lowui.Text((self.attr(u"cwdtitle"), u" ~ "), align.CENTER)
+        self.title = lowui.Text((self.attr(u"cwdtitle"), u" /home/syhpoon "), align.CENTER)
 
         self.info = lowui.Text(u"-rwx-rx-rx (1.5M) file2 ")
         self.info = lowui.Padding(self.info, align.LEFT, 38)
         self.info = lowui.AttrWrap(self.info, self.attr(u"info"))
 
-        self.block_mount = lowui.Filler(lowui.Text(u""))
-        self.block_mount = lowui.AttrWrap(self.block_mount, self.attr(u"mount"))
-
         self.block_cont = lowui.ListBox([self._xx0, self._xx1, self._xx4,
-                                         self._xx3, self._core, self._xx2,
+                                         self._xx3, self._xx2,
                                          self._xx5, self._xx6])
 
-        self.block = lowui.AttrWrap(self.block_cont, self.attr(u"panel"))
-        self.block = lowui.Frame(self.block, self.title, self.info)
-        self.block = lowui.AttrWrap(self.block, self.attr(u"mount"))
-        self.block = lowui.Overlay(self.block, self.block_mount,
-                                   align.CENTER, 38, align.MIDDLE, 22)
+        self.block = lowui.Frame(self.block_cont, footer=self.info)
+        self.block = Border(self.block, self.title, self.attr(u"border"))
+        self.block = lowui.AttrWrap(self.block, self.attr(u"panel"))
+
         self.block = lowui.BoxAdapter(self.block, 22)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

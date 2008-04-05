@@ -101,22 +101,18 @@ class Launcher(object):
 
         w = lowui.Filler(uilib.Panel(self.xyz))
         self.xyz.screen.draw_screen(_dim, w.render(_dim, True))
-        #w = uilib.YesNoBox(self.xyz, self._top, "AAAAA", "BBB")
+        while not self.xyz.screen.get_input():
+            pass
+
+        #_str = "PREVED"
+        #_title = "TITLE"
+        #w = uilib.MessageBox(self.xyz, self._top, _str, _title)
+        #w.show()
+        #w = uilib.ErrorBox(self.xyz, self._top, _str)
+        #w.show()
+        #w = uilib.YesNoBox(self.xyz, self._top, _str, _title)
         #w.show()
 
-        while not self.xyz.screen.get_input():
-            pass
-
-        x = uilib.MessageBox(self.xyz, w, "AAA", "BBB")
-        x.show()
-        x = uilib.YesNoBox(self.xyz, w, "AAAAAA\nBBBBBB\nCCCCCC", "BBB")
-        x.show()
-        x = uilib.ErrorBox(self.xyz, w, "AAAAAA\nBBBBBB\nCCCCCC")
-        x.show()
-
-        self.xyz.screen.draw_screen(_dim, w.render(_dim, True))
-        while not self.xyz.screen.get_input():
-            pass
         self.finalize()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

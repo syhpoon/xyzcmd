@@ -25,6 +25,7 @@ __all__ = (
     'align',
     'colors',
     'Keys',
+    'Border',
     'XYZButton',
     'Box',
     'MessageBox',
@@ -41,6 +42,7 @@ import colors
 
 from keys import Keys
 
+from border import Border
 from xyzbutton import XYZButton
 from box import Box
 from box_message import MessageBox

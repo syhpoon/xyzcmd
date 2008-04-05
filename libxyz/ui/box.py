@@ -38,13 +38,22 @@ class Box(lowui.WidgetWrap):
 
         self.screen = xyz.screen
         self.skin = xyz.skin
-        self.rowspan = 3
-        self.mount_span = {u"vertical": 2, u"horizontal": 2}
+        self.message = message
         self.full_width = width
-        self.box_width = width - self.mount_span[u"horizontal"]
-        self.box_height = self._rows(message)
-        self.full_height = self.box_height + self.mount_span[u"vertical"]
 
+        self.mount_span = {u"vertical": 2, u"horizontal": 2}
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def calc_size(self, rowspan):
+        """
+        Calculate size
+        """
+
+        self.rowspan = rowspan
+        self.box_width = self.full_width - self.mount_span[u"horizontal"]
+        self.box_height = self._rows(self.message)
+        self.full_height = self.box_height + self.mount_span[u"vertical"]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -97,3 +106,20 @@ class Box(lowui.WidgetWrap):
             _rows = _lines + self.rowspan
 
         return _rows
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _strip_title(self, title):
+        """
+        Strip title if needed
+        """
+
+        _maxlen = self.box_width - 6
+        _len = len(title)
+
+        _stripped = title
+
+        if _len >= _maxlen:
+            _stripped = u"%s..." % title[:_maxlen - 3]
+
+        return _stripped

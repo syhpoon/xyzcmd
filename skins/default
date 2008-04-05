@@ -32,29 +32,32 @@ fs.priority {
 
 # Base widget
 ui.widget {
-	button = LIGHT_CYAN, BLACK
+	button = BLACK, LIGHT_GRAY
 }
 
 # Base box widgets
 ui.box {
-	title = LIGHT_CYAN, BLACK
-	box = LIGHT_CYAN, BLACK
+	title = WHITE, BLACK
+	box = BLACK, LIGHT_GRAY
+	border = BLACK, LIGHT_GRAY
 	mount = DEFAULT, LIGHT_GRAY
 }
 
 # Error message box
 ui.error_box {
-	title = WHITE, DARK_RED
+	title = WHITE, BLACK
 	box = WHITE, DARK_RED
-	mount = DEFAULT, LIGHT_GRAY
+	border = WHITE, DARK_RED
+	mount = WHITE, DARK_RED
 }
 
 ui.panel {
-	mount = DEFAULT, LIGHT_GRAY
-	cwdtitle = LIGHT_CYAN, BLACK
-	panel = DARK_CYAN, BLACK
+	cwdtitle = WHITE, DEFAULT
+	#cwdtitle = WHITE, BLACK
+	#panel = LIGHT_GRAY, BLACK
+	panel = DEFAULT, DEFAULT
 	cursor = BLACK, LIGHT_GRAY
 	info = BLACK, LIGHT_GRAY
-	# :-)
-	core = DARK_RED, BLACK
+	#border = LIGHT_GRAY, BLACK
+	border = DEFAULT, DEFAULT
 }

@@ -37,7 +37,7 @@ class YesNoBox(Box):
         @param title: Box title
         @param width: Box width (including mount box)
 
-        Required resources: title, box, mount, button
+        Required resources: title, box, border, mount, button
         """
 
         super(YesNoBox, self).__init__(xyz, body, message, title, width)
