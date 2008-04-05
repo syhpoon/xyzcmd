@@ -17,6 +17,7 @@
 from libxyz.ui import lowui
 from libxyz.ui import align
 from libxyz.ui import Box
+from libxyz.ui import Border
 
 import libxyz.ui
 
@@ -40,6 +41,7 @@ class YesNoBox(Box):
         """
 
         super(YesNoBox, self).__init__(xyz, body, message, title, width)
+        self.calc_size(6)
 
         self.keys = libxyz.ui.Keys()
 
@@ -49,21 +51,24 @@ class YesNoBox(Box):
 
         self._buttons = self._init_buttons()
 
-        _title = lowui.Text((self._attr(u"title"),
-                             " %s "  % title.replace("\n", "")), align.CENTER)
-        _mount = lowui.AttrWrap(lowui.Filler(_title, align.TOP),
+        _title = self._strip_title(title.replace(u"\n", u" "))
+        _title = lowui.Text(_title, align.CENTER)
+        _title = lowui.AttrWrap(_title, self._attr(u"title"))
+
+        _mount = lowui.AttrWrap(lowui.Filler(lowui.Text(u"")),
                                 self._attr(u"mount"))
 
         # Main dialog text
         _text = lowui.Text((self._attr(u"box"), message), align.CENTER)
         _blank = lowui.Text((self._attr(u"box"), ""))
 
+        _widgets = [_text, _blank, self._buttons]
+        _box = lowui.Filler(lowui.Pile(_widgets), valign=align.BOTTOM)
+        _box = Border(_box, _title, self._attr(u"border"))
+        _box = lowui.AttrWrap(_box, self._attr(u"box"))
+
         _mount = lowui.Overlay(_mount, body, align.CENTER, self.full_width,
                              align.MIDDLE, self.full_height)
-
-        _widgets = [_text, _blank, self._buttons]
-        _box = lowui.AttrWrap(lowui.Filler(lowui.Pile(_widgets)),
-                              self._attr(u"box"))
         _box = lowui.Overlay(_box, _mount, align.CENTER, self.box_width,
                              align.MIDDLE, self.box_height)
 

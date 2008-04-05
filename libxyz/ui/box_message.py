@@ -17,6 +17,7 @@
 from libxyz.ui import lowui
 from libxyz.ui import align
 from libxyz.ui import Box
+from libxyz.ui import Border
 
 import libxyz.ui
 
@@ -36,19 +37,22 @@ class MessageBox(Box):
         @param title: Box title
         @param width: Box width (including mount box)
 
-        Required resources: title, box, mount
+        Required resources: title, box, border, mount
         """
 
         super(MessageBox, self).__init__(xyz, body, message, title, width)
+        self.calc_size(5)
 
-        _title = lowui.Text((self._attr(u"title"),
-                             " %s "  % title.replace(u"\n", u"")), align.CENTER)
-
-        _mount = lowui.AttrWrap(lowui.Filler(_title, align.TOP),
+        _title = self._strip_title(title.replace(u"\n", u" "))
+        _title = lowui.Text(_title, align.CENTER)
+        _title = lowui.AttrWrap(_title, self._attr(u"title"))
+        _mount = lowui.AttrWrap(lowui.Filler(lowui.Text(u"")),
                                 self._attr(u"mount"))
 
         _text = lowui.Text(message, align.CENTER)
-        _box = lowui.AttrWrap(lowui.Filler(_text), self._attr(u"box"))
+        _box = lowui.Filler(_text)
+        _box = Border(_box, _title, self._attr(u"border"))
+        _box = lowui.AttrWrap(_box, self._attr(u"box"))
 
         _mount = lowui.Overlay(_mount, body, align.CENTER, self.full_width,
                              align.MIDDLE, self.full_height)
