@@ -26,46 +26,29 @@ class VFSObject(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def open(self):
-        pass
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def close(self):
-        pass
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def read(self):
-        pass
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def write(self):
-        pass
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def flush(self):
-        pass
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     def walk(self):
         """
         Directory tree generator
         """
 
-        pass
+        return VFS_NONE
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 def VFSFile(object):
     """
-    A VFS file information
+    A VFS file information interface
     """
 
-    def __init__(self):
+    def __init__(self, path):
+        self.path = os.path.abspath(path)
+
+        # File name
+        self.name = os.path.basename(self.path)
+
+        # File type
+        self.ftype = VFS_NONE
+
         # Access time
         self.atime = VFS_NONE
 
@@ -87,11 +70,36 @@ def VFSFile(object):
         # Mode
         self.mode = VFS_NONE
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def open(self):
+        return VFS_NONE
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def close(self):
+        return VFS_NONE
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def read(self):
+        return VFS_NONE
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def write(self):
+        return VFS_NONE
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def flush(self):
+        return VFS_NONE
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
 
 def VFSDir(VFSFile):
     """
-    A VFS directory information
+    A VFS directory information interface
     """
 
     pass

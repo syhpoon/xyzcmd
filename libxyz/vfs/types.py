@@ -1,3 +1,4 @@
+#-*- coding: utf8 -*
 #
 # Max E. Kuznecov ~syhpoon <mek@mek.uz.ua> 2008
 #
@@ -13,44 +14,72 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-class XYZError(Exception):
+class VFSTypeFile(object):
     """
-    Base exception
+    Regular file type
     """
 
-    pass
+    str_type = u"-"
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-class XYZRuntimeError(XYZError):
-    pass
+class VFSTypeBlock(object):
+    """
+    Block device type
+    """
+
+    str_type = u"b"
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-class XYZValueError(XYZError):
-    pass
+class VFSTypeChar(object):
+    """
+    Character device type
+    """
+
+    str_type = u"c"
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-class ParseError(XYZError):
-    pass
+class VFSTypeDir(object):
+    """
+    Directory type
+    """
+
+    str_type = u"d"
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-class LexerError(XYZError):
-    pass
+class VFSTypeLink(object):
+    """
+    Symbolic link type
+    """
+
+    str_type = u"l"
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-class PluginError(XYZError):
-    pass
+class VFSTypeFifo(object):
+    """
+    FIFO type
+    """
+
+    str_type = u"p"
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-class SkinError(XYZError):
-    pass
+class VFSTypeSocket(object):
+    """
+    Socket type
+    """
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    str_type = u"s"
 
-class VFSError(XYZError):
-    pass
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class VFSTypeUnknown(object):
+    """
+    Unknown type
+    """
+
+    str_type = u"?"

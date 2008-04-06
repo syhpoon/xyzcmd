@@ -9,3 +9,7 @@ close()
 read()
 write()
 readdir()
+
+URL:
+local files: /local/path/file.ext#type
+remote files: proto://[user[:pass]@]host/path

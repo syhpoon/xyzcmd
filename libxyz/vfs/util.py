@@ -1,3 +1,4 @@
+#-*- coding: utf8 -*
 #
 # Max E. Kuznecov ~syhpoon <mek@mek.uz.ua> 2008
 #
@@ -13,44 +14,28 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-class XYZError(Exception):
+import stat
+
+from libxyz.vfs import vfstypes
+
+def get_file_type(st_mode):
     """
-    Base exception
+    Find out file type
+    @param st_mode: Raw st_mode obtained from os.stat()
     """
 
-    pass
+    _types = (
+              (stat.S_ISDIR,  vfstypes.VFSTypeDir),
+              (stat.S_ISCHR,  vfstypes.VFSTypeChar),
+              (stat.S_ISBLK,  vfstypes.VFSTypeBlock),
+              (stat.S_ISREG,  vfstypes.VFSTypeFile),
+              (stat.S_ISFIFO, vfstypes.VFSTypeFifo),
+              (stat.S_ISLNK,  vfstypes.VFSTypeLink),
+              (stat.S_ISSOCK, vfstypes.VFSTypeSocket),
+              )
 
-#++++++++++++++++++++++++++++++++++++++++++++++++
+    for _test, _type in _types:
+        if _test(st_mode):
+            return _type()
 
-class XYZRuntimeError(XYZError):
-    pass
-
-#++++++++++++++++++++++++++++++++++++++++++++++++
-
-class XYZValueError(XYZError):
-    pass
-
-#++++++++++++++++++++++++++++++++++++++++++++++++
-
-class ParseError(XYZError):
-    pass
-
-#++++++++++++++++++++++++++++++++++++++++++++++++
-
-class LexerError(XYZError):
-    pass
-
-#++++++++++++++++++++++++++++++++++++++++++++++++
-
-class PluginError(XYZError):
-    pass
-
-#++++++++++++++++++++++++++++++++++++++++++++++++
-
-class SkinError(XYZError):
-    pass
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-class VFSError(XYZError):
-    pass
+    return vfstypes.VFSTypeUnknown()
