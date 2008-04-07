@@ -1,0 +1,58 @@
+AUTHOR: "Max E. Kuznecov <mek@mek.uz.ua>"
+VERSION: "0.1"
+DESCRIPTION: "Seablue skin"
+
+# Filesystem objects
+
+fs.type {
+	file = LIGHT_GRAY
+	dir = WHITE
+	block = DARK_MAGENTA
+	char = LIGHT_MAGENTA
+	link = LIGHT_CYAN
+	fifo = DARK_CYAN
+	socket = DARK_RED
+}
+
+fs.regexp {
+	'''.+\.core$''' = DARK_RED,BROWN
+	'''\.+''' = LIGHT_GRAY
+}
+
+fs.priority {
+	type = 1
+   perm = 2
+   regexp = 3
+   owner = 4
+}
+
+### User interface objects
+
+# Base widget
+ui.widget {
+	button = BLACK, LIGHT_GRAY
+}
+
+# Base box widgets
+ui.box {
+	title = WHITE, BLACK
+	box = LIGHT_GRAY, DARK_BLUE
+	border = BLACK, LIGHT_GRAY
+	mount = DEFAULT, LIGHT_GRAY
+}
+
+# Error message box
+ui.error_box {
+	title = WHITE, BLACK
+	box = WHITE, DARK_RED
+	border = WHITE, DARK_RED
+	mount = WHITE, DARK_RED
+}
+
+ui.panel {
+	cwdtitle = BLACK, LIGHT_GRAY
+	panel = WHITE, DARK_BLUE
+	cursor = BLACK, LIGHT_GRAY
+	info = BLACK, LIGHT_GRAY
+	border = WHITE, DARK_BLUE
+}
