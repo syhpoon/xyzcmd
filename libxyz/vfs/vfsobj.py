@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+import os.path
+
 VFS_NONE = None
 
 class VFSObject(object):
@@ -35,7 +37,7 @@ class VFSObject(object):
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-def VFSFile(object):
+class VFSFile(object):
     """
     A VFS file information interface
     """
@@ -70,6 +72,9 @@ def VFSFile(object):
         # Mode
         self.mode = VFS_NONE
 
+        # Visual filetype representation
+        self.visual = VFS_NONE
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def open(self):
@@ -94,12 +99,3 @@ def VFSFile(object):
 
     def flush(self):
         return VFS_NONE
-
-#++++++++++++++++++++++++++++++++++++++++++++++++
-
-def VFSDir(VFSFile):
-    """
-    A VFS directory information interface
-    """
-
-    pass

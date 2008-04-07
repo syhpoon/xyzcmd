@@ -17,6 +17,7 @@
 from libxyz.ui import lowui
 from libxyz.ui import align
 from libxyz.ui import Border
+from libxyz.vfs.local import LocalVFSObject
 
 class Panel(lowui.WidgetWrap):
     """
@@ -29,8 +30,8 @@ class Panel(lowui.WidgetWrap):
         self.xyz = xyz
 
         self._blank = lowui.Text("")
-        self.block1 = Block(self._attr)
-        self.block2 = Block(self._attr)
+        self.block1 = Block(LocalVFSObject("/tmp"), self._attr)
+        self.block2 = Block(LocalVFSObject("/"), self._attr)
 
         columns = lowui.Columns([self.block1.block, self.block2.block], 0)
         _status = lowui.Text("Status bar")
@@ -55,32 +56,32 @@ class Block(object):
     Single block
     """
 
-    def __init__(self, attr_func):
+    def __init__(self, vfsobj, attr_func):
         """
+        @param vfsobj:
+        @param attr_func:
         """
 
         self.attr = attr_func
 
-        self._xx0 = lowui.Text(" ..")
-        self._xx1 = lowui.Text(" kernel")
-        self._xx2 = lowui.AttrWrap(lowui.Text(" file2"), self.attr(u"cursor"))
-        self._xx3 = lowui.Text(" file3")
-        self._xx4 = lowui.Text(" file4")
-        self._xx5 = lowui.Text(" file5")
-        self._xx6 = lowui.Text(" file6")
+        _d, _dirs, _files = vfsobj.walk()
 
-        self.title = lowui.Text((self.attr(u"cwdtitle"), u" /home/syhpoon "), align.CENTER)
+        cwd = lowui.Text((self.attr(u"cwdtitle"), _d), align.CENTER)
+
+        _entries = [lowui.Text(u"..")]
+        _entries.extend([lowui.Text(u"%s%s "% (x.visual, x.name))
+                         for x in _dirs])
+        _entries.extend([lowui.Text(u"%s%s " % (x.visual, x.name))
+                         for x in _files])
 
         self.info = lowui.Text(u"-rwx-rx-rx (1.5M) file2 ")
         self.info = lowui.Padding(self.info, align.LEFT, 38)
         self.info = lowui.AttrWrap(self.info, self.attr(u"info"))
 
-        self.block_cont = lowui.ListBox([self._xx0, self._xx1, self._xx4,
-                                         self._xx3, self._xx2,
-                                         self._xx5, self._xx6])
+        self.block_cont = lowui.ListBox(_entries)
 
         self.block = lowui.Frame(self.block_cont, footer=self.info)
-        self.block = Border(self.block, self.title, self.attr(u"border"))
+        self.block = Border(self.block, cwd, self.attr(u"border"))
         self.block = lowui.AttrWrap(self.block, self.attr(u"panel"))
 
         self.block = lowui.BoxAdapter(self.block, 22)

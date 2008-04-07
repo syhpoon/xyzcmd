@@ -18,14 +18,13 @@ import os
 import os.path
 import stat
 
-import libxyz.vfs as vfs
-
 from libxyz.exceptions import VFSError
+from libxyz.vfs import vfsobj
 from libxyz.vfs import types
 from libxyz.vfs import util
 from libxyz.vfs import mode
 
-class LocalVFSObject(vfs.VFSObject):
+class LocalVFSObject(vfsobj.VFSObject):
     """
     Local VFS object is used to access local filesystem
     """
@@ -35,26 +34,49 @@ class LocalVFSObject(vfs.VFSObject):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def list(self, directory):
+    def walk(self, top=None):
         """
-        Directory iterator
+        Directory tree generator
+        @param top: Top directory or self.path unless provided
+        @return: tuple (dir, dirs, files) where:
+                 dir - current dir name
+                 dirs - list of LocalVFSFile objects of directories
+                 files - list of LocalVFSFile objects of files
         """
 
-        for _entry in os.listdir(directory):
-            yield LocalVFSFile(os.path.join(os.path.absfile(directory), _entry)
+        top = top or self.path
+        _dir, _dirs, _files = os.walk(top).next()
+        _abstop = os.path.abspath(top)
+
+        return [
+                _dir,
+                [LocalVFSFile(os.path.join(_abstop, x)) for x in _dirs],
+                [LocalVFSFile(os.path.join(_abstop, x)) for x in _files],
+               ]
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-class LocalVFSFile(vfs.VFSFile):
+class LocalVFSFile(vfsobj.VFSFile):
     """
     Local file object
     """
 
     def __init__(self, path):
-        self.name = os.path.basename(path)
+        super(LocalVFSFile, self).__init__(path)
         self.ftype = self._find_type(path)
+        self.visual = self.ftype.visual
 
         self._set_attributes(self.ftype)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __str__(self):
+        return "<LocalVFSFile object: %s>" % os.path.join(self.path, self.name)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __repr__(self):
+        return self.__str__()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -64,11 +86,11 @@ class LocalVFSFile(vfs.VFSFile):
         """
 
         try:
-            self._stat = os.stat(path)
+            self._stat = os.lstat(path)
         except OSError, e:
             raise VFSError(_(u"Unable to stat file %s: %s" % (path, str(e))))
 
-        return vfsutil.get_file_type(self._stat.st_mode)
+        return util.get_file_type(self._stat.st_mode)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -92,4 +114,4 @@ class LocalVFSFile(vfs.VFSFile):
         self.size = self._stat.st_size
         self.uid = self._stat.st_uid
         self.gid = self._stat.st_gid
-        self.mode = vfsmode.VFSMode(self._stat.st_mode, filetype=self.ftype)
+        self.mode = mode.Mode(self._stat.st_mode)

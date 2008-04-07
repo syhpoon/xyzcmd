@@ -16,7 +16,7 @@
 
 import stat
 
-from libxyz.vfs import vfstypes
+from libxyz.vfs import types as vfstypes
 
 def get_file_type(st_mode):
     """

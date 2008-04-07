@@ -16,7 +16,7 @@
 
 import stat
 
-from libxyz.vfs import vfsutil
+from libxyz.vfs import util
 
 class Mode(object):
     """
@@ -33,12 +33,22 @@ class Mode(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def __str__(self):
+        return self.string
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __repr__(self):
+        return self.__str__()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def _make_string_mode(self):
         """
         Make string mode representaion
         """
 
-        _str_mode = [vfsutil.get_file_type(self.raw).str_type]
+        _str_mode = [util.get_file_type(self.raw).str_type]
 
         # usr bits
         _str_mode.extend(self._usr_bits())

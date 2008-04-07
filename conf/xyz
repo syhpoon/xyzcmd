@@ -11,4 +11,4 @@ plugins {
 }
 
 # Skin to use
-skin = default
+skin = seablue

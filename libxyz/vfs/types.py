@@ -20,6 +20,15 @@ class VFSTypeFile(object):
     """
 
     str_type = u"-"
+    visual = u" "
+
+    def __str__(self):
+        return "<Regular file type>"
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __repr__(self):
+        return self.__str__()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -29,6 +38,17 @@ class VFSTypeBlock(object):
     """
 
     str_type = u"b"
+    visual = u"+"
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __str__(self):
+        return "<Block device type>"
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __repr__(self):
+        return self.__str__()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -38,6 +58,17 @@ class VFSTypeChar(object):
     """
 
     str_type = u"c"
+    visual = u"-"
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __str__(self):
+        return "<Char device type>"
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __repr__(self):
+        return self.__str__()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -47,6 +78,17 @@ class VFSTypeDir(object):
     """
 
     str_type = u"d"
+    visual = u"/"
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __str__(self):
+        return "<Directory type>"
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __repr__(self):
+        return self.__str__()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -56,6 +98,17 @@ class VFSTypeLink(object):
     """
 
     str_type = u"l"
+    visual = u"@"
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __str__(self):
+        return "<Soft link type>"
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __repr__(self):
+        return self.__str__()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -65,6 +118,17 @@ class VFSTypeFifo(object):
     """
 
     str_type = u"p"
+    visual = u"|"
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    def __str__(self):
+        return "<FIFO type>"
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __repr__(self):
+        return self.__str__()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -74,6 +138,17 @@ class VFSTypeSocket(object):
     """
 
     str_type = u"s"
+    visual = u"="
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __str__(self):
+        return "<Socket type>"
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __repr__(self):
+        return self.__str__()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -83,3 +158,13 @@ class VFSTypeUnknown(object):
     """
 
     str_type = u"?"
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __str__(self):
+        return "<Unknown file type>"
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __repr__(self):
+        return self.__str__()
