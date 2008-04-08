@@ -17,22 +17,34 @@
 from libxyz.ui import lowui
 from libxyz.ui import align
 
+from libxyz.exceptions import UIError
+
 class Border(lowui.WidgetWrap):
     def __init__(self, widget, title=None, attr=None):
         """
         Draw a line border around widget and set up a title
         @param widget: Widget to wrap
-        @param title: Title
+        @param title: (title, attribute) tuple or basestring
         @type title: libxyz.ui.lowui.Text object
         @param attr: Attribute of border
         """
 
         utf8decode = lowui.escape.utf8decode
 
-        if title:
-            _text = title.get_text()[0]
-        else:
-            _text = None
+        _title = None
+
+        if title is not None:
+            if isinstance(title, tuple):
+                _len = len(title[0])
+                _title = lowui.Text((title[1], " %s " % title[0]), align.CENTER)
+            elif isinstance(title, basestring):
+                _len = len(title)
+                _title = lowui.Text(title, align.CENTER)
+            else:
+                raise UIError(_(u"Invalid title type %s. "\
+                                u"Tuple or basetring expected" % type(_title)))
+
+            _len += 2 # " _text "
 
         self.attr = attr
 
@@ -48,9 +60,8 @@ class Border(lowui.WidgetWrap):
 
         tline_widgets = [('fixed', 1, self.tlcorner), self.tline]
 
-        if _text is not None:
-            _len = len(_text) + 2 # " _text "
-            tline_widgets.append(("fixed", _len, title))
+        if title is not None:
+            tline_widgets.append(("fixed", _len, _title))
 
         tline_widgets.extend([self.tline, ("fixed", 1, self.trcorner)])
 

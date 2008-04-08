@@ -54,3 +54,8 @@ class SkinError(XYZError):
 
 class VFSError(XYZError):
     pass
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class UIError(XYZError):
+    pass

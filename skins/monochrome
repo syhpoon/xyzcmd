@@ -53,11 +53,8 @@ ui.error_box {
 
 ui.panel {
 	cwdtitle = WHITE, DEFAULT
-	#cwdtitle = WHITE, BLACK
-	#panel = LIGHT_GRAY, BLACK
 	panel = DEFAULT, DEFAULT
 	cursor = BLACK, LIGHT_GRAY
 	info = BLACK, LIGHT_GRAY
-	#border = LIGHT_GRAY, BLACK
 	border = DEFAULT, DEFAULT
 }

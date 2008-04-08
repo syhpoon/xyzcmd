@@ -30,14 +30,14 @@ fs.priority {
 
 # Base widget
 ui.widget {
-	button = BLACK, LIGHT_GRAY
+	button = DARK_BLUE, LIGHT_GRAY
 }
 
 # Base box widgets
 ui.box {
-	title = WHITE, BLACK
-	box = LIGHT_GRAY, DARK_BLUE
-	border = BLACK, LIGHT_GRAY
+	title = WHITE, DARK_BLUE
+	box = BLACK, LIGHT_GRAY
+	border = DARK_BLUE, LIGHT_GRAY
 	mount = DEFAULT, LIGHT_GRAY
 }
 

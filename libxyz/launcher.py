@@ -104,14 +104,14 @@ class Launcher(object):
         while not self.xyz.screen.get_input():
             pass
 
-        #_str = "PREVED"
-        #_title = "TITLE"
-        #w = uilib.MessageBox(self.xyz, self._top, _str, _title)
-        #w.show()
-        #w = uilib.ErrorBox(self.xyz, self._top, _str)
-        #w.show()
-        #w = uilib.YesNoBox(self.xyz, self._top, _str, _title)
-        #w.show()
+        _str = "PREVED"
+        _title = "TITLE"
+        w = uilib.MessageBox(self.xyz, w, _str, _title)
+        w.show()
+        w = uilib.ErrorBox(self.xyz, w, _str)
+        w.show()
+        w = uilib.YesNoBox(self.xyz, w, _str, _title)
+        w.show()
 
         self.finalize()
 

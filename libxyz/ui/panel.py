@@ -64,11 +64,9 @@ class Block(object):
 
         self.attr = attr_func
 
-        _d, _dirs, _files = vfsobj.walk()
+        _dir, _dirs, _files = vfsobj.walk()
 
-        cwd = lowui.Text((self.attr(u"cwdtitle"), _d), align.CENTER)
-
-        _entries = [lowui.Text(u"..")]
+        _entries = [lowui.Text((self.attr(u"cursor"), u".."))]
         _entries.extend([lowui.Text(u"%s%s "% (x.visual, x.name))
                          for x in _dirs])
         _entries.extend([lowui.Text(u"%s%s " % (x.visual, x.name))
@@ -81,12 +79,8 @@ class Block(object):
         self.block_cont = lowui.ListBox(_entries)
 
         self.block = lowui.Frame(self.block_cont, footer=self.info)
-        self.block = Border(self.block, cwd, self.attr(u"border"))
+        self.block = Border(self.block, (_dir, self.attr(u"cwdtitle")),
+                            self.attr(u"border"))
         self.block = lowui.AttrWrap(self.block, self.attr(u"panel"))
 
         self.block = lowui.BoxAdapter(self.block, 22)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def get_block(self):
-        return self.block

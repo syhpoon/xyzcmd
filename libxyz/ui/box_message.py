@@ -44,8 +44,7 @@ class MessageBox(Box):
         self.calc_size(5)
 
         _title = self._strip_title(title.replace(u"\n", u" "))
-        _title = lowui.Text(_title, align.CENTER)
-        _title = lowui.AttrWrap(_title, self._attr(u"title"))
+        _title = (_title, self._attr(u"title"))
         _mount = lowui.AttrWrap(lowui.Filler(lowui.Text(u"")),
                                 self._attr(u"mount"))
 
