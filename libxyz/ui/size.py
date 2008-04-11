@@ -14,40 +14,11 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-"""
-Module contains user interface widgets
+class Size(object):
+    """
+    Simple widget size wrapper
+    """
 
-"""
-
-__all__ = (
-    'lowui',
-    'display',
-    'align',
-    'colors',
-    'Size',
-    'Keys',
-    'Border',
-    'XYZButton',
-    'Box',
-    'MessageBox',
-    'YesNoBox',
-    'ErrorBox',
-    'Panel',
-)
-
-import urwid as lowui
-
-import display
-import align
-import colors
-
-from size import Size
-
-from keys import Keys
-from border import Border
-from xyzbutton import XYZButton
-from box import Box
-from box_message import MessageBox
-from box_yesno import YesNoBox
-from box_error import ErrorBox
-from panel import Panel
+    def __init__(self, rows, cols):
+        self.rows = rows
+        self.cols = cols

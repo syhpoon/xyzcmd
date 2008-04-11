@@ -35,9 +35,18 @@ class Lexer(object):
       to quote it or escape it using escapechar.
     * Variable can take list of values, separated by comma
     * Escaping can only be used in rval position.
+
+    Macros:
+    ------
+    Macros are special internal variables that get expanded upon parsing.
+    Macro definition is similar to variable definition, but '$' char is
+    prepended:
+    $macro = value
+
     """
 
     TOKEN_IDT = 0
+    TOKEN_MACRO = 1
 
     def __init__(self, source, tokens, comment="#"):
         """

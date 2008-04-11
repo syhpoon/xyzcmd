@@ -110,7 +110,7 @@ class Launcher(object):
         w.show()
         w = uilib.ErrorBox(self.xyz, w, _str)
         w.show()
-        w = uilib.YesNoBox(self.xyz, w, _str, _title)
+        w = uilib.YesNoBox(self.xyz, w, _str+u"?", _title)
         w.show()
 
         self.finalize()
