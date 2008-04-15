@@ -63,10 +63,11 @@ class LocalVFSFile(vfsobj.VFSFile):
 
     def __init__(self, path):
         super(LocalVFSFile, self).__init__(path)
+
         self.ftype = self._find_type(path)
         self.visual = self.ftype.visual
 
-        self._set_attributes(self.ftype)
+        self._set_attributes()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -94,16 +95,7 @@ class LocalVFSFile(vfsobj.VFSFile):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _set_attributes(self, ftype):
-        """
-        Set object attributes
-        """
-
-        self._set_attributes()
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _set_attributes(self, path):
+    def _set_attributes(self):
         """
         Set file attibutes
         """

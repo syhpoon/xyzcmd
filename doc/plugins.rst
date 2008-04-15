@@ -7,10 +7,10 @@ In fact even base functionality is implemented mainly via plugins.
 
 Plugins are being held in one of the following directories:
 
-- User plugins: Any other third-party plugins are held in ~/.xyzcmd/plugins.
 - System plugins: subdirectory of main |XYZ| installation path 
   (usually /usr/local/share/xyzcmd/plugins). All base system plugins are held
   here.
+- User plugins: Any other third-party plugins are held in ~/.xyzcmd/plugins.
 
 In these directories namespace subdirectories are created (see below for
 more details).
@@ -117,4 +117,7 @@ Following is an example of typical plugin usage in python code
    # And then call
    say_hello()
 
-
+Configuration
+-------------
+All the neccessary plugin confiration provided via ``plugins``
+configuration file.

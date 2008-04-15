@@ -93,7 +93,7 @@ class PluginManager(object):
     def load(self, plugin, *initargs, **initkwargs):
         """
         Load and initiate required plugin
-        @param plugin: Absoulute or relative plugin namespace path
+        @param plugin: Absolute or relative plugin namespace path
         @param initargs: Necessary arguments to initiate plugin
         @param initkwargs: Necessary kw arguments to initiate plugin
         """
@@ -236,3 +236,4 @@ class PluginManager(object):
 
         _data = self.xyz.conf[u"xyz"][u"plugins"]
         return [normalize_ns_path(_pname) for _pname in _data if _data[_pname]]
+

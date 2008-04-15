@@ -34,7 +34,6 @@ class Panel(lowui.WidgetWrap):
         _blocksize = libxyz.ui.Size(rows=22, cols=38)
         self.block1 = Block(_blocksize, LocalVFSObject("/tmp"), self._attr)
         self.block2 = Block(_blocksize, LocalVFSObject("/"), self._attr)
-
         columns = lowui.Columns([self.block1.block, self.block2.block], 0)
         _status = lowui.Text("Status bar")
         _cmd = lowui.Text("# uname -a")
@@ -81,7 +80,8 @@ class Block(object):
         self.info = lowui.Padding(self.info, align.LEFT, self.size.cols)
         self.info = lowui.AttrWrap(self.info, self.attr(u"info"))
 
-        self.block_cont = lowui.ListBox(_entries)
+        #self.block_cont = lowui.ListBox(_entries)
+        self.block_cont = Container(attr_func, _entries)
 
         self.block = lowui.Frame(self.block_cont, footer=self.info)
         self.block = libxyz.ui.Border(self.block,
@@ -90,3 +90,54 @@ class Block(object):
         self.block = lowui.AttrWrap(self.block, self.attr(u"panel"))
 
         self.block = lowui.BoxAdapter(self.block, self.size.rows)
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class Container(lowui.BoxWidget):
+    """
+    """
+
+    def __init__(self, attr_func, entries):
+        """
+        @param entries: List of container entries
+        @type entries: List of VFSFile or subclasses
+        """
+
+        self.attr = attr_func
+        self.entries = entries
+        self.selected = 0
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    def selectable(self):
+        return True
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def render(self, (maxcol, maxrow), focus=False):
+        """
+        Render container
+        """
+
+        canvases = []
+
+        for i in range(len(self.entries)):
+            if i == self.selected:
+                x = lowui.TextCanvas(text=[self.entries[i].get_text()[0].encode("utf-8")], attr=[[(self.attr(u"cursor"), maxcol)]], maxcol=maxcol)
+                canvases.append((x, i, False))
+            else:
+                canvases.append((self.entries[i].render((maxcol,)), i, False))
+
+        combined = lowui.CanvasCombine(canvases)
+
+        if len(self.entries) < maxrow:
+            combined.pad_trim_top_bottom(0, maxrow - len(self.entries))
+        elif len(self.entries) > maxrow:
+            combined.trim_end(len(self.entries) - maxrow)
+
+        return combined
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def keypress(self, size, key):
+        pass

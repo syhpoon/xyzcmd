@@ -100,6 +100,7 @@ class Launcher(object):
         self._top = lowui.Filler(lowui.Text(""))
 
         w = lowui.Filler(uilib.Panel(self.xyz))
+
         self.xyz.screen.draw_screen(_dim, w.render(_dim, True))
         while not self.xyz.screen.get_input():
             pass
