@@ -40,9 +40,8 @@ class Lexer(object):
     ------
     Macros are special internal variables that get expanded upon parsing.
     Macro definition is similar to variable definition, but '$' char is
-    prepended:
+    prepended to var name:
     $macro = value
-
     """
 
     TOKEN_IDT = 0

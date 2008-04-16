@@ -117,7 +117,40 @@ Following is an example of typical plugin usage in python code
    # And then call
    say_hello()
 
+Alse see the `keys configuration file`_ for how to bind plugin methods to
+keyboard shortcuts.
+
 Configuration
 -------------
-All the neccessary plugin confiration provided via ``plugins``
-configuration file.
+All the neccessary plugin configuration provided via ``plugins``
+configuration file. Its syntax is simple::
+
+ <:plugin:ns:path> {
+   var = val
+   ...
+ }
+
+So single block contains configuration for one plugin.
+Value can be of any common types:
+
+* Literal: literal_value
+* String: "string value"
+* Multiline string: '''Multiline
+                       String
+                       Value'''
+* Number: 99
+* List: 1, 2, literal, "quoted string"
+
+Note that one cannot use value_validator function to transform provided
+values as configration file is parsed before plugins are available to use.
+
+For example, if we'd had following block in plugins config::
+
+   :misc:hello {
+      show_version = true
+   }
+
+Plugin :misc:hello can access ``show_version`` variable as::
+
+   show_version = xyz.conf[u"plugins"][u":misc:hello"].show_version
+

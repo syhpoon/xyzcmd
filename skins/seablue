@@ -51,7 +51,7 @@ ui.error_box {
 
 ui.panel {
 	cwdtitle = BLACK, LIGHT_GRAY
-	panel = WHITE, DARK_BLUE
+	panel = LIGHT_GRAY, DARK_BLUE
 	cursor = BLACK, LIGHT_GRAY
 	info = BLACK, LIGHT_GRAY
 	border = WHITE, DARK_BLUE
