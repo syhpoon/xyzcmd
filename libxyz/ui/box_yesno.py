@@ -89,17 +89,17 @@ class YesNoBox(Box):
 
                 _keys = self.screen.get_input()
 
-                if [x for x in (self.keys.KEY_LEFT,
-                                self.keys.KEY_RIGHT,
-                                self.keys.KEY_UP,
-                                self.keys.KEY_DOWN,
+                if [x for x in (self.keys.LEFT,
+                                self.keys.RIGHT,
+                                self.keys.UP,
+                                self.keys.DOWN,
                                 ) if x in _keys]:
                     self._change_focus(_keys)
 
-                if self.keys.KEY_ESC in _keys:
+                if self.keys.ESC in _keys:
                     return False
 
-                if self.keys.KEY_ENTER in _keys:
+                if self.keys.ENTER in _keys:
                     _button = self._buttons.focus_cell.get_w()
                     self._pressed(_button)
                     return self._value
@@ -131,10 +131,10 @@ class YesNoBox(Box):
             _widget = None
 
             # Move right
-            if key in (self.keys.KEY_RIGHT, self.keys.KEY_UP):
+            if key in (self.keys.RIGHT, self.keys.UP):
                 _widget = 1 # index
             # Move left
-            elif key in (self.keys.KEY_LEFT, self.keys.KEY_DOWN):
+            elif key in (self.keys.LEFT, self.keys.DOWN):
                 _widget = 0
             else:
                 pass

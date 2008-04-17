@@ -14,11 +14,10 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-from libxyz.parser import Lexer
 from libxyz.parser import BaseParser
+from libxyz.parser import SourceData
 from libxyz.exceptions import XYZValueError
 from libxyz.exceptions import ParseError
-from libxyz.exceptions import LexerError
 
 class RegexpParser(BaseParser):
     """
@@ -26,156 +25,67 @@ class RegexpParser(BaseParser):
     It is only useful for parsing linear, non-structured files.
     """
 
-    DEFAULT_OPT = {
-                   u"comment": u"#",
-                   u"assignchar": u":",
-                   u"delimiter": u"\n",
-                   u"validvars": (),
-                   u"value_validator": None,
-                   u"count": 0,
-                   }
-
-    def __init__(self, opt=None, default_data=None):
+    def __init__(self, cbpool):
         """
-        @param opt: Options
-        @type opt: dict
-
-        Available options:
-            - comment: Comment character.
-              Everything else ignored until EOL.
-              Type: I{string (single char)}
-            - assignchar: Variable-value split character.
-              Type: I{string (single char)}
-            - delimiter: Character to use as delimiter between statements.
-              Type: I{string (single char)}
-            - validvars: List of variables valid within block.
-              Type: I{sequence}
-            - value_validator: Value validator
-              Type: A function that takes two args:
-              variable and value and validates them.
-              In case value is invalid, XYZValueError must be raised.
-              Otherwise function must return required value, possibly modified.
-            - count: How many blocks to parse. If count <= 0 - will parse
-              all available.
-              Type: integer
-
-        @param default_data: Dictionary with default values.
+        @param cbpool: Dictionary with compiled regexp as keys and
+                       callback functions as values.
+                       Upon matching regexp, callback will be called with
+                       MatchObject as an argument. Callback function should
+                       raise XYZValueError in case of any error and True
+                       otherwise.
         """
 
-        super(FlatParser, self).__init__()
+        super(RegexpParser, self).__init__()
 
-        self.default_data = default_data
-
-        self._parsed = 0
-        self._result = {}
-        self._lexer = None
-
-        self.opt = opt or self.DEFAULT_OPT
-        self.set_opt(self.DEFAULT_OPT, self.opt)
-
-        self._parse_table = {
-            self.STATE_VARIABLE: self._process_state_variable,
-            self.STATE_ASSIGN: self._process_state_assign,
-            self.STATE_VALUE: self._process_state_value,
-            self.STATE_DELIM: self._process_state_delim,
-        }
+        self.cbpool = cbpool
+        self.sfile = None
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def parse(self, source):
         """
-        Begin parsing
+        Parse config
         """
 
-        self._cleanup()
+        self.sfile = None
+        _lineno = 1
+        _source = self.get_source(source)
 
-        _tokens = (self.assignchar, self.delimiter)
-        self._lexer = Lexer(source, _tokens, self.comment)
+        for _line in _source:
+            for _regexp in self.cbpool:
+                _res = _regexp.search(_line.strip())
 
-        try:
-            while True:
-                _res = self._lexer.lexer()
+                if _res is not None:
+                    try:
+                        self.cbpool[_regexp](_res)
+                    except XYZValueError, e:
+                        raise ParseError(_(u"Parse erorr on line %d: %s"\
+                                         % (_lineno, e)))
+                    else:
+                        _lineno += 1
 
-                if _res is None:
-                    break
-                else:
-                    _lex, _val = _res
-
-                if _val == u"\n" and self._state != self.STATE_DELIM:
-                    continue
-                self._parse_table[self._state](_val)
-        except LexerError, e:
-            self.error(str(e))
-
-        self._check_complete()
-
-        return self._result
+        if self.sfile is not None:
+            self.sfile.close()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _process_state_variable(self, word):
-        if self.count > 0 and self.count == self._parsed:
-            self._lexer.done()
-            return
+    def get_source(self, source):
+        """
+        Determine type of the source
+        """
 
-        if self.validvars and word not in self.validvars:
-                self.error(_(u"Unknown variable %s" % word))
+        _src = None
+
+        if isinstance(source, basestring):
+            # List of lines
+            _src = source.splitlines(True)
         else:
-            self._varname = word
-            self._state = self.STATE_ASSIGN
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _process_state_assign(self, word):
-        if word != self.assignchar:
-            self.error(msg=(word, self.assignchar),
-                       etype=self.error_unexpected)
-        else:
-            self._state = self.STATE_VALUE
-            self._lexer.escaping_on()
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _process_state_value(self, word):
-        _value = word
-
-        if self.value_validator:
             try:
-                _value = self.value_validator(self._varname, word)
-            except XYZValueError, e:
-                self.error(_(u"Invalid value: %s" % str(e)))
+                self.sfile = open(source, "r")
+            except IOError, e:
+                raise ParseError(_(u"Unable to open file %s for reading: %s"\
+                                 % (source, unicode(e))))
+            else:
+                _src = self.sfile
 
-        self._result[self._varname] = _value
-        self._parsed += 1
-        self._varname = None
-        self._lexer.escaping_off()
-        self._state = self.STATE_DELIM
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _process_state_delim(self, word):
-        if self.count > 0 and self.count == self._parsed:
-            self._lexer.done()
-            return
-
-        if word != self.delimiter:
-            self.error(msg=(word, self.delimiter),
-                       etype=self.error_unexpected)
-        else:
-            self._state = self.STATE_VARIABLE
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _cleanup(self):
-        if self.default_data and isinstance(self.default_data, dict):
-            self._result = self.default_data.copy()
-
-        self._parsed = 0
-        self._state = self.STATE_VARIABLE
-        self._varname = None
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _check_complete(self):
-        if self._state not in (self.STATE_VARIABLE, self.STATE_DELIM):
-            self.error(_(u"Unterminated expression"))
+        return _src

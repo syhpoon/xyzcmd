@@ -25,18 +25,16 @@ import re
 import os
 import os.path
 
+import libxyz
 import libxyz.ui as uilib
 import libxyz.const as const
+import libxyz.parser as parser
+import libxyz.core as core
 
 from libxyz.ui import lowui
 from libxyz.version import Version
-from libxyz.core import Skin
-from libxyz.core import XYZData
 from libxyz.core.plugins import PluginManager
-from libxyz.parser import BlockParser
-from libxyz.parser import FlatParser
-from libxyz.parser import MultiParser
-from libxyz.parser import ParsedData
+
 from libxyz.exceptions import XYZValueError
 from libxyz.exceptions import XYZRuntimeError
 from libxyz.exceptions import ParseError
@@ -54,9 +52,9 @@ class Launcher(object):
         gettext.install(u"xyzcmd")
 
         self.cmdopts = "c:vh"
-        self.xyz = XYZData()
+        self.xyz = core.XYZData()
 
-        self._path_sel = PathSelector()
+        self._path_sel = libxyz.PathSelector()
         self._conf_dir = None
 
         self._init_default()
@@ -85,7 +83,7 @@ class Launcher(object):
         if not _skin:
             _skin = self._path_sel.get_skin(const.DEFAULT_SKIN)
 
-        self.xyz.skin = Skin(_skin)
+        self.xyz.skin = core.Skin(_skin)
         self.xyz.pm = PluginManager(self.xyz, self._path_sel.get_plugins_dir())
 
         self.xyz.screen = uilib.display.init_display()
@@ -171,7 +169,7 @@ class Launcher(object):
         def _set_default(data):
             for _required in (
                               (u"skin", const.DEFAULT_SKIN),
-                              (u"plugins", ParsedData(u"plugins")),
+                              (u"plugins", parser.ParsedData(u"plugins")),
                              ):
                 if _required[0] not in data:
                     data[_required[0]] = _required[1]
@@ -186,7 +184,7 @@ class Launcher(object):
                          u"assignchar": ">",
                          u"value_validator": _validate,
                         }
-        _plugins_p = BlockParser(_plugins_opts)
+        _plugins_p = parser.BlockParser(_plugins_opts)
 
         _flat_vars = (u"skin",
                      )
@@ -195,9 +193,9 @@ class Launcher(object):
                       u"assignchar": u"=",
                       u"validvars": _flat_vars,
                      }
-        _flat_p = FlatParser(_flat_opts)
+        _flat_p = parser.FlatParser(_flat_opts)
 
-        _parser = MultiParser({})
+        _parser = parser.MultiParser({})
         _parser.register(u"plugins", _plugins_p)
         _parser.register(_flat_vars, _flat_p)
 
@@ -274,65 +272,3 @@ Usage: %s [-c dir][-vh]
         """
 
         self.xyz.pm.shutdown()
-
-#++++++++++++++++++++++++++++++++++++++++++++++++
-
-class PathSelector(object):
-    """
-    Class is used to select first appropriate path.
-    Common rule is to load system file unless found in user ~/.xyzcmd
-    """
-
-    def __init__(self):
-        self.user_dir = os.path.join(os.path.expanduser("~"), const.USER_DIR)
-        self.system_dir = const.SYSTEM_DIR
-        self.conf_dir = const.CONF_DIR
-        self.skins_dir = const.SKINS_DIR
-        self.plugins_dir = const.PLUGINS_DIR
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def get_conf(self, conf):
-        """
-        Return first found conf path
-        """
-
-        return self._get(self.conf_dir, conf)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-    def get_skin(self, skin):
-        """
-        Return first found skin path
-        """
-
-        return self._get(self.skins_dir, skin)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _get(self, subdir, obj):
-        _userpath = os.path.join(self.user_dir, subdir, obj)
-        _systempath = os.path.join(self.system_dir, subdir, obj)
-
-        return self.get_first_of((_userpath, _systempath))
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def get_first_of(self, files):
-        """
-        Return first existing file from supplied files or False in none exist
-        """
-
-        for _file in files:
-            if os.access(_file, os.R_OK):
-                return _file
-
-        return False
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def get_plugins_dir(self):
-        _userpath = os.path.join(self.user_dir, self.plugins_dir)
-        _systempath = os.path.join(self.system_dir, self.plugins_dir)
-
-        return [_userpath, _systempath]

@@ -19,6 +19,7 @@ __all__ = (
     'core',
     'ui',
     'Launcher',
+    'PathSelector',
     )
 
 import parser
@@ -26,3 +27,4 @@ import core
 import ui
 
 from launcher import Launcher
+from pselector import PathSelector

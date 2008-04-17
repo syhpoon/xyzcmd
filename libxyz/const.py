@@ -35,5 +35,8 @@ SKINS_DIR = u"skins"
 # Main configuration file name
 XYZ_CONF_FILE = u"xyz"
 
+# Keybindings configuration file name
+KEYS_CONF_FILE = u"keys"
+
 # Default fallback skin name
 DEFAULT_SKIN = u"default"
