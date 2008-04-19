@@ -2,4 +2,5 @@ from :misc:hello load SayHello
 load :misc:hello
 
 bind :misc:hello:SayHello to CTRL-R
+bind :misc:hello:SayHello to CTRL-R context DEFAULT
 bind! SayHello to CTRL-X

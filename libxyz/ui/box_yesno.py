@@ -112,7 +112,7 @@ class YesNoBox(Box):
         _yes_len = len(self._yes_txt)
         _no_len = len(self._no_txt)
         _b_attr = self._attr("button")
-        _b_size = max(_yes_len, _no_len) + 4 # < ... >
+        _b_size = max(_yes_len, _no_len) + 4 # [ ... ]
 
         self._b_yes = lowui.AttrWrap(libxyz.ui.XYZButton(self._yes_txt),_b_attr)
         self._b_no = lowui.AttrWrap(libxyz.ui.XYZButton(self._no_txt),_b_attr)

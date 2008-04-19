@@ -24,6 +24,7 @@ __all__ = (
     'BlockParser',
     'MultiParser',
     'FlatParser',
+    'RegexpParser',
     'ParsedData',
     'SourceData',
 )
@@ -35,3 +36,4 @@ from base import BaseParser
 from block import BlockParser
 from multi import MultiParser
 from flat import FlatParser
+from regexp import RegexpParser

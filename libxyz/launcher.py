@@ -85,6 +85,10 @@ class Launcher(object):
 
         self.xyz.skin = core.Skin(_skin)
         self.xyz.pm = PluginManager(self.xyz, self._path_sel.get_plugins_dir())
+        self.xyz.km = core.KeyManager(self.xyz,
+                                 self._path_sel.get_conf(const.KEYS_CONF_FILE))
+
+        return
 
         self.xyz.screen = uilib.display.init_display()
         self.xyz.screen.register_palette(self.xyz.skin.get_palette_list())
@@ -204,8 +208,7 @@ class Launcher(object):
         try:
             _file = open(_path, "r")
         except IOError, e:
-            self.error(_(u"Unable to open configuration file %s: %s" %\
-                       (_path, e)))
+            self.error(_(u"Unable to open configuration file: %s" % e))
 
         try:
             _data = _parser.parse(_file)
@@ -215,7 +218,7 @@ class Launcher(object):
             _file.close()
 
         # Set default values if needed
-        _dat = _set_default(_data)
+        _data = _set_default(_data)
 
         return _data
 

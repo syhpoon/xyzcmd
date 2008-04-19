@@ -22,6 +22,7 @@ class XYZData(object):
     __slots__ = ["screen",
                  "skin",
                  "pm",
+                 "km",
                  "conf",
                  ]
 
@@ -29,4 +30,5 @@ class XYZData(object):
         self.screen = None
         self.skin = None
         self.pm = None
+        self.km = None
         self.conf = {}

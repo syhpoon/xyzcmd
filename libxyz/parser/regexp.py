@@ -31,14 +31,13 @@ class RegexpParser(BaseParser):
                        callback functions as values.
                        Upon matching regexp, callback will be called with
                        MatchObject as an argument. Callback function should
-                       raise XYZValueError in case of any error and True
-                       otherwise.
+                       raise XYZValueError in case of any error and return
+                       whatever otherwise.
         """
 
         super(RegexpParser, self).__init__()
 
         self.cbpool = cbpool
-        self.sfile = None
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -47,15 +46,18 @@ class RegexpParser(BaseParser):
         Parse config
         """
 
-        self.sfile = None
         _lineno = 1
-        _source = self.get_source(source)
+        _source = self._get_source(source)
 
         for _line in _source:
+            _line = _line.strip()
+            _matched = False
+
             for _regexp in self.cbpool:
-                _res = _regexp.search(_line.strip())
+                _res = _regexp.search(_line)
 
                 if _res is not None:
+                    _matched = True
                     try:
                         self.cbpool[_regexp](_res)
                     except XYZValueError, e:
@@ -64,12 +66,12 @@ class RegexpParser(BaseParser):
                     else:
                         _lineno += 1
 
-        if self.sfile is not None:
-            self.sfile.close()
+            if not _matched:
+                raise ParseError(_(u"Unmatched line %d" % _lineno))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def get_source(self, source):
+    def _get_source(self, source):
         """
         Determine type of the source
         """
@@ -79,13 +81,7 @@ class RegexpParser(BaseParser):
         if isinstance(source, basestring):
             # List of lines
             _src = source.splitlines(True)
-        else:
-            try:
-                self.sfile = open(source, "r")
-            except IOError, e:
-                raise ParseError(_(u"Unable to open file %s for reading: %s"\
-                                 % (source, unicode(e))))
-            else:
-                _src = self.sfile
+        else: # Assume an open file object
+            _src = source
 
         return _src

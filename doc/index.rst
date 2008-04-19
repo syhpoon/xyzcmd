@@ -9,3 +9,4 @@
 .. include:: configs.rst
 .. include:: skins.rst
 .. include:: plugins.rst
+.. include:: vfs.rst

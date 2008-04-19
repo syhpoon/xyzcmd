@@ -19,7 +19,8 @@ import re
 import os
 import os.path
 
-from libxyz.exceptions import PluginError, XYZValueError
+from libxyz.exceptions import PluginError
+from libxyz.exceptions import XYZValueError
 from libxyz.parser import FlatParser
 
 ABS_NS_PREFIX = u"xyz:plugins:"

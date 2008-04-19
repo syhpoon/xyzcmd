@@ -144,7 +144,7 @@ Value can be of any common types:
 Note that one cannot use value_validator function to transform provided
 values as configration file is parsed before plugins are available to use.
 
-For example, if we'd had following block in plugins config::
+For example, if we'd have following block in plugins config::
 
    :misc:hello {
       show_version = true

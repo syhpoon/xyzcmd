@@ -14,12 +14,10 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-__all__ = (
-    'Skin',
-    'XYZData',
-    'KeyManager',
-    )
+class Shortcut(object):
+    """
+    Keyboard shortcut abstraction class
+    """
 
-from skin import Skin
-from xyzdata import XYZData
-from keymanager import KeyManager
+    def __init__(self):
+        pass

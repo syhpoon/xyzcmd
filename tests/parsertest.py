@@ -405,6 +405,11 @@ class FlatParsing(unittest.TestCase):
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
+class RegexpParsing(unittest.TestCase):
+    pass
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
 if __name__ == "__main__":
     import gettext
     gettext.install("xyzcmd")
