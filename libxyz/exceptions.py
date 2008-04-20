@@ -50,7 +50,7 @@ class PluginError(XYZError):
 class SkinError(XYZError):
     pass
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#++++++++++++++++++++++++++++++++++++++++++++++++
 
 class VFSError(XYZError):
     pass
@@ -58,4 +58,9 @@ class VFSError(XYZError):
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 class UIError(XYZError):
+    pass
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class KeyManagerError(XYZError):
     pass

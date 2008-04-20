@@ -30,6 +30,9 @@ class KeyManager(object):
         self.confpath = confpath
 
         self._loaded_plugins = {}
+        self._loaded_methods = {}
+        self._bind_data = {}
+
         self._path_sel = libxyz.PathSelector()
 
         self._parse_config()
@@ -43,14 +46,18 @@ class KeyManager(object):
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         def _from_cb(mo):
-            _plugin = mo.group("plugin")
-            _method = mo.group("method")
-            self._from_load(_plugin, _method)
+            try:
+                self._from_load(mo.group("plugin"), mo.group("method"))
+            except exceptions.PluginError, e:
+                raise exceptions.XYZValueError(unicode(e))
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         def _load_cb(mo):
-            self._load_plugin(mo.group("plugin"))
+            try:
+                self._load_plugin(mo.group("plugin"))
+            except exceptions.PluginError, e:
+                raise exceptions.XYZValueError(unicode(e))
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -63,8 +70,10 @@ class KeyManager(object):
             _shortcut = mo.group("shortcut")
             _context = mo.group("context")
 
-            self._bind(_method, _shortcut, _context, force=_force)
-            return True
+            try:
+                self._bind(_method, _shortcut, _context, force=_force)
+            except exceptions.KeyManagerError, e:
+                raise exceptions.XYZValueError(unicode(e))
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -122,6 +131,7 @@ class KeyManager(object):
                   }
 
         _parser = libxyz.parser.RegexpParser(_cbpool)
+
         try:
             _file = open(self.confpath, "r")
         except IOError, e:
@@ -167,14 +177,40 @@ class KeyManager(object):
     def _bind(self, method, shortcut, context, force=False):
         """
         Bind a method to shortcut
+        @return: True on success, False otherwise, also raises exception
+                 if method was not loaded
         """
 
-        _shortcut = Shortcut(shortcut)
+        def _try_to_bind(m, sc):
+            if m in self._loaded_methods:
+                self._bind_data[sc] = self._loaded_methods[m]
+                return True
+            else:
+                return False
 
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        print method, shortcut, context, force
+        import pdb; pdb.set_trace()
+
+        _shortcut = libxyz.core.Shortcut(shortcut)
+
+        # Already binded
         if _shortcut in self._bind_data and not force:
             return
 
-        # Try by method name
-        if method in self._loaded_methods:
-            self._bind_data[Shortcut(shortcut)] = self._loaded_methods[method]
+        # Method could be either in full form with plugin path, or just
+        # a method name
+        # First try by method name
+        if _try_to_bind(method, _shortcut):
+            # Succeeded
             return
+
+        # Next try by full form
+        # Last component of full plugin ns path is a method name
+        _method_name = method.split(":")[-1]
+
+        if _try_to_bind(_method_name, _shortcut):
+            return
+
+        raise exceptions.KeyManagerError(_(u"Unbound method %s" % method))

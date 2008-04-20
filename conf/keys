@@ -1,6 +1,6 @@
-from :misc:hello load SayHello
 load :misc:hello
+from :misc:hello load say_hello
 
-bind :misc:hello:SayHello to CTRL-R
-bind :misc:hello:SayHello to CTRL-R context DEFAULT
-bind! SayHello to CTRL-X
+bind :misc:hello:say_hello to CTRL-R
+bind :misc:hello:say_hello to CTRL-R context DEFAULT
+bind! say_hello to CTRL-X

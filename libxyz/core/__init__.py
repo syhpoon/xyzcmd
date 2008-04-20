@@ -18,8 +18,10 @@ __all__ = (
     'Skin',
     'XYZData',
     'KeyManager',
+    'Shortcut',
     )
 
 from skin import Skin
 from xyzdata import XYZData
 from keymanager import KeyManager
+from shortcut import Shortcut

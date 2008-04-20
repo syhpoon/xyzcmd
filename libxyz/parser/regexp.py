@@ -46,11 +46,17 @@ class RegexpParser(BaseParser):
         Parse config
         """
 
-        _lineno = 1
+        _lineno = 0
         _source = self._get_source(source)
 
         for _line in _source:
+            _lineno += 1
             _line = _line.strip()
+
+            # Empty line
+            if not _line:
+                continue
+
             _matched = False
 
             for _regexp in self.cbpool:
@@ -61,13 +67,13 @@ class RegexpParser(BaseParser):
                     try:
                         self.cbpool[_regexp](_res)
                     except XYZValueError, e:
-                        raise ParseError(_(u"Parse erorr on line %d: %s"\
+                        raise ParseError(_(u"Parse error on line %d: %s"\
                                          % (_lineno, e)))
                     else:
-                        _lineno += 1
+                        break
 
             if not _matched:
-                raise ParseError(_(u"Unmatched line %d" % _lineno))
+                raise ParseError(_(u"Unmatched line %d: %s" % (_lineno, _line)))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -30,10 +30,12 @@ class Panel(lowui.WidgetWrap):
     def __init__(self, xyz):
         self.xyz = xyz
 
-        self._blank = lowui.Text("")
         _blocksize = libxyz.ui.Size(rows=22, cols=38)
+
+        self._blank = lowui.Text("")
         self.block1 = Block(_blocksize, LocalVFSObject("/tmp"), self._attr)
         self.block2 = Block(_blocksize, LocalVFSObject("/"), self._attr)
+
         columns = lowui.Columns([self.block1.block, self.block2.block], 0)
         _status = lowui.Text("Status bar")
         _cmd = lowui.Text("# uname -a")

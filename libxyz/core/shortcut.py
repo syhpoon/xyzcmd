@@ -19,5 +19,5 @@ class Shortcut(object):
     Keyboard shortcut abstraction class
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, raw_shortcut):
+        raw = raw_shortcut.split("-")
