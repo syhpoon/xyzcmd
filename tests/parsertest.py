@@ -3,10 +3,10 @@
 # Max E. Kuznecov ~syhpoon <mek@mek.uz.ua> 2008
 #
 
-
+import re
 import unittest
 
-from libxyz.parser import BlockParser, MultiParser, FlatParser
+from libxyz.parser import BlockParser, MultiParser, FlatParser, RegexpParser
 from libxyz.exceptions import ParseError, XYZValueError
 
 class BlockParsing(unittest.TestCase):
@@ -406,7 +406,54 @@ class FlatParsing(unittest.TestCase):
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 class RegexpParsing(unittest.TestCase):
-    pass
+    res = False
+
+    def testCBFailure(self):
+        """
+        Test for callback raising exceptions
+        """
+
+        def cb(mo):
+            raise XYZValueError(u"Test error")
+
+        _p = RegexpParser({re.compile("^test line$"): cb})
+        _src = "test line"
+
+        self.assertRaises(ParseError, _p.parse, _src)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testCBSuccess(self):
+        """
+        Test for callback success
+        """
+
+        self.res = False
+
+        def cb(mo):
+            self.res = True
+
+        _p = RegexpParser({re.compile("^test line$"): cb})
+        _src = "test line"
+
+        _p.parse(_src)
+
+        self.assert_(self.res)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testUnmatched(self):
+        """
+        Test for umatched line
+        """
+
+        def cb(mo):
+            return
+
+        _p = RegexpParser({re.compile("^test line$"): cb})
+        _src = "NOT a test line"
+
+        self.assertRaises(ParseError, _p.parse, _src)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
