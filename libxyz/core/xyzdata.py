@@ -27,8 +27,18 @@ class XYZData(object):
                  ]
 
     def __init__(self):
-        self.screen = None
-        self.skin = None
-        self.pm = None
-        self.km = None
-        self.conf = {}
+        object.__setattr__(self, "screen", None)
+        object.__setattr__(self, "skin", None)
+        object.__setattr__(self, "pm", None)
+        object.__setattr__(self, "km", None)
+        object.__setattr__(self, "conf", None)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __setattr__(self, attr, val):
+        # Assure attributes get assigned only once
+
+        if object.__getattribute__(self, attr) is not None:
+            raise AttributeError(_(u"Attribute %s is a constant" % attr))
+        else:
+            object.__setattr__(self, attr, val)
