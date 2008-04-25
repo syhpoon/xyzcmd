@@ -45,7 +45,7 @@ Please note that not all of the possible combinations make sense.
 Contexts
 ++++++++
 When a focus widget receives keyboard input it looks for matching key pressed
-in BindManager object accessible as ``bm`` attribute of ``XYZData`` class.
+in KeyManager object accessible as ``km`` attribute of ``XYZData`` class.
 
 But for different widgets the same keys/shortcuts can have different meanings.
 For intance key *UP* pressed while Panel widget is active will move the

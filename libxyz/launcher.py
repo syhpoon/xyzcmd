@@ -53,6 +53,7 @@ class Launcher(object):
 
         self.cmdopts = "c:vh"
         self.xyz = core.XYZData()
+        self.xyz.conf = {}
 
         self._path_sel = libxyz.PathSelector()
         self._conf_dir = None

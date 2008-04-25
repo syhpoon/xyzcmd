@@ -14,10 +14,25 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+from libxyz.ui import Keys
+
 class Shortcut(object):
     """
     Keyboard shortcut abstraction class
     """
 
     def __init__(self, raw_shortcut):
-        raw = raw_shortcut.split("-")
+        """
+        """
+
+        self.keys = Keys()
+
+        _shortcut = []
+
+        for _key in raw_shortcut.split("-"):
+            try:
+                _shortcut.append(getattr(self.keys, _key))
+            except AttributeError, e:
+                _shortcut.append(_key)
+
+        self.shortcut = " ".join(_shortcut)
