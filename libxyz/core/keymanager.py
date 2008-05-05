@@ -77,6 +77,11 @@ class KeyManager(object):
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+        def _chain_cb(mo):
+            _chain = mo.group("shortcut")
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         _comment_re = re.compile("^\s*#.*$")
 
         _from_re = re.compile("""
@@ -124,10 +129,31 @@ class KeyManager(object):
         $                   # end
         """, re.VERBOSE)
 
+        _chain_re = re.compile("""
+        ^                   # begin
+        \s*                 # leading spaces
+        set                 # keywoard set
+        \s+                 # one ore more spaces
+        chain               # keywoard chain
+        \s+                 # one ore more spaces
+        key                 # keywoard key
+        \s+                 # one ore more spaces
+        (?P<shortcut>\S+)   # shortcut
+        (                   # optional context group begin
+        \s+                 # one ore more spaces
+        context             # keyword context
+        \s+                 # one ore more spaces
+        (?P<context>[\w_]+) # context name
+        )?                  # context group end
+        \s*                 # trailing spaces
+        $                   # end
+        """, re.VERBOSE)
+
         _cbpool = {_comment_re: _comment_cb,
                    _from_re: _from_cb,
                    _load_re: _load_cb,
                    _bind_re: _bind_cb,
+                   _chain_re: _chain_cb,
                   }
 
         _parser = libxyz.parser.RegexpParser(_cbpool)

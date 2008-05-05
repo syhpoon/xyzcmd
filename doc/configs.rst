@@ -15,6 +15,8 @@ File syntax is following:
 * ``bind[!] {method} to {shortcut} [context {contextname}]`` binds method 
   to be invoked upon pressing shortcut in context.
   If shortcut is already binded do nothing unless ``!`` flag is specified.
+* ``set chain key {shortcut} [context {contextname}]`` set chain key
+  for context or for DEFAULT unless provided
 
 Where:
 
@@ -28,7 +30,7 @@ Where:
 **{shortcut}**
    A keyboard shortcut. See Shortcuts_ below.
 
-**{context}**
+**{contextname}**
    Running context. See Contexts_ below.
 
 Shortcuts
@@ -37,8 +39,8 @@ Shortcut is a combination of keys pressed.
 It is specifed as a list of special (libxyz.ui.Keys attributes) and
 regular keys separated by hiphen::
 
-   CTRL-SHIFT-X  means Control + Shift + X key
-   META-L        means Escape + L key
+   CTRL-x  means Control + x key
+   META-L  means Escape + SHIFT + l key
 
 Please note that not all of the possible combinations make sense.
 
@@ -58,11 +60,11 @@ Context named **DEFAULT** used unless another provided.
 For example, consider the part of keys configuration file::
 
    # 1.
-   bind CTRL-SHIFT-] to default_action
+   bind META-SHIFT-p to default_action
    # 2.
-   bind CTRL-SHIFT-] to box_action context BOX
+   bind META-SHIFT-p to box_action context BOX
 
-In 1. we've bound Ctrl+Shift+] shortcut to default_action method. As we haven't
+In 1. we've bound Meta+Shift+p shortcut to default_action method. As we haven't
 provided context name, **DEFAULT** will be used.
 
 In 2. we've explicitly provided **BOX** context. So box_action will only
@@ -71,3 +73,27 @@ receiving input.
 
 To make a widget belonging to some context, a *context* keyword should be
 passed to constructor.
+
+Shortcut chains
++++++++++++++++
+In general, shortcut will contain two keys: modifier (like META or CTRL) and
+the regular key. As only widget receives such a combination, it tries to
+search among defined shortcuts to determine what the action to fire.
+But we can tell |XYZ| not to immediately look for action by providing
+a ``chain key`` (well, shortcut to be precise), which will indicate
+beginning of multiple shortcuts combination treated as single one.
+
+To bind a chain key we use the following syntax
+``set chain key {shortcut} [context {contextname}]``.
+
+So, if we have::
+
+   set chain key CTRL-J
+   set chain key META-G context BOX
+
+Pressing CTRL-J in default context would not trigger action lookup, but instead
+KeyManager will wait until chain key pressed again or timeout reached.
+Therefore, pressing ``CTRL-J META-1 META-2 CTRL-S CTRL-J`` will trigger
+KeyManager to lookup for shortcut ``META-1 META-2 CTRL-S``.
+Of course such a long shortcuts make little sense, but double ones could
+be really of use sometimes.

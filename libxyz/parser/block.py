@@ -24,7 +24,7 @@ from libxyz.exceptions import LexerError
 
 class BlockParser(BaseParser):
     """
-    BaseParser is used to parse block structures
+    BaseParser is used to parse block structures.
     Format:
 
     name {
@@ -110,8 +110,8 @@ class BlockParser(BaseParser):
         self._result = {}
         self._current_list = []
         self._lexer = None
-        self._openbracket = u"{"
-        self._closebracket = u"}"
+        self._openblock = u"{"
+        self._closeblock = u"}"
 
         self._parse_table = {
             self.STATE_INIT: self._process_state_init,
@@ -137,8 +137,8 @@ class BlockParser(BaseParser):
 
         self._cleanup()
 
-        _tokens = (self._openbracket,
-                   self._closebracket,
+        _tokens = (self._openblock,
+                   self._closeblock,
                    self.assignchar,
                    self.delimiter,
                    self.list_separator,
@@ -183,8 +183,8 @@ class BlockParser(BaseParser):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _process_state_block_open(self, word):
-        if word != self._openbracket:
-            self.error(msg=(word, self._openbracket),
+        if word != self._openblock:
+            self.error(msg=(word, self._openblock),
                        etype=self.error_unexpected)
         else:
             self._state = self.STATE_VARIABLE
@@ -192,7 +192,7 @@ class BlockParser(BaseParser):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _process_state_variable(self, word):
-        if word == self._closebracket:
+        if word == self._closeblock:
             self._complete_block()
             return
         if self.validvars and word not in self.validvars:
@@ -248,7 +248,7 @@ class BlockParser(BaseParser):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _process_state_delim(self, word):
-        if word == self._closebracket:
+        if word == self._closeblock:
             self._complete_block()
             return
         if word != self.delimiter:

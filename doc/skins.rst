@@ -50,7 +50,7 @@ Possible types:
 
 General fs ruleset definition syntax::
 
-   <fs>.<by> {
+   fs.<by> {
       <var> = <FG>[,<BG>][,<MA1>[,<MA2>]...]
       ...
    }
@@ -173,7 +173,7 @@ Regular expressions must use x-quoting: ``'''<re>'''``::
    }
 
 Order
-~~~~~
+-----
 
 Searching for rule in ruleset continues until first match is found
 according to priorities.

@@ -42,6 +42,7 @@ class Lexer(object):
     Macro definition is similar to variable definition, but '$' char is
     prepended to var name:
     $macro = value
+    var = $macro
     """
 
     TOKEN_IDT = 0
