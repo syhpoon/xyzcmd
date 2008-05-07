@@ -166,6 +166,27 @@ class BlockParsing(unittest.TestCase):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def testMacroValueValidator1(self):
+        """
+        Check if value_validator raises exception on macro
+        """
+
+        def _f(block, var, val):
+            if val != "CORRECT_VALUE":
+                raise XYZValueError("Incorrect value %s!" % val)
+
+            return val
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        _opt = {"value_validator": _f}
+
+        _p = BlockParser(_opt)
+
+        self.assertRaises(ParseError, _p.parse, "block { &m = INCORRECT_VALUE\n test = &m }")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def testValueValidator2(self):
         """
         Check for value_validator correct value
@@ -185,6 +206,28 @@ class BlockParsing(unittest.TestCase):
         _p = BlockParser(_opt)
 
         self.assert_(len(_p.parse("block { a = CORRECT_VALUE }")))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testMacroValueValidator2(self):
+        """
+        Check for value_validator correct value on macro
+        """
+
+        def _f(block, var, val):
+            if val != "CORRECT_VALUE":
+                raise XYZValueError("Incorrect value %s!" % val)
+
+            # Returning modified value
+            return 1
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        _opt = {"value_validator": _f}
+
+        _p = BlockParser(_opt)
+
+        self.assert_(len(_p.parse("block { &m = CORRECT_VALUE\n a = &m }")))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -210,6 +253,17 @@ class BlockParsing(unittest.TestCase):
 
         _r = _p.parse(_src)
         self.assert_(isinstance(_r["block"]["var"], tuple))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testUndefinedMacro(self):
+        """
+        Check for undefined macro
+        """
+
+        _p = BlockParser()
+
+        self.assertRaises(ParseError, _p.parse, "block { a = &undef }")
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

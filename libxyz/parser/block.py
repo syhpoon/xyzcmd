@@ -51,6 +51,7 @@ class BlockParser(BaseParser):
                    u"value_validator": None,
                    u"count": 0,
                    u"list_separator": u",",
+                   u"macrochar": u"&",
                    }
 
     def __init__(self, opt=None, default_data=None):
@@ -88,6 +89,9 @@ class BlockParser(BaseParser):
             - list_separator: Character to separate elements in list
               Type: I{string (single char)}
               Default: ,
+            - macrochar: Macro character (None to disable macros)
+              Type: I{string (single char)}
+              Default: &
 
         @param default_data: Dictionary containing L{libxyz.parser.ParsedData}
                              objects with default values.
@@ -106,12 +110,16 @@ class BlockParser(BaseParser):
         self._state = self.STATE_INIT
         self._parsed_obj = None
         self._varname = None
+        self._macroname = None
         self._sdata = None
         self._result = {}
         self._current_list = []
+        self._macros = {}
         self._lexer = None
         self._openblock = u"{"
         self._closeblock = u"}"
+
+        self._tok_type = None
 
         self._parse_table = {
             self.STATE_INIT: self._process_state_init,
@@ -144,7 +152,7 @@ class BlockParser(BaseParser):
                    self.list_separator,
                   )
 
-        self._lexer = Lexer(source, _tokens, self.comment)
+        self._lexer = Lexer(source, _tokens, self.comment, self.macrochar)
         self._sdata = self._lexer.sdata
 
         try:
@@ -154,7 +162,7 @@ class BlockParser(BaseParser):
                 if _res is None:
                     break
                 else:
-                    _lex, _val = _res
+                    self._tok_type, _val = _res
 
                 # We're only interested in LF in DELIM or LIST_VALUE
                 # states
@@ -195,12 +203,17 @@ class BlockParser(BaseParser):
         if word == self._closeblock:
             self._complete_block()
             return
-        if self.validvars and word not in self.validvars:
-                self.error(_(u"Unknown variable %s" % word))
-        elif self.varre.match(word) is None:
-            self.error(_(u"Invalid variable name: %s" % word))
 
-        self._varname = word
+        if self._tok_type == self._lexer.TOKEN_MACRO:
+            self._macroname = word
+        else:
+            if self.validvars and word not in self.validvars:
+                self.error(_(u"Unknown variable %s" % word))
+            elif self.varre.match(word) is None:
+                self.error(_(u"Invalid variable name: %s" % word))
+
+            self._varname = word
+
         self._state = self.STATE_ASSIGN
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -225,24 +238,38 @@ class BlockParser(BaseParser):
         else:
             _value = tuple(self._current_list)
 
-        if self.value_validator:
-            try:
-                _value = self.value_validator(self._parsed_obj.name,
-                                              self._varname, _value)
-            except XYZValueError, e:
-                self.error(_(u"Invalid value: %s" % str(e)))
+        # Macro
+        if self._macroname:
+            self._macros[self._macroname] = _value
+            self._macroname = None
+        # Variable
+        else:
+            if self.value_validator:
+                try:
+                    _value = self.value_validator(self._parsed_obj.name,
+                                                  self._varname, _value)
+                except XYZValueError, e:
+                    self.error(_(u"Invalid value: %s" % str(e)))
+
+            self._parsed_obj[self._varname] = _value
+            self._varname = None
 
         self._current_list = []
-        self._parsed_obj[self._varname] = _value
         self._lexer.escaping_off()
-        self._varname = None
         self._state = self.STATE_DELIM
         self._lexer.unget(word)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _process_state_value(self, word):
-        self._current_list.append(word)
+        if self._tok_type == self._lexer.TOKEN_MACRO:
+            try:
+                self._current_list.append(self._macros[word])
+            except KeyError:
+                self.error(_(u"Undefined macro %s" % word))
+        else:
+            self._current_list.append(word)
+
         self._state = self.STATE_LIST_VALUE
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -277,10 +304,12 @@ class BlockParser(BaseParser):
 
         self._parsed_obj = None
         self._varname = None
+        self._macroname = None
         self._state = self.STATE_INIT
         self._in_comment = False
         self._in_quote = False
         self._current_list = []
+        self._macros = {}
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

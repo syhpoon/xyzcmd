@@ -23,7 +23,7 @@ class Lexer(object):
 
     Lexer rules:
     -----------
-    * Blank chars are usually ignored. Except from in quoting.
+    * Blank chars are usually ignored. Except from in quotes.
     * Quote can be one-line: "quoted value", or multiline:
       '''quoted value1,
          quoted value2,
@@ -39,16 +39,16 @@ class Lexer(object):
     Macros:
     ------
     Macros are special internal variables that get expanded upon parsing.
-    Macro definition is similar to variable definition, but '$' char is
-    prepended to var name:
-    $macro = value
-    var = $macro
+    Macro definition is similar to variable definition, but macro char
+    (default '&') is prepended to var name:
+        &macro = value
+        var = &macro
     """
 
     TOKEN_IDT = 0
     TOKEN_MACRO = 1
 
-    def __init__(self, source, tokens, comment="#"):
+    def __init__(self, source, tokens, comment=u"#", macro=u"&"):
         """
         @param source: Parsing source. If file object is passed, it must be
                        closed by caller function after parsing completes.
@@ -58,6 +58,7 @@ class Lexer(object):
         @type tokens: sequence
 
         @param comment: Comment char
+        @param macro: Macros char
         """
 
         if isinstance(source, SourceData):
@@ -67,6 +68,7 @@ class Lexer(object):
 
         self.tokens = tokens
         self.comment = comment
+        self.macro = macro
 
         self._escapechar = u"\\"
         self._xqchar = u"'"
@@ -93,6 +95,22 @@ class Lexer(object):
 
         @return: typle (token_type, token_value)
         """
+
+        def _token_type(tok):
+            """
+            Determine token type
+            """
+
+            _type = self.TOKEN_IDT
+            _tok = tok
+
+            if self.macro and tok[0] == self.macro:
+                _type = self.TOKEN_MACRO
+                _tok = tok[1:]
+
+            return (_type, _tok)
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         for char in self.sdata:
             if self._done:
@@ -164,7 +182,7 @@ class Lexer(object):
                         _token = char
 
                 if _token:
-                    return (self.TOKEN_IDT, _token)
+                    return _token_type(_token)
                 else:
                     continue
 
@@ -194,7 +212,7 @@ class Lexer(object):
                         _token = char
 
                 if _token:
-                    return (self.TOKEN_IDT, _token)
+                    return _token_type(_token)
                 else:
                     continue
 
@@ -208,7 +226,7 @@ class Lexer(object):
         if self._idt:
             _token = u"".join(self._idt)
             self._idt = []
-            return (self.TOKEN_IDT, _token)
+            return _token_type(_token)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

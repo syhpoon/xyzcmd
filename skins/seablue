@@ -35,18 +35,22 @@ ui.widget {
 
 # Base box widgets
 ui.box {
+	&BG = LIGHT_GRAY
+
 	title = WHITE, DARK_BLUE
-	box = BLACK, LIGHT_GRAY
-	border = DARK_BLUE, LIGHT_GRAY
-	mount = DEFAULT, LIGHT_GRAY
+	box = BLACK, &BG
+	border = DARK_BLUE, &BG
+	mount = DEFAULT, &BG
 }
 
 # Error message box
 ui.error_box {
+	&BG = DARK_RED
+
 	title = WHITE, BLACK
-	box = WHITE, DARK_RED
-	border = WHITE, DARK_RED
-	mount = WHITE, DARK_RED
+	box = WHITE, &BG
+	border = WHITE, &BG
+	mount = WHITE, &BG
 }
 
 ui.panel {
