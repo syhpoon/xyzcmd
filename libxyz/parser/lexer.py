@@ -41,8 +41,8 @@ class Lexer(object):
     Macros are special internal variables that get expanded upon parsing.
     Macro definition is similar to variable definition, but macro char
     (default '&') is prepended to var name:
-        &macro = value
-        var = &macro
+    &macro = value
+    var = &macro
     """
 
     TOKEN_IDT = 0

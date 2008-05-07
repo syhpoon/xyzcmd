@@ -80,8 +80,8 @@ In general, shortcut will contain two keys: modifier (like META or CTRL) and
 the regular key. As only widget receives such a combination, it tries to
 search among defined shortcuts to determine what the action to fire.
 But we can tell |XYZ| not to immediately look for action by providing
-a ``chain key`` (well, shortcut to be precise), which will indicate
-beginning of multiple shortcuts combination treated as single one.
+a ``chain key``, which will indicate beginning of multiple shortcuts
+combination treated as single one.
 
 To bind a chain key we use the following syntax
 ``set chain key {shortcut} [context {contextname}]``.
@@ -95,5 +95,5 @@ Pressing CTRL-J in default context would not trigger action lookup, but instead
 KeyManager will wait until chain key pressed again or timeout reached.
 Therefore, pressing ``CTRL-J META-1 META-2 CTRL-S CTRL-J`` will trigger
 KeyManager to lookup for shortcut ``META-1 META-2 CTRL-S``.
-Of course such a long shortcuts make little sense, but double ones could
-be really of use sometimes.
+Of course such a long shortcuts make little sense, but combinations with 
+two-three shortcuts could be really of use sometimes.
