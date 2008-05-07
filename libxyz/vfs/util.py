@@ -18,21 +18,23 @@ import stat
 
 from libxyz.vfs import types as vfstypes
 
+_types = (
+          (stat.S_ISDIR,  vfstypes.VFSTypeDir),
+          (stat.S_ISCHR,  vfstypes.VFSTypeChar),
+          (stat.S_ISBLK,  vfstypes.VFSTypeBlock),
+          (stat.S_ISREG,  vfstypes.VFSTypeFile),
+          (stat.S_ISFIFO, vfstypes.VFSTypeFifo),
+          (stat.S_ISLNK,  vfstypes.VFSTypeLink),
+          (stat.S_ISSOCK, vfstypes.VFSTypeSocket),
+          )
+
 def get_file_type(st_mode):
     """
     Find out file type
     @param st_mode: Raw st_mode obtained from os.stat()
     """
 
-    _types = (
-              (stat.S_ISDIR,  vfstypes.VFSTypeDir),
-              (stat.S_ISCHR,  vfstypes.VFSTypeChar),
-              (stat.S_ISBLK,  vfstypes.VFSTypeBlock),
-              (stat.S_ISREG,  vfstypes.VFSTypeFile),
-              (stat.S_ISFIFO, vfstypes.VFSTypeFifo),
-              (stat.S_ISLNK,  vfstypes.VFSTypeLink),
-              (stat.S_ISSOCK, vfstypes.VFSTypeSocket),
-              )
+    global _types
 
     for _test, _type in _types:
         if _test(st_mode):
