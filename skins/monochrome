@@ -37,24 +37,30 @@ ui.widget {
 
 # Base box widgets
 ui.box {
+	&BG = LIGHT_GRAY
+
 	title = WHITE, BLACK
-	box = BLACK, LIGHT_GRAY
-	border = BLACK, LIGHT_GRAY
-	mount = DEFAULT, LIGHT_GRAY
+	box = BLACK, &BG
+	border = BLACK, &BG
+	mount = DEFAULT, &BG
 }
 
 # Error message box
 ui.error_box {
+	&BG = DARK_RED
+
 	title = WHITE, BLACK
-	box = WHITE, DARK_RED
-	border = WHITE, DARK_RED
-	mount = WHITE, DARK_RED
+	box = WHITE, &BG
+	border = WHITE, &BG
+	mount = WHITE, &BG
 }
 
 ui.panel {
-	cwdtitle = BLACK, LIGHT_GRAY
+	&BG = LIGHT_GRAY
+
+	cwdtitle = BLACK, &BG
 	panel = DEFAULT, DEFAULT
-	cursor = BLACK, LIGHT_GRAY
-	info = BLACK, LIGHT_GRAY
+	cursor = BLACK, &BG
+	info = BLACK, &BG
 	border = DEFAULT, DEFAULT
 }
