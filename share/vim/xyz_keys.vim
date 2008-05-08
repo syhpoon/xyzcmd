@@ -21,29 +21,39 @@ setlocal iskeyword+=!
 
 syn case match
 
+syn keyword xyzKeyword context
+
 """load :ns:plugin
 syn match xyzComment /#.*/
 syn match xyzLoad /load/ nextgroup=xyzNSPath skipwhite
 syn match xyzNSPath /\(\:[^ ]\+\)/ contained skipwhite
 
 """from :ns:plugin load method
-syn match xyzFromLoad /from/ nextgroup=xyzFromNSPath contains=xyzFromNSPath skipwhite
+syn match xyzFromLoad /from/ nextgroup=xyzFromNSPath skipwhite
 syn match xyzFromNSPath /\(\:\S\+\)/ nextgroup=xyzLoadPlugin contained skipwhite
 syn match xyzLoadPlugin /load/ nextgroup=xyzPlugin contained skipwhite
 syn match xyzPlugin /\S\+/ contained
 
+"bind :misc:hello:say_hello to CTRL-R
+syn match xyzBind /bind\(!\)\?/ nextgroup=xyzBindPlugin skipwhite
+syn match xyzBindPlugin /\(:\)\?\S\+/ nextgroup=xyzBindTo contained skipwhite
+syn match xyzBindTo /to/ contained
+
 syn match xyzStatement /set chain key/
 
+highlight link xyzKeyword Keyword
 highlight link xyzLoad Statement
 highlight link xyzFromLoad Statement
+highlight link xyzBind Statement
+highlight link xyzBindTo Statement
 highlight link xyzLoadPlugin Statement
 highlight link xyzStatement Statement
 highlight link xyzComment Comment
 highlight link xyzNSPath Identifier
 highlight link xyzFromNSPath Identifier
 highlight link xyzPlugin Identifier
+highlight link xyzBindPlugin Identifier
 
-"bind :misc:hello:say_hello to CTRL-R
 "bind :misc:hello:say_hello to CTRL-R context DEFAULT
 "bind! say_hello to CTRL-X
 
