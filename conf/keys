@@ -1,3 +1,5 @@
+# Comment
+
 load :misc:hello
 from :misc:hello load say_hello
 

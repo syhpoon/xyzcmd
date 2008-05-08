@@ -45,12 +45,13 @@ ui.box {
 
 # Error message box
 ui.error_box {
+	&FG = WHITE
 	&BG = DARK_RED
 
-	title = WHITE, BLACK
-	box = WHITE, &BG
-	border = WHITE, &BG
-	mount = WHITE, &BG
+	title = &FG, BLACK
+	box = &FG, &BG
+	border = &FG, &BG
+	mount = &FG, &BG
 }
 
 ui.panel {
