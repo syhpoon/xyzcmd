@@ -8,6 +8,7 @@
 
 plugins {
 	:misc:hello > ENABLE
+	:core:learnkeys > ENABLE
 }
 
 # Skin to use

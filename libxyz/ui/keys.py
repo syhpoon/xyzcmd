@@ -21,7 +21,7 @@ class Keys(object):
 
     CONTROL = "ctrl"
     META = "meta"
-    ESC = "esc"
+    ESCAPE = "esc"
     SHIFT = "shift"
     UP = 'up'
     DOWN = 'down'

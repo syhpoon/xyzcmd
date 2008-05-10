@@ -99,23 +99,21 @@ class Launcher(object):
 
     def _run(self):
         _dim = self.xyz.screen.get_cols_rows()
-        #self._top = lowui.Frame(lowui.Filler(lowui.Text("")))
-        self._top = lowui.Filler(lowui.Text(""))
+        self.xyz.top = lowui.Filler(uilib.Panel(self.xyz))
 
-        w = lowui.Filler(uilib.Panel(self.xyz))
+        self.xyz.screen.draw_screen(_dim, self.xyz.top.render(_dim, True))
 
-        self.xyz.screen.draw_screen(_dim, w.render(_dim, True))
-        while not self.xyz.screen.get_input():
-            pass
+        lk = self.xyz.pm.load(u":core:learnkeys")
+        lk.learn_keys()
 
-        _str = "PREVED"
-        _title = "TITLE"
-        w = uilib.MessageBox(self.xyz, w, _str, _title)
-        w.show()
-        w = uilib.ErrorBox(self.xyz, w, _str)
-        w.show()
-        w = uilib.YesNoBox(self.xyz, w, _str+u"?", _title)
-        w.show()
+        #_str = "PREVED"
+        #_title = "TITLE"
+        #w = uilib.MessageBox(self.xyz, self.xyz.top, _str, _title)
+        #w.show()
+        #w = uilib.ErrorBox(self.xyz, self.xyz.top, _str)
+        #w.show()
+        #w = uilib.YesNoBox(self.xyz, self.xyz.top, _str+u"?", _title)
+        #w.show()
 
         self.finalize()
 

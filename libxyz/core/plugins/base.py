@@ -21,6 +21,9 @@ class BasePlugin(object):
     Parent class for all xyz-plugins
     """
 
+    # NAME: Plugin name
+    NAME = None
+
     # AUTHOR: Author name
     AUTHOR = None
 

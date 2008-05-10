@@ -96,7 +96,7 @@ class YesNoBox(Box):
                                 ) if x in _keys]:
                     self._change_focus(_keys)
 
-                if self.keys.ESC in _keys:
+                if self.keys.ESCAPE in _keys:
                     return False
 
                 if self.keys.ENTER in _keys:

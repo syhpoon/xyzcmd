@@ -21,6 +21,9 @@ libxyz.core.plugins.BasePlugin class.
 
 XYZPlugin class should define following mandatory attributes:
 
+**NAME**
+   Plugin name.
+
 **AUTHOR**
    Plugin author name. Preferably in format ``Name <foo@bar>``.
 
@@ -58,6 +61,7 @@ Minimal path can be specified as following::
 
 Here ``<namespace>`` is one of the available namespaces::
 
+   - core  - Core plugins
    - ui    - User-interface related
    - vfs   - Virtual file-system related
    - misc  - Other miscellaneous

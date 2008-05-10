@@ -12,20 +12,19 @@ class XYZPlugin(BasePlugin):
     Example plugin
     """
 
-    # AUTHOR: Author name
+    # Plugin name
+    NAME = u"Hello"
 
+    # AUTHOR: Author name
     AUTHOR = u"Max E. Kuznecov ~syhpoon <mek@mek.uz.ua>"
 
     # VERSION: Plugin version
-
-    VERSION = "0.1"
+    VERSION = u"0.1"
 
     # Brief one line description
-
     BRIEF_DESCRIPTION = u"Simple hello plugin"
 
     # Full plugin description
-
     FULL_DESCRIPTION = u"""\
 Hello plugin is an example of XYZCommander plugin.
 It shows main aspects of plugin creation.
@@ -57,7 +56,7 @@ which shows greeting message box.\
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _say_hello(self, top):
+    def _say_hello(self):
         """
         Exported method
         Shows simple greeting dialog
@@ -67,6 +66,6 @@ which shows greeting message box.\
         _dim = self.xyz.screen.get_cols_rows()
         _title = u"XYZCommander version %s" % Version.version
 
-        _box = MessageBox(self.xyz, top, _msg, _title)
+        _box = MessageBox(self.xyz, self.xyz.top, _msg, _title)
 
         return _box.show()

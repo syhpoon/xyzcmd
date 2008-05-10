@@ -20,6 +20,7 @@ class XYZData(object):
     """
 
     __slots__ = ["screen",
+                 "top",
                  "skin",
                  "pm",
                  "km",
@@ -28,6 +29,7 @@ class XYZData(object):
 
     def __init__(self):
         object.__setattr__(self, "screen", None)
+        object.__setattr__(self, "top", None)
         object.__setattr__(self, "skin", None)
         object.__setattr__(self, "pm", None)
         object.__setattr__(self, "km", None)

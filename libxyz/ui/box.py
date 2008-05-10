@@ -31,7 +31,7 @@ class Box(lowui.WidgetWrap):
         @param body: Top-level widget
         @param message: Message to display
         @param title: Box title
-        @param width: Box width (including mount box)
+        @param width: Box width
 
         Required resources: title, box, mount
         """
@@ -76,8 +76,15 @@ class Box(lowui.WidgetWrap):
 
         self.screen.draw_screen(dim, self.render(dim, True))
 
-        while not self.screen.get_input():
-            pass
+        _input = None
+
+        while True:
+            _input = self.screen.get_input()
+
+            if _input:
+                break
+
+        return _input
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
