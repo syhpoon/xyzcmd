@@ -14,5 +14,17 @@
 " along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 "
-" any block-structrured configuration file syntax
+" block-structured configuration file syntax
 "
+
+syn match xyzComment /#.*/
+syn match xyz_skinMacro /&\S\+/
+syn match xyz_skinDigit /\d\+/
+syn region xyz_skinString start=/"/ end=/"/ end=/$/ excludenl
+syn region xyz_skinMultiString start=/'''/ end=/'''/
+
+highlight link xyzComment Comment
+highlight link xyz_skinString String
+highlight link xyz_skinMultiString String
+highlight link xyz_skinMacro Macro
+highlight link xyz_skinDigit Number

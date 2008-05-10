@@ -16,3 +16,17 @@
 "
 " skin file syntax
 "
+
+runtime! syntax/xyz_block.vim
+
+syn keyword xyz_skinColor BLACK BROWN YELLOW WHITE DEFAULT DARK_BLUE
+syn keyword xyz_skinColor DARK_RED DARK_GREEN DARK_GRAY LIGHT_GRAY LIGHT_RED
+syn keyword xyz_skinColor LIGHT_BLUE LIGHT_MAGENTA LIGHT_CYAN BOLD UNDERLINE
+syn keyword xyz_skinColor STANDOUT DARK_MAGENTA DARK_CYAN LIGHT_GREEN
+
+syn match xyz_skinMetavar /^\s*AUTHOR/ 
+syn match xyz_skinMetavar /^\s*VERSION/ 
+syn match xyz_skinMetavar /^\s*DESCRIPTION/ 
+
+highlight link xyz_skinColor Keyword
+highlight link xyz_skinMetavar Identifier

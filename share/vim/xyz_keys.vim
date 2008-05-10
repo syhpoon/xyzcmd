@@ -21,10 +21,10 @@ setlocal iskeyword+=!
 
 syn case match
 
+syn match xyzComment /#.*/
 syn keyword xyzKeyword context
 
 """load :ns:plugin
-syn match xyzComment /#.*/
 syn match xyzLoad /load/ nextgroup=xyzNSPath skipwhite
 syn match xyzNSPath /\(\:[^ ]\+\)/ contained skipwhite
 
@@ -37,7 +37,7 @@ syn match xyzPlugin /\S\+/ contained
 "bind :misc:hello:say_hello to CTRL-R
 syn match xyzBind /bind\(!\)\?/ nextgroup=xyzBindPlugin skipwhite
 syn match xyzBindPlugin /\(:\)\?\S\+/ nextgroup=xyzBindTo contained skipwhite
-syn match xyzBindTo /to/ contained
+syn match xyzBindTo /to/ contained skipwhite
 
 syn match xyzStatement /set chain key/
 
@@ -53,9 +53,3 @@ highlight link xyzNSPath Identifier
 highlight link xyzFromNSPath Identifier
 highlight link xyzPlugin Identifier
 highlight link xyzBindPlugin Identifier
-
-"bind :misc:hello:say_hello to CTRL-R context DEFAULT
-"bind! say_hello to CTRL-X
-
-"set chain key META-Q
-"set chain key META-L context XXX
