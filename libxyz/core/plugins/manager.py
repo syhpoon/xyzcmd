@@ -163,7 +163,7 @@ class PluginManager(object):
 
         if method not in _obj.public:
             raise PluginError(_(u"%s plugin instance does not export "\
-                                u"%s method" % (plugin, method)))
+                                u"method %s" % (plugin, method)))
         else:
             return _obj.public[method]
 
@@ -211,22 +211,31 @@ class PluginManager(object):
         """
 
         try:
+            self.shutdown(plugin)
             del(self._loaded[plugin])
         except KeyError:
             pass
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def shutdown(self):
+    def shutdown(self, plugin=None):
         """
-        Run destructors on all loaded plugins
+        Run destructors on specified or all loaded plugins
         """
 
-        for plugin_name in self._loaded:
+        _fin(p):
             try:
-                self._loaded[plugin_name].finalize()
+                self._loaded[p].finalize()
             except StandardError:
                 pass
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        if plugin is not None:
+            _fin(plugin)
+        else:
+            for plugin_name in self._loaded:
+                _fin(plugin_name)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -237,4 +246,3 @@ class PluginManager(object):
 
         _data = self.xyz.conf[u"xyz"][u"plugins"]
         return [normalize_ns_path(_pname) for _pname in _data if _data[_pname]]
-
