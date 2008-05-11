@@ -223,7 +223,7 @@ class PluginManager(object):
         Run destructors on specified or all loaded plugins
         """
 
-        _fin(p):
+        def _fin(p):
             try:
                 self._loaded[p].finalize()
             except StandardError:

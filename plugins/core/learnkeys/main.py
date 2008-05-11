@@ -14,9 +14,14 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+import cPickle
+
 import libxyz.ui as uilib
 
 from libxyz.core.plugins import BasePlugin
+from libxyz.core import UserData
+from libxyz.exceptions import PluginError
+from libxyz.exceptions import XYZRuntimeError
 
 class XYZPlugin(BasePlugin):
     """
@@ -37,6 +42,8 @@ class XYZPlugin(BasePlugin):
         super(XYZPlugin, self).__init__(xyz)
 
         self.public = {u"learn_keys": self._learn_keys_dialog}
+
+        self._ud = UserData()
 
         self.keys = (("F1", uilib.Keys.F1),
                      ("F2", uilib.Keys.F2),
@@ -65,8 +72,8 @@ class XYZPlugin(BasePlugin):
                      ("LEFT", uilib.Keys.LEFT),
                      ("RIGHT", uilib.Keys.RIGHT),
                      ("HOME", uilib.Keys.HOME),
-                     ("PAGE DOWN", uilib.Keys.PAGE_DOWN),
                      ("PAGE UP", uilib.Keys.PAGE_UP),
+                     ("PAGE DOWN", uilib.Keys.PAGE_DOWN),
                      ("INSERT", uilib.Keys.INSERT),
                      ("TAB", uilib.Keys.TAB),
                     )
@@ -90,14 +97,20 @@ class XYZPlugin(BasePlugin):
 
         _title = _(u"%s - %s" % (self.NAME, self.VERSION))
 
-        _pressed = {}
+        # TODO: добавить разделение по типу терминала {TERM: {}...}
+        _pressed = self._load_data()
 
         for _label, _key in self.keys:
-            _msg = _(u"Please press key %s\nPress ESC to skip" % _label)
+            _msg = _(u"Please press key %s\n"\
+                     u"Press ENTER to skip key\n"\
+                     u"Press ESCAPE to quit dialog" % _label)
             _p = uilib.MessageBox(self.xyz, self.xyz.top, _msg, _title).show()
 
-            if _p == [] or _p[0] == uilib.Keys.ESCAPE:
+            if _p == [] or _p[0] == uilib.Keys.ENTER:
                 continue
+
+            if _p[0] == uilib.Keys.ESCAPE:
+                break
 
             if _p[0] != _key:
                 _pressed[tuple(_p)] = _key
@@ -106,4 +119,43 @@ class XYZPlugin(BasePlugin):
 
         if uilib.YesNoBox(self.xyz, self.xyz.top, _ask_msg, _title).show():
             # Save data
+            self._save_data(_pressed)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _save_data(self, data):
+        """
+        Store learned keycodes
+        """
+
+        try:
+            _file = self._ud.openfile("keycodes", "wb", subdir="data")
+        except XYZRuntimeError, e:
+            raise PluginError(_(u"Unable to open file: %s" % unicode(e)))
+
+        try:
+            cPickle.dump(data, _file)
+        except cPickle.PicklingError:
+            raise PluginError(_(u"Unable to save learned data"))
+        finally:
+            _file.close()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    def _load_data(self):
+        """
+        Load stored keycodes
+        """
+
+        _data = {}
+
+        try:
+            _file = self._ud.openfile("keycodes", "rb", subdir="data")
+        except XYZRuntimeError, e:
+            # Skip open error
             pass
+        else:
+            _data = cPickle.load(_file)
+            _file.close()
+
+        return _data
