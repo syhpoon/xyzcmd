@@ -45,6 +45,33 @@ class UserData(object):
         @return open file-object or XYZRuntimeError raised on error
         """
 
+        try:
+            return open(self.makepath(filename, subdir), mode)
+        except IOError, e:
+            raise XYZRuntimeError(e)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def delfile(self, filename, subdir=None):
+        """
+        Delete file in user-directory
+        """
+
+        _path = self.makepath(filename, subdir)
+
+        if os.path.isfile(_path):
+            try:
+                os.unlink(_path)
+            except OSError, e:
+                raise XYZRuntimeError(e)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def makepath(self, filename, subdir=None):
+        """
+        Make absolute path to file
+        """
+
         _path = [self.user_dir]
 
         if subdir is not None:
@@ -61,7 +88,4 @@ class UserData(object):
 
         _path.append(filename)
 
-        try:
-            return open(os.path.join(*_path), mode)
-        except IOError, e:
-            raise XYZRuntimeError(e)
+        return os.path.join(*_path)
