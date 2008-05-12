@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import cPickle
 
 import libxyz.ui as uilib
@@ -36,12 +37,21 @@ class XYZPlugin(BasePlugin):
     BRIEF_DESCRIPTION = u"Setup terminal keycodes"
 
     FULL_DESCRIPTION = u"LearnKeys plugin is used to properly "\
-                       u"configure terminal keycodes."
+                       u"configure terminal keycodes.\n"\
+                       u"For each terminal type keycodes are stored "\
+                       u"independently. Terminal type determined by examining "\
+                       u"TERM environment variable."
 
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 
-        self.public = {u"learn_keys": self._learn_keys_dialog}
+        self.public = {"learn_keys": self._learn_keys_dialog,
+                       "delete_keys": self._del_saved_keys,
+        }
+
+        self._keysfile = "keycodes"
+        self._keyssubdir = "data"
+        self._terminal = None
 
         self._ud = UserData()
 
@@ -81,12 +91,7 @@ class XYZPlugin(BasePlugin):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def prepare(self):
-        pass
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-    def finalize(self):
-        pass
+        self._terminal = os.getenv("TERM") or "DEFAULT"
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -97,14 +102,17 @@ class XYZPlugin(BasePlugin):
 
         _title = _(u"%s - %s" % (self.NAME, self.VERSION))
 
-        # TODO: добавить разделение по типу терминала {TERM: {}...}
         _pressed = self._load_data()
 
+        if self._terminal not in _pressed:
+            _pressed[self._terminal] = {}
+
+        _msg = _(u"Please press key %s\nPress ENTER to skip key\n"\
+                 u"Press ESCAPE to quit dialog")
+
         for _label, _key in self.keys:
-            _msg = _(u"Please press key %s\n"\
-                     u"Press ENTER to skip key\n"\
-                     u"Press ESCAPE to quit dialog" % _label)
-            _p = uilib.MessageBox(self.xyz, self.xyz.top, _msg, _title).show()
+            _m = _msg % _label
+            _p = uilib.MessageBox(self.xyz, self.xyz.top, _m, _title).show()
 
             if _p == [] or _p[0] == uilib.Keys.ENTER:
                 continue
@@ -113,7 +121,7 @@ class XYZPlugin(BasePlugin):
                 break
 
             if _p[0] != _key:
-                _pressed[tuple(_p)] = _key
+                _pressed[self._terminal][tuple(_p)] = _key
 
         _ask_msg = _(u"Save learned keys?")
 
@@ -123,13 +131,38 @@ class XYZPlugin(BasePlugin):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def _del_saved_keys(self, all=False):
+        """
+        Delete learned keycodes data.
+        If all is True, delete all saved data for all terminal types,
+        otherwise delete only current terminal type data.
+        """
+
+        if all:
+            try:
+                self._ud.delfile(self._keysfile, self._keyssubdir)
+            except XYZRuntimeError, e:
+                pass
+        else:
+            _data = self._load_data()
+
+            if self._terminal in _data:
+                del _data[self._terminal]
+
+            try:
+                self._save_data(_data)
+            except PluginError, e:
+                pass
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def _save_data(self, data):
         """
         Store learned keycodes
         """
 
         try:
-            _file = self._ud.openfile("keycodes", "wb", subdir="data")
+            _file = self._ud.openfile(self._keysfile, "wb", self._keyssubdir)
         except XYZRuntimeError, e:
             raise PluginError(_(u"Unable to open file: %s" % unicode(e)))
 
@@ -150,7 +183,7 @@ class XYZPlugin(BasePlugin):
         _data = {}
 
         try:
-            _file = self._ud.openfile("keycodes", "rb", subdir="data")
+            _file = self._ud.openfile(self._keysfile, "rb", self._keyssubdir)
         except XYZRuntimeError, e:
             # Skip open error
             pass
