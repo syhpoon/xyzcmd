@@ -19,11 +19,11 @@
 Create new plugin template
 """
 
+import os
+import os.path
 import sys
 
-def write_plugin(pname, author, ns):
-
-    _template = """\
+template = """\
 #-*- coding: utf8 -*
 #
 # Author <e-mail> year
@@ -70,4 +70,49 @@ class XYZPlugin(BasePlugin):
 
     def finalize(self):
         pass
-""" % locals()
+"""
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def error(em):
+    print "ERROR: %s" % em
+    sys.exit(1)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def write_plugin(pname, author, ns):
+    global template
+
+    _cont = template % locals()
+
+    # Create plugin directory
+    try:
+        os.mkdir("./%s" % pname)
+    except OSError, e:
+        error("Unable to create plugin directory %s: %s" % (pname, str(e)))
+
+    # Create neccesary files
+
+    file("./%s/__init__.py" % pname, "w").close()
+
+    main = file("./%s/main.py" % pname, "w")
+    main.write("%s\n" % _cont)
+    main.close()
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def usage():
+    print "%s plugin_name author namespace" % os.path.basename(sys.argv[0])
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+if __name__ == "__main__":
+    if len(sys.argv) != 4:
+        usage()
+        sys.exit(1)
+    else:
+        pname, author, ns = sys.argv[1:]
+
+    write_plugin(pname, author, ns)
+
+    print "Plugin template created"
