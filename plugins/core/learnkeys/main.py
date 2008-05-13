@@ -45,9 +45,11 @@ class XYZPlugin(BasePlugin):
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 
-        self.public = {"learn_keys": self._learn_keys_dialog,
+        self.public = {
+                       "learn_keys": self._learn_keys_dialog,
                        "delete_keys": self._del_saved_keys,
-        }
+                       "get_keys": self.get_keycodes,
+                      }
 
         self._keysfile = "keycodes"
         self._keyssubdir = "data"
@@ -153,6 +155,25 @@ class XYZPlugin(BasePlugin):
                 self._save_data(_data)
             except PluginError, e:
                 pass
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_keycodes(self, all=False):
+        """
+        Return saved keycodes data as dictionary.
+        If all is True, return all saved data for all terminal types,
+        otherwise return only current terminal type data.
+        """
+
+        _data = self._load_data()
+
+        if not all:
+            try:
+                _data = _data[self._terminal]
+            except KeyError:
+                _data = {}
+
+        return _data
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
