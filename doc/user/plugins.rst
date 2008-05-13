@@ -74,7 +74,7 @@ All plugin management is performed using PluginManger instance, accessible as
 PluginManger supports following methods:
    
 **load <plugin>**
-   Search for <plugin>, load it, instanciate, prepare (run prepare()) and return
+   Search for <plugin>, load it, instantiate, prepare (run prepare()) and return
 
 **reload <plugin>**
    Force [re]loading <plugin> even if it is already stored in cache.

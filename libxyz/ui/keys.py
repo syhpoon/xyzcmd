@@ -20,8 +20,10 @@ class Keys(object):
     """
 
     CONTROL = "ctrl"
+    CTRL = CONTROL
     META = "meta"
     ESCAPE = "esc"
+    ESC = ESCAPE
     SHIFT = "shift"
     UP = 'up'
     DOWN = 'down'

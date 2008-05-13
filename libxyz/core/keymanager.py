@@ -29,7 +29,6 @@ class KeyManager(object):
         self.xyz = xyz
         self.confpath = confpath
 
-        self._loaded_plugins = {}
         self._loaded_methods = {}
         self._bind_data = {}
 
@@ -45,17 +44,9 @@ class KeyManager(object):
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        def _from_cb(mo):
-            try:
-                self._from_load(mo.group("plugin"), mo.group("method"))
-            except exceptions.PluginError, e:
-                raise exceptions.XYZValueError(unicode(e))
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
         def _load_cb(mo):
             try:
-                self._load_plugin(mo.group("plugin"))
+                self._load(mo.group("method"))
             except exceptions.PluginError, e:
                 raise exceptions.XYZValueError(unicode(e))
 
@@ -71,7 +62,7 @@ class KeyManager(object):
             _context = mo.group("context")
 
             try:
-                self._bind(_method, _shortcut, _context, force=_force)
+                self._bind(_method, _shortcut, _context, _force)
             except exceptions.KeyManagerError, e:
                 raise exceptions.XYZValueError(unicode(e))
 
@@ -84,26 +75,12 @@ class KeyManager(object):
 
         _comment_re = re.compile("^\s*#.*$")
 
-        _from_re = re.compile("""
-        ^                  # begin
-        \s*                # leading spaces
-        from               # keyword from
-        \s+                # one ore more spaces
-        (?P<plugin>[\w:]+) # plugin ns-path
-        \s+                # one ore more spaces
-        load               # keywoard load
-        \s+                # one ore more spaces
-        (?P<method>\w+)    # method name
-        \s*                # trailing spaces
-        $                  # EOL
-        """, re.VERBOSE)
-
         _load_re = re.compile("""
         ^                  # begin
         \s*                # leading spaces
         load               # keywoard load
         \s+                # one ore more spaces
-        (?P<plugin>[\w:]+) # plugin name
+        (?P<method>[\w:]+) # method name
         \s*                # trailing spaces
         $                  # EOL
         """, re.VERBOSE)
@@ -150,7 +127,6 @@ class KeyManager(object):
         """, re.VERBOSE)
 
         _cbpool = {_comment_re: _comment_cb,
-                   _from_re: _from_cb,
                    _load_re: _load_cb,
                    _bind_re: _bind_cb,
                    _chain_re: _chain_cb,
@@ -171,32 +147,20 @@ class KeyManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _load_plugin(self, plugin):
+    def _load(self, fullmethod):
         """
-        Load plugin
+        Load method
         """
 
         # Already loaded
-        if plugin in self._loaded_plugins:
+        if fullmethod in self._loaded_methods:
             return
 
-        _plugin = self.xyz.pm.load(plugin)
+        _split = fullmethod.split(":")
+        _plugin, _method = _split[:-1], _split[-1]
 
-        self._loaded_plugins[plugin] = _plugin
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _from_load(self, plugin, method):
-        """
-        Load a method from plugin
-        """
-
-        if method in self._loaded_methods:
-            return
-
-        _method = self.xyz.pm.from_load(plugin, method)
-
-        self._loaded_methods[method] = _method
+        self._loaded_methods[fullmethod] = self.xyz.pm.from_load(_plugin,
+                                                                 _method)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -207,36 +171,13 @@ class KeyManager(object):
                  if method was not loaded
         """
 
-        def _try_to_bind(m, sc):
-            if m in self._loaded_methods:
-                self._bind_data[sc] = self._loaded_methods[m]
-                return True
-            else:
-                return False
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        print method, shortcut, context, force
-        import pdb; pdb.set_trace()
-
         _shortcut = libxyz.core.Shortcut(shortcut)
 
         # Already binded
         if _shortcut in self._bind_data and not force:
             return
 
-        # Method could be either in full form with plugin path, or just
-        # a method name
-        # First try by method name
-        if _try_to_bind(method, _shortcut):
-            # Succeeded
-            return
-
-        # Next try by full form
-        # Last component of full plugin ns path is a method name
-        _method_name = method.split(":")[-1]
-
-        if _try_to_bind(_method_name, _shortcut):
-            return
-
-        raise exceptions.KeyManagerError(_(u"Unbound method %s" % method))
+        if method in self._loaded_methods:
+            self._bind_data[_shortcut] = self._loaded_methods[method]
+        else:
+            raise exceptions.KeyManagerError(_(u"Unbound method %s" % method))

@@ -23,6 +23,7 @@ class Shortcut(object):
 
     def __init__(self, raw_shortcut):
         """
+        @param raw_shortcut: Raw shortcut as read from config file
         """
 
         self.keys = Keys()
@@ -36,3 +37,13 @@ class Shortcut(object):
                 _shortcut.append(_key)
 
         self.shortcut = " ".join(_shortcut)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __str__(self):
+        return "<Shortcut object: %s>" % self.shortcut
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __repr__(self):
+        return self.__str__()

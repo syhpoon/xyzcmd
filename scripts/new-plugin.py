@@ -17,6 +17,7 @@
 
 """
 Create new plugin template
+Usage: new-plugin.py <plugin_name> <author> <namespace>
 """
 
 import os
@@ -32,7 +33,7 @@ template = """\
 from libxyz.core.plugins import BasePlugin
 
 class XYZPlugin(BasePlugin):
-    "%(pname)s"
+    "Plugin %(pname)s"
 
     # Plugin name
     NAME = u"%(pname)s"

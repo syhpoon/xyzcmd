@@ -10,7 +10,6 @@ to keyboard shortcuts.
 File syntax is following:
 
 * ``#`` Begins commentary to the end of line
-* ``from {plugin_path} load {method}`` loads method from plugin
 * ``load {plugin_path}`` loads plugin
 * ``bind[!] {method} to {shortcut} [context {contextname}]`` binds method 
   to be invoked upon pressing shortcut in context.

@@ -1,11 +1,10 @@
 # Comment
 
-load :misc:hello
-from :misc:hello load say_hello
+load :misc:hello:say_hello
 
 bind :misc:hello:say_hello to CTRL-R
 bind :misc:hello:say_hello to CTRL-R context DEFAULT
-bind! say_hello to CTRL-X
+bind!:misc:hello:say_hello to CTRL-X
 
 set chain key META-Q
 set chain key META-L context XXX

@@ -54,6 +54,7 @@ ui.error_box {
 	mount = &FG, &BG
 }
 
+# Panel widget
 ui.panel {
 	cwdtitle = BLACK, LIGHT_GRAY
 	panel = LIGHT_GRAY, DARK_BLUE
