@@ -25,62 +25,61 @@ class Keys(object):
     ESCAPE = "esc"
     ESC = ESCAPE
     SHIFT = "shift"
-    UP = 'up'
-    DOWN = 'down'
-    RIGHT = 'right'
-    LEFT = 'left'
-    END = 'end'
-    HOME = 'home'
-    INSERT = 'insert'
-    DELETE = 'delete'
-    PAGE_UP = 'page up'
-    PAGE_DOWN = 'page down'
-    ENTER = 'enter'
-    TAB = 'tab'
-    BACKSPACE = 'backspace'
+    UP = "up"
+    DOWN = "down"
+    RIGHT = "right"
+    LEFT = "left"
+    END = "end"
+    HOME = "home"
+    INSERT = "insert"
+    DELETE = "delete"
+    PAGE_UP = "page up"
+    PAGE_DOWN = "page down"
+    ENTER = "enter"
+    TAB = "tab"
+    BACKSPACE = "backspace"
 
     # F-keys
-    F1 = 'f1'
-    F2 = 'f2'
-    F3 = 'f3'
-    F4 = 'f4'
-    F5 = 'f5'
-    F1 = 'f1'
-    F2 = 'f2'
-    F3 = 'f3'
-    F4 = 'f4'
-    F5 = 'f5'
-    F6 = 'f6'
-    F7 = 'f7'
-    F8 = 'f8'
-    F9 = 'f9'
-    F10 = 'f10'
-    F11 = 'f11'
-    F12 = 'f12'
-    F13 = 'f13'
-    F14 = 'f14'
-    F15 = 'f15'
-    F16 = 'f16'
-    F17 = 'f17'
-    F18 = 'f18'
-    F19 = 'f19'
-    F20 = 'f20'
+    F1 = "f1"
+    F2 = "f2"
+    F3 = "f3"
+    F4 = "f4"
+    F5 = "f5"
+    F1 = "f1"
+    F2 = "f2"
+    F3 = "f3"
+    F4 = "f4"
+    F5 = "f5"
+    F6 = "f6"
+    F7 = "f7"
+    F8 = "f8"
+    F9 = "f9"
+    F10 = "f10"
+    F11 = "f11"
+    F12 = "f12"
+    F13 = "f13"
+    F14 = "f14"
+    F15 = "f15"
+    F16 = "f16"
+    F17 = "f17"
+    F18 = "f18"
+    F19 = "f19"
+    F20 = "f20"
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def shortcut(self, *keys):
+    def make_shortcut(self, raw_shortcut):
         """
-        Make a shortcut
+        Make shortcut tuple
+        @param raw_shortcut: Raw shortcut as read from config file
         """
 
-        _keys = []
+        _shortcut = []
 
-        for key in keys:
+        for _key in raw_shortcut.split("-"):
             try:
-                key = getattr(self, key)
-            except AttributeError:
-                pass
+                _shortcut.append(getattr(self, _key))
+            except AttributeError, e:
+                _shortcut.append(_key)
 
-            _keys.append(key)
-
-        return " ".join(_keys)
+        return (" ".join(_shortcut),)

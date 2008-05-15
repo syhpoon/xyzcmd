@@ -2,7 +2,7 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
@@ -12,13 +12,20 @@
    height="744.09448"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.45.1"
+   inkscape:version="0.46"
    version="1.0"
    sodipodi:docbase="/home/syhpoon/UNIX/Работа/Программирование/Языки/python/Проекты/xyzcmd/xyzcmd-trunk/doc/img"
    sodipodi:docname="widgets.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape">
   <defs
      id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 372.04724 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="1052.3622 : 372.04724 : 1"
+       inkscape:persp3d-origin="526.18109 : 248.03149 : 1"
+       id="perspective135" />
     <marker
        inkscape:stockid="Arrow1Lend"
        orient="auto"
@@ -56,9 +63,9 @@
      objecttolerance="10"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4659513"
-     inkscape:cx="418.82828"
-     inkscape:cy="585.15852"
+     inkscape:zoom="1.457299"
+     inkscape:cx="429.28853"
+     inkscape:cy="584.1353"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      width="1052.3622px"
@@ -66,7 +73,8 @@
      inkscape:window-width="1276"
      inkscape:window-height="771"
      inkscape:window-x="0"
-     inkscape:window-y="0" />
+     inkscape:window-y="0"
+     showgrid="false" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -649,26 +657,19 @@
            y="118.93707" />
         <text
            xml:space="preserve"
-           style="font-size:12px;font-style:normal;font-weight:normal;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+           style="font-size:12px;font-style:normal;font-weight:normal;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr;line-height:125%"
            x="322.03979"
            y="99.1362"
-           id="text2274"><tspan
+           id="text2274"
+           sodipodi:linespacing="125%"><tspan
              sodipodi:role="line"
-             id="tspan2276"
-             x="322.03979"
-             y="99.1362">/dir1</tspan><tspan
+             id="tspan2508">/dir1</tspan><tspan
              sodipodi:role="line"
-             x="322.03979"
-             y="114.1362"
-             id="tspan2278">/dir2</tspan><tspan
+             id="tspan2510">/dir2</tspan><tspan
              sodipodi:role="line"
-             x="322.03979"
-             y="129.1362"
-             id="tspan2280"> file</tspan><tspan
+             id="tspan2512"> file</tspan><tspan
              sodipodi:role="line"
-             x="322.03979"
-             y="144.1362"
-             id="tspan2282"> @link</tspan></text>
+             id="tspan2514">@link</tspan></text>
       </g>
       <g
          transform="translate(248.87515,32.121359)"

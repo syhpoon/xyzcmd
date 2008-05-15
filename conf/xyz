@@ -8,7 +8,7 @@
 
 plugins {
 	:misc:hello > ENABLE
-	:core:learnkeys > ENABLE
+	:core:keycodes > ENABLE
 }
 
 # Skin to use

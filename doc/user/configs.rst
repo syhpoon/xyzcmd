@@ -55,13 +55,13 @@ button focus.
 To handle such a problem a concept of *context* is introduced.
 Context is simply a set which shares the shortcuts defined within it.
 Context has a name and may include an arbritrary amount of widgets.
-Context named **DEFAULT** used unless another provided.
+Context named **DEFAULT** used unless other provided.
 For example, consider the part of keys configuration file::
 
    # 1.
-   bind META-SHIFT-p to default_action
+   bind META-P to default_action
    # 2.
-   bind META-SHIFT-p to box_action context BOX
+   bind META-P to box_action context BOX
 
 In 1. we've bound Meta+Shift+p shortcut to default_action method. As we haven't
 provided context name, **DEFAULT** will be used.
@@ -77,7 +77,7 @@ Shortcut chains
 +++++++++++++++
 In general, shortcut will contain two keys: modifier (like META or CTRL) and
 the regular key. As only widget receives such a combination, it tries to
-search among defined shortcuts to determine what the action to fire.
+search among defined shortcuts to determine what action to fire.
 But we can tell |XYZ| not to immediately look for action by providing
 a ``chain key``, which will indicate beginning of multiple shortcuts
 combination treated as single one.
@@ -87,12 +87,11 @@ To bind a chain key we use the following syntax
 
 So, if we have::
 
-   set chain key CTRL-J
+   set chain key CTRL-j
    set chain key META-G context BOX
 
-Pressing CTRL-J in default context would not trigger action lookup, but instead
-KeyManager will wait until chain key pressed again or timeout reached.
-Therefore, pressing ``CTRL-J META-1 META-2 CTRL-S CTRL-J`` will trigger
-KeyManager to lookup for shortcut ``META-1 META-2 CTRL-S``.
-Of course such a long shortcuts make little sense, but combinations with 
-two-three shortcuts could be really of use sometimes.
+Pressing CTRL-j in default context would not trigger action lookup, but instead
+KeyManager will wait for next shortcut in chain until the same chain key
+pressed again or timeout reached.
+Thus, pressing ``CTRL-j META-1 META-2 CTRL-j`` in ``BOX`` context will trigger
+KeyManager to lookup for shortcut ``META-1 META-2``.

@@ -103,7 +103,8 @@ def write_plugin(pname, author, ns):
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def usage():
-    print "%s plugin_name author namespace" % os.path.basename(sys.argv[0])
+    print "%s <plugin_name> <author> <namespace>" %\
+           os.path.basename(sys.argv[0])
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

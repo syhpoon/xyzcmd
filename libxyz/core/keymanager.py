@@ -18,19 +18,25 @@ import re
 
 import libxyz
 
-from libxyz import exceptions
+from libxyz.exceptions import PluginError
+from libxyz.exceptions import KeyManagerError
+from libxyz.exceptions import XYZValueError
 
 class KeyManager(object):
     """
     Key bindings management class
     """
 
+    CONTEXT_DEFAULT = u"DEFAULT"
+
     def __init__(self, xyz, confpath):
         self.xyz = xyz
         self.confpath = confpath
+        self.keys = libxyz.ui.Keys()
 
         self._loaded_methods = {}
         self._bind_data = {}
+        self._chain_keys = {}
 
         self._path_sel = libxyz.PathSelector()
 
@@ -47,8 +53,8 @@ class KeyManager(object):
         def _load_cb(mo):
             try:
                 self._load(mo.group("method"))
-            except exceptions.PluginError, e:
-                raise exceptions.XYZValueError(unicode(e))
+            except PluginError, e:
+                raise XYZValueError(unicode(e))
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -63,13 +69,16 @@ class KeyManager(object):
 
             try:
                 self._bind(_method, _shortcut, _context, _force)
-            except exceptions.KeyManagerError, e:
-                raise exceptions.XYZValueError(unicode(e))
+            except KeyManagerError, e:
+                raise XYZValueError(unicode(e))
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         def _chain_cb(mo):
             _chain = mo.group("shortcut")
+            _context = mo.group("context")
+
+            self._set_chain(_chain, _context)
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -80,7 +89,7 @@ class KeyManager(object):
         \s*                # leading spaces
         load               # keywoard load
         \s+                # one ore more spaces
-        (?P<method>[\w:]+) # method name
+        (?P<method>[\S:]+) # Full plugin path with method name
         \s*                # trailing spaces
         $                  # EOL
         """, re.VERBOSE)
@@ -147,37 +156,89 @@ class KeyManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _load(self, fullmethod):
+    def _load(self, method):
         """
         Load method
         """
 
         # Already loaded
-        if fullmethod in self._loaded_methods:
+        if method in self._loaded_methods:
             return
 
-        _split = fullmethod.split(":")
-        _plugin, _method = _split[:-1], _split[-1]
+        _m = MethodName(method)
 
-        self._loaded_methods[fullmethod] = self.xyz.pm.from_load(_plugin,
-                                                                 _method)
+        # Wildcard
+        if _m.method == _m.ALL:
+            self._loaded_methods[method] = _m.ALL
+        else:
+            self._loaded_methods[method] = self.xyz.pm.from_load(_m.plugin,
+                                                                 _m.method)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _bind(self, method, shortcut, context, force=False):
         """
-        Bind a method to shortcut
+        Bind a shortcut to a method
         @return: True on success, False otherwise, also raises exception
                  if method was not loaded
         """
 
-        _shortcut = libxyz.core.Shortcut(shortcut)
+        _shortcut = self.keys.make_shortcut(shortcut)
 
-        # Already binded
-        if _shortcut in self._bind_data and not force:
+        if context is None:
+            context = self.CONTEXT_DEFAULT
+
+        if context not in self._bind_data:
+            self._bind_data[context] = {}
+        elif _shortcut in self._bind_data[context] and not force:
+            # Already binded
             return
 
-        if method in self._loaded_methods:
-            self._bind_data[_shortcut] = self._loaded_methods[method]
+        _m = MethodName(method)
+        _mobj = None
+
+        # First check if methods were loaded by wildcard ALL
+        if method not in self._loaded_methods:
+            if "%s:%s" % (_m.plugin, _m.ALL) not in self._loaded_methods:
+                raise KeyManagerError(_(u"Method %s not loaded" % method))
+
+            # Else try to load specified method
+            try:
+                _mobj = self.xyz.pm.from_load(_m.plugin, _m.method)
+            except PluginError, e:
+                raise KeyManagerError(_(u"Load error: %s" % e))
         else:
-            raise exceptions.KeyManagerError(_(u"Unbound method %s" % method))
+            _mobj = self._loaded_methods[method]
+
+        self._bind_data[context][_shortcut] = _mobj
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _set_chain(self, chain, context):
+        """
+        Set shortcut as chain key
+        """
+
+        _chain = self.keys.make_shortcut(chain)
+
+        if context is None:
+            context = self.CONTEXT_DEFAULT
+
+        self._chain_keys[context] = _chain
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class MethodName(object):
+    """
+    Abstract method name class
+    """
+
+    # Wildcard to load all public methods from plugin
+    ALL = "*"
+
+    def __init__(self, method):
+        _split = method.split(":")
+
+        self.full = method
+        self.plugin = ":".join(_split[:-1])
+        self.method = _split[-1]

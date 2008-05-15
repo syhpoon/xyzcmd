@@ -26,17 +26,17 @@ from libxyz.exceptions import XYZRuntimeError
 
 class XYZPlugin(BasePlugin):
     """
-    Learn terminal keycodes
+    Terminal keycodes handling
     """
 
-    NAME = u"LearnKeys"
+    NAME = u"KeyCodes"
     AUTHOR = u"Max E. Kuznecov ~syhpoon <mek@mek.uz.ua>"
     VERSION = u"0.1"
     NAMESPACE = u"core"
 
     BRIEF_DESCRIPTION = u"Setup terminal keycodes"
 
-    FULL_DESCRIPTION = u"LearnKeys plugin is used to properly "\
+    FULL_DESCRIPTION = u"KeyCodes plugin is used to properly "\
                        u"configure terminal keycodes.\n"\
                        u"For each terminal type keycodes are stored "\
                        u"independently. Terminal type determined by examining "\
@@ -46,7 +46,7 @@ class XYZPlugin(BasePlugin):
         super(XYZPlugin, self).__init__(xyz)
 
         self.public = {
-                       "learn_keys": self._learn_keys_dialog,
+                       "learn_keys": self._learn_keys,
                        "delete_keys": self._del_saved_keys,
                        "get_keys": self.get_keycodes,
                       }
@@ -97,7 +97,7 @@ class XYZPlugin(BasePlugin):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _learn_keys_dialog(self):
+    def _learn_keys(self):
         """
         Show LearnKeys dialog
         """

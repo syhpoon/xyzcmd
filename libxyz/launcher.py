@@ -86,10 +86,10 @@ class Launcher(object):
 
         self.xyz.skin = core.Skin(_skin)
         self.xyz.pm = PluginManager(self.xyz, self._path_sel.get_plugins_dir())
-        #self.xyz.km = core.KeyManager(self.xyz,
-        #                         self._path_sel.get_conf(const.KEYS_CONF_FILE))
+        self.xyz.km = core.KeyManager(self.xyz,
+                                 self._path_sel.get_conf(const.KEYS_CONF_FILE))
 
-        #return
+        return
 
         self.xyz.screen = uilib.display.init_display()
         self.xyz.screen.register_palette(self.xyz.skin.get_palette_list())
@@ -103,7 +103,7 @@ class Launcher(object):
 
         self.xyz.screen.draw_screen(_dim, self.xyz.top.render(_dim, True))
 
-        lk = self.xyz.pm.load(u":core:learnkeys")
+        lk = self.xyz.pm.load(u":core:keycodes")
         lk.learn_keys()
 
         #_str = "PREVED"
