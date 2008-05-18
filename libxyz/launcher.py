@@ -57,6 +57,7 @@ class Launcher(object):
 
         self._path_sel = libxyz.PathSelector()
         self._conf_dir = None
+        self._exit = False
 
         self._init_default()
 
@@ -89,7 +90,7 @@ class Launcher(object):
         self.xyz.km = core.KeyManager(self.xyz,
                                  self._path_sel.get_conf(const.KEYS_CONF_FILE))
 
-        return
+        #return
 
         self.xyz.screen = uilib.display.init_display()
         self.xyz.screen.register_palette(self.xyz.skin.get_palette_list())
@@ -102,9 +103,24 @@ class Launcher(object):
         self.xyz.top = lowui.Filler(uilib.Panel(self.xyz))
 
         self.xyz.screen.draw_screen(_dim, self.xyz.top.render(_dim, True))
+        k = uilib.Keys()
+        self.xyz.km.bind(self.shutdown, "F10")
 
-        lk = self.xyz.pm.load(u":core:keycodes")
-        lk.learn_keys()
+        while True:
+            if self._exit:
+                break
+
+            _input = self.xyz.screen.get_input()
+
+            if _input:
+                _binded = self.xyz.km.process(_input)
+                if _binded is not None:
+                    _binded()
+
+            self.xyz.screen.draw_screen(_dim, self.xyz.top.render(_dim, True))
+
+        #lk = self.xyz.pm.load(u":core:keycodes")
+        #lk.learn_keys()
 
         #_str = "PREVED"
         #_title = "TITLE"
@@ -265,6 +281,11 @@ Usage: %s [-c dir][-vh]
 
         if quit:
             self.quit()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def shutdown(self):
+        self._exit = True
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

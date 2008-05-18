@@ -44,6 +44,27 @@ class KeyManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def process(self, pressed, context=None):
+        """
+        Process pressed keys
+        """
+
+        # TODO: process chains
+        context = context or self.CONTEXT_DEFAULT
+
+        _p = tuple(pressed)
+
+        # Look for binded shortcut
+        try:
+            _method = self._bind_data[context][_p]
+        except KeyError:
+            # No bind
+            return None
+
+        return _method
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def _parse_config(self):
         def _comment_cb(mo):
             return
@@ -176,7 +197,28 @@ class KeyManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _bind(self, method, shortcut, context, force=False):
+    def _bind(self, method, shortcut, context=None, force=False):
+        _m = MethodName(method)
+        _mobj = None
+
+        # First check if methods were loaded by wildcard ALL
+        if method not in self._loaded_methods:
+            if "%s:%s" % (_m.plugin, _m.ALL) not in self._loaded_methods:
+                raise KeyManagerError(_(u"Method %s not loaded" % method))
+
+            # Else try to load specified method
+            try:
+                _mobj = self.xyz.pm.from_load(_m.plugin, _m.method)
+            except PluginError, e:
+                raise KeyManagerError(_(u"Load error: %s" % e))
+        else:
+            _mobj = self._loaded_methods[method]
+
+        self.bind(_mobj, shortcut, context, force)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def bind(self, method, shortcut, context=None, force=False):
         """
         Bind a shortcut to a method
         @return: True on success, False otherwise, also raises exception
@@ -194,23 +236,7 @@ class KeyManager(object):
             # Already binded
             return
 
-        _m = MethodName(method)
-        _mobj = None
-
-        # First check if methods were loaded by wildcard ALL
-        if method not in self._loaded_methods:
-            if "%s:%s" % (_m.plugin, _m.ALL) not in self._loaded_methods:
-                raise KeyManagerError(_(u"Method %s not loaded" % method))
-
-            # Else try to load specified method
-            try:
-                _mobj = self.xyz.pm.from_load(_m.plugin, _m.method)
-            except PluginError, e:
-                raise KeyManagerError(_(u"Load error: %s" % e))
-        else:
-            _mobj = self._loaded_methods[method]
-
-        self._bind_data[context][_shortcut] = _mobj
+        self._bind_data[context][_shortcut] = method
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -93,5 +93,5 @@ So, if we have::
 Pressing CTRL-j in default context would not trigger action lookup, but instead
 KeyManager will wait for next shortcut in chain until the same chain key
 pressed again or timeout reached.
-Thus, pressing ``CTRL-j META-1 META-2 CTRL-j`` in ``BOX`` context will trigger
-KeyManager to lookup for shortcut ``META-1 META-2``.
+Thus, pressing ``CTRL-j META-1`` in ``BOX`` context will trigger
+KeyManager to lookup for shortcut ``CTRL-j META-1``.

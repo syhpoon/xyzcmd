@@ -3,10 +3,10 @@
 load :misc:hello:say_hello
 load :core:keycodes:*
 
-bind :misc:hello:say_hello to CTRL-r
+bind :misc:hello:say_hello to META-CTRL-f
 bind :core:keycodes:learn_keys to CTRL-k
-bind :core:keycodes:get_keys to META-x context XXX
+#bind :core:keycodes:get_keys to META-x context XXX
 
-set chain key META-Q
-set chain key META-L context PANEL
-set chain key TAB-Q context TAB
+#set chain key META-Q
+#set chain key META-L context PANEL
+#set chain key TAB-Q context TAB
