@@ -194,6 +194,9 @@ class XYZPlugin(BasePlugin):
         finally:
             _file.close()
 
+        # Update inputwrapper data to make it available without restarting
+        self.xyz.input.update(data[self._terminal])
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     def _load_data(self):

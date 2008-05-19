@@ -19,9 +19,11 @@ __all__ = (
     'XYZData',
     'UserData',
     'KeyManager',
+    'InputWrapper',
     )
 
 from skin import Skin
 from xyzdata import XYZData
 from userdata import UserData
 from keymanager import KeyManager
+from inputwrapper import InputWrapper

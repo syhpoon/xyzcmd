@@ -21,11 +21,28 @@ class InputWrapper(object):
 
     def __init__(self, xyz):
         self.xyz = xyz
-        self.keycodes = xyz.pm.from_load(u":core:keycodes", "get_keys")()
+        self.plugin = xyz.pm.load(u":core:keycodes")
+        self.keycodes = {}
+
+        self.update()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def get_input(self):
+    def update(self, data=None):
+        """
+        Set/load keycodes data
+        @param data: Keycodes data. If not provided load via get_keys()
+        @type data: dict
+        """
+
+        if data is not None:
+            self.keycodes = data
+        else:
+            self.keycodes = self.plugin.get_keys()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get(self):
         """
         Get input from screen and search if it matches any user-defined keycodes
         """

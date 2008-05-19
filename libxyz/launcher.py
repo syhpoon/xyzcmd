@@ -81,6 +81,7 @@ class Launcher(object):
         self.parse_configs()
 
         _skin = self._path_sel.get_skin(self.xyz.conf[u"xyz"][u"skin"])
+
         # Skin specified in config not found, load default
         if not _skin:
             _skin = self._path_sel.get_skin(const.DEFAULT_SKIN)
@@ -89,8 +90,7 @@ class Launcher(object):
         self.xyz.pm = PluginManager(self.xyz, self._path_sel.get_plugins_dir())
         self.xyz.km = core.KeyManager(self.xyz,
                                  self._path_sel.get_conf(const.KEYS_CONF_FILE))
-
-        #return
+        self.xyz.input = core.InputWrapper(self.xyz)
 
         self.xyz.screen = uilib.display.init_display()
         self.xyz.screen.register_palette(self.xyz.skin.get_palette_list())
@@ -103,24 +103,22 @@ class Launcher(object):
         self.xyz.top = lowui.Filler(uilib.Panel(self.xyz))
 
         self.xyz.screen.draw_screen(_dim, self.xyz.top.render(_dim, True))
-        k = uilib.Keys()
         self.xyz.km.bind(self.shutdown, "F10")
 
         while True:
             if self._exit:
                 break
 
-            _input = self.xyz.screen.get_input()
+            _input = self.xyz.input.get()
 
             if _input:
+                # TODO: Call method within process()
                 _binded = self.xyz.km.process(_input)
+
                 if _binded is not None:
                     _binded()
 
             self.xyz.screen.draw_screen(_dim, self.xyz.top.render(_dim, True))
-
-        #lk = self.xyz.pm.load(u":core:keycodes")
-        #lk.learn_keys()
 
         #_str = "PREVED"
         #_title = "TITLE"
@@ -285,7 +283,11 @@ Usage: %s [-c dir][-vh]
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def shutdown(self):
-        self._exit = True
+        _q = _(u"Really quit %s?" % const.PROG)
+        _title = const.PROG
+
+        if uilib.YesNoBox(self.xyz, self.xyz.top, _q, _title).show():
+            self._exit = True
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -295,3 +297,7 @@ Usage: %s [-c dir][-vh]
         """
 
         self.xyz.pm.shutdown()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    # TODO: get_input_wrap
