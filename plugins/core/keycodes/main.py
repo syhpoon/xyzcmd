@@ -122,8 +122,11 @@ class XYZPlugin(BasePlugin):
             if _p[0] == uilib.Keys.ESCAPE:
                 break
 
-            if _p[0] != _key:
-                _pressed[self._terminal][tuple(_p)] = _key
+            _cur = _pressed[self._terminal]
+            _tkey = tuple(_p)
+
+            if _p[0] != _key or (_tkey in _cur and tuple(_p[0]) != _cur[_tkey]):
+                _cur[_tkey] = _key
 
         _ask_msg = _(u"Save learned keys?")
 
