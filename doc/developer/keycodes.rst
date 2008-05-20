@@ -32,6 +32,6 @@ Thus all keycodes, which was learned by invoking ``learn_keys`` in xterm will
 be saved in ``xterm`` subsection and won't conflict with ones learned in
 ``cons25`` etc.
 
-So in case you need to recieve a user input, ``xyz.input.get()`` method should
+So in case you need to receive user input, ``xyz.input.get()`` method should
 be used, which will honor learned keycodes data, and not
 ``xyz.screen.get_input()``.
