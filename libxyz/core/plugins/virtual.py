@@ -14,14 +14,26 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-__all__ = (
-    'Namespace',
-    'BasePlugin',
-    'VirtualPlugin',
-    'PluginManager',
-)
+from libxyz.exceptions import PluginError
+from libxyz.core.plugins import BasePlugin
 
-from ns import Namespace
-from base import BasePlugin
-from virtual import VirtualPlugin
-from manager import PluginManager
+class VirtualPlugin(BasePlugin):
+    """
+    Virtual (sys) plugin
+    """
+
+    NAMESPACE = u"sys"
+
+    def __init__(self, xyz, name):
+        super(VirtualPlugin, self).__init__(xyz)
+
+        self.NAME = name
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def export(self, name, method):
+        """
+        Add new public method
+        """
+
+        self.public[name] = method

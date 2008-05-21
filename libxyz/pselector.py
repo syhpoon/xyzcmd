@@ -69,7 +69,7 @@ class PathSelector(object):
             if os.access(_file, os.R_OK):
                 return _file
 
-        return False
+        return None
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

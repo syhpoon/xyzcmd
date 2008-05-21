@@ -12,4 +12,4 @@ plugins {
 }
 
 # Skin to use
-skin = seablue
+skin = seablu

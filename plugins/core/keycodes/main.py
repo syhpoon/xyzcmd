@@ -29,7 +29,7 @@ class XYZPlugin(BasePlugin):
     Terminal keycodes handling
     """
 
-    NAME = u"KeyCodes"
+    NAME = u"keycodes"
     AUTHOR = u"Max E. Kuznecov ~syhpoon <mek@mek.uz.ua>"
     VERSION = u"0.1"
     NAMESPACE = u"core"

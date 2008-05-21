@@ -22,41 +22,23 @@ import os.path
 from libxyz.exceptions import PluginError
 from libxyz.exceptions import XYZValueError
 from libxyz.parser import FlatParser
+from libxyz.core.plugins import VirtualPlugin
+from libxyz.core.plugins import Namespace
 
-ABS_NS_PREFIX = u"xyz:plugins:"
-
-def normalize_ns_path(path):
+def ns_transform(func):
     """
-    Normalize plugin namespace path
-    """
-
-    _path = path
-
-    if _path.startswith(ABS_NS_PREFIX):
-        _path = _path.replace(ABS_NS_PREFIX, u"")
-    elif _path.startswith(u":"):
-        _path = _path[1:]
-
-    # Else suppose it is already normalized
-
-    _path = _path.replace(u":", u".")
-
-    return _path
-
-#++++++++++++++++++++++++++++++++++++++++++++++++
-
-def dec_normalize(method):
-    """
-    Normalize decorator
+    Transform passed ns plugin path to libxyz.core.plugins.Namespace instance
     """
 
-    def _norm(instance, *args, **kwargs):
+    def _trans(instance, *args, **kwargs):
         _path, _rest = args[0], args[1:]
-        _path = normalize_ns_path(_path)
 
-        return method(instance, _path, *_rest, **kwargs)
+        if not isinstance(_path, Namespace):
+            _path = Namespace(_path)
 
-    return _norm
+        return func(instance, _path, *_rest, **kwargs)
+
+    return _trans
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -67,6 +49,7 @@ class PluginManager(object):
     """
 
     PLUGIN_CLASS = u"XYZPlugin"
+    VIRTUAL_NAMESPACE = u"sys"
 
     def __init__(self, xyz, dirs):
         """
@@ -90,28 +73,38 @@ class PluginManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    @dec_normalize
+    @ns_transform
     def load(self, plugin, *initargs, **initkwargs):
         """
         Load and initiate required plugin
-        @param plugin: Absolute or relative plugin namespace path
+        @param plugin: Plugin namespace path
         @param initargs: Necessary arguments to initiate plugin
         @param initkwargs: Necessary kw arguments to initiate plugin
         """
 
-        if plugin not in self.enabled:
+        virtual = False
+
+        if self.is_virtual(plugin):
+            virtual = True
+
+        if not virtual and plugin.pfull not in self.enabled:
             raise PluginError(_(u"Plugin %s is disabled or does not exists" %
                                 plugin))
 
         if self.is_loaded(plugin):
-            return self.get_loaded(plugin)
+            return self.get_loaded(plugin.pfull)
 
-        _path = u".".join((plugin, u"main"))
+        if virtual:
+            # If reached here, plugin is not loaded
+            raise PluginError(_(u"Virtual plugin %s does not exist" % plugin))
+
+        plugin.set_method(u"main")
 
         # Import plugin
         # Plugin entry-point is XYZPlugin class in a main.py file
         try:
-            _loaded = __import__(_path, globals(), locals(),[self.PLUGIN_CLASS])
+            _loaded = __import__(plugin.internal, globals(), locals(),
+                                [self.PLUGIN_CLASS])
         except ImportError, e:
             raise PluginError(_(u"Unable to load plugin %s: %s" % (plugin, e)))
 
@@ -127,39 +120,43 @@ class PluginManager(object):
         # Run prepare (constructor)
         _obj.prepare()
 
-        self.set_loaded(plugin, _obj)
+        self.set_loaded(plugin.pfull, _obj)
 
         return _obj
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    @dec_normalize
+    @ns_transform
     def reload(self, plugin, *initargs, **initkwargs):
         """
         Force load plugin if it's already in cache.
         """
 
+        if self.is_virtual(plugin):
+            # Virtual plugins do not support reloading
+            return None
+
         if self.is_loaded(plugin):
-            self.del_loaded(plugin)
+            self.del_loaded(plugin.pfull)
 
         return self.load(plugin, *initargs, **initkwargs)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    @dec_normalize
+    @ns_transform
     def from_load(self, plugin, method):
         """
         Load method from plugin.
         If plugin was not loaded before, load and initiate it first.
 
-        @param plugin: Absoulute or relative plugin namespace path
+        @param plugin: Plugin namespace path
         @param method: Public method name
         """
 
         if not self.is_loaded(plugin):
-            _obj = self.load(plugin)
+            _obj = self.load(plugin.pfull)
         else:
-            _obj = self.get_loaded(plugin)
+            _obj = self.get_loaded(plugin.pfull)
 
         if method not in _obj.public:
             raise PluginError(_(u"%s plugin instance does not export "\
@@ -169,50 +166,50 @@ class PluginManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    @dec_normalize
+    @ns_transform
     def is_loaded(self, plugin):
         """
         Check if plugin already loaded
-        @param plugin: Absoulute or relative plugin namespace path
+        @param plugin: Plugin namespace path
         """
 
-        return plugin in self._loaded
+        return plugin.full in self._loaded
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    @dec_normalize
+    @ns_transform
     def get_loaded(self, plugin):
         """
         Return loaded and initiated inistance of plugin
-        @param plugin: Absoulute or relative plugin namespace path
+        @param plugin: Plugin namespace path
         """
 
-        return self._loaded[plugin]
+        return self._loaded[plugin.pfull]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    @dec_normalize
+    @ns_transform
     def set_loaded(self, plugin, inst):
         """
         Set loaded and initiated inistance of plugin
-        @param plugin: Absoulute or relative plugin namespace path
+        @param plugin: Plugin namespace path
         @param inst: Plugin instance
         """
 
-        self._loaded[plugin] = inst
+        self._loaded[plugin.pfull] = inst
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    @dec_normalize
+    @ns_transform
     def del_loaded(self, plugin):
         """
         Delete loaded instance from cache
-        @param plugin: Absoulute or relative plugin namespace path
+        @param plugin: Plugin namespace path
         """
 
         try:
-            self.shutdown(plugin)
-            del(self._loaded[plugin])
+            self.shutdown(plugin.pfull)
+            del(self._loaded[plugin.pfull])
         except KeyError:
             pass
 
@@ -239,10 +236,35 @@ class PluginManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def register_virtual(self, obj):
+        """
+        Register new virtual plugin.
+        @param obj: libxyz.core.VirtualPlugin object
+        """
+
+        if not isinstance(obj, VirtualPlugin):
+            raise XYZValueError(_(u"VirtualPlugin instance expected, got: %s" %
+                                  type(obj)))
+
+        self.set_loaded(obj.ns, obj)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def uregister_virtual(self, plugin, method):
+        # TODO:
+        pass
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def is_virtual(self, plugin):
+        return plugin.ns == self.VIRTUAL_NAMESPACE
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def _enabled_list(self):
         """
         Make list of enabled plugins
         """
 
         _data = self.xyz.conf[u"xyz"][u"plugins"]
-        return [normalize_ns_path(_pname) for _pname in _data if _data[_pname]]
+        return [_pname for _pname in _data if _data[_pname]]

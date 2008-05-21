@@ -21,39 +21,23 @@ class XYZPlugin(BasePlugin):
     Show installed plugins
     """
 
-    # Plugin name
     NAME = u"pluginlist"
-
-    # AUTHOR: Author name
     AUTHOR = u"Max E. Kuznecov ~syhpoon <mek@mek.uz.ua>"
-
-    # VERSION: Plugin version
     VERSION = u"0.1"
-
-    # Brief one line description
-    BRIEF_DESCRIPTION = u""
-
-    # Full plugin description
+    BRIEF_DESCRIPTION = u"Show plugin list"
     FULL_DESCRIPTION = u""
-
-    # NAMESPACE: Plugin namespace. For detailed information about
-    #            namespaces see Plugins chapter of XYZCommander user manual.
-    #            Full namespace path to method is:
-    #            xyz:plugins:misc:hello:SayHello
-
-    NAMESPACE = "core"
+    NAMESPACE = u"core"
 
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 
-        self.public = {}
+        self.public = {"show_list": self._show_list}
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def prepare(self):
-        pass
+    def _show_list(self):
+        """
+        Show plugins list
+        """
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def finalize(self):
         pass

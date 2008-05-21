@@ -2,8 +2,10 @@
 
 load :misc:hello:say_hello
 load :core:keycodes:*
+load :sys:launcher:*
 
-bind :misc:hello:say_hello to META-CTRL-f
+bind :sys:launcher:shutdown to F11
+bind :misc:hello:say_hello to META-H
 bind :core:keycodes:learn_keys to CTRL-k
 #bind :core:keycodes:get_keys to META-x context XXX
 

@@ -15,6 +15,7 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 from libxyz.exceptions import PluginError
+from libxyz.core.plugins import Namespace
 
 class BasePlugin(object):
     """
@@ -52,6 +53,8 @@ class BasePlugin(object):
 
         # List of exported public methods
         self.public = {}
+
+        self.ns = Namespace(u":".join(("", self.NAMESPACE, self.NAME)))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

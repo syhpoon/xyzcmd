@@ -18,6 +18,7 @@ import re
 
 import libxyz
 
+from libxyz.core.plugins import Namespace
 from libxyz.exceptions import PluginError
 from libxyz.exceptions import KeyManagerError
 from libxyz.exceptions import XYZValueError
@@ -61,7 +62,8 @@ class KeyManager(object):
             # No bind
             return None
 
-        return _method
+        if _method is not None:
+            return _method()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -182,43 +184,42 @@ class KeyManager(object):
         Load method
         """
 
+        _p = Namespace(method)
+
         # Already loaded
-        if method in self._loaded_methods:
+        if _p.full in self._loaded_methods:
             return
 
-        _m = MethodName(method)
-
         # Wildcard
-        if _m.method == _m.ALL:
-            self._loaded_methods[method] = _m.ALL
+        if _p.method == _p.ALL:
+            self._loaded_methods[_p.full] = _p.ALL
         else:
-            self._loaded_methods[method] = self.xyz.pm.from_load(_m.plugin,
-                                                                 _m.method)
+            self._loaded_methods[_p.full] = self.xyz.pm.from_load(_p, _p.method)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _bind(self, method, shortcut, context=None, force=False):
-        _m = MethodName(method)
+        _p = Namespace(method)
         _mobj = None
 
         # First check if methods were loaded by wildcard ALL
-        if method not in self._loaded_methods:
-            if "%s:%s" % (_m.plugin, _m.ALL) not in self._loaded_methods:
-                raise KeyManagerError(_(u"Method %s not loaded" % method))
+        if _p.full not in self._loaded_methods:
+            if "%s:%s" % (_p.plugin, _p.ALL) not in self._loaded_methods:
+                raise KeyManagerError(_(u"Method %s not loaded" % _p))
 
             # Else try to load specified method
             try:
-                _mobj = self.xyz.pm.from_load(_m.plugin, _m.method)
+                _mobj = self.xyz.pm.from_load(_p.plugin, _p.method)
             except PluginError, e:
                 raise KeyManagerError(_(u"Load error: %s" % e))
         else:
-            _mobj = self._loaded_methods[method]
+            _mobj = self._loaded_methods[_p.full]
 
         self.bind(_mobj, shortcut, context, force)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def bind(self, method, shortcut, context=None, force=False):
+    def bind(self, mobj, shortcut, context=None, force=False):
         """
         Bind a shortcut to a method
         @return: True on success, False otherwise, also raises exception
@@ -236,7 +237,7 @@ class KeyManager(object):
             # Already binded
             return
 
-        self._bind_data[context][_shortcut] = method
+        self._bind_data[context][_shortcut] = mobj
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -251,20 +252,3 @@ class KeyManager(object):
             context = self.CONTEXT_DEFAULT
 
         self._chain_keys[context] = _chain
-
-#++++++++++++++++++++++++++++++++++++++++++++++++
-
-class MethodName(object):
-    """
-    Abstract method name class
-    """
-
-    # Wildcard to load all public methods from plugin
-    ALL = "*"
-
-    def __init__(self, method):
-        _split = method.split(":")
-
-        self.full = method
-        self.plugin = ":".join(_split[:-1])
-        self.method = _split[-1]

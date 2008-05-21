@@ -99,35 +99,27 @@ class Launcher(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _run(self):
+        _launcher_plugin = core.plugins.VirtualPlugin(self.xyz, u"launcher")
+        _launcher_plugin.export(u"shutdown", self.shutdown)
+        self.xyz.pm.register_virtual(_launcher_plugin)
+
+        # TODO: Default binds
+        #self.xyz.km.bind(self.shutdown, uilib.Keys.F10)
+
         _dim = self.xyz.screen.get_cols_rows()
         self.xyz.top = lowui.Filler(uilib.Panel(self.xyz))
-
-        self.xyz.screen.draw_screen(_dim, self.xyz.top.render(_dim, True))
-        self.xyz.km.bind(self.shutdown, "F10")
 
         while True:
             if self._exit:
                 break
 
+            self.xyz.screen.draw_screen(_dim, self.xyz.top.render(_dim, True))
+
             _input = self.xyz.input.get()
 
             if _input:
-                # TODO: Call method within process()
-                _binded = self.xyz.km.process(_input)
-
-                if _binded is not None:
-                    _binded()
-
-            self.xyz.screen.draw_screen(_dim, self.xyz.top.render(_dim, True))
-
-        #_str = "PREVED"
-        #_title = "TITLE"
-        #w = uilib.MessageBox(self.xyz, self.xyz.top, _str, _title)
-        #w.show()
-        #w = uilib.ErrorBox(self.xyz, self.xyz.top, _str)
-        #w.show()
-        #w = uilib.YesNoBox(self.xyz, self.xyz.top, _str+u"?", _title)
-        #w.show()
+                # TODO: Call method within process() ??
+                self.xyz.km.process(_input)
 
         self.finalize()
 
@@ -297,7 +289,3 @@ Usage: %s [-c dir][-vh]
         """
 
         self.xyz.pm.shutdown()
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    # TODO: get_input_wrap

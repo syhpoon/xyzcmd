@@ -13,7 +13,7 @@ class XYZPlugin(BasePlugin):
     """
 
     # Plugin name
-    NAME = u"Hello"
+    NAME = u"hello"
 
     # AUTHOR: Author name
     AUTHOR = u"Max E. Kuznecov ~syhpoon <mek@mek.uz.ua>"

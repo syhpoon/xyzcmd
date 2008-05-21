@@ -48,19 +48,15 @@ Also some optional attributes can be defined:
 Namespaces
 ----------
 Namespaces are used to hierarchically organize exported methods and
-to prevent method-names collisions. Namespace path can be specified
-either in absolute or in minimal form.
+to prevent method-names collisions.
 
-Typical absolute namespace path is::
+Typical plugin namespace path is::
 
-   xyz:plugins:<namespace>:<plugin-name>
-
-Minimal path can be specified as following::
-   
    :<namespace>:<plugin-name>
 
 Here ``<namespace>`` is one of the available namespaces::
 
+   - sys   - Virtual system plugins TODO:
    - core  - Core plugins
    - ui    - User-interface related
    - vfs   - Virtual file-system related
@@ -145,8 +141,7 @@ Value can be of any common types:
 * Number: 99
 * List: 1, 2, literal, "quoted string"
 
-Note that one cannot use value_validator function to transform provided
-values as configration file is parsed before plugins are available to use.
+#TODO: remove? Note that one cannot use value_validator function to transform provided values as configration file is parsed before plugins are available to use.
 
 For example, if we'd have following block in plugins config::
 
@@ -158,3 +153,6 @@ Plugin :misc:hello can access ``show_version`` variable as::
 
    show_version = xyz.conf[u"plugins"][u":misc:hello"].show_version
 
+Virtual plugins
+---------------
+**TODO**
