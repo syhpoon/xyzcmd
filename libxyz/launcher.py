@@ -88,9 +88,14 @@ class Launcher(object):
 
         self.xyz.skin = core.Skin(_skin)
         self.xyz.pm = PluginManager(self.xyz, self._path_sel.get_plugins_dir())
+
+        self._set_internal_plugin()
+
         self.xyz.km = core.KeyManager(self.xyz,
                                  self._path_sel.get_conf(const.KEYS_CONF_FILE))
         self.xyz.input = core.InputWrapper(self.xyz)
+
+        self._bind_defaults()
 
         self.xyz.screen = uilib.display.init_display()
         self.xyz.screen.register_palette(self.xyz.skin.get_palette_list())
@@ -99,13 +104,6 @@ class Launcher(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _run(self):
-        _launcher_plugin = core.plugins.VirtualPlugin(self.xyz, u"launcher")
-        _launcher_plugin.export(u"shutdown", self.shutdown)
-        self.xyz.pm.register_virtual(_launcher_plugin)
-
-        # TODO: Default binds
-        #self.xyz.km.bind(self.shutdown, uilib.Keys.F10)
-
         _dim = self.xyz.screen.get_cols_rows()
         self.xyz.top = lowui.Filler(uilib.Panel(self.xyz))
 
@@ -118,10 +116,30 @@ class Launcher(object):
             _input = self.xyz.input.get()
 
             if _input:
-                # TODO: Call method within process() ??
                 self.xyz.km.process(_input)
 
         self.finalize()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _set_internal_plugin(self):
+        """
+        Set own virtual plugin
+        """
+
+        _launcher_plugin = core.plugins.VirtualPlugin(self.xyz, u"launcher")
+        _launcher_plugin.export(u"shutdown", self.shutdown)
+        self.xyz.pm.register_virtual(_launcher_plugin)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _bind_defaults(self):
+        """
+        Bind default shortcuts
+        User defined (if any) will override default values
+        """
+
+        self.xyz.km.bind(self.shutdown, uilib.Keys.F10)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

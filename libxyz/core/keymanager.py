@@ -194,7 +194,8 @@ class KeyManager(object):
         if _p.method == _p.ALL:
             self._loaded_methods[_p.full] = _p.ALL
         else:
-            self._loaded_methods[_p.full] = self.xyz.pm.from_load(_p, _p.method)
+            self._loaded_methods[_p.full] = self.xyz.pm.from_load(_p.pfull,
+                                                                  _p.method)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -204,12 +205,12 @@ class KeyManager(object):
 
         # First check if methods were loaded by wildcard ALL
         if _p.full not in self._loaded_methods:
-            if "%s:%s" % (_p.plugin, _p.ALL) not in self._loaded_methods:
+            if "%s:%s" % (_p.pfull, _p.ALL) not in self._loaded_methods:
                 raise KeyManagerError(_(u"Method %s not loaded" % _p))
 
             # Else try to load specified method
             try:
-                _mobj = self.xyz.pm.from_load(_p.plugin, _p.method)
+                _mobj = self.xyz.pm.from_load(_p.pfull, _p.method)
             except PluginError, e:
                 raise KeyManagerError(_(u"Load error: %s" % e))
         else:

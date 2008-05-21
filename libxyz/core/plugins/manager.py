@@ -82,17 +82,14 @@ class PluginManager(object):
         @param initkwargs: Necessary kw arguments to initiate plugin
         """
 
-        virtual = False
-
-        if self.is_virtual(plugin):
-            virtual = True
+        virtual = self.is_virtual(plugin)
 
         if not virtual and plugin.pfull not in self.enabled:
             raise PluginError(_(u"Plugin %s is disabled or does not exists" %
                                 plugin))
 
         if self.is_loaded(plugin):
-            return self.get_loaded(plugin.pfull)
+            return self.get_loaded(plugin)
 
         if virtual:
             # If reached here, plugin is not loaded
@@ -120,7 +117,7 @@ class PluginManager(object):
         # Run prepare (constructor)
         _obj.prepare()
 
-        self.set_loaded(plugin.pfull, _obj)
+        self.set_loaded(plugin, _obj)
 
         return _obj
 
@@ -137,7 +134,7 @@ class PluginManager(object):
             return None
 
         if self.is_loaded(plugin):
-            self.del_loaded(plugin.pfull)
+            self.del_loaded(plugin)
 
         return self.load(plugin, *initargs, **initkwargs)
 
@@ -154,9 +151,9 @@ class PluginManager(object):
         """
 
         if not self.is_loaded(plugin):
-            _obj = self.load(plugin.pfull)
+            _obj = self.load(plugin)
         else:
-            _obj = self.get_loaded(plugin.pfull)
+            _obj = self.get_loaded(plugin)
 
         if method not in _obj.public:
             raise PluginError(_(u"%s plugin instance does not export "\

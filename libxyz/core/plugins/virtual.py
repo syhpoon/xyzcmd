@@ -25,9 +25,9 @@ class VirtualPlugin(BasePlugin):
     NAMESPACE = u"sys"
 
     def __init__(self, xyz, name):
-        super(VirtualPlugin, self).__init__(xyz)
-
         self.NAME = name
+
+        super(VirtualPlugin, self).__init__(xyz)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
