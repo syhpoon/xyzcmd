@@ -3,7 +3,7 @@ Key-codes
 =========
 
 |XYZ| has an ability to bind different keystrokes (shortcuts) to some actions,
-usually to ones, exported by various plugins. In order to properly work on
+usually to methods, exported by various plugins. In order to properly work on
 any pseudo-terminal, there should be some kind of mapping different keycodes
 to a predefined set of phisical keys on a keyboard.
 And that's the termcap/terminfo database is for. It describes various
@@ -22,7 +22,7 @@ But fear not, |XYZ| has its own codes handler wrapper. It is accessible in
 press a bunch of keys.
 
 And even more, using keycodes data file, it is possible to completely
-redefine keys. For instance if one has F10 key remapped to physical TAB key,
+redefine keys. For instance if one had F10 key remapped to physical TAB key,
 then pressing TAB would cause the application to believe that F10 key
 was pressed.
 
@@ -33,5 +33,5 @@ be saved in ``xterm`` subsection and won't conflict with ones learned in
 ``cons25`` etc.
 
 So in case you need to receive user input, ``xyz.input.get()`` method should
-be used, which will honor learned keycodes data, and not
+be used, which will honour learned keycodes data, and not
 ``xyz.screen.get_input()``.
