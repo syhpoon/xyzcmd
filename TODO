@@ -1,5 +1,0 @@
-parser:
-    + (block) Вложенные блоки
-
-+ ERROR CONSOLE с выводом всех ошибок (logger plugin)
-+ Список биндов плагин
