@@ -13,7 +13,17 @@ Each parser has its own usage benefits depending on data needed to parse.
 
 General syntax
 --------------
-**TBD**
+* Blank chars are usually ignored.
+* Quoted string can be one-line: "quoted value",
+  or multiline:'''quoted value1,
+                  quoted value2,
+               '''
+* New-line char ends commented line if any.
+* Values can be provided as simple literals or quoted ones.
+* If value contains spaces or any other non-alphanumeric values it is better
+  to quote it or escape it using escapechar.
+* Variable can take list of values, separated by comma
+* Escaping can only be used in rval position.
 
 BlockParser
 -----------
@@ -66,6 +76,41 @@ BlockParser can take a bunch of options:
 **macrochar**
    Macro character (None to disable macros).
    *Default: &*
+
+Macros
+++++++
+BlockParser supports macros. Macros are special internal variables that get
+expanded upon parsing. Macro definition is similar to variable definition,
+but macro char (default '&') is prepended to var name::
+
+   &macro = value
+   var = &macro
+
+Macro can hold not only a single values, but a list of values as well::
+
+   &mlist = v1, v2, v3
+   var = &mlist
+
+Also macros can be nested::
+
+   &m1 = value1
+   &m2 = value2
+   &m3 = &m1, &m2
+   var = &m
+
+Here ``var`` will get list value ``value1, value2``.
+
+Example
++++++++
+Following example shows the simplest BlockParser usage case::
+
+   from libxyz.parser import BlockParser
+
+   parser = BlockParser()
+   result = parser.parse(file("super.conf"))
+
+Here result is a libxyz.parser.ParsedData instance contained all parsed data
+from super.conf file.
 
 FlatParser
 ----------
