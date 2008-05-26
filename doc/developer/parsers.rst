@@ -96,7 +96,7 @@ Also macros can be nested::
    &m1 = value1
    &m2 = value2
    &m3 = &m1, &m2
-   var = &m
+   var = &m3
 
 Here ``var`` will get list value ``value1, value2``.
 
