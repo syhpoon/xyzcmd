@@ -41,7 +41,8 @@ regular keys separated by hiphen::
    CTRL-x  means Control + x key
    META-L  means Escape + SHIFT + l key
 
-Please note that not all of the possible combinations make sense.
+.. note::
+   Please note that not all of the possible combinations make sense.
 
 Contexts
 ++++++++

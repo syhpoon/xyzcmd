@@ -4,9 +4,16 @@
 |XYZ| User Manual
 -----------------
 
-.. contents:: Table of contents
+Contents:
 
-.. include:: configs.rst
-.. include:: skins.rst
-.. include:: plugins.rst
-.. include:: vfs.rst
+.. toctree::
+   :maxdepth: 2
+
+   configs
+   skins
+   plugins
+   vfs
+
+------------------
+
+* :ref:`search`

@@ -17,7 +17,7 @@ more details).
 
 Plugin entry-point is a main.py file inside plugin directory.
 This file should contain class named ``XYZPlugin`` sublclassed from 
-libxyz.core.plugins.BasePlugin class.
+:class:`libxyz.core.plugins.BasePlugin` class.
 
 XYZPlugin class should define following mandatory attributes:
 
@@ -65,7 +65,7 @@ Here ``<namespace>`` is one of the available namespaces::
 Managment
 ---------
 All plugin management is performed using PluginManger instance, accessible as 
-``pm`` attribute of ``libxyz.core.XYZData`` object named ``xyz``.
+``pm`` attribute of :class:`libxyz.core.XYZData` object named ``xyz``.
 
 PluginManger supports following methods:
    
