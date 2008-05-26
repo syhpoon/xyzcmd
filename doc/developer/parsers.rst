@@ -14,10 +14,14 @@ Each parser has its own usage benefits depending on data needed to parse.
 General syntax
 --------------
 * Blank chars are usually ignored.
-* Quoted string can be one-line: "quoted value",
-  or multiline:'''quoted value1,
-                  quoted value2,
-               '''
+* Quoted string can be one-line: ``"quoted value"``,
+  or multiline::
+
+   '''
+   quoted value1,
+   quoted value2,
+   '''
+
 * New-line char ends commented line if any.
 * Values can be provided as simple literals or quoted ones.
 * If value contains spaces or any other non-alphanumeric values it is better
@@ -52,7 +56,7 @@ BlockParser can take a bunch of options:
 
 **delimiter**
    Delimiter char. It terminates single statement.
-   *Default is \n*
+   *Default: \\n*
 
 **validvars**
    A list of valid variable names.
@@ -60,8 +64,9 @@ BlockParser can take a bunch of options:
 
 **value_validator**
    A function that takes three args: current block, var and value
-   and validates them. In case value is invalid, XYZValueError must be raised.
-   Otherwise function must return required value, possibly modified.
+   and validates them. In case value is invalid, :exc:`XYZValueError` 
+   must be raised. Otherwise function must return required value,
+   possibly modified.
    *Default: None*
 
 **count**
@@ -109,8 +114,8 @@ Following example shows the simplest BlockParser usage case::
    parser = BlockParser()
    result = parser.parse(file("super.conf"))
 
-Here result is a libxyz.parser.ParsedData instance contained all parsed data
-from super.conf file.
+Here result is a :class:`libxyz.parser.ParsedData` instance contained
+all parsed data from conf file.
 
 FlatParser
 ----------

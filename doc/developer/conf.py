@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# XYZCommander Developer documentation build configuration file, created by
+# XYZCommander Developer Manual build configuration file, created by
 # sphinx-quickstart on Mon May 26 14:04:03 2008.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -125,7 +125,7 @@ html_last_updated_fmt = '%b %d, %Y'
 #html_file_suffix = ''
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'XYZCommander Developer Manualdoc'
+htmlhelp_basename = 'XYZCommander Developer Manual'
 
 
 # Options for LaTeX output

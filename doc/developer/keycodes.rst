@@ -18,20 +18,23 @@ in urwid internal codes handler).
 
 But fear not, |XYZ| has its own codes handler wrapper. It is accessible in
 ``:core:keycodes`` plugin methods.
-``learn_keys`` method invokes an interactive dialog and user is prompted to
-press a bunch of keys.
+:func:`learn_keys` method invokes an interactive dialog and user is prompted
+to press a bunch of keys.
 
 And even more, using keycodes data file, it is possible to completely
 redefine keys. For instance if one had F10 key remapped to physical TAB key,
 then pressing TAB would cause the application to believe that F10 key
 was pressed.
 
-Learned data is stored in *~/.xyzcmd/data/keycodes* file. Please note, that
-data is stored in subsections based on TERM environment variable value.
-Thus all keycodes, which was learned by invoking ``learn_keys`` in xterm will
-be saved in ``xterm`` subsection and won't conflict with ones learned in
-``cons25`` etc.
+Learned data is stored in :file:`~/.xyzcmd/data/keycodes` file.
 
-So in case you need to receive user input, ``xyz.input.get()`` method should
+.. note::
+
+   Please note, that data is stored in subsections based on TERM environment
+   variable value. Thus all keycodes, which was learned by invoking 
+   ``learn_keys`` in xterm will be saved in ``xterm``
+   subsection and won't conflict with ones learned in ``cons25`` etc.
+
+So in case you need to receive user input, :func:`xyz.input.get` method should
 be used, which will honour learned keycodes data, and not
-``xyz.screen.get_input()``.
+:func:`xyz.screen.get_input`.
