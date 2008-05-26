@@ -119,11 +119,66 @@ all parsed data from conf file.
 
 FlatParser
 ----------
-**TBD**
+FlatParser is simple linear parser, it is used to parse single-line expressions.
+Parseable format is following: ``var1 <assign> val1 <delimiter>``.
+
+FlatParser takes following options (all the options have the same meaning as
+the ones of BlockParser):
+
+* comment
+* assignchar
+* delimiter
+* validvars
+* value_validator
 
 RegexpParser
 ------------
-**TBD**
+As name implies, RegexpParser is used to parse files using regular expressions.
+
+RegexpParser constructor takes a single argument: a dictionary, where keys
+are compiled regular expressions (using :func:`re.compile`), and
+values are callback-functions.
+
+Upon matching, RegexpParser will call appropriate callback with
+:class:`MatchObject` as argument.
+
+Callback-function must raise :exc:`libxyz.exceptions.XYZValueError` in case
+of any error, or return anything otherwise.
+
+.. note::
+   RegexpParser is a line-based parser. Thus it cannot be used to parse
+   any non-linear multiline structures. BlockParser is used for it.
+
+If RegexpParser is unable to match a line within none of provided parsers,
+it will raise :exc:`libxyz.exceptions.ParseError`
+
+Example
++++++++
+A RegexpParser common usage example::
+
+   import re
+   from libxyz.plugins import RegexpParser
+
+   # Comment callback, just return
+   def cb_comment(mo):
+      return
+
+   # Assign expression callback, put variable and value to internal symtable
+   def cb_assign(mo):
+      global symtable
+
+      var = mo.group("variable")
+      val = mo.group("value")
+
+      symtable[var] = val
+
+   re_comment = re.compile(r"^\s*#.*$")
+   re_assign = re.compile(r"^\s*(?<variable>\w+)\s*=\s*(?<value>\w+)\s*$")
+
+   cbpool = {re_comment: cb_comment, re_assign: cb_assign}
+
+   parser = RegexpParser(cbpool)
+   parser.parser("# Comment\n x = y")
 
 MultiParser
 -----------
