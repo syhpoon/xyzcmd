@@ -178,8 +178,68 @@ A RegexpParser common usage example::
    cbpool = {re_comment: cb_comment, re_assign: cb_assign}
 
    parser = RegexpParser(cbpool)
-   parser.parser("# Comment\n x = y")
+   parser.parse("# Comment\n x = y")
 
 MultiParser
 -----------
-**TBD**
+So far we've seen all the available parsers in libxyz.
+But all of those parsers designed to parse single source from the beginning to
+the end. Quite often it is exactly what you want. But sometimes, you'd want
+to mix several different syntices in a single source. That's exactly
+the MultiParser is for. It's actually a wrapper around another parser types.
+
+MultiParser can take following options:
+
+**comment**
+   A commentary character.
+   *Default: #*
+
+**tokens**
+   A sequence of tokens.
+   *Default: ()*
+
+As its first argument, MultiParser constructor takes a dictionary, where
+keys could be either string, or sequence or compiled regexp and values
+are any valid parser instance.
+
+So MultiParser acts as follows:
+
+* Get a token from lexer
+* Try to match a token against any key in parsers dictionary
+* If matched, call appropriate parser instance :func:`parse` method
+* If not found, try to match a token against all the sequences in parsers dict
+* If not found try to match a token against all regular expressions in parser dict
+
+.. note::
+   Usually all the parsers provided to MultiParser, have option **count** set 
+   to 1. Becase parsing single expression does not mean that, the following
+   expression in source would be the same type and would require the
+   same parser to parse.
+
+And that's it.
+Let's assume we want to parse a configuration file with following syntax::
+
+   # Comment
+   VAR1: VAL1 # Flat expression
+
+   # Block expression
+   block {
+      var = val
+   }
+
+Now let's take a look at how we would manage to parse such a file::
+
+   import libxyz.parser as par
+   import re
+
+   # Parser options
+   flat_opts = {u"count": 1, u"assingchar": u":"}
+   block_opts = {u"count": 1}
+
+   flat_p = par.FlatParser(flat_opts)
+   block_p = par.BlockParser(block_opts)
+   multi_p = par.MultiParser({})
+   multi_p.register(re.compile(r"VAR\d+"), flat_p)
+   multi_p.register(u"block", block_p)
+
+   data = multi_p.parse(file("config.file"))
