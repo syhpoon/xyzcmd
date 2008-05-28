@@ -32,13 +32,14 @@ class Panel(lowui.WidgetWrap):
 
         _blocksize = libxyz.ui.Size(rows=22, cols=38)
 
-        self._blank = lowui.Text("")
-        self.block1 = Block(_blocksize, LocalVFSObject("/tmp"), self._attr)
+        self.block1 = Block(_blocksize, LocalVFSObject("/tmp"), self._attr,
+                            active=True)
         self.block2 = Block(_blocksize, LocalVFSObject("/"), self._attr)
 
         columns = lowui.Columns([self.block1.block, self.block2.block], 0)
         _status = lowui.Text("Status bar")
         _cmd = lowui.Text("# uname -a")
+
         self._widget = lowui.Pile([columns, _status, _cmd])
 
         super(Panel, self).__init__(self._widget)
@@ -59,16 +60,19 @@ class Block(object):
     Single block
     """
 
-    def __init__(self, size, vfsobj, attr_func):
+    def __init__(self, size, vfsobj, attr_func, active=False):
         """
         @param size: Block widget size
         @type size: L{libxyz.ui.Size}
         @param vfsobj:
         @param attr_func:
+        @param active:
         """
 
         self.size = size
         self.attr = attr_func
+
+        self._active = active
 
         _dir, _dirs, _files = vfsobj.walk()
 
@@ -83,7 +87,7 @@ class Block(object):
         self.info = lowui.AttrWrap(self.info, self.attr(u"info"))
 
         #self.block_cont = lowui.ListBox(_entries)
-        self.block_cont = Container(attr_func, _entries)
+        self.block_cont = Container(attr_func, _entries, self._active)
 
         self.block = lowui.Frame(self.block_cont, footer=self.info)
         self.block = libxyz.ui.Border(self.block,
@@ -99,15 +103,19 @@ class Container(lowui.BoxWidget):
     """
     """
 
-    def __init__(self, attr_func, entries):
+    def __init__(self, attr_func, entries, active=False):
         """
+        @param: attr_func:
         @param entries: List of container entries
         @type entries: List of VFSFile or subclasses
+        @param active:
         """
 
         self.attr = attr_func
         self.entries = entries
         self.selected = 0
+
+        self.active = active
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
@@ -124,7 +132,7 @@ class Container(lowui.BoxWidget):
         canvases = []
 
         for i in range(len(self.entries)):
-            if i == self.selected:
+            if self.active and i == self.selected:
                 x = lowui.TextCanvas(text=[self.entries[i].get_text()[0].encode("utf-8")], attr=[[(self.attr(u"cursor"), maxcol)]], maxcol=maxcol)
                 canvases.append((x, i, False))
             else:
