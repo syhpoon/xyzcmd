@@ -29,7 +29,6 @@ class Lexer(object):
          quoted value2,
       '''
     * New-line char ends commented line if any.
-    * Variable names are validated according to varre regexp.
     * Values can be provided as simple literals or quoted ones.
     * If value contains spaces or any other non-alphanumeric values it is better
       to quote it or escape it using escapechar.

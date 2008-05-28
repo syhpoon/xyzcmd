@@ -107,6 +107,8 @@ class Launcher(object):
         _dim = self.xyz.screen.get_cols_rows()
         self.xyz.top = lowui.Filler(uilib.Panel(self.xyz))
 
+        #self.xyz.pm.from_load(u":core:pluginlist", u"show_list")(_dim)
+
         while True:
             if self._exit:
                 break
@@ -129,7 +131,10 @@ class Launcher(object):
 
         _launcher_plugin = core.plugins.VirtualPlugin(self.xyz, u"launcher")
         _launcher_plugin.export(u"shutdown", self.shutdown)
-        self.xyz.pm.register_virtual(_launcher_plugin)
+        _launcher_plugin.VERSION = u"0.1"
+        _launcher_plugin.BRIEF_DESCRIPTION = u"Launcher plugin"
+
+        self.xyz.pm.register(_launcher_plugin)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -213,8 +218,7 @@ class Launcher(object):
                         }
         _plugins_p = parser.BlockParser(_plugins_opts)
 
-        _flat_vars = (u"skin",
-                     )
+        _flat_vars = (u"skin",)
         _flat_opts = {
                       u"count": 1,
                       u"assignchar": u"=",
@@ -293,6 +297,10 @@ Usage: %s [-c dir][-vh]
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def shutdown(self):
+        """
+        Quit program
+        """
+
         _q = _(u"Really quit %s?" % const.PROG)
         _title = const.PROG
 

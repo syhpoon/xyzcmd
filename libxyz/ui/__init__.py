@@ -33,6 +33,7 @@ __all__ = (
     'YesNoBox',
     'ErrorBox',
     'Panel',
+    'XYZListBox',
 )
 
 import urwid as lowui
@@ -51,3 +52,4 @@ from box_message import MessageBox
 from box_yesno import YesNoBox
 from box_error import ErrorBox
 from panel import Panel
+from xyzlistbox import XYZListBox

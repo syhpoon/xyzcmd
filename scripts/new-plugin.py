@@ -112,9 +112,7 @@ if __name__ == "__main__":
     if len(sys.argv) != 4:
         usage()
         sys.exit(1)
-    else:
-        pname, author, ns = sys.argv[1:]
 
-    write_plugin(pname, author, ns)
+    write_plugin(*sys.argv[1:])
 
     print "Plugin template created"

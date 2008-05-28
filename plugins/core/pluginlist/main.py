@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+import inspect
+
 import libxyz.ui as uilib
 
 from libxyz.ui import lowui
@@ -53,9 +55,8 @@ class XYZPlugin(BasePlugin):
                            PluginEntry(_obj, self.xyz.skin.attr, self._info)
                            for _obj in _plugins])
 
-        _list = uilib.XYZListBox(self.xyz, self.xyz.top, self._walker,
-                                 _(u"Active plugins list"))
-        _list.show()
+        uilib.XYZListBox(self.xyz, self.xyz.top, self._walker,
+                         _(u"Active plugins list")).show()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -64,8 +65,53 @@ class XYZPlugin(BasePlugin):
         Show plugin detailed info
         """
 
+        def make_args(func):
+            _args, _varargs, _varkw, _def = inspect.getargspec(func)
+
+            # We will be inspecting only methods, so always skip self
+            if len(_args) == 1:
+                return u""
+
+            _args = _args[1:]
+            _tmp = []
+
+            # No defaults
+            if _def is None:
+                _tmp = _args
+            else:
+                _delta = len(_args) - len(_def)
+
+                if _delta > 0:
+                    _tmp.extend(_args[:_delta])
+                    _args = _args[_delta:]
+
+                for _a, _d in zip(_args, _def):
+                    _tmp.append(u"=".join((unicode(_a), unicode(_d))))
+
+            return u",".join(_tmp)
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         _w = self._walker.get_focus()[0]
         _plugin = _w.plugin
 
-        uilib.MessageBox(self.xyz, self.xyz.top, "%s" %
-          str([(k, v.__doc__) for k,v in _plugin.public.iteritems()])).show()
+        _data = []
+
+        _divattr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"border")
+
+        _div = lowui.Divider(lowui.escape.utf8decode("─"), bottom=1)
+        _div = lowui.AttrWrap(_div, _divattr)
+
+        for k, v in _plugin.public.iteritems():
+            if v.__doc__ is not None:
+                _doc = v.__doc__.rstrip()
+            else:
+                _doc = v.__doc__
+
+            _data.append(lowui.Text(u"%s(%s): %s" % (k, make_args(v), _doc)))
+            _data.append(_div)
+
+        _method_walker = lowui.SimpleListWalker(_data)
+
+        uilib.XYZListBox(self.xyz, self.xyz.top, _method_walker,
+                         _(u"Plugin info %s" % _plugin.ns)).show()

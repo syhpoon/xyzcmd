@@ -105,9 +105,9 @@ class KeyManager(object):
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        _comment_re = re.compile("^\s*#.*$")
+        _comment_re = re.compile(r"^\s*#.*$")
 
-        _load_re = re.compile("""
+        _load_re = re.compile(r"""
         ^                  # begin
         \s*                # leading spaces
         load               # keywoard load
@@ -117,7 +117,7 @@ class KeyManager(object):
         $                  # EOL
         """, re.VERBOSE)
 
-        _bind_re = re.compile("""
+        _bind_re = re.compile(r"""
         ^                   # begin
         \s*                 # leading spaces
         bind                # keywoard bind
@@ -138,7 +138,7 @@ class KeyManager(object):
         $                   # end
         """, re.VERBOSE)
 
-        _chain_re = re.compile("""
+        _chain_re = re.compile(r"""
         ^                   # begin
         \s*                 # leading spaces
         set                 # keywoard set

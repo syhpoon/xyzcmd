@@ -80,3 +80,13 @@ class Namespace(object):
 
     def __repr__(self):
         return self.__str__()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __cmp__(self, other):
+        return cmp(self.full, other)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __len__(self):
+        return len(self.full)

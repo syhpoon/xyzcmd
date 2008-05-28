@@ -39,7 +39,7 @@ ui.widget {
 ui.box {
 	&BG = LIGHT_GRAY
 
-	title = WHITE, BLACK
+	title = WHITE, DEFAULT
 	box = BLACK, &BG
 	border = BLACK, &BG
 	mount = DEFAULT, &BG
@@ -63,4 +63,14 @@ ui.panel {
 	cursor = BLACK, &BG
 	info = BLACK, &BG
 	border = DEFAULT, DEFAULT
+}
+
+# XYZListBox
+ui.list_box {
+	&BG = LIGHT_GRAY
+
+	title = BLACK, &BG
+	border = BLACK, &BG
+	box = BLACK, &BG
+	selected = WHITE, DEFAULT
 }

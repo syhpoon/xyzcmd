@@ -21,8 +21,7 @@ import os.path
 
 from libxyz.exceptions import PluginError
 from libxyz.exceptions import XYZValueError
-from libxyz.parser import FlatParser
-from libxyz.core.plugins import VirtualPlugin
+from libxyz.core.plugins import BasePlugin
 from libxyz.core.plugins import Namespace
 
 def ns_transform(func):
@@ -175,13 +174,23 @@ class PluginManager(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @ns_transform
-    def get_loaded(self, plugin):
+    def get_loaded(self, plugin=None):
         """
         Return loaded and initiated inistance of plugin
         @param plugin: Plugin namespace path
         """
 
         return self._loaded[plugin.pfull]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_all_loaded(self):
+        """
+        Return all currenty loaded plugins as dictionary with plugins ns path
+        as keys and instances as values
+        """
+
+        return self._loaded
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -233,23 +242,17 @@ class PluginManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def register_virtual(self, obj):
+    def register(self, obj):
         """
-        Register new virtual plugin.
-        @param obj: libxyz.core.VirtualPlugin object
+        Register new plugin.
+        @param obj: libxyz.core.BasePlugin inherited instance
         """
 
-        if not isinstance(obj, VirtualPlugin):
-            raise XYZValueError(_(u"VirtualPlugin instance expected, got: %s" %
+        if not isinstance(obj, BasePlugin):
+            raise XYZValueError(_(u"BasePlugin instance expected, got: %s" %
                                   type(obj)))
 
         self.set_loaded(obj.ns, obj)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def uregister_virtual(self, plugin, method):
-        # TODO:
-        pass
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

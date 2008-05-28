@@ -62,3 +62,13 @@ ui.panel {
 	info = BLACK, LIGHT_GRAY
 	border = WHITE, DARK_BLUE
 }
+
+# XYZListBox
+ui.list_box {
+	&BG = LIGHT_GRAY
+
+	title = DARK_BLUE, &BG
+	border = DARK_BLUE, &BG
+	box = BLACK, &BG
+	selected = WHITE, DARK_BLUE
+}

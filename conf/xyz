@@ -9,7 +9,9 @@
 plugins {
 	:misc:hello > ENABLE
 	:core:keycodes > ENABLE
+	:core:pluginlist > ENABLE
 }
 
 # Skin to use
-skin = seablu
+#skin = monochrome
+skin = seablue

@@ -14,6 +14,9 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+import libxyz.ui as uilib
+from libxyz.ui import lowui
+
 class PluginEntry(lowui.FlowWidget):
     """
     Plugins list entry

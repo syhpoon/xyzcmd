@@ -44,7 +44,7 @@ class Border(lowui.WidgetWrap):
                 raise UIError(_(u"Invalid title type %s. "\
                                 u"Tuple or basetring expected" % type(_title)))
 
-            _len += 2 # " _text "
+            _len += 2 # " text "
 
         self.attr = attr
 

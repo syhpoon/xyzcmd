@@ -52,7 +52,11 @@ class YesNoBox(Box):
         self._buttons = self._init_buttons()
 
         _title = self._strip_title(title.replace(u"\n", u" "))
-        _title = (_title, self._attr(u"title"))
+
+        if _title:
+            _title = (_title, self._attr(u"title"))
+        else:
+            _title = None
 
         _mount = lowui.AttrWrap(lowui.Filler(lowui.Text(u"")),
                                 self._attr(u"mount"))

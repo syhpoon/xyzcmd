@@ -48,7 +48,7 @@ class XYZPlugin(BasePlugin):
         self.public = {
                        "learn_keys": self._learn_keys,
                        "delete_keys": self._del_saved_keys,
-                       "get_keys": self.get_keycodes,
+                       "get_keys": self._get_keycodes,
                       }
 
         self._keysfile = "keycodes"
@@ -161,7 +161,7 @@ class XYZPlugin(BasePlugin):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def get_keycodes(self, all=False):
+    def _get_keycodes(self, all=False):
         """
         Return saved keycodes data as dictionary.
         If all is True, return all saved data for all terminal types,

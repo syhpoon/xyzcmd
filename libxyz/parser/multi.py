@@ -41,7 +41,7 @@ class MultiParser(BaseParser):
         """
         @param parsers: dictionary containing string, list or
                         compiled regexp of keywords as key
-                        and *Parser object as value.
+                        and *Parser objects as values.
         @type parsers: dictionary with string or sequence keys
 
         @param opt: Options
@@ -85,13 +85,16 @@ class MultiParser(BaseParser):
             _p = None
 
             for _key in self.parsers:
+                # First string
                 if isinstance(_key, basestring) and _key == val:
                     _p = self.parsers[_key]
                     break
-                elif type(_key) is type(self._rx) and _key.match(val):
+                # Next sequence
+                elif hasattr(_key, "__contains__") and val in _key:
                     _p = self.parsers[_key]
                     break
-                elif hasattr(_key, "__contains__") and val in _key:
+                # Otherwise regexp
+                elif type(_key) is type(self._rx) and _key.match(val):
                     _p = self.parsers[_key]
                     break
 

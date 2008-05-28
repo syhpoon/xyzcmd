@@ -3,8 +3,10 @@
 load :misc:hello:say_hello
 load :core:keycodes:*
 load :sys:launcher:*
+load :core:pluginlist:show_list
 
-bind :sys:launcher:shutdown to F1
+bind :sys:launcher:shutdown to F10
+bind :core:pluginlist:show_list to F1
 bind :misc:hello:say_hello to META-;
 bind :core:keycodes:learn_keys to CTRL-k
 #bind :core:keycodes:get_keys to META-x context XXX

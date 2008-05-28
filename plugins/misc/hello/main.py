@@ -58,7 +58,6 @@ which shows greeting message box.\
 
     def _say_hello(self):
         """
-        Exported method
         Shows simple greeting dialog
         """
 
