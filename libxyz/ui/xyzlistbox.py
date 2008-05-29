@@ -27,7 +27,7 @@ class XYZListBox(lowui.WidgetWrap):
     # Skin rulesets resolution order
     resolution = (u"list_box", u"box", u"widget")
 
-    def __init__(self, xyz, body, walker, title):
+    def __init__(self, xyz, body, walker, title, dim=None):
         """
         @param xyz: XYZ data
         @param body: Top-level widget

@@ -8,32 +8,25 @@ from libxyz.core.plugins import BasePlugin
 class XYZPlugin(BasePlugin):
     "Plugin logger"
 
-    # Plugin name
     NAME = u"logger"
-
-    # AUTHOR: Author name
     AUTHOR = u"Max E. Kuznecov ~syhpoon <mek@mek.uz.ua>"
-
-    # VERSION: Plugin version
     VERSION = u"0.1"
+    BRIEF_DESCRIPTION = u"Logger console"
+    FULL_DESCRIPTION = u"Logger console is used to collect system messages."
+    NAMESPACE = u"core"
 
-    # Brief one line description
-    BRIEF_DESCRIPTION = u""
-
-    # Full plugin description
-    FULL_DESCRIPTION = u""
-
-    # NAMESPACE: Plugin namespace. For detailed information about
-    #            namespaces see Plugins chapter of XYZCommander user manual.
-    #            Full namespace path to method is:
-    #            xyz:plugins:misc:hello:SayHello
-
-    NAMESPACE = "core"
+    DOC = u"There are several message levels:\n"\
+          u"ERROR: Critical error. Program must be closed.\n"\
+          u"WARNING: Non-critical warning.\n"\
+          u"INFO: Informational message.\n"\
+          u"DEBUG: Debug messages.\n"\
+          u"Plugin configuration:\n"\
+          u"levels - a list of levels to track "
 
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 
-        self.public = {}
+        self.public = {"show_console": self._show_console}
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -45,3 +38,11 @@ class XYZPlugin(BasePlugin):
     def finalize(self):
         pass
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _show_console(self):
+        """
+        show_console
+        """
+
+        pass

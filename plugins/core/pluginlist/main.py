@@ -95,12 +95,19 @@ class XYZPlugin(BasePlugin):
         _w = self._walker.get_focus()[0]
         _plugin = _w.plugin
 
-        _data = []
-
         _divattr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"border")
-
         _div = lowui.Divider(lowui.escape.utf8decode("─"), bottom=1)
         _div = lowui.AttrWrap(_div, _divattr)
+
+        _data = []
+
+        if _plugin.FULL_DESCRIPTION is not None:
+            _data.append(lowui.Text(_plugin.FULL_DESCRIPTION))
+            _data.append(_div)
+
+        if _plugin.DOC is not None:
+            _data.append(lowui.Text(_plugin.DOC))
+            _data.append(_div)
 
         for k, v in _plugin.public.iteritems():
             if v.__doc__ is not None:

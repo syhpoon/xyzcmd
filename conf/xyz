@@ -10,6 +10,7 @@ plugins {
 	:misc:hello > ENABLE
 	:core:keycodes > ENABLE
 	:core:pluginlist > ENABLE
+	:core:logger > ENABLE
 }
 
 # Skin to use

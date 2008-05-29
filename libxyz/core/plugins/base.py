@@ -45,6 +45,9 @@ class BasePlugin(object):
     #                  the plugin is compatible with
     MIN_XYZ_VERSION = None
 
+    # Plugin documentation
+    DOC = None
+
     def __init__(self, xyz, *args, **kwargs):
         self.xyz = xyz
 

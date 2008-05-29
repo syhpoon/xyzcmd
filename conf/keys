@@ -1,15 +1,18 @@
-# Comment
+# 
+# Default keybinds
+#
 
 load :misc:hello:say_hello
 load :core:keycodes:*
 load :sys:launcher:*
 load :core:pluginlist:show_list
+load :core:logger:*
 
+bind :core:logger:show_console to F5
 bind :sys:launcher:shutdown to F10
 bind :core:pluginlist:show_list to F1
 bind :misc:hello:say_hello to META-;
 bind :core:keycodes:learn_keys to CTRL-k
-#bind :core:keycodes:get_keys to META-x context XXX
 
 #set chain key META-Q
 #set chain key META-L context PANEL

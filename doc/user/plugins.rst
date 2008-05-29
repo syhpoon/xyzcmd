@@ -45,6 +45,9 @@ Also some optional attributes can be defined:
    Minimal |XYZ| version the plugin can be used with.
    If none defined, plugin will be available to use with any |XYZ| version.
 
+**DOC**
+   Plugin documentation. Usually here configuration variables described.
+
 Namespaces
 ----------
 Namespaces are used to hierarchically organize exported methods and

@@ -23,11 +23,12 @@ Usage: new-plugin.py <plugin_name> <author> <namespace>
 import os
 import os.path
 import sys
+import time
 
 template = """\
 #-*- coding: utf8 -*
 #
-# Author <e-mail> year
+# %(author)s %(year)s
 #
 
 from libxyz.core.plugins import BasePlugin
@@ -55,7 +56,7 @@ class XYZPlugin(BasePlugin):
     #            Full namespace path to method is:
     #            xyz:plugins:misc:hello:SayHello
 
-    NAMESPACE = "%(ns)s"
+    NAMESPACE = u"%(ns)s"
 
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
@@ -83,6 +84,8 @@ def error(em):
 
 def write_plugin(pname, author, ns):
     global template
+
+    year = time.strftime("%Y")
 
     _cont = template % locals()
 
