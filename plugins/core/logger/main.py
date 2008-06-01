@@ -3,7 +3,14 @@
 # Author <e-mail> year
 #
 
+import libxyz.ui as uilib
+
+from libxyz.ui import lowui
 from libxyz.core.plugins import BasePlugin
+from libxyz.core import Queue
+
+from loglevel import LogLevel
+from logentry import LogEntry
 
 class XYZPlugin(BasePlugin):
     "Plugin logger"
@@ -12,37 +19,113 @@ class XYZPlugin(BasePlugin):
     AUTHOR = u"Max E. Kuznecov ~syhpoon <mek@mek.uz.ua>"
     VERSION = u"0.1"
     BRIEF_DESCRIPTION = u"Logger console"
-    FULL_DESCRIPTION = u"Logger console is used to collect system messages."
+    FULL_DESCRIPTION = u"Logger console is used to collect system messages.\n"\
+                       u"There are several message levels:\n"\
+                       u"ERROR: Critical error. Program must be closed.\n"\
+                       u"WARNING: Non-critical warning.\n"\
+                       u"INFO: Informational message.\n"\
+                       u"DEBUG: Debug messages.\n"\
+                       u"ALL: All of the above.\n"\
+                       u"If no level specified log nothing."
     NAMESPACE = u"core"
 
-    DOC = u"There are several message levels:\n"\
-          u"ERROR: Critical error. Program must be closed.\n"\
-          u"WARNING: Non-critical warning.\n"\
-          u"INFO: Informational message.\n"\
-          u"DEBUG: Debug messages.\n"\
-          u"Plugin configuration:\n"\
-          u"levels - a list of levels to track "
+    DOC = u"Plugin configuration:\n"\
+          u"levels - a list of levels to track\n"\
+          u"lines - max number of lines to be shown in logger console."
+
+    _DEFAULT_LINES = 100
 
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 
-        self.public = {"show_console": self._show_console}
+        self.public = {"show_console": self._show_console,
+                       "log": self._log,
+                      }
+
+        #TODO: Remove loglevel link from here
+        self.loglevel = LogLevel()
+
+        self._lines = self._DEFAULT_LINES
+        self._level = self.loglevel.NONE
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def prepare(self):
-        pass
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def finalize(self):
-        pass
+        self._process_config()
+        self._data = Queue(self._lines)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _show_console(self):
         """
-        show_console
+        Show logger console
         """
 
-        pass
+        # Queue is actually subclassed from list, but SimpleListWalker
+        # checks arg type by type(), not by isinstance()
+
+        _walker = lowui.SimpleListWalker(list(self._data))
+
+        uilib.XYZListBox(self.xyz, self.xyz.top, _walker,
+                        _(u"Logger console")).show()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _log(self, msg, level=None):
+        """
+        Add new message to log
+
+        @param msg: Message
+        @param level: Log level
+        @type level: L{LogLevel} attribute
+        """
+
+        if level is None:
+            level = self.loglevel.UNKNOWN
+
+        _attr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"selected")
+
+        if self._level & level:
+            self._data.append(LogEntry(msg, self.loglevel.str_level(level),
+                              _attr))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _process_config(self):
+        """
+        See what variables are defined in plugins.conf, and set default if
+        needed.
+        """
+
+        # Configuration for this plugin is not defined
+        if self.ns.pfull not in self.xyz.conf[u"plugins"]:
+            return
+
+        try:
+            self._lines = self.xyz.conf[u"plugins"][self.ns.pfull][u"lines"]
+        except (KeyError, ValueError):
+            pass
+
+        try:
+            self._level = self._calc_levels(
+                            self.xyz.conf[u"plugins"][self.ns.pfull][u"levels"])
+        except KeyError:
+            pass
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _calc_levels(self, level_list):
+        """
+        Parse levels from config
+        """
+
+        _level = self.loglevel.NONE
+
+        for _lvl in level_list:
+
+            try:
+                _level |= getattr(self.loglevel, _lvl)
+            except KeyError:
+                pass
+
+        return _level
