@@ -48,6 +48,9 @@ Also some optional attributes can be defined:
 **DOC**
    Plugin documentation. Usually here configuration variables described.
 
+**HOMEPAGE**
+   Plugin home-page
+
 Namespaces
 ----------
 Namespaces are used to hierarchically organize exported methods and

@@ -20,6 +20,7 @@ __all__ = (
     'UserData',
     'KeyManager',
     'InputWrapper',
+    'Queue',
     )
 
 from skin import Skin
@@ -27,3 +28,4 @@ from xyzdata import XYZData
 from userdata import UserData
 from keymanager import KeyManager
 from inputwrapper import InputWrapper
+from queue import Queue

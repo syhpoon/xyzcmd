@@ -1,1 +1,6 @@
 # Global plugins configuration file
+
+:core:logger {
+	levels = ALL
+	lines = 100
+}

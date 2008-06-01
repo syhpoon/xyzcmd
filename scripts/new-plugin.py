@@ -58,6 +58,16 @@ class XYZPlugin(BasePlugin):
 
     NAMESPACE = u"%(ns)s"
 
+    # MIN_XYZ_VERSION: Minimal XYZCommander version
+    #                  the plugin is compatible with
+    MIN_XYZ_VERSION = None
+
+    # Plugin documentation
+    DOC = None
+
+    # Plugin home-page
+    HOMEPAGE = None
+
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 

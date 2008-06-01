@@ -51,9 +51,9 @@ class XYZPlugin(BasePlugin):
         _plugins = sorted(self.xyz.pm.get_all_loaded().values(),
                           lambda x, y: cmp(x.ns, y.ns))
 
-        self._walker = lowui.SimpleListWalker([
-                           PluginEntry(_obj, self.xyz.skin.attr, self._info)
-                           for _obj in _plugins])
+        _sel_attr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"selected")
+        self._walker = lowui.SimpleListWalker([PluginEntry(_obj, _sel_attr,
+                                              self._info) for _obj in _plugins])
 
         uilib.XYZListBox(self.xyz, self.xyz.top, self._walker,
                          _(u"Active plugins list")).show()
@@ -109,6 +109,9 @@ class XYZPlugin(BasePlugin):
             _data.append(lowui.Text(_plugin.DOC))
             _data.append(_div)
 
+        _len = len(_plugin.public)
+        _i = 0
+
         for k, v in _plugin.public.iteritems():
             if v.__doc__ is not None:
                 _doc = v.__doc__.rstrip()
@@ -116,9 +119,14 @@ class XYZPlugin(BasePlugin):
                 _doc = v.__doc__
 
             _data.append(lowui.Text(u"%s(%s): %s" % (k, make_args(v), _doc)))
-            _data.append(_div)
+
+            _i += 1
+
+            if _i < _len:
+                _data.append(_div)
 
         _method_walker = lowui.SimpleListWalker(_data)
 
         uilib.XYZListBox(self.xyz, self.xyz.top, _method_walker,
                          _(u"Plugin info %s" % _plugin.ns)).show()
+

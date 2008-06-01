@@ -107,7 +107,35 @@ class Launcher(object):
         _dim = self.xyz.screen.get_cols_rows()
         self.xyz.top = lowui.Filler(uilib.Panel(self.xyz))
 
-        #self.xyz.pm.from_load(u":core:pluginlist", u"show_list")(_dim)
+        _logger = self.xyz.pm.load(u":core:logger")
+        _logger.log(u"Message 1", _logger.loglevel.ERROR)
+        _logger.log(u"Message 2", _logger.loglevel.WARNING)
+        _logger.log(u"Message 3", _logger.loglevel.INFO)
+        _logger.log(u"Message 3", _logger.loglevel.INFO)
+        _logger.log(u"Message 3", _logger.loglevel.INFO)
+        _logger.log(u"Message 3", _logger.loglevel.INFO)
+        _logger.log(u"Message 3", _logger.loglevel.INFO)
+        _logger.log(u"Message 3", _logger.loglevel.INFO)
+        _logger.log(u"Message 3", _logger.loglevel.INFO)
+        _logger.log(u"Message 3", _logger.loglevel.INFO)
+        _logger.log(u"Message 3", _logger.loglevel.INFO)
+        _logger.log(u"Message 3", _logger.loglevel.INFO)
+        _logger.log(u"Message 3", _logger.loglevel.INFO)
+        _logger.log(u"Message 3", _logger.loglevel.INFO)
+        _logger.log(u"Message 3", _logger.loglevel.INFO)
+        _logger.log(u"Message 3", _logger.loglevel.INFO)
+        _logger.log(u"He had read somewhere that the Eskimos had over two hundred different words for snow, without which their conversation would probably have got very monotonous. So they would distinguish between thin snow and thick snow, light snow and heavy snow, sludgy snow, brittle snow, snow that came in flurries, snow that came in drifts, snow that came in on the bottom of your neighbour's boots all over your nice clean igloo floor, the snows of winter, the snows of spring, the snows you remember from your childhood that were so much better than any of your modern snow, fine snow, feathery snow, hill snow, valley snow, snow that falls in the morning, snow that falls at night, snow that falls all of a sudden just when you were going out fishing, and snow that despite all your efforts to train them, the huskies have pissed on.", _logger.loglevel.INFO)
+        _logger.log(u"Message 5", _logger.loglevel.INFO)
+        _logger.log(u"Message 6", _logger.loglevel.INFO)
+        _logger.log(u"Message 7", _logger.loglevel.INFO)
+        _logger.log(u"Message 8",)
+        _logger.log(u"Message 9", _logger.loglevel.INFO)
+        _logger.log(u"Message a", _logger.loglevel.INFO)
+        _logger.log(u"Message b", _logger.loglevel.INFO)
+        _logger.log(u"Message t", _logger.loglevel.INFO)
+        _logger.log(u"Message r", _logger.loglevel.INFO)
+        _logger.log(u"Message y", _logger.loglevel.INFO)
+        _logger.log(u"Message z", _logger.loglevel.INFO)
 
         while True:
             if self._exit:
@@ -178,6 +206,7 @@ class Launcher(object):
         """
 
         self.xyz.conf[u"xyz"] = self._parse_conf_xyz()
+        self.xyz.conf[u"plugins"] = self._parse_conf_plugins()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -246,6 +275,55 @@ class Launcher(object):
 
         # Set default values if needed
         _data = _set_default(_data)
+
+        return _data
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _parse_conf_plugins(self):
+        """
+        Parse plugins config
+        """
+
+        def _validate(block, var, val):
+            if var == u"levels":
+                try:
+                    return [x.strip() for x in val.split(u",")]
+                except Exception:
+                    raise XYZValueError(_(u"Invalid value %s.\n"\
+                                          u"A list of log levels expected"
+                                          % val))
+            elif var == u"lines":
+                try:
+                    return abs(int(val))
+                except ValueError:
+                    raise XYZValueError(_(u"Invalid value %s.\n"\
+                                          u"A positive integer expected" % val))
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        _opts = {
+                 u"varre": re.compile("^[\w:-]+$"),
+                 u"assignchar": "=",
+                 u"value_validator": _validate,
+                }
+
+        _valid = (u"levels", u"lines")
+        _parser = parser.BlockParser(_opts)
+
+        _path = self._path_sel.get_conf(const.PLUGINS_CONF_FILE)
+
+        try:
+            _file = open(_path, "r")
+        except IOError, e:
+            self.error(_(u"Unable to open configuration file: %s" % e))
+
+        try:
+            _data = _parser.parse(_file)
+        except ParseError, e:
+            self.error(str(e))
+        finally:
+            _file.close()
 
         return _data
 

@@ -38,5 +38,8 @@ XYZ_CONF_FILE = u"xyz"
 # Keybindings configuration file name
 KEYS_CONF_FILE = u"keys"
 
+# Plugins configuration file name
+PLUGINS_CONF_FILE = u"plugins"
+
 # Default fallback skin name
 DEFAULT_SKIN = u"default"

@@ -48,6 +48,9 @@ class BasePlugin(object):
     # Plugin documentation
     DOC = None
 
+    # Plugin home-page
+    HOMEPAGE = None
+
     def __init__(self, xyz, *args, **kwargs):
         self.xyz = xyz
 

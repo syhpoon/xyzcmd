@@ -229,16 +229,16 @@ Let's assume we want to parse a configuration file with following syntax::
 
 Now let's take a look at how we would manage to parse such a file::
 
-   import libxyz.parser as par
+   import libxyz.parser
    import re
 
    # Parser options
    flat_opts = {u"count": 1, u"assingchar": u":"}
    block_opts = {u"count": 1}
 
-   flat_p = par.FlatParser(flat_opts)
-   block_p = par.BlockParser(block_opts)
-   multi_p = par.MultiParser({})
+   flat_p = libxyz.parser.FlatParser(flat_opts)
+   block_p = libxyz.parser.BlockParser(block_opts)
+   multi_p = libxyz.parser.MultiParser({})
    multi_p.register(re.compile(r"VAR\d+"), flat_p)
    multi_p.register(u"block", block_p)
 

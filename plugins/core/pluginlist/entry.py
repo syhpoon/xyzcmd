@@ -22,14 +22,14 @@ class PluginEntry(lowui.FlowWidget):
     Plugins list entry
     """
 
-    def __init__(self, plugin, attr, enter_cb):
+    def __init__(self, plugin, selected_attr, enter_cb):
         super(PluginEntry, self).__init__()
 
         self.plugin = plugin
         self.enter_cb = enter_cb
 
         self._text = u"%s%*s (%s)"
-        self._attr = attr(uilib.XYZListBox.resolution, u"selected")
+        self._attr = selected_attr
         self._content = lowui.Text(self._text)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
