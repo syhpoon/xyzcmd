@@ -75,14 +75,17 @@ All plugin management is performed using PluginManger instance, accessible as
 
 PluginManger supports following methods:
    
-**load <plugin>**
+**load(<plugin>)**
    Search for <plugin>, load it, instantiate, prepare (run prepare()) and return
 
-**reload <plugin>**
+**reload(<plugin>)**
    Force [re]loading <plugin> even if it is already stored in cache.
 
-**from <plugin> load <method>**
+**from_load(<plugin>, <method>)**
    Load public method <method> from <plugin>.
+
+**from_load_data(<plugin>, <obj>)**
+   Load public data <obj> from <plugin>.
 
 In both cases <plugin> is a plugin namespace path.
 
@@ -100,6 +103,8 @@ After plugin gets loaded for first time following actions take place:
 - An instance of XYZPlugin class created 
 - A prepare() method is run
 
+Plugin can export methods and data.
+
 Plugin exports its public methods via 'public' dictionary of BasePlugin class.
 Access to public methods can be performed as:
 
@@ -107,6 +112,16 @@ Access to public methods can be performed as:
    - ``plugin.method()``
 
 Second variant is simpler, cleaner and therefore preferable.
+
+Plugin exports its public data via 'public_data' dictionary of BasePlugin class.
+Access to public data can be performed as:
+
+   - ``plugin.public_data[u"obj"]``
+   - ``plugin[u"obj"]``
+
+So, in general, access to public methods is performed as attribute access:
+``plugin.method()``, and access to public data is performed as dict-item access:
+``plugin[u"data_obj"]``.
 
 Following is an example of typical plugin usage in python code
 (other cases will be described later)::
@@ -117,11 +132,17 @@ Following is an example of typical plugin usage in python code
    # Call public method say_hello() directly
    hello.say_hello()
 
+   # Access public data `some_object`
+   print hello[u"some_object"]
+
    # Or load only the method itself using from_load
    say_hello = self.xyz.pm.from_load(u":misc:hello", u"say_hello")
 
    # And then call
    say_hello()
+
+   # Load only the data object itself using from_load_data
+   some_object = self.xyz.pm.from_load_data(u":misc:hello", u"some_object")
 
 Alse see the `keys configuration file`_ for how to bind plugin methods to
 keyboard shortcuts.
