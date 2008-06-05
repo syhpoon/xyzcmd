@@ -163,6 +163,29 @@ class PluginManager(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @ns_transform
+    def from_load_data(self, plugin, obj):
+        """
+        Load data object from plugin.
+        If plugin was not loaded before, load and initiate it first.
+
+        @param plugin: Plugin namespace path
+        @param method: Public data object name
+        """
+
+        if not self.is_loaded(plugin):
+            _obj = self.load(plugin)
+        else:
+            _obj = self.get_loaded(plugin)
+
+        if obj not in _obj.public_data:
+            raise PluginError(_(u"%s plugin instance does not export "\
+                                u"data object %s" % (plugin, obj)))
+        else:
+            return _obj.public_data[obj]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @ns_transform
     def is_loaded(self, plugin):
         """
         Check if plugin already loaded

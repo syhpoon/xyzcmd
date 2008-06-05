@@ -39,7 +39,10 @@ class XYZListBox(lowui.WidgetWrap):
 
         self.xyz = xyz
 
-        _dim = self._get_dim()
+        if dim is None:
+            _dim = self._get_dim()
+        else:
+            _dim = dim
 
         _listbox = lowui.AttrWrap(lowui.ListBox(walker), self._attr(u"box"))
 

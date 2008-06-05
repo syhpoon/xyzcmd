@@ -26,7 +26,7 @@ class XYZData(object):
                  "km",
                  "conf",
                  "input",
-                 ]
+                ]
 
     def __init__(self):
         object.__setattr__(self, "screen", None)

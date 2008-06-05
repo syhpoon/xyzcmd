@@ -38,15 +38,16 @@ class XYZPlugin(BasePlugin):
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 
-        self.public = {"show_console": self._show_console,
-                       "log": self._log,
+        self.public = {u"show_console": self._show_console,
+                       u"log": self._log,
                       }
 
-        #TODO: Remove loglevel link from here
-        self.loglevel = LogLevel()
+        self._loglevel = LogLevel()
+
+        self.public_data = {u"loglevel": self._loglevel}
 
         self._lines = self._DEFAULT_LINES
-        self._level = self.loglevel.NONE
+        self._level = self._loglevel.NONE
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -66,8 +67,10 @@ class XYZPlugin(BasePlugin):
 
         _walker = lowui.SimpleListWalker(list(self._data))
 
+        _dim = tuple([x - 2 for x in self.xyz.screen.get_cols_rows()])
+
         uilib.XYZListBox(self.xyz, self.xyz.top, _walker,
-                        _(u"Logger console")).show()
+                         _(u"Logger console"), _dim).show()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -81,12 +84,12 @@ class XYZPlugin(BasePlugin):
         """
 
         if level is None:
-            level = self.loglevel.UNKNOWN
+            level = self._loglevel.UNKNOWN
 
         _attr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"selected")
 
         if self._level & level:
-            self._data.append(LogEntry(msg, self.loglevel.str_level(level),
+            self._data.append(LogEntry(msg, self._loglevel.str_level(level),
                               _attr))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -119,12 +122,12 @@ class XYZPlugin(BasePlugin):
         Parse levels from config
         """
 
-        _level = self.loglevel.NONE
+        _level = self._loglevel.NONE
 
         for _lvl in level_list:
 
             try:
-                _level |= getattr(self.loglevel, _lvl)
+                _level |= getattr(self._loglevel, _lvl)
             except KeyError:
                 pass
 

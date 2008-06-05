@@ -57,8 +57,13 @@ class BasePlugin(object):
         # Integer module version (for possible comparison)
         self.intversion = 0
 
-        # List of exported public methods
+        # Public methods dictionary
+        # Accessed as plugin attribute (plugin.method())
         self.public = {}
+
+        # Public data dictionary
+        # Accessed as plugin items (plugin["data"])
+        self.public_data = {}
 
         self.ns = Namespace(u":".join(("", self.NAMESPACE, self.NAME)))
 
@@ -69,10 +74,22 @@ class BasePlugin(object):
         Provide transparent access to public methods
         """
 
-        if method in self.public:
+        try:
             return self.public[method]
-        else:
+        except KeyError:
             raise AttributeError(_(u"%s is not a public method" % method))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __getitem__(self, obj):
+        """
+        Provide transparent access to public data
+        """
+
+        try:
+            return self.public_data[obj]
+        except KeyError:
+            raise AttributeError(_(u"%s is not a public data object " % obj))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

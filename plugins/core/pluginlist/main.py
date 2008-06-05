@@ -96,22 +96,35 @@ class XYZPlugin(BasePlugin):
         _plugin = _w.plugin
 
         _divattr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"border")
-        _div = lowui.Divider(lowui.escape.utf8decode("─"), bottom=1)
+        _titleattr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"title")
+        _div = lowui.Divider(lowui.escape.utf8decode("─"))
         _div = lowui.AttrWrap(_div, _divattr)
 
         _data = []
 
+        _empty = True
+
         if _plugin.FULL_DESCRIPTION is not None:
+            _empty = False
             _data.append(lowui.Text(_plugin.FULL_DESCRIPTION))
-            _data.append(_div)
 
         if _plugin.DOC is not None:
+            _empty = False
+            _data.append(uilib.Separator(_(u"Plugin doc"),
+                                         title_attr=_titleattr,
+                                         div_attr=_divattr))
+
             _data.append(lowui.Text(_plugin.DOC))
-            _data.append(_div)
+
+        if not _empty:
+            _data.append(uilib.Separator(_(u"Public methods"),
+                                         title_attr=_titleattr,
+                                         div_attr=_divattr))
 
         _len = len(_plugin.public)
         _i = 0
 
+        # Public methods
         for k, v in _plugin.public.iteritems():
             if v.__doc__ is not None:
                 _doc = v.__doc__.rstrip()
@@ -124,6 +137,8 @@ class XYZPlugin(BasePlugin):
 
             if _i < _len:
                 _data.append(_div)
+
+        # TODO: List of public data: name -> type()
 
         _method_walker = lowui.SimpleListWalker(_data)
 

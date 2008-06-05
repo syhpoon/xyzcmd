@@ -65,10 +65,11 @@ class PluginEntry(lowui.FlowWidget):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def keypress(self, (maxcol,), key):
+        # TODO: make logger builtin
         if key == uilib.Keys.ENTER:
             try:
                 self.enter_cb()
-            except TypeError:
+            except Exception:
                 pass
         else:
             return key

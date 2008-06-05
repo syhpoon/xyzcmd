@@ -62,7 +62,7 @@ Typical plugin namespace path is::
 
 Here ``<namespace>`` is one of the available namespaces::
 
-   - sys   - Virtual system plugins TODO:
+   - sys   - Virtual system plugins
    - core  - Core plugins
    - ui    - User-interface related
    - vfs   - Virtual file-system related
@@ -167,8 +167,6 @@ Value can be of any common types:
                        Value'''
 * Number: 99
 * List: 1, 2, literal, "quoted string"
-
-#TODO: remove? Note that one cannot use value_validator function to transform provided values as configration file is parsed before plugins are available to use.
 
 For example, if we'd have following block in plugins config::
 
