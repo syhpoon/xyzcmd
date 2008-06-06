@@ -4,11 +4,11 @@
 
 load :misc:hello:say_hello
 load :core:keycodes:*
-load :sys:launcher:*
 load :core:pluginlist:show_list
-load :core:logger:*
+load :sys:launcher:*
+load :sys:logger:*
 
-bind :core:logger:show_console to F5
+bind :sys:logger:show_console to F5
 bind :sys:launcher:shutdown to F10
 bind :core:pluginlist:show_list to F1
 bind :misc:hello:say_hello to META-;

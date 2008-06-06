@@ -34,6 +34,7 @@ import libxyz.core as core
 from libxyz.ui import lowui
 from libxyz.version import Version
 from libxyz.core.plugins import PluginManager
+from libxyz.core import logger
 
 from libxyz.exceptions import XYZValueError
 from libxyz.exceptions import XYZRuntimeError
@@ -89,6 +90,7 @@ class Launcher(object):
         self.xyz.skin = core.Skin(_skin)
         self.xyz.pm = PluginManager(self.xyz, self._path_sel.get_plugins_dir())
 
+        self.init_logger()
         self._set_internal_plugin()
 
         self.xyz.km = core.KeyManager(self.xyz,
@@ -107,37 +109,9 @@ class Launcher(object):
         _dim = self.xyz.screen.get_cols_rows()
         self.xyz.top = lowui.Filler(uilib.Panel(self.xyz))
 
-        _logger = self.xyz.pm.load(u":core:logger")
-        _level = _logger[u"loglevel"]
-
-        _logger.log(u"Message 1", _level.ERROR)
-        _logger.log(u"Message 2", _level.WARNING)
-        _logger.log(u"Message 3", _level.INFO)
-        _logger.log(u"Message 3", _level.INFO)
-        _logger.log(u"Message 3", _level.INFO)
-        _logger.log(u"Message 3", _level.INFO)
-        _logger.log(u"Message 3", _level.INFO)
-        _logger.log(u"Message 3", _level.INFO)
-        _logger.log(u"Message 3", _level.INFO)
-        _logger.log(u"Message 3", _level.INFO)
-        _logger.log(u"Message 3", _level.INFO)
-        _logger.log(u"Message 3", _level.INFO)
-        _logger.log(u"Message 3", _level.INFO)
-        _logger.log(u"Message 3", _level.INFO)
-        _logger.log(u"Message 3", _level.INFO)
-        _logger.log(u"Message 3", _level.INFO)
-        _logger.log(u"He had read somewhere that the Eskimos had over two hundred different words for snow, without which their conversation would probably have got very monotonous. So they would distinguish between thin snow and thick snow, light snow and heavy snow, sludgy snow, brittle snow, snow that came in flurries, snow that came in drifts, snow that came in on the bottom of your neighbour's boots all over your nice clean igloo floor, the snows of winter, the snows of spring, the snows you remember from your childhood that were so much better than any of your modern snow, fine snow, feathery snow, hill snow, valley snow, snow that falls in the morning, snow that falls at night, snow that falls all of a sudden just when you were going out fishing, and snow that despite all your efforts to train them, the huskies have pissed on.", _level.INFO)
-        _logger.log(u"Message 5", _level.INFO)
-        _logger.log(u"Message 6", _level.INFO)
-        _logger.log(u"Message 7", _level.INFO)
-        _logger.log(u"Message 8")
-        _logger.log(u"Message 9", _level.INFO)
-        _logger.log(u"Message a", _level.INFO)
-        _logger.log(u"Message b", _level.INFO)
-        _logger.log(u"Message t", _level.INFO)
-        _logger.log(u"Message r", _level.INFO)
-        _logger.log(u"Message y", _level.INFO)
-        _logger.log(u"Message z", _level.INFO)
+        xyzlog.log(u"Message 1", xyzlog.loglevel.ERROR)
+        xyzlog.log(u"Message 2", xyzlog.loglevel.WARNING)
+        xyzlog.log(u"Message 3", xyzlog.loglevel.INFO)
 
         while True:
             if self._exit:
@@ -202,6 +176,22 @@ class Launcher(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def init_logger(self):
+        """
+        Initiate Logger object and set it to builtin namespace
+        """
+
+        import __builtin__
+
+        _log_level = self.xyz.conf[u"xyz"][u"log_level"]
+        _log_lines = self.xyz.conf[u"xyz"][u"log_lines"]
+
+        _logger = core.logger.Logger(self.xyz, _log_level, _log_lines)
+
+        __builtin__.__dict__["xyzlog"] = _logger
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def parse_configs(self):
         """
         Parse configuration
@@ -232,6 +222,8 @@ class Launcher(object):
         def _set_default(data):
             for _required in (
                               (u"skin", const.DEFAULT_SKIN),
+                              (u"log_level", logger.LogLevel().ALL),
+                              (u"log_lines", 100),
                               (u"plugins", parser.ParsedData(u"plugins")),
                              ):
                 if _required[0] not in data:
@@ -249,7 +241,7 @@ class Launcher(object):
                         }
         _plugins_p = parser.BlockParser(_plugins_opts)
 
-        _flat_vars = (u"skin",)
+        _flat_vars = (u"skin", u"log_level", u"log_lines")
         _flat_opts = {
                       u"count": 1,
                       u"assignchar": u"=",
