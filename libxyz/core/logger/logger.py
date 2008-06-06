@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+import re
+
 import libxyz.ui as uilib
 
 from libxyz.ui import lowui
@@ -98,6 +100,15 @@ class Logger(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def clear(self):
+        """
+        Clear log queue
+        """
+
+        self._data.clear()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def _calc_levels(self, level_list):
         """
         Parse levels from config
@@ -123,7 +134,10 @@ class Logger(object):
         _logger_plugin = VirtualPlugin(self.xyz, u"logger")
         _logger_plugin.export(u"show_console", self.show_console)
         _logger_plugin.export(u"log", self.log)
+        _logger_plugin.export(u"clear", self.clear)
         _logger_plugin.VERSION = u"0.1"
         _logger_plugin.BRIEF_DESCRIPTION = u"Logger plugin"
+        _logger_plugin.FULL_DESCRIPTION = re.sub(r"\ {2,}",
+                                                 r"", self.__doc__).strip()
 
         self.xyz.pm.register(_logger_plugin)

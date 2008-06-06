@@ -92,56 +92,72 @@ class XYZPlugin(BasePlugin):
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+        def _add_public_data():
+            if _plugin.public_data:
+                _data.append(uilib.Separator(_(u"Public data"),
+                                             title_attr=_titleattr,
+                                             div_attr=_divattr))
+
+                _dlen = len(_plugin.public_data)
+                _di = 0
+
+                for k, v in _plugin.public_data.iteritems():
+                    _data.append(lowui.Text(u"%s: %s" % (k, type(v))))
+
+                    _di += 1
+
+                    if _di < _dlen:
+                        _data.append(_div)
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        def _add_public_methods():
+            _data.append(uilib.Separator(_(u"Public methods"),
+                                         title_attr=_titleattr,
+                                         div_attr=_divattr))
+
+            _len = len(_plugin.public)
+            _i = 0
+
+            for k, v in _plugin.public.iteritems():
+                if v.__doc__ is not None:
+                    _doc = v.__doc__.rstrip()
+                else:
+                    _doc = v.__doc__
+
+                _data.append(lowui.Text(u"%s(%s): %s" %
+                             (k, make_args(v), _doc)))
+
+                _i += 1
+
+                if _i < _len:
+                    _data.append(_div)
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         _w = self._walker.get_focus()[0]
         _plugin = _w.plugin
 
         _divattr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"border")
         _titleattr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"title")
-        _div = lowui.Divider(lowui.escape.utf8decode("─"))
-        _div = lowui.AttrWrap(_div, _divattr)
+        _div = lowui.Text("")
 
         _data = []
 
-        _empty = True
-
         if _plugin.FULL_DESCRIPTION is not None:
-            _empty = False
             _data.append(lowui.Text(_plugin.FULL_DESCRIPTION))
 
         if _plugin.DOC is not None:
-            _empty = False
             _data.append(uilib.Separator(_(u"Plugin doc"),
                                          title_attr=_titleattr,
                                          div_attr=_divattr))
 
             _data.append(lowui.Text(_plugin.DOC))
 
-        if not _empty:
-            _data.append(uilib.Separator(_(u"Public methods"),
-                                         title_attr=_titleattr,
-                                         div_attr=_divattr))
-
-        _len = len(_plugin.public)
-        _i = 0
-
-        # Public methods
-        for k, v in _plugin.public.iteritems():
-            if v.__doc__ is not None:
-                _doc = v.__doc__.rstrip()
-            else:
-                _doc = v.__doc__
-
-            _data.append(lowui.Text(u"%s(%s): %s" % (k, make_args(v), _doc)))
-
-            _i += 1
-
-            if _i < _len:
-                _data.append(_div)
-
-        # TODO: List of public data: name -> type()
+        _add_public_data()
+        _add_public_methods()
 
         _method_walker = lowui.SimpleListWalker(_data)
 
         uilib.XYZListBox(self.xyz, self.xyz.top, _method_walker,
                          _(u"Plugin info %s" % _plugin.ns)).show()
-

@@ -36,3 +36,12 @@ class Queue(list):
             del(self[0])
 
         self.append(item)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def clear(self):
+        """
+        Clear queue
+        """
+
+        del self[:]

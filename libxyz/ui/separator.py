@@ -24,13 +24,12 @@ class Separator(lowui.FlowWidget):
     ignore_focus = True
 
     def __init__(self, title, div_char=None, title_attr=None, div_attr=None,
-                 align=None, top=0, bottom=0):
+                 top=0, bottom=0):
         """
         @param title: Title
         @param div_char: Character to repeat across line
         @param title_attr: Attribute of title text
         @param div_attr: Attribute of divider line
-        @param align: TODO:
         @param top: number of blank lines above
         @param bottom: number of blank lines below
         """
@@ -40,8 +39,6 @@ class Separator(lowui.FlowWidget):
         _title = " %s " % title
 
         self.title_len = len(_title)
-        # TODO: align
-        self.align = align
         self.div_char = lowui.escape.utf8decode("─")
         self.div_attr = div_attr
         self.top = top
@@ -69,16 +66,22 @@ class Separator(lowui.FlowWidget):
         """
 
         sep_len = (maxcol - self.title_len) / 2
+        _len = sep_len * 2 + self.title_len
+
+        if _len != maxcol:
+            _offset = abs(maxcol - _len)
+        else:
+            _offset = 0
 
         canv_begin = lowui.Text((self.div_attr, self.div_char * sep_len))
         canv_begin = canv_begin.render((maxcol,))
         canv_text = self.text.render((maxcol,))
-        canv_end = lowui.Text((self.div_attr, self.div_char * sep_len))
+        canv_end = lowui.Text((self.div_attr, self.div_char *(sep_len+_offset)))
         canv_end = canv_end.render((maxcol,))
 
         canv = lowui.CanvasJoin([(canv_begin, None, False, sep_len),
                                  (canv_text, None, False, self.title_len),
-                                 (canv_end, None, False, sep_len)])
+                                 (canv_end, None, False, sep_len + _offset)])
 
         if self.top or self.bottom:
             canv.pad_trim_top_bottom(self.top, self.bottom)

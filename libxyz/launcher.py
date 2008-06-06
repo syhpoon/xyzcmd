@@ -109,10 +109,6 @@ class Launcher(object):
         _dim = self.xyz.screen.get_cols_rows()
         self.xyz.top = lowui.Filler(uilib.Panel(self.xyz))
 
-        xyzlog.log(u"Message 1", xyzlog.loglevel.ERROR)
-        xyzlog.log(u"Message 2", xyzlog.loglevel.WARNING)
-        xyzlog.log(u"Message 3", xyzlog.loglevel.INFO)
-
         while True:
             if self._exit:
                 break
@@ -160,7 +156,7 @@ class Launcher(object):
         try:
             _opts, _args = getopt.getopt(sys.argv[1:], self.cmdopts)
         except getopt.GetoptError, e:
-            print str(e)
+            self.error(str(e))
             self.usage()
             self.quit()
 
@@ -361,7 +357,11 @@ Usage: %s [-c dir][-vh]
         Print error message and optionally quit
         """
 
-        print msg
+        try:
+            xyzlog.log(msg)
+        except NameError:
+            # Before logger initiated, print errors to stdout
+            print msg
 
         if quit:
             self.quit()

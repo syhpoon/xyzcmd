@@ -140,10 +140,12 @@ class Container(lowui.BoxWidget):
 
         combined = lowui.CanvasCombine(canvases)
 
-        if len(self.entries) < maxrow:
-            combined.pad_trim_top_bottom(0, maxrow - len(self.entries))
-        elif len(self.entries) > maxrow:
-            combined.trim_end(len(self.entries) - maxrow)
+        _len = len(self.entries)
+
+        if _len < maxrow:
+            combined.pad_trim_top_bottom(0, maxrow - _len)
+        elif _len > maxrow:
+            combined.trim_end(_len - maxrow)
 
         return combined
 
