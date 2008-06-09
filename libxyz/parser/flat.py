@@ -34,7 +34,8 @@ class FlatParser(BaseParser):
     STATE_VARIABLE = 0
     STATE_ASSIGN = 1
     STATE_VALUE = 2
-    STATE_DELIM = 3
+    STATE_LIST_VALUE = 3
+    STATE_DELIM = 4
 
     DEFAULT_OPT = {
                    u"comment": u"#",
@@ -43,6 +44,7 @@ class FlatParser(BaseParser):
                    u"validvars": (),
                    u"value_validator": None,
                    u"count": 0,
+                   u"list_separator": u",",
                    }
 
     def __init__(self, opt=None, default_data=None):
@@ -68,6 +70,9 @@ class FlatParser(BaseParser):
             - count: How many blocks to parse. If count <= 0 - will parse
               all available.
               Type: integer
+            - list_separator: Character to separate elements in list
+              Type: I{string (single char)}
+              Default: ,
 
         @param default_data: Dictionary with default values.
         """
@@ -78,6 +83,7 @@ class FlatParser(BaseParser):
 
         self._parsed = 0
         self._result = {}
+        self._current_list = []
         self._lexer = None
 
         self.opt = opt or self.DEFAULT_OPT
@@ -87,6 +93,7 @@ class FlatParser(BaseParser):
             self.STATE_VARIABLE: self._process_state_variable,
             self.STATE_ASSIGN: self._process_state_assign,
             self.STATE_VALUE: self._process_state_value,
+            self.STATE_LIST_VALUE: self._process_state_list_value,
             self.STATE_DELIM: self._process_state_delim,
         }
 
@@ -99,7 +106,12 @@ class FlatParser(BaseParser):
 
         self._cleanup()
 
-        _tokens = (self.assignchar, self.delimiter)
+        _tokens = (
+                   self.assignchar,
+                   self.delimiter,
+                   self.list_separator
+                  )
+
         self._lexer = Lexer(source, _tokens, self.comment)
 
         try:
@@ -111,11 +123,16 @@ class FlatParser(BaseParser):
                 else:
                     _lex, _val = _res
 
-                if _val == u"\n" and self._state != self.STATE_DELIM:
+                if _val == u"\n" and self._state not in \
+                (self.STATE_DELIM, self.STATE_LIST_VALUE):
                     continue
                 self._parse_table[self._state](_val)
         except LexerError, e:
             self.error(str(e))
+
+        # Finish assembling value
+        if self._state == self.STATE_LIST_VALUE:
+            self._process_state_list_value(None)
 
         self._check_complete()
 
@@ -147,19 +164,37 @@ class FlatParser(BaseParser):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _process_state_value(self, word):
-        _value = word
+        self._current_list.append(word)
+        self._state = self.STATE_LIST_VALUE
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _process_state_list_value(self, word):
+        if word == self.list_separator:
+            self._state = self.STATE_VALUE
+            return
+
+        if len(self._current_list) == 1:
+            _value = self._current_list[0]
+        else:
+            _value = tuple(self._current_list)
 
         if self.value_validator:
             try:
-                _value = self.value_validator(self._varname, word)
+                _value = self.value_validator(self._varname, _value)
             except XYZValueError, e:
                 self.error(_(u"Invalid value: %s" % str(e)))
 
         self._result[self._varname] = _value
         self._parsed += 1
         self._varname = None
+
+        self._current_list = []
         self._lexer.escaping_off()
         self._state = self.STATE_DELIM
+
+        if word is not None:
+            self._lexer.unget(word)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
