@@ -339,6 +339,7 @@ ui.block2 {
                     }
 
         _opt2 = {"tokens": (":",)}
+
         multi = MultiParser(_parsers, _opt2)
 
         data = multi.parse(src)
@@ -456,6 +457,19 @@ class FlatParsing(unittest.TestCase):
         _p = FlatParser(_opt)
 
         self.assert_(_p.parse("A: CORRECT_VALUE"))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testListValue(self):
+        """
+        Check for proper list values parsing
+        """
+
+        _p = FlatParser()
+        _src = "var : l, i, s ,t"
+
+        _r = _p.parse(_src)
+        self.assert_(isinstance(_r["var"], tuple))
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 

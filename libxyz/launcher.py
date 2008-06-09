@@ -109,6 +109,12 @@ class Launcher(object):
         _dim = self.xyz.screen.get_cols_rows()
         self.xyz.top = lowui.Filler(uilib.Panel(self.xyz))
 
+        xyzlog.log(u"TEST ERROR", xyzlog.loglevel.ERROR)
+        xyzlog.log(u"TEST WARN", xyzlog.loglevel.WARNING)
+        xyzlog.log(u"TEST INFO", xyzlog.loglevel.INFO)
+        xyzlog.log(u"TEST DEBUG", xyzlog.loglevel.DEBUG)
+        xyzlog.log(u"TEST ERROR2", xyzlog.loglevel.ERROR)
+
         while True:
             if self._exit:
                 break
@@ -203,7 +209,7 @@ class Launcher(object):
         Parse main config
         """
 
-        def _validate(block, var, val):
+        def _validate_plugins(block, var, val):
             if val == u"ENABLE":
                 return True
             elif val == u"DISABLE":
@@ -212,6 +218,29 @@ class Launcher(object):
                 raise XYZValueError(_(u"Invalid value %s.\n"\
                                       u"Available values are: "\
                                       u"ENABLED, DISABLE" % val))
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        def _validate_main(var, val):
+            if var == u"log_level":
+                _log = logger.LogLevel()
+
+                if not isinstance(val, tuple):
+                    val = (val,)
+                try:
+                    return [getattr(_log, x) for x in val]
+                except Exception:
+                    raise XYZValueError(_(u"Invalid value %s.\n"\
+                                          u"A list of valid log levels expected"
+                                          % unicode(val)))
+            elif var == u"log_lines":
+                try:
+                    return abs(int(val))
+                except ValueError:
+                    raise XYZValueError(_(u"Invalid value %s.\n"\
+                                          u"A positive integer expected" % val))
+            else:
+                return val
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -233,7 +262,7 @@ class Launcher(object):
                          u"count": 1,
                          u"varre": re.compile("^[\w:-]+$"),
                          u"assignchar": ">",
-                         u"value_validator": _validate,
+                         u"value_validator": _validate_plugins,
                         }
         _plugins_p = parser.BlockParser(_plugins_opts)
 
@@ -242,6 +271,7 @@ class Launcher(object):
                       u"count": 1,
                       u"assignchar": u"=",
                       u"validvars": _flat_vars,
+                      u"value_validator": _validate_main,
                      }
         _flat_p = parser.FlatParser(_flat_opts)
 
@@ -275,30 +305,11 @@ class Launcher(object):
         Parse plugins config
         """
 
-        def _validate(block, var, val):
-            if var == u"levels":
-                try:
-                    return [x.strip() for x in val.split(u",")]
-                except Exception:
-                    raise XYZValueError(_(u"Invalid value %s.\n"\
-                                          u"A list of log levels expected"
-                                          % val))
-            elif var == u"lines":
-                try:
-                    return abs(int(val))
-                except ValueError:
-                    raise XYZValueError(_(u"Invalid value %s.\n"\
-                                          u"A positive integer expected" % val))
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
         _opts = {
                  u"varre": re.compile("^[\w:-]+$"),
                  u"assignchar": "=",
-                 u"value_validator": _validate,
                 }
 
-        _valid = (u"levels", u"lines")
         _parser = parser.BlockParser(_opts)
 
         _path = self._path_sel.get_conf(const.PLUGINS_CONF_FILE)

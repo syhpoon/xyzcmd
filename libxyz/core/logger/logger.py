@@ -50,10 +50,6 @@ class Logger(object):
             pass
 
         self.loglevel = LogLevel()
-
-        if isinstance(levels, basestring):
-            levels = (levels,)
-
         self.tracked_levels = self._calc_levels(levels)
 
         self._lines = lines
@@ -94,6 +90,7 @@ class Logger(object):
 
         _attr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"selected")
 
+        # TODO: check for correct levels and lines
         if self.tracked_levels & level:
             self._data.append(LogEntry(msg, self.loglevel.str_level(level),
                               _attr))
@@ -118,7 +115,7 @@ class Logger(object):
 
         for _lvl in level_list:
             try:
-                _level |= getattr(self.loglevel, _lvl)
+                _level |= _lvl
             except KeyError:
                 pass
 

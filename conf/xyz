@@ -13,8 +13,11 @@ plugins {
 }
 
 # Skin to use
-#skin = monochrome
-skin = seablue
+skin = monochrome
+#skin = seablue
 
-log_level = ALL
+# Log levels to track
+log_level = INFO,DEBUG,NONE,ALL,NONE
+
+# Maximum number of entries to keep
 log_lines = 100

@@ -2,13 +2,14 @@
 # Default keybinds
 #
 
-load :misc:hello:say_hello
 load :core:keycodes:*
 load :core:pluginlist:show_list
 load :sys:launcher:*
 load :sys:logger:*
 
-bind :sys:logger:show_console to F5
+load :misc:hello:say_hello
+
+bind :sys:logger:show_console to F2
 bind :sys:launcher:shutdown to F10
 bind :core:pluginlist:show_list to F1
 bind :misc:hello:say_hello to META-;

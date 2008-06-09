@@ -65,6 +65,27 @@ class XYZPlugin(BasePlugin):
         Show plugin detailed info
         """
 
+        def _add_info():
+            if _plugin.AUTHOR is not None:
+                _data.append(lowui.Text(_(u"Author: %s" % _plugin.AUTHOR)))
+
+            if _plugin.VERSION is not None:
+                _data.append(lowui.Text(_(u"Version: %s" % _plugin.VERSION)))
+
+            if _plugin.MIN_XYZ_VERSION is not None:
+                _data.append(lowui.Text(_(u"Minimal compatible version: %s"
+                                          % _plugin.MIN_XYZ_VERSION)))
+
+            if _plugin.HOMEPAGE is not None:
+                _data.append(lowui.Text(_(u"Homepage: %s" % _plugin.HOMEPAGE)))
+
+            _data.append(_div)
+
+            if _plugin.FULL_DESCRIPTION is not None:
+                _data.append(lowui.Text(_plugin.FULL_DESCRIPTION))
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         def make_args(func):
             _args, _varargs, _varkw, _def = inspect.getargspec(func)
 
@@ -144,8 +165,7 @@ class XYZPlugin(BasePlugin):
 
         _data = []
 
-        if _plugin.FULL_DESCRIPTION is not None:
-            _data.append(lowui.Text(_plugin.FULL_DESCRIPTION))
+        _add_info()
 
         if _plugin.DOC is not None:
             _data.append(uilib.Separator(_(u"Plugin doc"),
