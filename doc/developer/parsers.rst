@@ -120,7 +120,8 @@ all parsed data from conf file.
 FlatParser
 ----------
 FlatParser is simple linear parser, it is used to parse single-line expressions.
-Parseable format is following: ``var1 <assign> val1 <delimiter>``.
+Parseable format is following:
+``var1 <assign> val1[<list_separator>,...] <delimiter>``.
 
 FlatParser takes following options (all the options have the same meaning as
 the ones of BlockParser):
@@ -130,6 +131,7 @@ the ones of BlockParser):
 * delimiter
 * validvars
 * value_validator
+* list_separator
 
 RegexpParser
 ------------
@@ -146,8 +148,8 @@ Callback-function must raise :exc:`libxyz.exceptions.XYZValueError` in case
 of any error, or return anything otherwise.
 
 .. note::
-   RegexpParser is a line-based parser. Thus it cannot be used to parse
-   any non-linear multiline structures. BlockParser is used for it.
+   RegexpParser is a line-based parser. Thus it is not suitable for parsing
+   any non-linear multiline structures. Use BlockParser instead.
 
 If RegexpParser is unable to match a line within none of provided parsers,
 it will raise :exc:`libxyz.exceptions.ParseError`
@@ -157,11 +159,13 @@ Example
 A RegexpParser common usage example::
 
    import re
-   from libxyz.plugins import RegexpParser
+   from libxyz.parsers import RegexpParser
 
    # Comment callback, just return
    def cb_comment(mo):
       return
+
+   symtable = {}
 
    # Assign expression callback, put variable and value to internal symtable
    def cb_assign(mo):
