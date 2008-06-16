@@ -28,7 +28,7 @@ class Logger(object):
     """
     Logger console is used to collect system messages.
     There are several message levels:
-    ERROR: Critical error. Program must be closed.
+    ERROR: Critical error.
     WARNING: Non-critical warning.
     INFO: Informational message.
     DEBUG: Debug messages.
@@ -65,8 +65,7 @@ class Logger(object):
         """
 
         # Queue is actually subclassed from list, but SimpleListWalker
-        # checks arg type by type(), not by isinstance()
-
+        # checks arg type by type(), not by isinstance(), so cast explicitly
         _walker = lowui.SimpleListWalker(list(self._data))
 
         _dim = tuple([x - 2 for x in self.xyz.screen.get_cols_rows()])
@@ -88,12 +87,11 @@ class Logger(object):
         if level is None:
             level = self.loglevel.UNKNOWN
 
-        _attr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"selected")
+        _sel_attr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"selected")
 
-        # TODO: check for correct levels and lines
         if self.tracked_levels & level:
             self._data.append(LogEntry(msg, self.loglevel.str_level(level),
-                              _attr))
+                              _sel_attr))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -114,10 +112,7 @@ class Logger(object):
         _level = self.loglevel.NONE
 
         for _lvl in level_list:
-            try:
-                _level |= _lvl
-            except KeyError:
-                pass
+            _level |= _lvl
 
         return _level
 

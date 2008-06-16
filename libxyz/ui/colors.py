@@ -27,6 +27,8 @@ class Color(object):
     ctype = u"base"
 
     def __init__(self, color):
+        # TODO: set colors as attributes by metclass??
+
         if color not in self.colors:
             raise XYZValueError(_(u"Invalid %s color: %s" % \
             (self.ctype, str(color))))
@@ -141,6 +143,34 @@ class Palette(object):
             _ma = self.ma.color
 
         return (self.name, self.fg.color, self.bg.color, _ma)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def set_fg(self, fg):
+        """
+        Set foreground color
+        """
+
+        if not isinstance(fg, Foreground):
+            raise XYZValueError(_(u"Invalid argument type %s, "\
+                                  u"libxyz.ui.color.Foreground instance "\
+                                  u"expected." % type(fg)))
+
+        self.fg = fg
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def set_bg(self, bg):
+        """
+        Set background color
+        """
+
+        if not isinstance(bg, Background):
+            raise XYZValueError(_(u"Invalid argument type %s, "\
+                                  u"libxyz.ui.color.Background instance "\
+                                  u"expected." % type(bg)))
+
+        self.bg = bg
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

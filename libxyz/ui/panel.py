@@ -25,12 +25,14 @@ class Panel(lowui.WidgetWrap):
     Panel is used to display filesystem hierarchy
     """
 
+    context = u"PANEL"
     resolution = (u"panel", u"widget")
 
     def __init__(self, xyz):
         self.xyz = xyz
 
-        _blocksize = libxyz.ui.Size(rows=22, cols=38)
+        _size = self.xyz.screen.get_cols_rows()
+        _blocksize = libxyz.ui.Size(rows=_size[1] - 2, cols=_size[0]/2-2)
 
         self.block1 = Block(_blocksize, LocalVFSObject("/tmp"), self._attr,
                             active=True)
@@ -38,11 +40,32 @@ class Panel(lowui.WidgetWrap):
 
         columns = lowui.Columns([self.block1.block, self.block2.block], 0)
         _status = lowui.Text("Status bar")
-        _cmd = lowui.Text("# uname -a")
 
-        self._widget = lowui.Pile([columns, _status, _cmd])
+        self._cmd = libxyz.ui.Cmd(xyz, xyz.conf[u"xyz"][u"cmd_prompt"])
+        self._widget = lowui.Pile([columns, _status, self._cmd])
 
         super(Panel, self).__init__(self._widget)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def repl(self):
+        """
+        Start working loop
+        """
+
+        _dim = self.xyz.screen.get_cols_rows()
+
+        while True:
+            self.xyz.screen.draw_screen(_dim, self.xyz.top.render(_dim, True))
+
+            _input = self.xyz.input.get()
+
+            if _input:
+                _meth = self.xyz.km.process(_input, self.context)
+
+                # No binds for PANEL context
+                if _meth is None:
+                    self._cmd.keypress(_dim, _input)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -86,7 +109,6 @@ class Block(object):
         self.info = lowui.Padding(self.info, align.LEFT, self.size.cols)
         self.info = lowui.AttrWrap(self.info, self.attr(u"info"))
 
-        #self.block_cont = lowui.ListBox(_entries)
         self.block_cont = Container(attr_func, _entries, self._active)
 
         self.block = lowui.Frame(self.block_cont, footer=self.info)
@@ -113,7 +135,7 @@ class Container(lowui.BoxWidget):
 
         self.attr = attr_func
         self.entries = entries
-        self.selected = 0
+        self.selected = 3
 
         self.active = active
 
@@ -152,4 +174,9 @@ class Container(lowui.BoxWidget):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def keypress(self, size, key):
-        pass
+        if key == "down":
+            self.selected += 1
+        elif key == "up":
+            self.selected -= 1
+
+        return key

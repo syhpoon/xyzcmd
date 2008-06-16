@@ -36,7 +36,7 @@ class XYZPlugin(BasePlugin):
 
     BRIEF_DESCRIPTION = u"Setup terminal keycodes"
 
-    FULL_DESCRIPTION = u"KeyCodes plugin is used to properly "\
+    FULL_DESCRIPTION = u"keycodes plugin is used to properly "\
                        u"configure terminal keycodes.\n"\
                        u"For each terminal type keycodes are stored "\
                        u"independently. Terminal type determined by examining "\

@@ -68,3 +68,9 @@ ui.list_box {
 	title = DARK_BLUE, LIGHT_GRAY
 	selected = WHITE, DARK_BLUE
 }
+
+# Command line widget
+ui.cmd {
+	prompt = WHITE, DARK_BLUE
+	text = LIGHT_GRAY, DARK_BLUE
+}

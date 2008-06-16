@@ -63,7 +63,7 @@ class KeyManager(object):
             return None
 
         if _method is not None:
-            return _method()
+            return _method
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

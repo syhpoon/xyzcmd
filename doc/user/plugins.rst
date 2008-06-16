@@ -158,15 +158,8 @@ configuration file. Its syntax is simple::
  }
 
 So single block contains configuration for one plugin.
-Value can be of any common types:
-
-* Literal: literal_value
-* String: "string value"
-* Multiline string: '''Multiline
-                       String
-                       Value'''
-* Number: 99
-* List: 1, 2, literal, "quoted string"
+Value can be of any common types recognized by lexer. See developer's manual,
+chapter *Parsers*.
 
 For example, if we'd have following block in plugins config::
 

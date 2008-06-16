@@ -96,3 +96,7 @@ KeyManager will wait for next shortcut in chain until the same chain key
 pressed again or timeout reached.
 Thus, pressing ``CTRL-j META-1`` in ``BOX`` context will trigger
 KeyManager to lookup for shortcut ``CTRL-j META-1``.
+
+xyz
+----
+**TODO**

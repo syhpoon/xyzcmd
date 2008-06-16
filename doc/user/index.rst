@@ -12,6 +12,7 @@ Contents:
    configs
    skins
    plugins
+   stdplugins
    vfs
 
 ------------------

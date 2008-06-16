@@ -24,11 +24,13 @@ class LogEntry(lowui.FlowWidget):
     Log message entry
     """
 
-    def __init__(self, msg, level, selected_attr, write_time=True):
+    def __init__(self, msg, level, selected_attr, entry_attr=None,
+                 write_time=True):
         """
         @param msg: Message
         @param level: Log level
         @param selected_attr: Atrribute of selected entry
+        @param entry_attr: Entry text attribute
         @param write_time: Whether to write timestamp in entry
         """
 
@@ -43,7 +45,7 @@ class LogEntry(lowui.FlowWidget):
 
         self._text = u"%(_time_clause)s(%(level)s) %(msg)s" % locals()
         self._sel_attr = selected_attr
-
+        self._entry_attr = entry_attr
         self._content = lowui.Text(self._text)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -62,7 +64,10 @@ class LogEntry(lowui.FlowWidget):
         if focus:
             self._content.set_text((self._sel_attr, self._text))
         else:
-            self._content.set_text(self._text)
+            if self._entry_attr is not None:
+                self._content.set_text((self._entry_attr, self._text))
+            else:
+                self._content.set_text(self._text)
 
         return self._content.render((maxcol,), focus)
 

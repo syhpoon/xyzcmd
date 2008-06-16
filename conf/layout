@@ -19,10 +19,7 @@ layout default {
 	row {
 		MenuBar: F1-Menu, F2-Menu, F3-Menu;
 	}
-	[
-		Panel1;
-		Panel2;
-	]
+	[Panel1; Panel2]
 	[StatusBar]
 	[CmdLine]
 }

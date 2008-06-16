@@ -90,7 +90,7 @@ class Box(lowui.WidgetWrap):
 
     def _attr(self, name):
         """
-        Find palette
+        Find attribute
         """
 
         return self.skin.attr(self.resolution, name)

@@ -18,6 +18,11 @@ is a skin name.
 Skin-files may be located in skins subdirectory of xyzcmd main installation
 path or in user .xyz/skins directory.
 
+.. note::
+   For every palette defined in skin, a separate color pair is used, so
+   keep in mind that a terminal has a limited number of available color pairs.
+   And there would be an error if you define too much of them.
+
 Constants
 ---------
 
@@ -205,7 +210,7 @@ Priorities can be customized. This can be done using priority ruleset::
 User interface (UI) widgets
 ---------------------------
 
-Allmost all aspects of UI look-n-feel can be customized using ``ui.*`` skin
+Almost all aspects of UI look-n-feel can be customized using ``ui.*`` skin
 rulesets.
 
 Every widget defines a member called ``resolution`` which contains
@@ -228,7 +233,7 @@ For example the MessageBox widget requires three resources to be defined:
 - mount
 - box
 
-So ruleset may look as::
+So ruleset may look like following::
 
    ui.message_box {
       mount = YELLOW, DARK_GREEN

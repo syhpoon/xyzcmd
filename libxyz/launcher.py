@@ -101,30 +101,17 @@ class Launcher(object):
 
         self.xyz.screen = uilib.display.init_display()
         self.xyz.screen.register_palette(self.xyz.skin.get_palette_list())
+        self.xyz.skin.set_screen(self.xyz.screen)
         self.xyz.screen.run_wrapper(self._run)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _run(self):
         _dim = self.xyz.screen.get_cols_rows()
-        self.xyz.top = lowui.Filler(uilib.Panel(self.xyz))
+        panel = uilib.Panel(self.xyz)
+        self.xyz.top = lowui.Filler(panel)
 
-        xyzlog.log(u"TEST ERROR", xyzlog.loglevel.ERROR)
-        xyzlog.log(u"TEST WARN", xyzlog.loglevel.WARNING)
-        xyzlog.log(u"TEST INFO", xyzlog.loglevel.INFO)
-        xyzlog.log(u"TEST DEBUG", xyzlog.loglevel.DEBUG)
-        xyzlog.log(u"TEST ERROR2", xyzlog.loglevel.ERROR)
-
-        while True:
-            if self._exit:
-                break
-
-            self.xyz.screen.draw_screen(_dim, self.xyz.top.render(_dim, True))
-
-            _input = self.xyz.input.get()
-
-            if _input:
-                self.xyz.km.process(_input)
+        panel.repl()
 
         self.finalize()
 
@@ -150,6 +137,7 @@ class Launcher(object):
         User defined (if any) will override default values
         """
 
+        #TODO: instead of explicit binding parse default keys conf
         self.xyz.km.bind(self.shutdown, uilib.Keys.F10)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -245,11 +233,14 @@ class Launcher(object):
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         def _set_default(data):
+            # TODO: Remove required from here but parse default xyz conf
+            # in system dir instead
             for _required in (
                               (u"skin", const.DEFAULT_SKIN),
                               (u"log_level", logger.LogLevel().ALL),
                               (u"log_lines", 100),
                               (u"plugins", parser.ParsedData(u"plugins")),
+                              (u"cmd_prompt", u""),
                              ):
                 if _required[0] not in data:
                     data[_required[0]] = _required[1]
@@ -266,7 +257,7 @@ class Launcher(object):
                         }
         _plugins_p = parser.BlockParser(_plugins_opts)
 
-        _flat_vars = (u"skin", u"log_level", u"log_lines")
+        _flat_vars = (u"skin", u"log_level", u"log_lines", "cmd_prompt")
         _flat_opts = {
                       u"count": 1,
                       u"assignchar": u"=",

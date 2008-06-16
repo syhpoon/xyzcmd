@@ -16,6 +16,7 @@
 
 import os
 import re
+import string
 
 from libxyz.exceptions import ParseError
 from libxyz.exceptions import SkinError
@@ -42,7 +43,12 @@ class Skin(object):
         else:
             self.path = path
 
+        # Number of iterations to try to generate random attribute name
+        self._gen_rand_iter = 20
+
         self._data = {}
+
+        self.screen = None
 
         # Default fallback palette
         self._default = uilib.colors.Palette(u"default",
@@ -70,6 +76,11 @@ class Skin(object):
 
     def __getitem__(self, key):
         return self._data[key]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def set_screen(self, screen):
+        self.screen = screen
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -179,7 +190,7 @@ class Skin(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _make_name(self, block, resource):
-        return "%s@%s" % (resource, block)
+        return "%(resource)s@%(block)s" % locals()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -210,19 +221,36 @@ class Skin(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def attr(self, resolution, name):
+    def attr(self, resolution, name, default=True):
         """
         Search for first matching attribute <name> according to resolution
+        @param resolution:
+        @param name: Attribute name
+        @param default: If True, return default palette in case attr
+                        is not found, otherwise return None
         @return: Registered palette name
         """
 
-        for _el in resolution:
+        return self.palette(resolution, name, default).name
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def palette(self, resolution, name, default=True):
+        """
+        Search for first matching palette <name> according to resolution
+        """
+
+        for _w in resolution:
             # Normalize name
-            if not _el.startswith(u"ui."):
-                _el = u"ui.%s" % _el
+            if not _w.startswith(u"ui."):
+                _w = u"ui.%s" % _w
 
-            if _el in self._data and (name in self._data[_el]):
-                return self._data[_el][name].name
+            try:
+                return self._data[_w][name]
+            except KeyError:
+                pass
 
-        # If none found return default
-        return self._default.name
+        if default:
+            return self._default
+        else:
+            return None
