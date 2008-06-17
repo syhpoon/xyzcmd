@@ -15,6 +15,8 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 import libxyz.ui
+import libxyz.core
+import libxyz.const
 
 from libxyz.ui import lowui
 from libxyz.ui import align
@@ -43,6 +45,9 @@ class Panel(lowui.WidgetWrap):
 
         self._cmd = libxyz.ui.Cmd(xyz, xyz.conf[u"xyz"][u"cmd_prompt"])
         self._widget = lowui.Pile([columns, _status, self._cmd])
+        self._stop = False
+
+        self._set_plugin()
 
         super(Panel, self).__init__(self._widget)
 
@@ -56,6 +61,9 @@ class Panel(lowui.WidgetWrap):
         _dim = self.xyz.screen.get_cols_rows()
 
         while True:
+            if self._stop:
+                break
+
             self.xyz.screen.draw_screen(_dim, self.xyz.top.render(_dim, True))
 
             _input = self.xyz.input.get()
@@ -66,6 +74,34 @@ class Panel(lowui.WidgetWrap):
                 # No binds for PANEL context
                 if _meth is None:
                     self._cmd.keypress(_dim, _input)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _set_plugin(self):
+        """
+        Set virtual plugin
+        """
+
+        _run_plugin = libxyz.core.plugins.VirtualPlugin(self.xyz, u"run")
+        _run_plugin.export(u"shutdown", self.shutdown)
+        _run_plugin.VERSION = u"0.1"
+        _run_plugin.AUTHOR = u"Max E. Kuznecov <mek@mek.uz.ua>"
+        _run_plugin.BRIEF_DESCRIPTION = u"Run plugin"
+
+        self.xyz.pm.register(_run_plugin)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def shutdown(self):
+        """
+        Quit program
+        """
+
+        _q = _(u"Really quit %s?" % libxyz.const.PROG)
+        _title = libxyz.const.PROG
+
+        if libxyz.ui.YesNoBox(self.xyz, self.xyz.top, _q, _title).show():
+            self._stop = True
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

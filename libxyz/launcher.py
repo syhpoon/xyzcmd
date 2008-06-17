@@ -58,7 +58,6 @@ class Launcher(object):
 
         self._path_sel = libxyz.PathSelector()
         self._conf_dir = None
-        self._exit = False
 
         self._init_default()
 
@@ -91,13 +90,10 @@ class Launcher(object):
         self.xyz.pm = PluginManager(self.xyz, self._path_sel.get_plugins_dir())
 
         self.init_logger()
-        self._set_internal_plugin()
 
         self.xyz.km = core.KeyManager(self.xyz,
                                  self._path_sel.get_conf(const.KEYS_CONF_FILE))
         self.xyz.input = core.InputWrapper(self.xyz)
-
-        self._bind_defaults()
 
         self.xyz.screen = uilib.display.init_display()
         self.xyz.screen.register_palette(self.xyz.skin.get_palette_list())
@@ -114,32 +110,6 @@ class Launcher(object):
         panel.repl()
 
         self.finalize()
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _set_internal_plugin(self):
-        """
-        Set own virtual plugin
-        """
-
-        _launcher_plugin = core.plugins.VirtualPlugin(self.xyz, u"launcher")
-        _launcher_plugin.export(u"shutdown", self.shutdown)
-        _launcher_plugin.VERSION = u"0.1"
-        _launcher_plugin.AUTHOR = u"Max E. Kuznecov <mek@mek.uz.ua>"
-        _launcher_plugin.BRIEF_DESCRIPTION = u"Launcher plugin"
-
-        self.xyz.pm.register(_launcher_plugin)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _bind_defaults(self):
-        """
-        Bind default shortcuts
-        User defined (if any) will override default values
-        """
-
-        #TODO: instead of explicit binding parse default keys conf
-        self.xyz.km.bind(self.shutdown, uilib.Keys.F10)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -371,22 +341,9 @@ Usage: %s [-c dir][-vh]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def shutdown(self):
-        """
-        Quit program
-        """
-
-        _q = _(u"Really quit %s?" % const.PROG)
-        _title = const.PROG
-
-        if uilib.YesNoBox(self.xyz, self.xyz.top, _q, _title).show():
-            self._exit = True
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     def finalize(self):
         """
         Perform shutdown procedures
         """
 
-        self.xyz.pm.shutdown()
+        pass
