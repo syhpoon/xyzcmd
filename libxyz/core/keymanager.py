@@ -62,8 +62,7 @@ class KeyManager(object):
             # No bind
             return None
 
-        if _method is not None:
-            return _method
+        return _method
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -216,7 +215,23 @@ class KeyManager(object):
         else:
             _mobj = self._loaded_methods[_p.full]
 
+        if _mobj is None:
+            # Wait until plugin method is available and then run callback
+            self.xyz.pm.wait_for(_p, self._bind_wait_cb, _p.method, shortcut,
+                                 context, force)
+
         self.bind(_mobj, shortcut, context, force)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _bind_wait_cb(self, plugin_obj, method, shortcut, context, force):
+        if method not in plugin_obj.public:
+            xyzlog.log(_(u"Unable to bind method %s. "\
+                         u"Plugin %s doesn't export it."% (method, plugin_obj)),
+                         xyzlog.loglevel.ERROR)
+            return
+
+        self.bind(plugin_obj.public[method], shortcut, context, force)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -234,7 +249,8 @@ class KeyManager(object):
 
         if context not in self._bind_data:
             self._bind_data[context] = {}
-        elif _shortcut in self._bind_data[context] and not force:
+        elif _shortcut in self._bind_data[context] and \
+        self._bind_data[context][_shortcut] is not None and not force:
             # Already binded
             return
 

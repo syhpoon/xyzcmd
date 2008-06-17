@@ -15,6 +15,7 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 __all__ = (
+    'Gag',
     'Namespace',
     'BasePlugin',
     'VirtualPlugin',

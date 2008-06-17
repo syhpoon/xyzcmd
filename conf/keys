@@ -3,17 +3,22 @@
 #
 
 load :core:keycodes:*
-load :core:pluginlist:show_list
 load :sys:launcher:*
 load :sys:logger:*
-
+load :sys:cmd:*
+load :core:pluginlist:show_list
 load :misc:hello:say_hello
+
+bind :sys:cmd:del_char to BACKSPACE
+bind :sys:cmd:clear to CTRL-u
 
 bind :sys:logger:show_console to F2
 bind :sys:launcher:shutdown to F10
+
 bind :core:pluginlist:show_list to F1
-bind :misc:hello:say_hello to META-;
 bind :core:keycodes:learn_keys to CTRL-k
+
+bind :misc:hello:say_hello to META-;
 
 #set chain key META-Q
 #set chain key META-L context PANEL

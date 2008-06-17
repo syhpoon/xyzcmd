@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+import libxyz.core
+
 from libxyz.ui import lowui
 from libxyz.ui import Prompt
 
@@ -23,6 +25,7 @@ class Cmd(lowui.FlowWidget):
     """
 
     resolution = (u"cmd",)
+    context = u"CMD"
 
     def __init__(self, xyz, prompt=u""):
         """
@@ -34,12 +37,32 @@ class Cmd(lowui.FlowWidget):
 
         super(Cmd, self).__init__()
 
+        self.xyz = xyz
         self._attr = lambda x: xyz.skin.attr(self.resolution, x)
 
         self.prompt = Prompt(prompt, self._attr(u"prompt"))
 
         self._text_attr = self._attr(u"text")
         self._data = []
+
+        self._init_plugin()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _init_plugin(self):
+        """
+        Init virtual plugin
+        """
+
+        _cmd_plugin = libxyz.core.plugins.VirtualPlugin(self.xyz, u"cmd")
+        _cmd_plugin.AUTHOR = u"Max E. Kuznecov <mek@mek.uz.ua>"
+        _cmd_plugin.VERSION = u"0.1"
+        _cmd_plugin.BRIEF_DESCRIPTION = u"Command line plugin"
+
+        _cmd_plugin.export(u"del_char", self.del_char)
+        _cmd_plugin.export(u"clear", self.clear)
+
+        self.xyz.pm.register(_cmd_plugin)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -104,11 +127,42 @@ class Cmd(lowui.FlowWidget):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def keypress(self, size, key):
-        # First lookup for bind in default context
+        # First lookup for bind in own context
+        _meth = self.xyz.km.process(key, self.context)
+
+        if _meth is not None:
+            _meth()
+            return
+
+        # Next in default one
         _meth = self.xyz.km.process(key)
 
         if _meth is not None:
             _meth()
+            return
         else:
             self._data.extend(key)
             self._invalidate()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    # Public methods
+
+    def del_char(self):
+        """
+        Delete single character
+        """
+
+        if self._data:
+            del(self._data[-1])
+            self._invalidate()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def clear(self):
+        """
+        Clear cmd line
+        """
+
+        self._data = []
+        self._invalidate()

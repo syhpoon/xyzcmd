@@ -69,6 +69,7 @@ class PluginManager(object):
         # Do not load all the enabled plugin at once
         # Do it on demand
         self._loaded = {}
+        self._waiting = {}
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -91,8 +92,9 @@ class PluginManager(object):
             return self.get_loaded(plugin)
 
         if virtual:
-            # If reached here, plugin is not loaded
-            raise PluginError(_(u"Virtual plugin %s does not exist" % plugin))
+            # Do not raise any error here, because virtual plugins may be
+            # initiated at runtime after keys conf is parsed.
+            return None
 
         plugin.set_method(u"main")
 
@@ -153,6 +155,9 @@ class PluginManager(object):
             _obj = self.load(plugin)
         else:
             _obj = self.get_loaded(plugin)
+
+        if _obj is None:
+            return None
 
         if method not in _obj.public:
             raise PluginError(_(u"%s plugin instance does not export "\
@@ -225,6 +230,17 @@ class PluginManager(object):
         @param inst: Plugin instance
         """
 
+        # Check for pending waiting plugins
+        if plugin.pfull in self._waiting:
+            # Try to run callback
+            for _cb, _args in self._waiting[plugin.pfull]:
+                try:
+                    _cb(inst, *_args)
+                except Exception, e:
+                    xyzlog.log(_(u"Error in wait_for() callback: %s" %
+                               unicode(e)), xyzlog.loglevel.WARNING)
+            del(self._waiting[plugin.pfull])
+
         self._loaded[plugin.pfull] = inst
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -241,6 +257,28 @@ class PluginManager(object):
             del(self._loaded[plugin.pfull])
         except KeyError:
             pass
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @ns_transform
+    def wait_for(self, plugin, callback, *args):
+        """
+        Some virtual plugins are not available at the parsing time.
+        This method is used to wait while plugin is loaded and then run
+        callback.
+        Arguments to callback: loaded plugin obj, and all optional *args passed
+        """
+
+        # WTF? already loaded? No need to wait
+        if self.is_loaded(plugin):
+            return callback(self.get_loaded(plugin), *args)
+
+        # Initiate storage
+        if plugin.pfull not in self._waiting:
+            self._waiting[plugin.pfull] = []
+
+        # Register for waiting
+        self._waiting[plugin.pfull].append((callback, args))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -125,6 +125,7 @@ class Launcher(object):
         _launcher_plugin = core.plugins.VirtualPlugin(self.xyz, u"launcher")
         _launcher_plugin.export(u"shutdown", self.shutdown)
         _launcher_plugin.VERSION = u"0.1"
+        _launcher_plugin.AUTHOR = u"Max E. Kuznecov <mek@mek.uz.ua>"
         _launcher_plugin.BRIEF_DESCRIPTION = u"Launcher plugin"
 
         self.xyz.pm.register(_launcher_plugin)
