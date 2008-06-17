@@ -9,8 +9,15 @@ load :sys:cmd:*
 load :core:pluginlist:show_list
 load :misc:hello:say_hello
 
+#TODO: add context CMD
 bind :sys:cmd:del_char to BACKSPACE
-bind :sys:cmd:clear to CTRL-u
+bind :sys:cmd:clear to CTRL-p
+bind :sys:cmd:clear_left to CTRL-u
+bind :sys:cmd:clear_right to CTRL-t
+bind :sys:cmd:cursor_begin to CTRL-a
+bind :sys:cmd:cursor_end to CTRL-e
+bind :sys:cmd:cursor_left to CTRL-b
+bind :sys:cmd:cursor_right to CTRL-f
 
 bind :sys:logger:show_console to F2
 bind :sys:run:shutdown to F10

@@ -44,6 +44,7 @@ class Cmd(lowui.FlowWidget):
 
         self._text_attr = self._attr(u"text")
         self._data = []
+        self._index = 0
 
         self._init_plugin()
 
@@ -61,6 +62,12 @@ class Cmd(lowui.FlowWidget):
 
         _cmd_plugin.export(u"del_char", self.del_char)
         _cmd_plugin.export(u"clear", self.clear)
+        _cmd_plugin.export(u"clear_left", self.clear_left)
+        _cmd_plugin.export(u"clear_right", self.clear_right)
+        _cmd_plugin.export(u"cursor_begin", self.cursor_begin)
+        _cmd_plugin.export(u"cursor_end", self.cursor_end)
+        _cmd_plugin.export(u"cursor_left", self.cursor_left)
+        _cmd_plugin.export(u"cursor_right", self.cursor_right)
 
         self.xyz.pm.register(_cmd_plugin)
 
@@ -122,7 +129,7 @@ class Cmd(lowui.FlowWidget):
         Return the (x,y) coordinates of cursor within widget.
         """
 
-        return self.prompt.length() + len(self._data), 0
+        return self.prompt.length() + self._index, 0
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -141,7 +148,8 @@ class Cmd(lowui.FlowWidget):
             _meth()
             return
         else:
-            self._data.extend(key)
+            self._data.insert(self._index, *key)
+            self._index += len(key)
             self._invalidate()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -153,16 +161,81 @@ class Cmd(lowui.FlowWidget):
         Delete single character
         """
 
-        if self._data:
-            del(self._data[-1])
+        if self._index > 0:
+            self._index -= 1
+            del(self._data[self._index])
             self._invalidate()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def clear(self):
         """
-        Clear cmd line
+        Clear the whole cmd line
         """
 
         self._data = []
+        self._index = 0
         self._invalidate()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def clear_left(self):
+        """
+        Clear the cmd line from the cursor to the left
+        """
+
+        self._data = self._data[self._index:]
+        self._index = 0
+        self._invalidate()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def clear_right(self):
+        """
+        Clear the cmd line from the cursor to the right
+        """
+
+        self._data = self._data[:self._index]
+        self._invalidate()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def cursor_begin(self):
+        """
+        Move cursor to the beginning of the command line
+        """
+
+        self._index = 0
+        self._invalidate()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def cursor_end(self):
+        """
+        Move cursor to the end of the command line
+        """
+
+        self._index = len(self._data)
+        self._invalidate()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def cursor_left(self):
+        """
+        Move cursor left
+        """
+
+        if self._index > 0:
+            self._index -= 1
+            self._invalidate()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def cursor_right(self):
+        """
+        Move cursor right
+        """
+
+        if self._index < len(self._data):
+            self._index += 1
+            self._invalidate()

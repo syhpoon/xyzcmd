@@ -13,8 +13,8 @@ plugins {
 }
 
 # Skin to use
-skin = monochrome
-#skin = seablue
+#skin = monochrome
+skin = seablue
 
 # Log levels to track
 log_level = ERROR,WARNING,INFO
