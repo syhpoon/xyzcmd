@@ -27,11 +27,12 @@ class Panel(lowui.WidgetWrap):
     Panel is used to display filesystem hierarchy
     """
 
-    context = u"PANEL"
     resolution = (u"panel", u"widget")
+    context = u"PANEL"
 
     def __init__(self, xyz):
         self.xyz = xyz
+        self._attr = lambda x: self.xyz.skin.attr(self.resolution, x)
 
         _size = self.xyz.screen.get_cols_rows()
         _blocksize = libxyz.ui.Size(rows=_size[1] - 2, cols=_size[0]/2-2)
@@ -41,7 +42,7 @@ class Panel(lowui.WidgetWrap):
         self.block2 = Block(_blocksize, LocalVFSObject("/"), self._attr)
 
         columns = lowui.Columns([self.block1.block, self.block2.block], 0)
-        _status = lowui.Text("Status bar")
+        _status = lowui.Text((self._attr(u"panel"), "Status bar"))
 
         self._cmd = libxyz.ui.Cmd(xyz, xyz.conf[u"xyz"][u"cmd_prompt"])
         self._widget = lowui.Pile([columns, _status, self._cmd])
@@ -74,6 +75,8 @@ class Panel(lowui.WidgetWrap):
                 # No binds for PANEL context
                 if _meth is None:
                     self._cmd.keypress(_dim, _input)
+                else:
+                    _meth()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -102,15 +105,6 @@ class Panel(lowui.WidgetWrap):
 
         if libxyz.ui.YesNoBox(self.xyz, self.xyz.top, _q, _title).show():
             self._stop = True
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _attr(self, name):
-        """
-        Find palette
-        """
-
-        return self.xyz.skin.attr(self.resolution, name)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 

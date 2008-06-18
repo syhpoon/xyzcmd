@@ -7,25 +7,24 @@ load :sys:run:*
 load :sys:logger:*
 load :sys:cmd:*
 load :core:pluginlist:show_list
-load :misc:hello:say_hello
 
-#TODO: add context CMD
-bind :sys:cmd:del_char to BACKSPACE
-bind :sys:cmd:clear to CTRL-p
-bind :sys:cmd:clear_left to CTRL-u
-bind :sys:cmd:clear_right to CTRL-t
-bind :sys:cmd:cursor_begin to CTRL-a
-bind :sys:cmd:cursor_end to CTRL-e
-bind :sys:cmd:cursor_left to CTRL-b
-bind :sys:cmd:cursor_right to CTRL-f
+bind :sys:cmd:del_char_left to BACKSPACE context CMD
+bind :sys:cmd:del_char to DELETE context CMD
+bind :sys:cmd:clear to CTRL-p context CMD
+bind :sys:cmd:clear_left to CTRL-u context CMD
+bind :sys:cmd:clear_right to CTRL-k context CMD
+bind :sys:cmd:cursor_begin to CTRL-a context CMD
+bind :sys:cmd:cursor_end to CTRL-e context CMD
+bind :sys:cmd:cursor_left to CTRL-b context CMD
+bind :sys:cmd:cursor_right to CTRL-f context CMD
+bind :sys:cmd:cursor_word_left to META-b context CMD
+bind :sys:cmd:cursor_word_right to META-f context CMD
+bind :sys:cmd:undo to CTRL-d context CMD
 
-bind :sys:logger:show_console to F2
-bind :sys:run:shutdown to F10
-
-bind :core:pluginlist:show_list to F1
-bind :core:keycodes:learn_keys to CTRL-k
-
-bind :misc:hello:say_hello to META-;
+bind :sys:logger:show_console to F2 context PANEL
+bind :sys:run:shutdown to F10 context PANEL
+bind :core:pluginlist:show_list to F1 context PANEL
+bind :core:keycodes:learn_keys to META-k context PANEL
 
 #set chain key META-Q
 #set chain key META-L context PANEL

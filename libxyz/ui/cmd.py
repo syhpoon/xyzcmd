@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+import copy
+
 import libxyz.core
 
 from libxyz.ui import lowui
@@ -46,7 +48,16 @@ class Cmd(lowui.FlowWidget):
         self._data = []
         self._index = 0
 
-        self._init_plugin()
+        self._plugin = self._init_plugin()
+
+        try:
+            _conf = self.xyz.conf[u"plugins"]
+            self._undo_depth = _conf[self._plugin.ns.pfull][u"undo_depth"]
+        except KeyError:
+            # Default value
+            self._undo_depth = 10
+
+        self._undo = libxyz.core.Queue(self._undo_depth)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -61,6 +72,7 @@ class Cmd(lowui.FlowWidget):
         _cmd_plugin.BRIEF_DESCRIPTION = u"Command line plugin"
 
         _cmd_plugin.export(u"del_char", self.del_char)
+        _cmd_plugin.export(u"del_char_left", self.del_char_left)
         _cmd_plugin.export(u"clear", self.clear)
         _cmd_plugin.export(u"clear_left", self.clear_left)
         _cmd_plugin.export(u"clear_right", self.clear_right)
@@ -68,8 +80,14 @@ class Cmd(lowui.FlowWidget):
         _cmd_plugin.export(u"cursor_end", self.cursor_end)
         _cmd_plugin.export(u"cursor_left", self.cursor_left)
         _cmd_plugin.export(u"cursor_right", self.cursor_right)
+        _cmd_plugin.export(u"cursor_word_left", self.cursor_word_left)
+        _cmd_plugin.export(u"cursor_word_right", self.cursor_word_right)
+        _cmd_plugin.export(u"is_empty", self.is_empty)
+        _cmd_plugin.export(u"undo", self.undo)
 
         self.xyz.pm.register(_cmd_plugin)
+
+        return _cmd_plugin
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -91,6 +109,8 @@ class Cmd(lowui.FlowWidget):
         """
         Render the command line
         """
+
+        #TODO: cmd swap
 
         if self.prompt is not None:
             _canv_prompt = self.prompt.render((maxcol,))
@@ -148,17 +168,37 @@ class Cmd(lowui.FlowWidget):
             _meth()
             return
         else:
+            # TODO: filter out control codes
             self._data.insert(self._index, *key)
             self._index += len(key)
             self._invalidate()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def _save_undo(self):
+        """
+        Save undo data
+        """
+
+        self._undo.push((self._index, copy.copy(self._data)))
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _restore_undo(self):
+        """
+        Restore one undo level
+        """
+
+        if self._undo:
+            self._index, self._data = self._undo.pop()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     # Public methods
 
-    def del_char(self):
+    def del_char_left(self):
         """
-        Delete single character
+        Delete single character left to the cursor
         """
 
         if self._index > 0:
@@ -168,11 +208,41 @@ class Cmd(lowui.FlowWidget):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def del_char(self):
+        """
+        Delete single character under the cursor
+        """
+
+        if self._index > 0 and self._index < len(self._data):
+            del(self._data[self._index])
+            self._invalidate()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def del_word_left(self):
+        """
+        Delete a word left to the cursor
+        """
+
+        pass
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def del_word_right(self):
+        """
+        Delete a word right to the cursor
+        """
+
+        pass
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def clear(self):
         """
         Clear the whole cmd line
         """
 
+        self._save_undo()
         self._data = []
         self._index = 0
         self._invalidate()
@@ -184,6 +254,7 @@ class Cmd(lowui.FlowWidget):
         Clear the cmd line from the cursor to the left
         """
 
+        self._save_undo()
         self._data = self._data[self._index:]
         self._index = 0
         self._invalidate()
@@ -195,6 +266,7 @@ class Cmd(lowui.FlowWidget):
         Clear the cmd line from the cursor to the right
         """
 
+        self._save_undo()
         self._data = self._data[:self._index]
         self._invalidate()
 
@@ -239,3 +311,68 @@ class Cmd(lowui.FlowWidget):
         if self._index < len(self._data):
             self._index += 1
             self._invalidate()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def cursor_word_left(self):
+        """
+        Move cursor one word left
+        """
+
+        for i in range(self._index - 1, 0, -1):
+            if self._data[i].isspace():
+                self._index = i
+                self._invalidate()
+                return
+
+        return self.cursor_begin()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def cursor_word_right(self):
+        """
+        Move cursor one word right
+        """
+
+        for i in range(self._index + 1, len(self._data)):
+            if self._data[i].isspace():
+                self._index = i
+                self._invalidate()
+                return
+
+        return self.cursor_end()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def execute(self):
+        """
+        Execute cmd contents
+        """
+
+        # TODO:
+        pass
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def is_empty(self):
+        """
+        Return True if cmd is empty, i.e. has no contents
+        """
+
+        return self._data == []
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def undo(self):
+        """
+        Restore one level from undo buffer
+        """
+
+        self._restore_undo()
+        self._invalidate()
+
+    #TODO:
+    #clear_word_left
+    #clear_word_right
+    #command-history
+    #completion

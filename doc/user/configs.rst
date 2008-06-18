@@ -62,15 +62,16 @@ For example, consider the part of keys configuration file::
    # 1.
    bind META-P to default_action
    # 2.
-   bind META-P to box_action context BOX
+   bind META-P to box_action context CMD
 
 In 1. we've bound Meta+Shift+p shortcut to default_action method. As we haven't
 provided context name, **DEFAULT** will be used.
 
-In 2. we've explicitly provided **BOX** context. So box_action will only
-be executed when a widget with context **BOX** will be in focus
+In 2. we've explicitly provided **CMD** context. So box_action will only
+be executed when a widget with context **CMD** will be in focus
 receiving input.
 
+#TODO: ???
 To make a widget belonging to some context, a *context* keyword should be
 passed to constructor.
 

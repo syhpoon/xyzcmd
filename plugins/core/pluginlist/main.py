@@ -32,7 +32,7 @@ class XYZPlugin(BasePlugin):
     AUTHOR = u"Max E. Kuznecov ~syhpoon <mek@mek.uz.ua>"
     VERSION = u"0.1"
     BRIEF_DESCRIPTION = u"Show plugin list"
-    FULL_DESCRIPTION = u"Show all currently loaded plugins and assosiated "\
+    FULL_DESCRIPTION = u"Show all currently loaded plugins and associated "\
                        u"information"
     NAMESPACE = u"core"
 
@@ -140,6 +140,7 @@ class XYZPlugin(BasePlugin):
             _len = len(_plugin.public)
             _i = 0
 
+            # TODO: sort method names
             for k, v in _plugin.public.iteritems():
                 if v.__doc__ is not None:
                     _doc = v.__doc__.rstrip()
