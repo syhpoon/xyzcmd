@@ -33,9 +33,10 @@ __all__ = (
     'YesNoBox',
     'ErrorBox',
     'Prompt',
+    'XYZListBox',
+    'ListEntry',
     'Cmd',
     'Panel',
-    'XYZListBox',
     'Separator',
 )
 
@@ -55,7 +56,8 @@ from box_message import MessageBox
 from box_yesno import YesNoBox
 from box_error import ErrorBox
 from prompt import Prompt
+from xyzlistbox import XYZListBox
+from listentry import ListEntry
 from cmd import Cmd
 from panel import Panel
-from xyzlistbox import XYZListBox
 from separator import Separator

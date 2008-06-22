@@ -25,10 +25,11 @@ bind :sys:cmd:cursor_right to CTRL-f context CMD
 bind :sys:cmd:cursor_word_left to META-b context CMD
 bind :sys:cmd:cursor_word_right to META-f context CMD
 bind :sys:cmd:undo to CTRL-d context CMD
+bind :sys:cmd:show_history to META-h context CMD
 
-bind :sys:logger:show_console to F2 context PANEL
+bind :sys:logger:show_console to META-l context PANEL
 bind :sys:run:shutdown to F10 context PANEL
-bind :core:pluginlist:show_list to F1 context PANEL
+bind :core:pluginlist:show_list to META-t context PANEL
 bind :core:keycodes:learn_keys to META-s context PANEL
 
 #set chain key META-Q

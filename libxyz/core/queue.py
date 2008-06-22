@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+from libxyz.exceptions import XYZValueError
+
 class Queue(list):
     """
     Fixed-sized list
@@ -22,7 +24,10 @@ class Queue(list):
     def __init__(self, maxsize):
         super(Queue, self).__init__()
 
-        self.maxsize = maxsize
+        try:
+            self.maxsize = int(maxsize)
+        except ValueError:
+            raise XYZValueError(_(u"Max-size must be of integer type"))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -32,7 +37,9 @@ class Queue(list):
         replace the oldest one.
         """
 
-        if len(self) == self.maxsize:
+        if self.maxsize <= 0:
+            return
+        elif len(self) == self.maxsize:
             del(self[0])
 
         self.append(item)

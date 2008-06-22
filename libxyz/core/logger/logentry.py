@@ -19,7 +19,7 @@ import time
 import libxyz.ui as uilib
 from libxyz.ui import lowui
 
-class LogEntry(lowui.FlowWidget):
+class LogEntry(uilib.ListEntry):
     """
     Log message entry
     """
@@ -34,7 +34,7 @@ class LogEntry(lowui.FlowWidget):
         @param write_time: Whether to write timestamp in entry
         """
 
-        super(LogEntry, self).__init__()
+        super(LogEntry, self).__init__(msg, selected_attr, entry_attr)
 
         self.level = level
 
@@ -47,31 +47,3 @@ class LogEntry(lowui.FlowWidget):
         self._sel_attr = selected_attr
         self._entry_attr = entry_attr
         self._content = lowui.Text(self._text)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def selectable(self):
-        return True
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def rows(self, (maxcol,), focus=False):
-        return len(self._content.get_line_translation(maxcol))
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def render(self, (maxcol,), focus=False):
-        if focus:
-            self._content.set_text((self._sel_attr, self._text))
-        else:
-            if self._entry_attr is not None:
-                self._content.set_text((self._entry_attr, self._text))
-            else:
-                self._content.set_text(self._text)
-
-        return self._content.render((maxcol,), focus)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def keypress(self, (maxcol,), key):
-        return key

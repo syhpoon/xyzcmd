@@ -18,8 +18,11 @@ import copy
 
 import libxyz.core
 
+from libxyz.exceptions import XYZValueError
 from libxyz.ui import lowui
 from libxyz.ui import Prompt
+from libxyz.ui import ListEntry
+from libxyz.ui import XYZListBox
 
 class Cmd(lowui.FlowWidget):
     """
@@ -51,17 +54,27 @@ class Cmd(lowui.FlowWidget):
 
         self._plugin = self._init_plugin()
 
-        _conf_vars = ((u"undo_depth", 10),
-                      (u"history_depth", 50),
+        _conf_vars = ((u"undo_depth", 10, int),
+                      (u"history_depth", 50, int),
                      )
 
         _conf = self.xyz.conf[u"plugins"]
 
-        for _var, _def in _conf_vars:
+        for _var, _def, _cast in _conf_vars:
             try:
-                _val  = _conf[self._plugin.ns.pfull][_var]
+                if _cast is not None:
+                    _val  = _cast(_conf[self._plugin.ns.pfull][_var])
+                else:
+                    _val  = _conf[self._plugin.ns.pfull][_var]
             except KeyError:
                 _val = _def
+            except ValueError, e:
+                _val = _def
+                xyzlog.log(_(u"%s: Invalid argument type %s: %s. "\
+                             u"Using default: %s" %
+                            (self._plugin.ns.pfull, _var, unicode(e),
+                             unicode(_def))),
+                            xyzlog.loglevel.WARNING)
             finally:
                 setattr(self, u"_%s" % _var, _val)
 
@@ -108,6 +121,7 @@ class Cmd(lowui.FlowWidget):
         _cmd_plugin.export(u"history_prev", self.history_prev)
         _cmd_plugin.export(u"history_next", self.history_next)
         _cmd_plugin.export(u"history_clear", self.history_clear)
+        _cmd_plugin.export(u"show_history", self.show_history)
 
         self.xyz.pm.register(_cmd_plugin)
 
@@ -488,7 +502,20 @@ class Cmd(lowui.FlowWidget):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def show_history(self):
-        pas
-    #TODO:
-    #command-history
-    #completion
+        """
+        Show commands history list
+        """
+
+        _sel_attr = self.xyz.skin.attr(XYZListBox.resolution, u"selected")
+
+        _walker = lowui.SimpleListWalker([
+                            ListEntry(u"".join(x), _sel_attr)
+                            for x in self._history])
+
+        _dim = tuple([x - 2 for x in self.xyz.screen.get_cols_rows()])
+
+        XYZListBox(self.xyz, self.xyz.top, _walker, _(u"History"), _dim).show()
+
+        #TODO: selected last entry
+        #TODO: ENTER -> put history to self._data
+        #TODO: entry format -> <NUM>: cmd.  Quick select by <NUM>

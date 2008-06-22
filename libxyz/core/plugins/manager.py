@@ -48,6 +48,7 @@ class PluginManager(object):
     """
 
     PLUGIN_CLASS = u"XYZPlugin"
+    PLUGIN_FILE = u"main"
     VIRTUAL_NAMESPACE = u"sys"
 
     def __init__(self, xyz, dirs):
@@ -96,7 +97,7 @@ class PluginManager(object):
             # initiated at runtime after keys conf is parsed.
             return None
 
-        plugin.set_method(u"main")
+        plugin.set_method(self.PLUGIN_FILE)
 
         # Import plugin
         # Plugin entry-point is XYZPlugin class in a main.py file
