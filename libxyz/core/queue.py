@@ -1,6 +1,6 @@
 #-*- coding: utf8 -*
 #
-# Max E. Kuznecov ~syhpoon <mek@mek.uz.ua> 2008
+# Max E. Kuznecov ~syhpoon <syhpoon@syhpoon.name> 2008
 #
 # This file is part of XYZCommander.
 # XYZCommander is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@ class Queue(list):
     def __init__(self, maxsize):
         super(Queue, self).__init__()
 
-        self._maxsize = maxsize
+        self.maxsize = maxsize
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -32,7 +32,7 @@ class Queue(list):
         replace the oldest one.
         """
 
-        if len(self) == self._maxsize:
+        if len(self) == self.maxsize:
             del(self[0])
 
         self.append(item)
@@ -45,3 +45,17 @@ class Queue(list):
         """
 
         del self[:]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def tail(self):
+        """
+        Return tail element
+        """
+
+        _len = len(self)
+
+        if _len:
+            return self[_len - 1]
+        else:
+            return None

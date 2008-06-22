@@ -1,6 +1,6 @@
 #-*- coding: utf8 -*
 #
-# Max E. Kuznecov ~syhpoon <mek@mek.uz.ua> 2008
+# Max E. Kuznecov ~syhpoon <syhpoon@syhpoon.name> 2008
 #
 # This file is part of XYZCommander.
 # XYZCommander is free software: you can redistribute it and/or modify
@@ -124,12 +124,14 @@ class Logger(object):
         """
 
         _logger_plugin = VirtualPlugin(self.xyz, u"logger")
-        _logger_plugin.export(u"show_console", self.show_console)
-        _logger_plugin.export(u"log", self.log)
-        _logger_plugin.export(u"clear", self.clear)
+        _logger_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
         _logger_plugin.VERSION = u"0.1"
         _logger_plugin.BRIEF_DESCRIPTION = u"Logger plugin"
         _logger_plugin.FULL_DESCRIPTION = re.sub(r"\ {2,}",
                                                  r"", self.__doc__).strip()
+
+        _logger_plugin.export(u"show_console", self.show_console)
+        _logger_plugin.export(u"log", self.log)
+        _logger_plugin.export(u"clear", self.clear)
 
         self.xyz.pm.register(_logger_plugin)

@@ -3,13 +3,18 @@
 #
 
 load :core:keycodes:*
-load :sys:run:*
+load :sys:run:shutdown
 load :sys:logger:*
 load :sys:cmd:*
 load :core:pluginlist:show_list
 
+bind :sys:cmd:execute to ENTER context CMD
+bind :sys:cmd:history_prev to META-p context CMD
+bind :sys:cmd:history_next to META-n context CMD
 bind :sys:cmd:del_char_left to BACKSPACE context CMD
 bind :sys:cmd:del_char to DELETE context CMD
+bind :sys:cmd:del_word_left to META-u context CMD
+bind :sys:cmd:del_word_right to META-k context CMD
 bind :sys:cmd:clear to CTRL-p context CMD
 bind :sys:cmd:clear_left to CTRL-u context CMD
 bind :sys:cmd:clear_right to CTRL-k context CMD
@@ -24,7 +29,7 @@ bind :sys:cmd:undo to CTRL-d context CMD
 bind :sys:logger:show_console to F2 context PANEL
 bind :sys:run:shutdown to F10 context PANEL
 bind :core:pluginlist:show_list to F1 context PANEL
-bind :core:keycodes:learn_keys to META-k context PANEL
+bind :core:keycodes:learn_keys to META-s context PANEL
 
 #set chain key META-Q
 #set chain key META-L context PANEL

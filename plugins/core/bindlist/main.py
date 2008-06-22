@@ -1,6 +1,6 @@
 #-*- coding: utf8 -*
 #
-# Max E. Kuznecov <mek@mek.uz.ua> 2008
+# Max E. Kuznecov <syhpoon@syhpoon.name> 2008
 #
 
 from libxyz.core.plugins import BasePlugin
@@ -12,7 +12,7 @@ class XYZPlugin(BasePlugin):
     NAME = u"bindlist"
 
     # AUTHOR: Author name
-    AUTHOR = u"Max E. Kuznecov <mek@mek.uz.ua>"
+    AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
 
     # VERSION: Plugin version
     VERSION = u"0.1"

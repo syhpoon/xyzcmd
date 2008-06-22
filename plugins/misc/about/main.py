@@ -6,10 +6,10 @@
 from libxyz.core.plugins import BasePlugin
 
 class XYZPlugin(BasePlugin):
-    "Plugin console"
+    "Plugin about"
 
     # Plugin name
-    NAME = u"console"
+    NAME = u"about"
 
     # AUTHOR: Author name
     AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
@@ -28,7 +28,17 @@ class XYZPlugin(BasePlugin):
     #            Full namespace path to method is:
     #            xyz:plugins:misc:hello:SayHello
 
-    NAMESPACE = u"core"
+    NAMESPACE = u"misc"
+
+    # MIN_XYZ_VERSION: Minimal XYZCommander version
+    #                  the plugin is compatible with
+    MIN_XYZ_VERSION = None
+
+    # Plugin documentation
+    DOC = None
+
+    # Plugin home-page
+    HOMEPAGE = None
 
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)

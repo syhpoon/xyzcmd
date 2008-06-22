@@ -1,6 +1,6 @@
 #-*- coding: utf8 -*
 #
-# Max E. Kuznecov ~syhpoon <mek@mek.uz.ua> 2008
+# Max E. Kuznecov ~syhpoon <syhpoon@syhpoon.name> 2008
 #
 # This file is part of XYZCommander.
 # XYZCommander is free software: you can redistribute it and/or modify
@@ -47,17 +47,26 @@ class Cmd(lowui.FlowWidget):
         self._text_attr = self._attr(u"text")
         self._data = []
         self._index = 0
+        self._hindex = 0
 
         self._plugin = self._init_plugin()
 
-        try:
-            _conf = self.xyz.conf[u"plugins"]
-            self._undo_depth = _conf[self._plugin.ns.pfull][u"undo_depth"]
-        except KeyError:
-            # Default value
-            self._undo_depth = 10
+        _conf_vars = ((u"undo_depth", 10),
+                      (u"history_depth", 50),
+                     )
+
+        _conf = self.xyz.conf[u"plugins"]
+
+        for _var, _def in _conf_vars:
+            try:
+                _val  = _conf[self._plugin.ns.pfull][_var]
+            except KeyError:
+                _val = _def
+            finally:
+                setattr(self, u"_%s" % _var, _val)
 
         self._undo = libxyz.core.Queue(self._undo_depth)
+        self._history = libxyz.core.Queue(self._history_depth)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -67,12 +76,22 @@ class Cmd(lowui.FlowWidget):
         """
 
         _cmd_plugin = libxyz.core.plugins.VirtualPlugin(self.xyz, u"cmd")
-        _cmd_plugin.AUTHOR = u"Max E. Kuznecov <mek@mek.uz.ua>"
+        _cmd_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
         _cmd_plugin.VERSION = u"0.1"
         _cmd_plugin.BRIEF_DESCRIPTION = u"Command line plugin"
+        _cmd_plugin.FULL_DESCRIPTION = u"Command line plugin. "\
+                                       u"It allows to enter, edit and execute "\
+                                       u"commands."
+        _cmd_plugin.DOC = u"Configuration variables:\n"\
+                          u"undo_depth - Specifies how many undo levels to "\
+                          u"keep. Default - 10\n"\
+                          u"history_depth - Specifies how man entered "\
+                          u"commands to keep. Default - 50"
 
         _cmd_plugin.export(u"del_char", self.del_char)
         _cmd_plugin.export(u"del_char_left", self.del_char_left)
+        _cmd_plugin.export(u"del_word_left", self.del_word_left)
+        _cmd_plugin.export(u"del_word_right", self.del_word_right)
         _cmd_plugin.export(u"clear", self.clear)
         _cmd_plugin.export(u"clear_left", self.clear_left)
         _cmd_plugin.export(u"clear_right", self.clear_right)
@@ -84,6 +103,11 @@ class Cmd(lowui.FlowWidget):
         _cmd_plugin.export(u"cursor_word_right", self.cursor_word_right)
         _cmd_plugin.export(u"is_empty", self.is_empty)
         _cmd_plugin.export(u"undo", self.undo)
+        _cmd_plugin.export(u"undo_clear", self.undo_clear)
+        _cmd_plugin.export(u"execute", self.execute)
+        _cmd_plugin.export(u"history_prev", self.history_prev)
+        _cmd_plugin.export(u"history_next", self.history_next)
+        _cmd_plugin.export(u"history_clear", self.history_clear)
 
         self.xyz.pm.register(_cmd_plugin)
 
@@ -168,10 +192,12 @@ class Cmd(lowui.FlowWidget):
             _meth()
             return
         else:
-            # TODO: filter out control codes
-            self._data.insert(self._index, *key)
-            self._index += len(key)
-            self._invalidate()
+            _good = [x for x in key if len(x) == 1]
+
+            if _good:
+                self._data.insert(self._index, *_good)
+                self._index += len(_good)
+                self._invalidate()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -191,6 +217,30 @@ class Cmd(lowui.FlowWidget):
 
         if self._undo:
             self._index, self._data = self._undo.pop()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _save_history(self):
+        """
+        Save typed command history
+        """
+
+        # Prevent duplicating entries
+        if self._history.tail() == self._data:
+            return
+
+        self._history.push(copy.copy(self._data))
+        self._hindex = len(self._history)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _clear_cmd(self):
+        """
+        Internal clear
+        """
+
+        self._data = []
+        self._index = 0
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -224,7 +274,17 @@ class Cmd(lowui.FlowWidget):
         Delete a word left to the cursor
         """
 
-        pass
+        _orig = self._index
+
+        for i in range(self._index - 1, 0, -1):
+            if self._data[i].isspace():
+                self._save_undo()
+                self._index = i
+                self._data = self._data[:i] + self._data[_orig:]
+                self._invalidate()
+                return
+
+        return self.clear_left()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -233,7 +293,16 @@ class Cmd(lowui.FlowWidget):
         Delete a word right to the cursor
         """
 
-        pass
+        _orig = self._index
+
+        for i in range(self._index + 1, len(self._data)):
+            if self._data[i].isspace():
+                self._save_undo()
+                self._data = self._data[:_orig] + self._data[i:]
+                self._invalidate()
+                return
+
+        return self.clear_right()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -243,8 +312,7 @@ class Cmd(lowui.FlowWidget):
         """
 
         self._save_undo()
-        self._data = []
-        self._index = 0
+        self._clear_cmd()
         self._invalidate()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -349,8 +417,12 @@ class Cmd(lowui.FlowWidget):
         Execute cmd contents
         """
 
-        # TODO:
-        pass
+        if not self._data:
+            return
+
+        self._save_history()
+        self._clear_cmd()
+        self._invalidate()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -371,8 +443,52 @@ class Cmd(lowui.FlowWidget):
         self._restore_undo()
         self._invalidate()
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def undo_clear(self):
+        """
+        Clear undo buffer
+        """
+
+        self._undo.clear()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def history_prev(self):
+        """
+        Scroll through list of saved commands backward
+        """
+
+        if self._hindex > 0:
+            self._hindex -= 1
+            self._data = copy.copy(self._history[self._hindex])
+            self.cursor_end()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def history_next(self):
+        """
+        Scroll through list of saved commands forward
+        """
+
+        if self._hindex < len(self._history) - 1:
+            self._hindex += 1
+            self._data = copy.copy(self._history[self._hindex])
+            self.cursor_end()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def history_clear(self):
+        """
+        Clear commands history
+        """
+
+        self._history.clear()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def show_history(self):
+        pas
     #TODO:
-    #clear_word_left
-    #clear_word_right
     #command-history
     #completion

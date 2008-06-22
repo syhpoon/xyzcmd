@@ -1,5 +1,9 @@
 # Global plugins configuration file
 
 :sys:cmd {
+	# Size of undo buffer
 	undo_depth = 10
+
+	# Size of typed commands history buffer
+	history_depth = 50
 }

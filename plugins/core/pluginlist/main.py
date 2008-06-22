@@ -1,6 +1,6 @@
 #-*- coding: utf8 -*
 #
-# Max E. Kuznecov ~syhpoon <mek@mek.uz.ua> 2008
+# Max E. Kuznecov ~syhpoon <syhpoon@syhpoon.name> 2008
 #
 # This file is part of XYZCommander.
 # XYZCommander is free software: you can redistribute it and/or modify
@@ -29,7 +29,7 @@ class XYZPlugin(BasePlugin):
     """
 
     NAME = u"pluginlist"
-    AUTHOR = u"Max E. Kuznecov ~syhpoon <mek@mek.uz.ua>"
+    AUTHOR = u"Max E. Kuznecov ~syhpoon <syhpoon@syhpoon.name>"
     VERSION = u"0.1"
     BRIEF_DESCRIPTION = u"Show plugin list"
     FULL_DESCRIPTION = u"Show all currently loaded plugins and associated "\
@@ -140,8 +140,9 @@ class XYZPlugin(BasePlugin):
             _len = len(_plugin.public)
             _i = 0
 
-            # TODO: sort method names
-            for k, v in _plugin.public.iteritems():
+            for k in sorted(_plugin.public.keys()):
+                v = _plugin.public[k]
+
                 if v.__doc__ is not None:
                     _doc = v.__doc__.rstrip()
                 else:

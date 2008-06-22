@@ -1,6 +1,6 @@
 #-*- coding: utf8 -*
 #
-# Max E. Kuznecov ~syhpoon <mek@mek.uz.ua> 2008
+# Max E. Kuznecov ~syhpoon <syhpoon@syhpoon.name> 2008
 #
 
 import re
@@ -292,7 +292,7 @@ class MultiParsing(unittest.TestCase):
         """
 
         src = """\
-AUTHOR: "Max E. Kuznecov <mek@mek.uz.ua>"
+AUTHOR: "Max E. Kuznecov <syhpoon@syhpoon.name>"
 VERSION: "0.1"
 DESCRIPTION: "Default XYZ skin"
 

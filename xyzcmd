@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*- coding: utf8 -*
 #
-# Max E. Kuznecov ~syhpoon <mek@mek.uz.ua> 2008
+# Max E. Kuznecov ~syhpoon <syhpoon@syhpoon.name> 2008
 #
 # This file is part of XYZCommander.
 # XYZCommander is free software: you can redistribute it and/or modify

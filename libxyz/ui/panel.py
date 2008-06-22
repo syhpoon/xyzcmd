@@ -1,6 +1,6 @@
 #-*- coding: utf8 -*
 #
-# Max E. Kuznecov ~syhpoon <mek@mek.uz.ua> 2008
+# Max E. Kuznecov ~syhpoon <syhpoon@syhpoon.name> 2008
 #
 # This file is part of XYZCommander.
 # XYZCommander is free software: you can redistribute it and/or modify
@@ -88,7 +88,7 @@ class Panel(lowui.WidgetWrap):
         _run_plugin = libxyz.core.plugins.VirtualPlugin(self.xyz, u"run")
         _run_plugin.export(u"shutdown", self.shutdown)
         _run_plugin.VERSION = u"0.1"
-        _run_plugin.AUTHOR = u"Max E. Kuznecov <mek@mek.uz.ua>"
+        _run_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
         _run_plugin.BRIEF_DESCRIPTION = u"Run plugin"
 
         self.xyz.pm.register(_run_plugin)
