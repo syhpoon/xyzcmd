@@ -144,7 +144,7 @@ Following is an example of typical plugin usage in python code
    # Load only the data object itself using from_load_data
    some_object = self.xyz.pm.from_load_data(u":misc:hello", u"some_object")
 
-Alse see the `keys configuration file`_ for how to bind plugin methods to
+Also see the `keys configuration file`_ for how to bind plugin methods to
 keyboard shortcuts.
 
 Configuration

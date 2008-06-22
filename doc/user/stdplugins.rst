@@ -4,8 +4,8 @@ Standard plugins
 This chapter contains a list and description of all standard plugins, shipped
 with |XYZ|.
 
-:core: plugins
---------------
+``:core: plugins``
+------------------
 *:core:* plugins provide, well, core functionality. As it was stated before,
 main part of |XYZ| functionality provided via plugins, thus keeping
 a base |XYZ| part lightweight, simple and clean.

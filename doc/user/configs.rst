@@ -20,8 +20,8 @@ File syntax is following:
 Where:
 
 **{plugin_path}**
-   Absolute or minimal plugin namespace path.
-   For example: ``xyz:plugins:misc:hello`` or ``:misc:hello``
+   Plugin namespace path.
+   For example: ``:misc:hello``
 
 **{method}**
    Plugin exported method.
@@ -62,7 +62,7 @@ For example, consider the part of keys configuration file::
    # 1.
    bind META-P to default_action
    # 2.
-   bind META-P to box_action context CMD
+   bind META-P to cmd_action context CMD
 
 In 1. we've bound Meta+Shift+p shortcut to default_action method. As we haven't
 provided context name, **DEFAULT** will be used.

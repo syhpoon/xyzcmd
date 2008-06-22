@@ -37,7 +37,7 @@ There are three mandatory constants to be defined in every skin.
 **DESCRIPTION**
    Some skin description
 
-Constant defined using construction: ``<CONST>: VALUE``
+Constants are defined using construction: ``<CONST>: VALUE``
 
 Filesystem types
 ----------------
