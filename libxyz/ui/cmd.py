@@ -15,6 +15,7 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 import copy
+import traceback
 
 import libxyz.core
 
@@ -23,6 +24,7 @@ from libxyz.ui import lowui
 from libxyz.ui import Prompt
 from libxyz.ui import ListEntry
 from libxyz.ui import XYZListBox
+from libxyz.ui import Keys
 
 class Cmd(lowui.FlowWidget):
     """
@@ -506,16 +508,80 @@ class Cmd(lowui.FlowWidget):
         Show commands history list
         """
 
+        def _enter_cb(num):
+            if num >= len(self._history):
+                return
+
+            self._data = copy.copy(self._history[num])
+            self.cursor_end()
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         _sel_attr = self.xyz.skin.attr(XYZListBox.resolution, u"selected")
 
-        _walker = lowui.SimpleListWalker([
-                            ListEntry(u"".join(x), _sel_attr)
-                            for x in self._history])
+        _wdata = []
+
+        for i in range(len(self._history)):
+            _wdata.append(Entry(u"".join(self._history[i]), _sel_attr, i,
+                          enter_cb=_enter_cb))
+
+        _walker = lowui.SimpleListWalker(_wdata)
+        _walker.focus = len(_walker) - 1
 
         _dim = tuple([x - 2 for x in self.xyz.screen.get_cols_rows()])
 
-        XYZListBox(self.xyz, self.xyz.top, _walker, _(u"History"), _dim).show()
+        _ek = [Keys.ENTER]
 
-        #TODO: selected last entry
-        #TODO: ENTER -> put history to self._data
-        #TODO: entry format -> <NUM>: cmd.  Quick select by <NUM>
+        XYZListBox(self.xyz, self.xyz.top, _walker, _(u"History"),
+                   _dim).show(exit_keys=_ek)
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class Entry(ListEntry):
+    """
+    Commands history entry
+    """
+
+    def __init__(self, msg, selected_attr, num_order, entry_attr=None,
+                 enter_cb=None):
+        """
+        @param msg: Message
+        @param selected_attr: Atrribute of selected entry
+        @param entry_attr: Entry text attribute
+        @param num_order: Entry number
+        @param enter_cb: Callback to be ran upon ENTER pressed
+        """
+
+        self._num = []
+
+        if callable(enter_cb):
+            self._enter_cb = enter_cb
+        else:
+            self._enter_cb = None
+
+        self.num_order = num_order
+        _msg = u"%d: %s" % (num_order, msg)
+
+        super(Entry, self).__init__(_msg, selected_attr, entry_attr)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def keypress(self, (maxcol,), key):
+        if key == Keys.ENTER and self._enter_cb:
+            if self._num:
+                _index = int("".join(self._num))
+                self._num = []
+            else:
+                _index = self.num_order
+            try:
+                self._enter_cb(_index)
+            except Exception, e:
+                xyzlog.log(_(u"Error in callback: %s" % unicode(e)),
+                           xyzlog.loglevel.ERROR)
+                xyzlog.log(traceback.format_exc(), xyzlog.loglevel.DEBUG)
+            finally:
+                return key
+        elif key.isdigit():
+            self._num.append(key)
+        else:
+            return key

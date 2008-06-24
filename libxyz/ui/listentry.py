@@ -26,7 +26,6 @@ class ListEntry(lowui.FlowWidget):
         @param msg: Message
         @param selected_attr: Atrribute of selected entry
         @param entry_attr: Entry text attribute
-        @param write_time: Whether to write timestamp in entry
         """
 
         super(ListEntry, self).__init__()

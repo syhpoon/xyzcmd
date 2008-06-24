@@ -56,10 +56,12 @@ class XYZListBox(lowui.WidgetWrap):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def show(self, dim=None):
+    def show(self, dim=None, exit_keys=None):
         """
         Show list
         """
+
+        exit_keys = exit_keys or []
 
         if dim is None:
             dim = self.xyz.screen.get_cols_rows()
@@ -75,6 +77,10 @@ class XYZListBox(lowui.WidgetWrap):
                         return
 
                     self.keypress(dim, _k)
+
+                    # Also quit on specified keys if any
+                    if _k in exit_keys:
+                        return
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

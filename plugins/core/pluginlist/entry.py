@@ -71,6 +71,8 @@ class PluginEntry(lowui.FlowWidget):
             try:
                 self.enter_cb()
             except Exception, e:
-                xyzlog.log(traceback.format_exc(), xyzlog.loglevel.ERROR)
+                xyzlog.log(_(u"Error in callback: %s" % unicode(e)),
+                             xyzlog.loglevel.ERROR)
+                xyzlog.log(traceback.format_exc(), xyzlog.loglevel.DEBUG)
         else:
             return key

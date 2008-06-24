@@ -86,7 +86,7 @@ class PluginManager(object):
         virtual = self.is_virtual(plugin)
 
         if not virtual and plugin.pfull not in self.enabled:
-            raise PluginError(_(u"Plugin %s is disabled or does not exists" %
+            raise PluginError(_(u"Plugin %s is disabled or does not exist" %
                                 plugin))
 
         if self.is_loaded(plugin):
@@ -157,6 +157,7 @@ class PluginManager(object):
         else:
             _obj = self.get_loaded(plugin)
 
+        # Possible case for virtual plugins
         if _obj is None:
             return None
 
