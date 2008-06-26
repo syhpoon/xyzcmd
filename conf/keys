@@ -1,4 +1,6 @@
-# 
+#
+# Max E. Kuznecov <syhpoon@syhpoon.name> 2008
+#
 # Default keybinds
 #
 
@@ -7,6 +9,7 @@ load :sys:run:shutdown
 load :sys:logger:*
 load :sys:cmd:*
 load :core:pluginlist:show_list
+load :ui:testinput:show_box
 
 bind :sys:cmd:execute to ENTER context @
 bind :sys:cmd:history_prev to META-p context @
@@ -29,8 +32,11 @@ bind :sys:cmd:show_history to META-h context @
 
 bind :sys:logger:show_console to META-l context PANEL
 bind :sys:run:shutdown to F10 context PANEL
+
 bind :core:pluginlist:show_list to META-t context PANEL
 bind :core:keycodes:learn_keys to META-s context PANEL
+
+bind :ui:testinput:show_box to META-e context PANEL
 
 #set chain key META-Q
 #set chain key META-L context PANEL

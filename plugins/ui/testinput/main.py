@@ -5,53 +5,50 @@
 
 from libxyz.core.plugins import BasePlugin
 
+from libxyz.ui import lowui
+
+import libxyz.ui as uilib
+
 class XYZPlugin(BasePlugin):
-    "Plugin testinput"
+    """
+    Plugin testinput
+    """
 
-    # Plugin name
     NAME = u"testinput"
-
-    # AUTHOR: Author name
     AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
-
-    # VERSION: Plugin version
     VERSION = u"0.1"
-
-    # Brief one line description
-    BRIEF_DESCRIPTION = u""
-
-    # Full plugin description
+    BRIEF_DESCRIPTION = u"Test input"
     FULL_DESCRIPTION = u""
-
-    # NAMESPACE: Plugin namespace. For detailed information about
-    #            namespaces see Plugins chapter of XYZCommander user manual.
-    #            Full namespace path to method is:
-    #            xyz:plugins:misc:hello:SayHello
-
     NAMESPACE = u"ui"
-
-    # MIN_XYZ_VERSION: Minimal XYZCommander version
-    #                  the plugin is compatible with
     MIN_XYZ_VERSION = None
-
-    # Plugin documentation
     DOC = None
-
-    # Plugin home-page
-    HOMEPAGE = None
+    HOMEPAGE = u"xyzcmd.syhpoon.name"
 
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 
-        self.public = {}
+        self.public = {u"show_box": self._show_box}
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def prepare(self):
-        pass
+    def _show_box(self):
+        """
+        Show test_box dialog
+        """
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        _msg = _(u"Press any key. Escape twice to quit.")
 
-    def finalize(self):
-        pass
+        _escape = 0
 
+        while True:
+            _input = uilib.MessageBox(self.xyz, self.xyz.top, _msg,
+                                     _(u"Input test")).show()
+
+            if uilib.Keys.ESCAPE in _input:
+                _escape += 1
+                if _escape == 2:
+                    return
+            else:
+                _escape = 0
+
+            _msg = unicode(_input)

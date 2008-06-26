@@ -91,7 +91,7 @@ class YesNoBox(Box):
             try:
                 self.screen.draw_screen(dim, self.render(dim, True))
 
-                _keys = self.screen.get_input()
+                _keys = self.xyz.input.get()
 
                 if [x for x in (self.keys.LEFT,
                                 self.keys.RIGHT,

@@ -36,6 +36,7 @@ class Box(lowui.WidgetWrap):
         Required resources: title, box, mount
         """
 
+        self.xyz = xyz
         self.screen = xyz.screen
         self.skin = xyz.skin
         self.message = message
