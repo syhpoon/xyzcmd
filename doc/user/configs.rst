@@ -60,20 +60,23 @@ Context named **DEFAULT** used unless other provided.
 For example, consider the part of keys configuration file::
 
    # 1.
-   bind META-P to default_action
+   bind :sys:cmd:undo to META-P
    # 2.
-   bind META-P to cmd_action context CMD
+   bind :sys:cmd:undo to META-P context CMD
 
-In 1. we've bound Meta+Shift+p shortcut to default_action method. As we haven't
-provided context name, **DEFAULT** will be used.
+In 1. we've bound Meta+Shift+p shortcut to undo method of :sys:cmd plugin.
+As we haven't provided context name, **DEFAULT** will be used.
 
 In 2. we've explicitly provided **CMD** context. So box_action will only
 be executed when a widget with context **CMD** will be in focus
 receiving input.
 
-#TODO: ???
-To make a widget belonging to some context, a *context* keyword should be
-passed to constructor.
+One can provide a special context name: ``@`` to make context name equal to
+plugin full namespace path::
+
+   bind :sys:cmd:execute to ENTER context @
+
+In this case, the bind will be saved to context ``:sys:cmd``.
 
 Shortcut chains
 +++++++++++++++

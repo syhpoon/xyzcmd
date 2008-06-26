@@ -32,7 +32,6 @@ class Cmd(lowui.FlowWidget):
     """
 
     resolution = (u"cmd",)
-    context = u"CMD"
 
     def __init__(self, xyz, prompt=u""):
         """
@@ -53,6 +52,7 @@ class Cmd(lowui.FlowWidget):
         self._data = []
         self._index = 0
         self._hindex = 0
+        self._offset = 0
 
         self._plugin = self._init_plugin()
 
@@ -127,6 +127,8 @@ class Cmd(lowui.FlowWidget):
 
         self.xyz.pm.register(_cmd_plugin)
 
+        self.context = _cmd_plugin.ns.pfull
+
         return _cmd_plugin
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -157,14 +159,17 @@ class Cmd(lowui.FlowWidget):
         else:
             _canv_prompt = lowui.Text(u"").render((maxcol,))
 
-        _totalsize = self.prompt.length() + len(self._data)
+        _plen = self.prompt.length()
+        _totalsize = _plen + len(self._data)
 
-        if _totalsize > maxcol:
-            _data = self._data[:maxcol]
+        if _totalsize >= maxcol:
+            self._offset = _totalsize - maxcol + 1
+            _data = self._data[self._offset:]
         else:
+            self._offset = 0
             _data = self._data
 
-        _text_len = maxcol - self.prompt.length()
+        _text_len = abs(maxcol - self.prompt.length())
 
         _canv_text = lowui.TextCanvas(text=["".join(_data)],
                                       attr=[[(self._text_attr, _text_len)]],
@@ -189,11 +194,15 @@ class Cmd(lowui.FlowWidget):
         Return the (x,y) coordinates of cursor within widget.
         """
 
-        return self.prompt.length() + self._index, 0
+        return self.prompt.length() + self._index - self._offset, 0
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def keypress(self, size, key):
+        """
+        Process pressed key
+        """
+
         # First lookup for bind in own context
         _meth = self.xyz.km.process(key, self.context)
 
@@ -257,6 +266,7 @@ class Cmd(lowui.FlowWidget):
 
         self._data = []
         self._index = 0
+        self._offset = 0
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

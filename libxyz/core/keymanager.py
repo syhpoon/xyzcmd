@@ -29,6 +29,7 @@ class KeyManager(object):
     """
 
     CONTEXT_DEFAULT = u"DEFAULT"
+    CONTEXT_SELF = u"@"
 
     def __init__(self, xyz, confpath):
         self.xyz = xyz
@@ -89,6 +90,9 @@ class KeyManager(object):
             _shortcut = mo.group("shortcut")
             _context = mo.group("context")
 
+            if _context == self.CONTEXT_SELF:
+                _context = Namespace(_method).pfull
+
             try:
                 self._bind(_method, _shortcut, _context, _force)
             except KeyManagerError, e:
@@ -131,11 +135,11 @@ class KeyManager(object):
         \s+                 # one ore more spaces
         context             # keyword context
         \s+                 # one ore more spaces
-        (?P<context>[\w_]+) # context name
+        (?P<context>[\w_%s]+) # context name
         )?                  # context group end
         \s*                 # trailing spaces
         $                   # end
-        """, re.VERBOSE)
+        """ % self.CONTEXT_SELF, re.VERBOSE)
 
         _chain_re = re.compile(r"""
         ^                   # begin

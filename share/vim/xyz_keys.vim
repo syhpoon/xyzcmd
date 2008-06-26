@@ -22,7 +22,8 @@ setlocal iskeyword+=!
 syn case match
 
 syn match xyzComment /#.*/
-syn keyword xyzKeyword context
+"syn keyword xyzKeyword context
+syn match xyzContext /context\s\+\(@\|\w\+\)/
 
 """load :ns:plugin
 syn match xyzLoad /load/ nextgroup=xyzNSPath skipwhite
@@ -35,7 +36,8 @@ syn match xyzBindTo /to/ contained skipwhite
 
 syn match xyzStatement /set chain key/
 
-highlight link xyzKeyword Keyword
+"highlight link xyzKeyword Keyword
+highlight link xyzContext Keyword
 highlight link xyzLoad Statement
 highlight link xyzBind Statement
 highlight link xyzBindTo Statement
