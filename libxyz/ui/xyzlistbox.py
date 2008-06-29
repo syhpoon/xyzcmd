@@ -44,6 +44,8 @@ class XYZListBox(lowui.WidgetWrap):
         else:
             _dim = dim
 
+        self._keys = Keys()
+
         _listbox = lowui.AttrWrap(lowui.ListBox(walker), self._attr(u"box"))
 
         _box = Border(_listbox, (title, (self._attr(u"title"))),
@@ -73,7 +75,7 @@ class XYZListBox(lowui.WidgetWrap):
 
             if _i:
                 for _k in _i:
-                    if _k == Keys.ESC:
+                    if _k == self._keys.ESC:
                         return
 
                     self.keypress(dim, _k)

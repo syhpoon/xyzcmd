@@ -19,52 +19,51 @@ class Keys(object):
     Keys abstractions
     """
 
-    CONTROL = "ctrl"
-    CTRL = CONTROL
-    META = "meta"
-    ESCAPE = "esc"
-    ESC = ESCAPE
-    SHIFT = "shift"
-    UP = "up"
-    DOWN = "down"
-    RIGHT = "right"
-    LEFT = "left"
-    END = "end"
-    HOME = "home"
-    INSERT = "insert"
-    DELETE = "delete"
-    PAGE_UP = "page up"
-    PAGE_DOWN = "page down"
-    ENTER = "enter"
-    TAB = "tab"
-    BACKSPACE = "backspace"
+    def __init__(self):
+        self._data = {
+                     "CONTROL": "ctrl",
+                     "CTRL": "ctrl",
+                     "META": "meta",
+                     "ESCAPE": "esc",
+                     "ESC": "esc",
+                     "SHIFT": "shift",
+                     "UP": "up",
+                     "DOWN": "down",
+                     "RIGHT": "right",
+                     "LEFT": "left",
+                     "END": "end",
+                     "HOME": "home",
+                     "INSERT": "insert",
+                     "DELETE": "delete",
+                     "PAGE_UP": "page up",
+                     "PAGE_DOWN": "page down",
+                     "ENTER": "enter",
+                     "TAB": "tab",
+                     "BACKSPACE": "backspace",
+                     "F1": "f1",
+                     "F2": "f2",
+                     "F3": "f3",
+                     "F4": "f4",
+                     "F5": "f5",
+                     "F6": "f6",
+                     "F7": "f7",
+                     "F8": "f8",
+                     "F9": "f9",
+                     "F10": "f10",
+                     "F11": "f11",
+                     "F12": "f12",
+                     "F13": "f13",
+                     "F14": "f14",
+                     "F15": "f15",
+                     "F16": "f16",
+                     "F17": "f17",
+                     "F18": "f18",
+                     "F19": "f19",
+                     "F20": "f20",
+                    }
 
-    # F-keys
-    F1 = "f1"
-    F2 = "f2"
-    F3 = "f3"
-    F4 = "f4"
-    F5 = "f5"
-    F1 = "f1"
-    F2 = "f2"
-    F3 = "f3"
-    F4 = "f4"
-    F5 = "f5"
-    F6 = "f6"
-    F7 = "f7"
-    F8 = "f8"
-    F9 = "f9"
-    F10 = "f10"
-    F11 = "f11"
-    F12 = "f12"
-    F13 = "f13"
-    F14 = "f14"
-    F15 = "f15"
-    F16 = "f16"
-    F17 = "f17"
-    F18 = "f18"
-    F19 = "f19"
-    F20 = "f20"
+        for _k, _v in self._data.iteritems():
+            setattr(self, _k, _v)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -83,3 +82,16 @@ class Keys(object):
                 _shortcut.append(_key)
 
         return (" ".join(_shortcut),)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_key(self, low):
+        """
+        Get attribute name by lowlevel representation
+        """
+
+        for _k, _v in self._data.iteritems():
+            if _v == low:
+                return _k
+
+        return None

@@ -28,6 +28,7 @@ class XYZPlugin(BasePlugin):
         super(XYZPlugin, self).__init__(xyz)
 
         self.public = {u"show_box": self._show_box}
+        self._keys = uilib.Keys()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -41,14 +42,46 @@ class XYZPlugin(BasePlugin):
         _escape = 0
 
         while True:
-            _input = uilib.MessageBox(self.xyz, self.xyz.top, _msg,
-                                     _(u"Input test")).show()
+            _input = InputBox(self.xyz, self.xyz.top, _msg,
+                              _(u"Input test")).show()
 
-            if uilib.Keys.ESCAPE in _input:
+            if self._keys.ESCAPE in _input:
                 _escape += 1
                 if _escape == 2:
                     return
             else:
                 _escape = 0
 
-            _msg = unicode(_input)
+            _keys = []
+
+            for _i in _input:
+                if len(_i) > 1: # Shortcut
+                    _keys.extend([self._keys.get_key(x) or x
+                                            for x in _i.split(u" ")])
+                else:
+                    _keys.append(_i)
+
+            _low = [unicode(x) for x in _input]
+            _msg = u"Shortcut: '%s'. Raw: '%s'" % \
+                   (u"-".join(_keys), u"".join(_low))
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class InputBox(uilib.MessageBox):
+    def show(self, dim=None):
+        if dim is None:
+            dim = self.screen.get_cols_rows()
+
+        self.screen.draw_screen(dim, self.render(dim, True))
+
+        _input = None
+
+        while True:
+            _input = self.xyz.input.get()
+
+            if _input:
+                break
+
+        return _input
+
+

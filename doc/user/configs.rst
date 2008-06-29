@@ -44,6 +44,9 @@ regular keys separated by hiphen::
 .. note::
    Please note that not all of the possible combinations make sense.
 
+There is a standard plugin ``:ui:testinput`` which can be usefull to determine
+what kind of shortcuts are corresponding to pressed keys.
+
 Contexts
 ++++++++
 When a focus widget receives keyboard input it looks for matching key pressed

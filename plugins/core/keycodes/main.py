@@ -42,6 +42,8 @@ class XYZPlugin(BasePlugin):
                        u"independently. Terminal type determined by examining "\
                        u"TERM environment variable."
 
+    HOMEPAGE = u"xyzcmd.syhpoon.name"
+
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 
@@ -57,37 +59,39 @@ class XYZPlugin(BasePlugin):
 
         self._ud = UserData()
 
-        self.keys = (("F1", uilib.Keys.F1),
-                     ("F2", uilib.Keys.F2),
-                     ("F3", uilib.Keys.F3),
-                     ("F4", uilib.Keys.F4),
-                     ("F5", uilib.Keys.F5),
-                     ("F6", uilib.Keys.F6),
-                     ("F7", uilib.Keys.F7),
-                     ("F8", uilib.Keys.F8),
-                     ("F9", uilib.Keys.F9),
-                     ("F10", uilib.Keys.F10),
-                     ("F11", uilib.Keys.F11),
-                     ("F12", uilib.Keys.F12),
-                     ("F13", uilib.Keys.F13),
-                     ("F14", uilib.Keys.F14),
-                     ("F15", uilib.Keys.F15),
-                     ("F16", uilib.Keys.F16),
-                     ("F17", uilib.Keys.F17),
-                     ("F18", uilib.Keys.F18),
-                     ("F19", uilib.Keys.F19),
-                     ("F20", uilib.Keys.F20),
-                     ("BACKSPACE", uilib.Keys.BACKSPACE),
-                     ("END", uilib.Keys.END),
-                     ("UP", uilib.Keys.UP),
-                     ("DOWN", uilib.Keys.DOWN),
-                     ("LEFT", uilib.Keys.LEFT),
-                     ("RIGHT", uilib.Keys.RIGHT),
-                     ("HOME", uilib.Keys.HOME),
-                     ("PAGE UP", uilib.Keys.PAGE_UP),
-                     ("PAGE DOWN", uilib.Keys.PAGE_DOWN),
-                     ("INSERT", uilib.Keys.INSERT),
-                     ("TAB", uilib.Keys.TAB),
+        self._keys = uilib.Keys()
+
+        self.keys = (("F1", self._keys.F1),
+                     ("F2", self._keys.F2),
+                     ("F3", self._keys.F3),
+                     ("F4", self._keys.F4),
+                     ("F5", self._keys.F5),
+                     ("F6", self._keys.F6),
+                     ("F7", self._keys.F7),
+                     ("F8", self._keys.F8),
+                     ("F9", self._keys.F9),
+                     ("F10", self._keys.F10),
+                     ("F11", self._keys.F11),
+                     ("F12", self._keys.F12),
+                     ("F13", self._keys.F13),
+                     ("F14", self._keys.F14),
+                     ("F15", self._keys.F15),
+                     ("F16", self._keys.F16),
+                     ("F17", self._keys.F17),
+                     ("F18", self._keys.F18),
+                     ("F19", self._keys.F19),
+                     ("F20", self._keys.F20),
+                     ("BACKSPACE", self._keys.BACKSPACE),
+                     ("END", self._keys.END),
+                     ("UP", self._keys.UP),
+                     ("DOWN", self._keys.DOWN),
+                     ("LEFT", self._keys.LEFT),
+                     ("RIGHT", self._keys.RIGHT),
+                     ("HOME", self._keys.HOME),
+                     ("PAGE UP", self._keys.PAGE_UP),
+                     ("PAGE DOWN", self._keys.PAGE_DOWN),
+                     ("INSERT", self._keys.INSERT),
+                     ("TAB", self._keys.TAB),
                     )
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -116,10 +120,10 @@ class XYZPlugin(BasePlugin):
             _m = _msg % _label
             _p = uilib.MessageBox(self.xyz, self.xyz.top, _m, _title).show()
 
-            if _p == [] or _p[0] == uilib.Keys.ENTER:
+            if _p == [] or _p[0] == self._keys.ENTER:
                 continue
 
-            if _p[0] == uilib.Keys.ESCAPE:
+            if _p[0] == self._keys.ESCAPE:
                 break
 
             _cur = _pressed[self._terminal]

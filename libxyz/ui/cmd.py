@@ -48,6 +48,8 @@ class Cmd(lowui.FlowWidget):
 
         self.prompt = Prompt(prompt, self._attr(u"prompt"))
 
+        self._keys = Keys()
+
         self._text_attr = self._attr(u"text")
         self._data = []
         self._index = 0
@@ -540,7 +542,7 @@ class Cmd(lowui.FlowWidget):
 
         _dim = tuple([x - 2 for x in self.xyz.screen.get_cols_rows()])
 
-        _ek = [Keys.ENTER]
+        _ek = [self._keys.ENTER]
 
         XYZListBox(self.xyz, self.xyz.top, _walker, _(u"History"),
                    _dim).show(exit_keys=_ek)
@@ -577,7 +579,7 @@ class Entry(ListEntry):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def keypress(self, (maxcol,), key):
-        if key == Keys.ENTER and self._enter_cb:
+        if key == self._keys.ENTER and self._enter_cb:
             if self._num:
                 _index = int("".join(self._num))
                 self._num = []

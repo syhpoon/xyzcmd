@@ -70,6 +70,7 @@ class Box(lowui.WidgetWrap):
     def show(self, dim=None):
         """
         Show box until key pressed
+        @param dim: Dimension
         """
 
         if dim is None:
@@ -80,7 +81,7 @@ class Box(lowui.WidgetWrap):
         _input = None
 
         while True:
-            _input = self.screen.get_input()
+            _input = self.xyz.input.get()
 
             if _input:
                 break

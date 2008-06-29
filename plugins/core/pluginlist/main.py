@@ -35,6 +35,7 @@ class XYZPlugin(BasePlugin):
     FULL_DESCRIPTION = u"Show all currently loaded plugins and associated "\
                        u"information"
     NAMESPACE = u"core"
+    HOMEPAGE = u"xyzcmd.syhpoon.name"
 
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)

@@ -30,6 +30,8 @@ class PluginEntry(lowui.FlowWidget):
         self.plugin = plugin
         self.enter_cb = enter_cb
 
+        self._keys = uilib.Keys()
+
         self._text = u"%s%*s (%s)"
         self._attr = selected_attr
         self._content = lowui.Text(self._text)
@@ -67,7 +69,7 @@ class PluginEntry(lowui.FlowWidget):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def keypress(self, (maxcol,), key):
-        if key == uilib.Keys.ENTER:
+        if key == self._keys.ENTER:
             try:
                 self.enter_cb()
             except Exception, e:
