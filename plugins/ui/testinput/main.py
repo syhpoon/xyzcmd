@@ -4,7 +4,6 @@
 #
 
 from libxyz.core.plugins import BasePlugin
-
 from libxyz.ui import lowui
 
 import libxyz.ui as uilib
@@ -18,7 +17,10 @@ class XYZPlugin(BasePlugin):
     AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
     VERSION = u"0.1"
     BRIEF_DESCRIPTION = u"Test input"
-    FULL_DESCRIPTION = u""
+    FULL_DESCRIPTION = u"Simple dialog to show pressed keys.\n"\
+                       u"Shortcut is what XYZCommander expects to see in "\
+                       u"configuration files.\n"\
+                       u"Raw is what low-level library emits to focus widget"
     NAMESPACE = u"ui"
     MIN_XYZ_VERSION = None
     DOC = None
