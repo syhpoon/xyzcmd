@@ -144,10 +144,37 @@ class Launcher(object):
 
         import __builtin__
 
-        _log_level = self.xyz.conf[u"xyz"][u"log_level"]
-        _log_lines = self.xyz.conf[u"xyz"][u"log_lines"]
+        _log = logger.LogLevel()
 
-        _logger = core.logger.Logger(self.xyz, _log_level, _log_lines)
+        try:
+            _levels = self.xyz.conf[u"plugins"][u":sys:logger"][u"levels"]
+        except KeyError:
+            _levels = (logger.LogLevel().ALL,)
+        else:
+            if not isinstance(_levels, tuple):
+                _levels = (_levels,)
+
+        try:
+            _levels = [getattr(_log, x) for x in _levels]
+        except Exception:
+            raise XYZValueError(_(u"Invalid value %s.\n"\
+                                  u"A list of valid log levels expected"
+                                  % unicode(_levels)))
+
+        try:
+            _lines = self.xyz.conf[u"plugins"][u":sys:logger"][u"lines"]
+        # Value not defined in conf
+        except KeyError:
+            _lines = 100
+
+        try:
+            _lines = abs(int(_lines))
+        except ValueError:
+            raise XYZValueError(_(u"Invalid value %s. "\
+                                  u"A positive integer expected" %
+                                  unicode(_lines)))
+
+        _logger = core.logger.Logger(self.xyz, _levels, _lines)
 
         __builtin__.__dict__["xyzlog"] = _logger
 
@@ -181,25 +208,7 @@ class Launcher(object):
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         def _validate_main(var, val):
-            if var == u"log_level":
-                _log = logger.LogLevel()
-
-                if not isinstance(val, tuple):
-                    val = (val,)
-                try:
-                    return [getattr(_log, x) for x in val]
-                except Exception:
-                    raise XYZValueError(_(u"Invalid value %s.\n"\
-                                          u"A list of valid log levels expected"
-                                          % unicode(val)))
-            elif var == u"log_lines":
-                try:
-                    return abs(int(val))
-                except ValueError:
-                    raise XYZValueError(_(u"Invalid value %s.\n"\
-                                          u"A positive integer expected" % val))
-            else:
-                return val
+            return val
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -208,8 +217,6 @@ class Launcher(object):
             # in system dir instead
             for _required in (
                               (u"skin", const.DEFAULT_SKIN),
-                              (u"log_level", logger.LogLevel().ALL),
-                              (u"log_lines", 100),
                               (u"plugins", parser.ParsedData(u"plugins")),
                               (u"cmd_prompt", u""),
                              ):

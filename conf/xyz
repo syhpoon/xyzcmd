@@ -14,15 +14,10 @@ plugins {
 }
 
 # Skin to use
-#skin = monochrome
-skin = seablue
-
-# Log levels to track
-log_level = ERROR,WARNING,INFO
-
-# Maximum number of entries to keep
-log_lines = 100
+skin = monochrome
+#skin = seablue
 
 # Command line prompt
 # TODO: macros in prompt
+# TODO: Test no prompt cmd
 cmd_prompt = "$"

@@ -169,7 +169,7 @@ For example, if we'd have following block in plugins config::
 
 Plugin :misc:hello can access ``show_version`` variable as::
 
-   show_version = xyz.conf[u"plugins"][u":misc:hello"].show_version
+   show_version = xyz.conf[u"plugins"][u":misc:hello"][u"show_version"]
 
 Virtual plugins
 ---------------

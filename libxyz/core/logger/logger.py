@@ -129,6 +129,7 @@ class Logger(object):
         _logger_plugin.BRIEF_DESCRIPTION = u"Logger plugin"
         _logger_plugin.FULL_DESCRIPTION = re.sub(r"\ {2,}",
                                                  r"", self.__doc__).strip()
+        _logger_plugin.HOMEPAGE = u"xyzcmd.syhpoon.name"
 
         _logger_plugin.export(u"show_console", self.show_console)
         _logger_plugin.export(u"log", self.log)

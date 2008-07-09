@@ -33,6 +33,11 @@ class Cmd(lowui.FlowWidget):
 
     resolution = (u"cmd",)
 
+    LEFT = u"left"
+    RIGHT = u"right"
+    END = u"end"
+    UNDER = u"under"
+
     def __init__(self, xyz, prompt=u""):
         """
         @param xyz: XYZData instance
@@ -52,9 +57,11 @@ class Cmd(lowui.FlowWidget):
 
         self._text_attr = self._attr(u"text")
         self._data = []
+        # Internal cursor index. Value is in range(0,len(self._data))
         self._index = 0
+        # Virtual cursor index. Value is in range(0,maxcol)
+        self._vindex = 0
         self._hindex = 0
-        self._offset = 0
 
         self._plugin = self._init_plugin()
 
@@ -161,16 +168,7 @@ class Cmd(lowui.FlowWidget):
         else:
             _canv_prompt = lowui.Text(u"").render((maxcol,))
 
-        _plen = self.prompt.length()
-        _totalsize = _plen + len(self._data)
-
-        if _totalsize >= maxcol:
-            self._offset = _totalsize - maxcol + 1
-            _data = self._data[self._offset:]
-        else:
-            self._offset = 0
-            _data = self._data
-
+        _data = self._get_visible(maxcol)
         _text_len = abs(maxcol - self.prompt.length())
 
         _canv_text = lowui.TextCanvas(text=["".join(_data)],
@@ -191,12 +189,40 @@ class Cmd(lowui.FlowWidget):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def _get_visible(self, maxcol):
+        """
+        Calculate and return currently visible piece of cmd data
+        """
+
+        _plen = self.prompt.length()
+        _dlen = len(self._data)
+        _xindex = _plen + self._index
+
+        if self._vindex >= maxcol:
+            self._vindex = maxcol - 2
+
+        if _plen + _dlen >= maxcol:
+            _off = _xindex - maxcol
+            _to = _xindex
+
+            if _off < 0:
+                _off = 0
+                _to = maxcol - _plen
+
+            _data = self._data[_off:_to]
+        else:
+            _data = self._data
+
+        return _data
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def get_cursor_coords(self,(maxcol,)):
         """
         Return the (x,y) coordinates of cursor within widget.
         """
 
-        return self.prompt.length() + self._index - self._offset, 0
+        return self.prompt.length() + self._vindex, 0
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -205,6 +231,13 @@ class Cmd(lowui.FlowWidget):
         Process pressed key
         """
 
+        def _add(char):
+            self._data.insert(self._index, char)
+            self._index += 1
+            self._vindex += 1
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        
         # First lookup for bind in own context
         _meth = self.xyz.km.process(key, self.context)
 
@@ -222,9 +255,13 @@ class Cmd(lowui.FlowWidget):
             _good = [x for x in key if len(x) == 1]
 
             if _good:
-                self._data.insert(self._index, *_good)
-                self._index += len(_good)
-                self._invalidate()
+                try:
+                    map(lambda x: _add(x), _good)
+                except Exception, e:
+                    xyzlog.log(_(unicode(e)), xyzlog.loglevel.ERROR)
+                    xyzlog.log(traceback.format_exc(), xyzlog.loglevel.DEBUG)
+                else:
+                    self._invalidate()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -268,7 +305,122 @@ class Cmd(lowui.FlowWidget):
 
         self._data = []
         self._index = 0
-        self._offset = 0
+        self._vindex = 0
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _move_cursor(self, direction, chars=None, topred=None):
+        """
+        Generic cursor moving procedure
+        @param direction: LEFT or RIGHT
+        @param chars: Number of character to move or END to move to the end
+                      in corresponding direction
+        @param topred: Predicate function which must return True if char
+                       under the cursor is endpoint in move
+        """
+
+        _newindex = None
+
+        # Using predicate
+        if callable(topred):
+            if direction == self.LEFT:
+                _range = range(self._index - 1, 0, -1)
+            else:
+                _range = range(self._index + 1, len(self._data))
+
+            for i in _range:
+                if topred(self._data[i]):
+                    _newindex = i
+                    break
+
+            if _newindex is None:
+                # To start or end, depending on direction
+                return self._move_cursor(direction, chars=self.END)
+
+        elif direction == self.LEFT:
+            if chars == self.END:
+                _newindex = 0
+            elif chars is not None and self._index >= chars:
+                _newindex = self._index - chars
+
+        elif direction == self.RIGHT:
+            if chars == self.END:
+                _newindex = len(self._data)
+
+            elif (self._index + chars) < len(self._data):
+                _newindex = self._index + chars
+
+        if _newindex is not None:
+            self._index = _newindex
+            self._vindex = _newindex
+            self._invalidate()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _delete(self, direction, chars=None, topred=None):
+        """
+        Generic delete routine
+        @param direction: LEFT, RIGHT or UNDER
+        @param chars: Number of characters to delete
+        @param topred: Predicate function which must return True if char
+                       under the cursor is endpoint in delete
+        """
+
+        _newindex = None
+        _delindex = None
+        _newdata = None
+
+        if callable(topred):
+            if direction == self.LEFT:
+                _range = range(self._index - 1, 0, -1)
+            else:
+                _range = range(self._index + 1, len(self._data))
+
+            _found = False
+
+            for i in _range:
+                if topred(self._data[i]):
+                    _found = True
+                    if direction == self.LEFT:
+                        _newindex = i
+                        _newdata = self._data[:_newindex] + \
+                                   self._data[self._index:]
+                    else:
+                        _newdata = self._data[:self._index] + self._data[i:]
+
+                    self._save_undo()
+                    break
+
+            if not _found:
+                return self._delete(direction, chars=self.END)
+
+        elif direction == self.UNDER:
+            if self._index >= 0 and self._index < len(self._data):
+                _delindex = self._index
+
+        elif direction == self.LEFT:
+            if chars == self.END:
+                self._save_undo()
+                _newdata = self._data[self._index:]
+                _newindex = 0
+            elif chars is not None and self._index >= chars:
+                _newindex = self._index - chars
+                _delindex = _newindex
+
+        elif direction == self.RIGHT:
+            if chars == self.END:
+                self._save_undo()
+                _newdata = self._data[:self._index]
+
+        if _newindex is not None:
+            self._index = _newindex
+            self._vindex = _newindex
+        if _newdata is not None:
+            self._data = _newdata
+        if _delindex is not None:
+            del(self._data[_delindex])
+
+        self._invalidate()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -279,10 +431,11 @@ class Cmd(lowui.FlowWidget):
         Delete single character left to the cursor
         """
 
-        if self._index > 0:
-            self._index -= 1
-            del(self._data[self._index])
-            self._invalidate()
+        self._delete(self.LEFT, chars=1)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    #TODO: def del_char_right(self):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -291,9 +444,7 @@ class Cmd(lowui.FlowWidget):
         Delete single character under the cursor
         """
 
-        if self._index > 0 and self._index < len(self._data):
-            del(self._data[self._index])
-            self._invalidate()
+        return self._delete(self.UNDER)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -302,17 +453,7 @@ class Cmd(lowui.FlowWidget):
         Delete a word left to the cursor
         """
 
-        _orig = self._index
-
-        for i in range(self._index - 1, 0, -1):
-            if self._data[i].isspace():
-                self._save_undo()
-                self._index = i
-                self._data = self._data[:i] + self._data[_orig:]
-                self._invalidate()
-                return
-
-        return self.clear_left()
+        return self._delete(self.LEFT, topred=lambda x: x.isspace())
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -321,16 +462,7 @@ class Cmd(lowui.FlowWidget):
         Delete a word right to the cursor
         """
 
-        _orig = self._index
-
-        for i in range(self._index + 1, len(self._data)):
-            if self._data[i].isspace():
-                self._save_undo()
-                self._data = self._data[:_orig] + self._data[i:]
-                self._invalidate()
-                return
-
-        return self.clear_right()
+        return self._delete(self.RIGHT, topred=lambda x: x.isspace())
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -350,10 +482,7 @@ class Cmd(lowui.FlowWidget):
         Clear the cmd line from the cursor to the left
         """
 
-        self._save_undo()
-        self._data = self._data[self._index:]
-        self._index = 0
-        self._invalidate()
+        self._delete(self.LEFT, chars=self.END)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -362,9 +491,7 @@ class Cmd(lowui.FlowWidget):
         Clear the cmd line from the cursor to the right
         """
 
-        self._save_undo()
-        self._data = self._data[:self._index]
-        self._invalidate()
+        return self._delete(self.RIGHT, chars=self.END)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -373,8 +500,7 @@ class Cmd(lowui.FlowWidget):
         Move cursor to the beginning of the command line
         """
 
-        self._index = 0
-        self._invalidate()
+        self._move_cursor(self.LEFT, chars=self.END)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -383,8 +509,7 @@ class Cmd(lowui.FlowWidget):
         Move cursor to the end of the command line
         """
 
-        self._index = len(self._data)
-        self._invalidate()
+        self._move_cursor(self.RIGHT, chars=self.END)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -393,9 +518,7 @@ class Cmd(lowui.FlowWidget):
         Move cursor left
         """
 
-        if self._index > 0:
-            self._index -= 1
-            self._invalidate()
+        self._move_cursor(self.LEFT, chars=1)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -404,9 +527,7 @@ class Cmd(lowui.FlowWidget):
         Move cursor right
         """
 
-        if self._index < len(self._data):
-            self._index += 1
-            self._invalidate()
+        self._move_cursor(self.RIGHT, chars=1)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -415,13 +536,7 @@ class Cmd(lowui.FlowWidget):
         Move cursor one word left
         """
 
-        for i in range(self._index - 1, 0, -1):
-            if self._data[i].isspace():
-                self._index = i
-                self._invalidate()
-                return
-
-        return self.cursor_begin()
+        self._move_cursor(self.LEFT, topred=lambda x: x.isspace())
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -430,13 +545,7 @@ class Cmd(lowui.FlowWidget):
         Move cursor one word right
         """
 
-        for i in range(self._index + 1, len(self._data)):
-            if self._data[i].isspace():
-                self._index = i
-                self._invalidate()
-                return
-
-        return self.cursor_end()
+        self._move_cursor(self.RIGHT, topred=lambda x: x.isspace())
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -572,6 +681,7 @@ class Entry(ListEntry):
             self._enter_cb = None
 
         self.num_order = num_order
+        self._keys = Keys()
         _msg = u"%d: %s" % (num_order, msg)
 
         super(Entry, self).__init__(_msg, selected_attr, entry_attr)

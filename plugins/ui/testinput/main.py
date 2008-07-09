@@ -34,9 +34,10 @@ class XYZPlugin(BasePlugin):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _show_box(self):
+    def _show_box(self, use_wrap=True):
         """
         Show test_box dialog
+        @param use_wrap: Whether to use input wrapper which honours learned keys
         """
 
         _msg = _(u"Press any key. Escape twice to quit.")
@@ -45,7 +46,7 @@ class XYZPlugin(BasePlugin):
 
         while True:
             _input = InputBox(self.xyz, self.xyz.top, _msg,
-                              _(u"Input test")).show()
+                              _(u"Input test")).show(use_wrap=use_wrap)
 
             if self._keys.ESCAPE in _input:
                 _escape += 1
@@ -70,7 +71,7 @@ class XYZPlugin(BasePlugin):
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 class InputBox(uilib.MessageBox):
-    def show(self, dim=None):
+    def show(self, dim=None, use_wrap=True):
         if dim is None:
             dim = self.screen.get_cols_rows()
 
@@ -79,7 +80,10 @@ class InputBox(uilib.MessageBox):
         _input = None
 
         while True:
-            _input = self.xyz.input.get()
+            if use_wrap:
+                _input = self.xyz.input.get()
+            else:
+                _input = self.screen.get_input()
 
             if _input:
                 break
