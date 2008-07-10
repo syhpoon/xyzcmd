@@ -11,13 +11,14 @@ plugins {
 	:core:keycodes > ENABLE
 	:core:pluginlist > ENABLE
 	:ui:testinput > ENABLE
+	:misc:about > ENABLE
 }
 
 # Skin to use
-skin = monochrome
-#skin = seablue
+#skin = monochrome
+skin = seablue
 
 # Command line prompt
 # TODO: macros in prompt
 # TODO: Test no prompt cmd
-cmd_prompt = "$"
+cmd_prompt = "|| "

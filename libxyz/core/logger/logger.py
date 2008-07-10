@@ -67,6 +67,7 @@ class Logger(object):
         # Queue is actually subclassed from list, but SimpleListWalker
         # checks arg type by type(), not by isinstance(), so cast explicitly
         _walker = lowui.SimpleListWalker(list(self._data))
+        _walker.focus = len(_walker) - 1
 
         _dim = tuple([x - 2 for x in self.xyz.screen.get_cols_rows()])
 

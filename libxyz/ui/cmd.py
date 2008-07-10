@@ -161,8 +161,6 @@ class Cmd(lowui.FlowWidget):
         Render the command line
         """
 
-        #TODO: cmd swap
-
         if self.prompt is not None:
             _canv_prompt = self.prompt.render((maxcol,))
         else:
@@ -194,12 +192,14 @@ class Cmd(lowui.FlowWidget):
         Calculate and return currently visible piece of cmd data
         """
 
+        maxcol -= 1
+
         _plen = self.prompt.length()
         _dlen = len(self._data)
         _xindex = _plen + self._index
 
         if self._vindex >= maxcol:
-            self._vindex = maxcol - 2
+            self._vindex = maxcol - 1
 
         if _plen + _dlen >= maxcol:
             _off = _xindex - maxcol
@@ -207,7 +207,7 @@ class Cmd(lowui.FlowWidget):
 
             if _off < 0:
                 _off = 0
-                _to = maxcol - _plen
+                _to = maxcol - _plen + 1
 
             _data = self._data[_off:_to]
         else:
@@ -249,8 +249,7 @@ class Cmd(lowui.FlowWidget):
         _meth = self.xyz.km.process(key)
 
         if _meth is not None:
-            _meth()
-            return
+            return _meth()
         else:
             _good = [x for x in key if len(x) == 1]
 
@@ -281,6 +280,7 @@ class Cmd(lowui.FlowWidget):
 
         if self._undo:
             self._index, self._data = self._undo.pop()
+            self._vindex = self._index
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -347,7 +347,7 @@ class Cmd(lowui.FlowWidget):
             if chars == self.END:
                 _newindex = len(self._data)
 
-            elif (self._index + chars) < len(self._data):
+            elif (self._index + chars) <= len(self._data):
                 _newindex = self._index + chars
 
         if _newindex is not None:

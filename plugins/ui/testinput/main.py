@@ -89,5 +89,3 @@ class InputBox(uilib.MessageBox):
                 break
 
         return _input
-
-
