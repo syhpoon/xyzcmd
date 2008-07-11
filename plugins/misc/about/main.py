@@ -41,18 +41,24 @@ class XYZPlugin(BasePlugin):
         _attr = self.xyz.skin.attr(uilib.Box.resolution, u"box")
 
         _w = []
-        _w.append(lowui.BigText((_attr, libxyz.const.PROG), _font6x6))
-        _w.append(lowui.BigText((_attr, u"Version: %s" %
-                                Version.string_version), _font6x6))
-        _w.append(lowui.BigText((_attr, u"Homepage: %s" %
-                                libxyz.const.HOMEPAGE), _font6x6))
-        #_box = lowui.Pile(_w)
-        _box = lowui.Filler(lowui.Pile(_w))
 
-        _box = lowui.Overlay(_box, self.xyz.top, uilib.align.CENTER, None,
-                             uilib.align.MIDDLE, None)
+        _w.append(lowui.Text((_attr, u"%s -- Flexible console file manager" %
+                             libxyz.const.PROG), align=uilib.align.CENTER))
+        _w.append(lowui.Text((_attr, u"Version: %s" %
+                                Version.string_version),
+                              align=uilib.align.CENTER))
+        _w.append(lowui.Text((_attr, u"Homepage: %s" %
+                                libxyz.const.HOMEPAGE),
+                              align=uilib.align.CENTER))
+
+        _box = lowui.AttrWrap(lowui.Filler(lowui.Pile(_w)), _attr)
 
         _dim = self.xyz.screen.get_cols_rows()
+        _width = int((_dim[0] / 100.0) * 70)
+
+        _box = lowui.Overlay(_box, self.xyz.top, uilib.align.CENTER, _width,
+                             uilib.align.MIDDLE, len(_w) + 2)
+
         self.xyz.screen.draw_screen(_dim, _box.render(_dim, True))
 
         _input = None
