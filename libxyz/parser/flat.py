@@ -85,6 +85,7 @@ class FlatParser(BaseParser):
         self._result = {}
         self._current_list = []
         self._lexer = None
+        self._state = self.STATE_VARIABLE
 
         self.opt = opt or self.DEFAULT_OPT
         self.set_opt(self.DEFAULT_OPT, self.opt)

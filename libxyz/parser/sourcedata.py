@@ -37,12 +37,16 @@ class SourceData(object):
         self._buffer = []
 
         self._source = source
+        self._intern = u""
 
         if isinstance(source, basestring):
+            self._intern = _(u"Source string")
             self._type = self.STRING
             self._next_me = self._next_string
             self._len = len(self._source)
+        # Open file-like object supposed
         else:
+            self._intern = source.name.decode()
             self._type = self.FILE
             self._next_me = self._next_file
 
@@ -98,3 +102,12 @@ class SourceData(object):
 
         # Decrease lineno if needed
         self.lineno -= string.count(u"\n")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def desc(self):
+        """
+        Get source data description
+        """
+
+        return self._intern

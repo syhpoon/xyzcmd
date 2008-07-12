@@ -15,10 +15,10 @@ plugins {
 }
 
 # Skin to use
-#skin = monochrome
-skin = seablue
+skin = monochrome
+#skin = seablue
 
 # Command line prompt
 # TODO: macros in prompt
 # TODO: Test no prompt cmd
-cmd_prompt = "|| "
+cmd_prompt = ""

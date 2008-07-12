@@ -49,7 +49,7 @@ class BaseParser(object):
         else:
             _emsg = _(u"Syntax error")
 
-        raise ParseError("%s: %s" % (_pre, _emsg))
+        raise ParseError(u"%s: %s: %s" % (self._lexer.sdata.desc(),_pre, _emsg))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
