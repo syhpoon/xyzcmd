@@ -103,13 +103,17 @@ class Lexer(object):
             _type = self.TOKEN_IDT
             _tok = tok
 
-            if self.macro and tok[0] == self.macro:
+            file("/tmp/DEBUG", "a").write("%s\n" % str(tok))
+            if tok and self.macro and tok[0] == self.macro:
+                file("/tmp/DEBUG", "a").write("%s\n" % str("MACRO"))
                 _type = self.TOKEN_MACRO
                 _tok = tok[1:]
 
             return (_type, _tok)
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        _quoted = False
 
         for char in self.sdata:
             if self._done:
@@ -123,7 +127,7 @@ class Lexer(object):
                 if 0 < self._xqtotal < self._xqcount:
                     if char != self._xqchar:
                         # Put read-ahead chars back
-                        _back_tk = "%s%s" % (self._xqchar * self._xqtotal, char)
+                        _back_tk = "%s%s" %(self._xqchar * self._xqtotal, char)
                         self.unget(_back_tk)
                         self._skip_next = len(_back_tk)
                         self._xqtotal = 0
@@ -140,6 +144,7 @@ class Lexer(object):
                         else:
                             # Beginning
                             self._in_xquote = True
+                            _quoted = True
 
                         self._xqtotal = 0
 
@@ -168,19 +173,20 @@ class Lexer(object):
 
                 _token = None
 
-                if self._idt:
+                if self._idt or _quoted:
                     _token = u"".join(self._idt)
                     self._idt = []
+                    _quoted = False
                 else:
                     self._in_comment = False
 
                 if char in self.tokens:
-                    if _token:
+                    if _token is not None:
                         self.unget(char)
                     else:
                         _token = char
 
-                if _token:
+                if _token is not None:
                     return _token_type(_token)
                 else:
                     continue
@@ -190,6 +196,7 @@ class Lexer(object):
                     self._in_quote = False
                 else:
                     self._in_quote = True
+                    _quoted = True
 
                 continue
 
@@ -201,16 +208,17 @@ class Lexer(object):
                 _token = None
 
                 # Check if we finished assembling the token
-                if self._idt:
+                if self._idt or _quoted:
                     _token = u"".join(self._idt)
                     self._idt = []
+                    _quoted = False
                 if not char.isspace():
-                    if _token:
+                    if _token is not None:
                         self.unget(char)
                     else:
                         _token = char
 
-                if _token:
+                if _token is not None:
                     return _token_type(_token)
                 else:
                     continue

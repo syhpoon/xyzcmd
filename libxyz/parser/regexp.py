@@ -47,7 +47,7 @@ class RegexpParser(BaseParser):
         """
 
         _lineno = 0
-        _source = self._get_source(source)
+        _source = SourceData(source, bytes=False)
 
         for _line in _source:
             _lineno += 1
@@ -67,27 +67,10 @@ class RegexpParser(BaseParser):
                     try:
                         self.cbpool[_regexp](_res)
                     except XYZValueError, e:
-                        raise ParseError(_(u"Parse error on line %d: %s"\
-                                         % (_lineno, e)))
+                        raise ParseError(_(u"%s: parse error on line %d: %s"\
+                                         % (_source.desc(), _lineno, e)))
                     else:
                         break
 
             if not _matched:
                 raise ParseError(_(u"Unmatched line %d: %s" % (_lineno, _line)))
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _get_source(self, source):
-        """
-        Determine type of the source
-        """
-
-        _src = None
-
-        if isinstance(source, basestring):
-            # List of lines
-            _src = source.splitlines(True)
-        else: # Assume an open file object
-            _src = source
-
-        return _src

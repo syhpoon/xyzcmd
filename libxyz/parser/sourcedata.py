@@ -22,14 +22,17 @@ class SourceData(object):
     FILE = 0
     STRING = 1
 
-    def __init__(self, source):
+    def __init__(self, source, bytes=True):
         """
         @param source: Source
         @type source: String or file-like object
+        @param bytes: If True then object will produce single byte on iteration
+                      Otherwise it will be single line.
         """
 
         self.lineno = 1
 
+        self._bytes = bytes
         self._source = None
         self._index = 0
         self._next_me = None
@@ -73,23 +76,37 @@ class SourceData(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _next_file(self):
-        _char = self._source.read(1)
+        if self._bytes:
+            _data = self._source.read(1)
+        else:
+            _data = self._source.readline()
 
         # EOF
-        if not _char:
+        if not _data:
             raise StopIteration()
         else:
-            return _char
+            return _data
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _next_string(self):
         if self._index >= self._len:
             raise StopIteration()
+
+        if not self._bytes:
+            _nl = self._source.find("\n")
+
+            if _nl == -1:
+                _data = self._source[self._index:]
+                self._index = len(_data)
+            else:
+                _data = self._source[self._index:_nl]
+                self._index = _nl
         else:
-            _char = self._source[self._index]
+            _data = self._source[self._index]
             self._index += 1
-            return _char
+
+        return _data
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

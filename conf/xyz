@@ -20,5 +20,4 @@ skin = monochrome
 
 # Command line prompt
 # TODO: macros in prompt
-# TODO: Test no prompt cmd
-cmd_prompt = ""
+cmd_prompt = "|| "

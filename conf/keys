@@ -10,7 +10,7 @@ load :sys:logger:*
 load :sys:cmd:*
 load :core:pluginlist:show_list
 load :ui:testinput:show_box
-load :misc:about:show_box
+load :misc:about:about
 
 bind :sys:cmd:execute to ENTER context @
 bind :sys:cmd:history_prev to META-p context @
@@ -39,7 +39,7 @@ bind :core:keycodes:learn_keys to META-s context PANEL
 
 bind :ui:testinput:show_box to META-e context PANEL
 
-bind :misc:about:show_box to META-a context PANEL
+bind :misc:about:about to META-a context PANEL
 
 #set chain key META-Q
 #set chain key META-L context PANEL

@@ -113,7 +113,7 @@ class FlatParser(BaseParser):
                    self.list_separator
                   )
 
-        self._lexer = Lexer(source, _tokens, self.comment)
+        self._lexer = Lexer(source, _tokens, self.comment, macro=None)
 
         try:
             while True:

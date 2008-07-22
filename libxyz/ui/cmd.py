@@ -173,14 +173,14 @@ class Cmd(lowui.FlowWidget):
                                       attr=[[(self._text_attr, _text_len)]],
                                       maxcol=maxcol)
 
-        canv = lowui.CanvasJoin(
-                                [
-                                 (_canv_prompt, None, False,
-                                  self.prompt.length()),
-                                 (_canv_text, 0, True, _text_len),
-                                ]
-                               )
+        _canvases = []
+        
+        if self.prompt.length() > 0:
+            _canvases.append((_canv_prompt, None, False, self.prompt.length()))
 
+        _canvases.append((_canv_text, 0, True, _text_len))
+
+        canv = lowui.CanvasJoin(_canvases)
         canv.cursor = self.get_cursor_coords((maxcol,))
 
         return canv

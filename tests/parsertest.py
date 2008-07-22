@@ -31,12 +31,32 @@ class BlockParsing(unittest.TestCase):
 
     def testXQuote(self):
         """
-        Test extending qutes
+        Test extended quotes
         """
 
         _p = BlockParser()
         self.assert_(len(_p.parse(
                      "block { x = ''' ssaf \t \n ; \" ' '' ; & }''' }")))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testEmptyQuote(self):
+        """
+        Test parsing empty string value: ""
+        """
+
+        _p = BlockParser()
+        self.assert_(len(_p.parse('block { x = "" }')))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testEmptyXQuote(self):
+        """
+        Test parsing empty x-quote
+        """
+
+        _p = BlockParser()
+        self.assert_(len(_p.parse("block { x = '''''' }")))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

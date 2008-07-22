@@ -27,11 +27,11 @@ class XYZPlugin(BasePlugin):
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 
-        self.public = {u"show_box": self.show_box}
+        self.public = {u"about": self.about}
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    def show_box(self):
+    def about(self):
         """
         Show About box
         """
@@ -42,7 +42,7 @@ class XYZPlugin(BasePlugin):
 
         _w = []
 
-        _w.append(lowui.Text((_attr, u"%s -- Flexible console file manager" %
+        _w.append(lowui.Text((_attr, u"%s - Console file manager" %
                              libxyz.const.PROG), align=uilib.align.CENTER))
         _w.append(lowui.Text((_attr, u"Version: %s" %
                                 Version.string_version),
