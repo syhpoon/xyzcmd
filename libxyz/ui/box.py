@@ -44,6 +44,8 @@ class Box(lowui.WidgetWrap):
 
         self.mount_span = {u"vertical": 2, u"horizontal": 2}
 
+        self._attr = lambda name: self.skin.attr(self.resolution, name)
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def calc_size(self, rowspan):
@@ -87,15 +89,6 @@ class Box(lowui.WidgetWrap):
                 break
 
         return _input
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _attr(self, name):
-        """
-        Find attribute
-        """
-
-        return self.skin.attr(self.resolution, name)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
