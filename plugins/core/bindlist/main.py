@@ -23,7 +23,7 @@ class XYZPlugin(BasePlugin):
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 
-        self.export(u"show_binds", self.show_binds)
+        self.export(self.show_binds)
 
         self._keys = uilib.Keys()
 

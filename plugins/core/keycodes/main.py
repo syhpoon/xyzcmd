@@ -47,9 +47,9 @@ class XYZPlugin(BasePlugin):
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 
-        self.export(u"learn_keys", self.learn_keys)
-        self.export(u"delete_keys", self.del_saved_keys)
-        self.export(u"get_keys", self.get_keycodes)
+        self.export(self.learn_keys)
+        self.export(self.delete_keys)
+        self.export(self.get_keys)
 
         self._keysfile = "keycodes"
         self._keyssubdir = "data"
@@ -138,7 +138,7 @@ class XYZPlugin(BasePlugin):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def del_saved_keys(self, all=False):
+    def delete_keys(self, all=False):
         """
         Delete learned keycodes data.
         If all is True, delete all saved data for all terminal types,
@@ -163,7 +163,7 @@ class XYZPlugin(BasePlugin):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def get_keycodes(self, all=False):
+    def get_keys(self, all=False):
         """
         Return saved keycodes data as dictionary.
         If all is True, return all saved data for all terminal types,

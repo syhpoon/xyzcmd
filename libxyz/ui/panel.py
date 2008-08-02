@@ -86,7 +86,7 @@ class Panel(lowui.WidgetWrap):
         """
 
         _run_plugin = libxyz.core.plugins.VirtualPlugin(self.xyz, u"run")
-        _run_plugin.export(u"shutdown", self.shutdown)
+        _run_plugin.export(self.shutdown)
         _run_plugin.VERSION = u"0.1"
         _run_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
         _run_plugin.BRIEF_DESCRIPTION = u"Run plugin"

@@ -113,14 +113,16 @@ class BasePlugin(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def export(self, name, func):
+    def export(self, func):
         """
         Export method
         """
 
-        func.im_func.ns = u"%s:%s" % (self.ns.full, func.im_func.__name__)
+        _name = func.im_func.__name__
 
-        self.public[name] = func
+        func.im_func.ns = u"%s:%s" % (self.ns.full, _name)
+
+        self.public[_name] = func
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -42,7 +42,7 @@ which shows greeting message box.\
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 
-        self.export(u"say_hello", self.say_hello)
+        self.export(self.say_hello)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     

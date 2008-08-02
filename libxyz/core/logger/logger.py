@@ -132,8 +132,8 @@ class Logger(object):
                                                  r"", self.__doc__).strip()
         _logger_plugin.HOMEPAGE = u"xyzcmd.syhpoon.name"
 
-        _logger_plugin.export(u"show_console", self.show_console)
-        _logger_plugin.export(u"log", self.log)
-        _logger_plugin.export(u"clear", self.clear)
+        _logger_plugin.export(self.show_console)
+        _logger_plugin.export(self.log)
+        _logger_plugin.export(self.clear)
 
         self.xyz.pm.register(_logger_plugin)
