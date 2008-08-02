@@ -263,6 +263,15 @@ class KeyManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def get_binds(self):
+        """
+        Return keybindings data
+        """
+
+        return self._bind_data
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def _set_chain(self, chain, context):
         """
         Set shortcut as chain key

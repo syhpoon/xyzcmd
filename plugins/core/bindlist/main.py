@@ -4,44 +4,56 @@
 #
 
 from libxyz.core.plugins import BasePlugin
+from libxyz.ui import lowui
+
+import libxyz.ui as uilib
 
 class XYZPlugin(BasePlugin):
     "Plugin bindlist"
 
-    # Plugin name
     NAME = u"bindlist"
-
-    # AUTHOR: Author name
     AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
-
-    # VERSION: Plugin version
     VERSION = u"0.1"
-
-    # Brief one line description
-    BRIEF_DESCRIPTION = u""
-
-    # Full plugin description
-    FULL_DESCRIPTION = u""
-
-    # NAMESPACE: Plugin namespace. For detailed information about
-    #            namespaces see Plugins chapter of XYZCommander user manual.
-    #            Full namespace path to method is:
-    #            xyz:plugins:misc:hello:SayHello
-
+    BRIEF_DESCRIPTION = u"Show keybindings"
+    FULL_DESCRIPTION = u"Plugin is used to display all current keybindings "\
+                       u"along with corresponding contextes and methods"
     NAMESPACE = u"core"
+    HOMEPAGE = u"xyzcmd.syhpoon.name"
 
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 
-        self.public = {}
+        self.export(u"show_binds", self.show_binds)
+
+        self._keys = uilib.Keys()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def prepare(self):
-        pass
+    def show_binds(self):
+        """
+        Show keybindings
+        """
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        _data = self.xyz.km.get_binds()
 
-    def finalize(self):
-        pass
+        _entries = []
 
+        _divattr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"border")
+
+        _entries.append(lowui.Text(u"%-15s %-15s %s" %
+                        (_(u"Context"), _(u"Bind"), _(u"Method"))))
+        _entries.append(uilib.Separator(div_attr=_divattr))
+
+        for _context in sorted(_data.keys()):
+            for _bind in sorted(_data[_context].keys()):
+                _entries.append(lowui.Text(u"%-15s %-15s %s" %
+                                (_context,
+                                 self._keys.raw_to_shortcut(_bind[0]),
+                                 _data[_context][_bind].ns)))
+
+        _walker = lowui.SimpleListWalker(_entries)
+
+        _dim = tuple([x - 2 for x in self.xyz.screen.get_cols_rows()])
+
+        uilib.XYZListBox(self.xyz, self.xyz.top, _walker,
+                         _(u"Keybindings list"), _dim).show()

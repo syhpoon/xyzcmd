@@ -103,9 +103,7 @@ class Lexer(object):
             _type = self.TOKEN_IDT
             _tok = tok
 
-            file("/tmp/DEBUG", "a").write("%s\n" % str(tok))
             if tok and self.macro and tok[0] == self.macro:
-                file("/tmp/DEBUG", "a").write("%s\n" % str("MACRO"))
                 _type = self.TOKEN_MACRO
                 _tok = tok[1:]
 

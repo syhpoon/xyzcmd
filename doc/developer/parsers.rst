@@ -161,10 +161,6 @@ A RegexpParser common usage example::
    import re
    from libxyz.parsers import RegexpParser
 
-   # Comment callback, just return
-   def cb_comment(mo):
-      return
-
    symtable = {}
 
    # Assign expression callback, put variable and value to internal symtable
@@ -179,7 +175,7 @@ A RegexpParser common usage example::
    re_comment = re.compile(r"^\s*#.*$")
    re_assign = re.compile(r"^\s*(?<variable>\w+)\s*=\s*(?<value>\w+)\s*$")
 
-   cbpool = {re_comment: cb_comment, re_assign: cb_assign}
+   cbpool = {re_comment: lambda: None, re_assign: cb_assign}
 
    parser = RegexpParser(cbpool)
    parser.parse("# Comment\n x = y")
@@ -216,9 +212,9 @@ So MultiParser acts as follows:
 
 .. note::
    Usually all the parsers provided to MultiParser, have option **count** set 
-   to 1. Becase parsing single expression does not mean that, the following
+   to 1. Because parsing single expression does not mean that, the following
    expression in source would be the same type and would require the
-   same parser to parse.
+   same parser to use.
 
 And that's it.
 Let's assume we want to parse a configuration file with following syntax::

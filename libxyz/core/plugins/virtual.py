@@ -28,12 +28,3 @@ class VirtualPlugin(BasePlugin):
         self.NAME = name
 
         super(VirtualPlugin, self).__init__(xyz)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def export(self, name, method):
-        """
-        Add new public method
-        """
-
-        self.public[name] = method

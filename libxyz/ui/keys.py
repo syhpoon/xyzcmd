@@ -95,3 +95,15 @@ class Keys(object):
                 return _k
 
         return None
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def raw_to_shortcut(self, raw):
+        """
+        Make shortcut from raw keys received
+        """
+
+        if len(raw) > 1: # Shortcut
+            return u"-".join([self.get_key(x) or x for x in raw.split(u" ")])
+        else:
+            return raw

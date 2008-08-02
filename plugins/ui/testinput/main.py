@@ -29,12 +29,13 @@ class XYZPlugin(BasePlugin):
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 
-        self.public = {u"show_box": self._show_box}
+        self.export(u"show_box", self.show_box)
+
         self._keys = uilib.Keys()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _show_box(self, use_wrap=True):
+    def show_box(self, use_wrap=True):
         """
         Show test_box dialog
         @param use_wrap: Whether to use input wrapper which honours learned keys
@@ -58,15 +59,11 @@ class XYZPlugin(BasePlugin):
             _keys = []
 
             for _i in _input:
-                if len(_i) > 1: # Shortcut
-                    _keys.extend([self._keys.get_key(x) or x
-                                            for x in _i.split(u" ")])
-                else:
-                    _keys.append(_i)
+                _keys.append(self._keys.raw_to_shortcut(_i))
 
             _low = [unicode(x) for x in _input]
             _msg = u"Shortcut: '%s'. Raw: '%s'" % \
-                   (u"-".join(_keys), u"".join(_low))
+                   (u"".join(_keys), u"".join(_low))
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 

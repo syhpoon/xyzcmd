@@ -23,8 +23,8 @@ class Separator(lowui.FlowWidget):
 
     ignore_focus = True
 
-    def __init__(self, title, div_char=None, title_attr=None, div_attr=None,
-                 top=0, bottom=0):
+    def __init__(self, title=None, div_char=None, title_attr=None,
+                 div_attr=None, top=0, bottom=0):
         """
         @param title: Title
         @param div_char: Character to repeat across line
@@ -36,18 +36,22 @@ class Separator(lowui.FlowWidget):
 
         super(Separator, self).__init__()
 
-        _title = " %s " % title
+        if title is not None:
+            _title = " %s " % title
+            self.title_len = len(_title)
 
-        self.title_len = len(_title)
+            if title_attr is not None:
+                self.text = lowui.Text((title_attr, _title))
+            else:
+                self.text = lowui.Text(_title)
+        else:
+            self.text = None
+            self.title_len = 0
+
         self.div_char = lowui.escape.utf8decode("─")
         self.div_attr = div_attr
         self.top = top
         self.bottom = bottom
-
-        if title_attr is not None:
-            self.text = lowui.Text((title_attr, _title))
-        else:
-            self.text = lowui.Text(_title)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -73,15 +77,21 @@ class Separator(lowui.FlowWidget):
         else:
             _offset = 0
 
+        _list = []
+
         canv_begin = lowui.Text((self.div_attr, self.div_char * sep_len))
         canv_begin = canv_begin.render((maxcol,))
-        canv_text = self.text.render((maxcol,))
+        _list.append((canv_begin, None, False, sep_len))
+
+        if self.text is not None:
+            canv_text = self.text.render((maxcol,))
+            _list.append((canv_text, None, False, self.title_len))
+
         canv_end = lowui.Text((self.div_attr, self.div_char *(sep_len+_offset)))
         canv_end = canv_end.render((maxcol,))
+        _list.append((canv_end, None, False, sep_len + _offset))
 
-        canv = lowui.CanvasJoin([(canv_begin, None, False, sep_len),
-                                 (canv_text, None, False, self.title_len),
-                                 (canv_end, None, False, sep_len + _offset)])
+        canv = lowui.CanvasJoin(_list)
 
         if self.top or self.bottom:
             canv.pad_trim_top_bottom(self.top, self.bottom)

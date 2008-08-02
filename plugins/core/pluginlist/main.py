@@ -40,11 +40,11 @@ class XYZPlugin(BasePlugin):
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 
-        self.public = {"show_list": self._show_list}
+        self.export(u"show_list", self.show_list)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _show_list(self):
+    def show_list(self):
         """
         Show plugins list
         """

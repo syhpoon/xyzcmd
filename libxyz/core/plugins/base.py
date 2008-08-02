@@ -17,6 +17,8 @@
 from libxyz.exceptions import PluginError
 from libxyz.core.plugins import Namespace
 
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
 class BasePlugin(object):
     """
     Parent class for all xyz-plugins
@@ -105,6 +107,26 @@ class BasePlugin(object):
     def finalize(self, *args, **kwargs):
         """
         Plugin destructor
+        """
+
+        pass
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def export(self, name, func):
+        """
+        Export method
+        """
+
+        func.im_func.ns = u"%s:%s" % (self.ns.full, func.im_func.__name__)
+
+        self.public[name] = func
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def export_data(self, name, data):
+        """
+        Export data
         """
 
         pass

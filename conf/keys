@@ -11,6 +11,7 @@ load :sys:cmd:*
 load :core:pluginlist:show_list
 load :ui:testinput:show_box
 load :misc:about:about
+load :core:bindlist:show_binds
 
 bind :sys:cmd:execute to ENTER context @
 bind :sys:cmd:history_prev to META-p context @
@@ -31,15 +32,16 @@ bind :sys:cmd:cursor_word_right to META-f context @
 bind :sys:cmd:undo to CTRL-d context @
 bind :sys:cmd:show_history to META-h context @
 
-bind :sys:logger:show_console to META-l context PANEL
-bind :sys:run:shutdown to F10 context PANEL
+bind :sys:logger:show_console to META-l
+bind :sys:run:shutdown to F10
 
-bind :core:pluginlist:show_list to META-t context PANEL
-bind :core:keycodes:learn_keys to META-s context PANEL
+bind :core:pluginlist:show_list to META-t
+bind :core:keycodes:learn_keys to META-s
+bind :core:bindlist:show_binds to META-r
 
-bind :ui:testinput:show_box to META-e context PANEL
+bind :ui:testinput:show_box to META-e
 
-bind :misc:about:about to META-a context PANEL
+bind :misc:about:about to META-a
 
 #set chain key META-Q
 #set chain key META-L context PANEL

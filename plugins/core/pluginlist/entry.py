@@ -17,6 +17,7 @@
 import traceback
 
 import libxyz.ui as uilib
+
 from libxyz.ui import lowui
 
 class PluginEntry(lowui.FlowWidget):
