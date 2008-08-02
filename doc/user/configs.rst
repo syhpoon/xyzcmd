@@ -14,8 +14,6 @@ File syntax is following:
 * ``bind[!] {method} to {shortcut} [context {contextname}]`` binds method 
   to be invoked upon pressing shortcut in context.
   If shortcut is already binded do nothing unless ``!`` flag is specified.
-* ``set chain key {shortcut} [context {contextname}]`` set chain key
-  for context or for DEFAULT unless provided
 
 Where:
 
@@ -80,29 +78,6 @@ plugin full namespace path::
    bind :sys:cmd:execute to ENTER context @
 
 In this case, the bind will be saved to context ``:sys:cmd``.
-
-Shortcut chains
-+++++++++++++++
-In general, shortcut will contain two keys: modifier (like META or CTRL) and
-the regular key. As only widget receives such a combination, it tries to
-search among defined shortcuts to determine what action to fire.
-But we can tell |XYZ| not to immediately look for action by providing
-a ``chain key``, which will indicate beginning of multiple shortcuts
-combination treated as single one.
-
-To bind a chain key we use the following syntax
-``set chain key {shortcut} [context {contextname}]``.
-
-So, if we have::
-
-   set chain key CTRL-j
-   set chain key META-G context BOX
-
-Pressing CTRL-j in default context would not trigger action lookup, but instead
-KeyManager will wait for next shortcut in chain until the same chain key
-pressed again or timeout reached.
-Thus, pressing ``CTRL-j META-1`` in ``BOX`` context will trigger
-KeyManager to lookup for shortcut ``CTRL-j META-1``.
 
 xyz
 ----

@@ -34,8 +34,6 @@ syn match xyzBind /bind\(!\)\?/ nextgroup=xyzBindPlugin skipwhite
 syn match xyzBindPlugin /\(:\)\?\S\+/ nextgroup=xyzBindTo contained skipwhite
 syn match xyzBindTo /to/ contained skipwhite
 
-syn match xyzStatement /set chain key/
-
 "highlight link xyzKeyword Keyword
 highlight link xyzContext Keyword
 highlight link xyzLoad Statement

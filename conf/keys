@@ -42,7 +42,3 @@ bind :core:bindlist:show_binds to META-r
 bind :ui:testinput:show_box to META-e
 
 bind :misc:about:about to META-a
-
-#set chain key META-Q
-#set chain key META-L context PANEL
-#set chain key TAB-Q context TAB

@@ -38,7 +38,6 @@ class KeyManager(object):
 
         self._loaded_methods = {}
         self._bind_data = {}
-        self._chain_keys = {}
 
         self._path_sel = libxyz.PathSelector()
 
@@ -51,7 +50,6 @@ class KeyManager(object):
         Process pressed keys
         """
 
-        # TODO: process chains
         context = context or self.CONTEXT_DEFAULT
 
         _p = tuple(pressed)
@@ -100,14 +98,6 @@ class KeyManager(object):
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        def _chain_cb(mo):
-            _chain = mo.group("shortcut")
-            _context = mo.group("context")
-
-            self._set_chain(_chain, _context)
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
         _comment_re = re.compile(r"^\s*#.*$")
 
         _load_re = re.compile(r"""
@@ -141,30 +131,9 @@ class KeyManager(object):
         $                   # end
         """ % self.CONTEXT_SELF, re.VERBOSE)
 
-        _chain_re = re.compile(r"""
-        ^                   # begin
-        \s*                 # leading spaces
-        set                 # keywoard set
-        \s+                 # one ore more spaces
-        chain               # keywoard chain
-        \s+                 # one ore more spaces
-        key                 # keywoard key
-        \s+                 # one ore more spaces
-        (?P<shortcut>\S+)   # shortcut
-        (                   # optional context group begin
-        \s+                 # one ore more spaces
-        context             # keyword context
-        \s+                 # one ore more spaces
-        (?P<context>[\w_]+) # context name
-        )?                  # context group end
-        \s*                 # trailing spaces
-        $                   # end
-        """, re.VERBOSE)
-
         _cbpool = {_comment_re: _comment_cb,
                    _load_re: _load_cb,
                    _bind_re: _bind_cb,
-                   _chain_re: _chain_cb,
                   }
 
         _parser = libxyz.parser.RegexpParser(_cbpool)
@@ -269,17 +238,3 @@ class KeyManager(object):
         """
 
         return self._bind_data
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _set_chain(self, chain, context):
-        """
-        Set shortcut as chain key
-        """
-
-        _chain = self.keys.make_shortcut(chain)
-
-        if context is None:
-            context = self.CONTEXT_DEFAULT
-
-        self._chain_keys[context] = _chain
