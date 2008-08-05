@@ -1,0 +1,78 @@
+AUTHOR: "Max E. Kuznecov <syhpoon@syhpoon.name>"
+VERSION: "0.1"
+DESCRIPTION: "XYZCommander Grass skin"
+
+# Filesystem objects
+
+fs.type {
+	file = LIGHT_GRAY
+	dir = WHITE
+	block = DARK_MAGENTA
+	char = LIGHT_MAGENTA
+	link = LIGHT_CYAN
+	fifo = DARK_CYAN
+	socket = DARK_RED
+}
+
+fs.regexp {
+	'''.+\.core$''' = DARK_RED,BROWN
+	'''\.+''' = LIGHT_GRAY
+}
+
+fs.priority {
+	type = 1
+   perm = 2
+   regexp = 3
+   owner = 4
+}
+
+### User interface objects
+
+# Base widget
+ui.widget {
+	button = DARK_GREEN, LIGHT_GRAY
+}
+
+# Base box widgets
+ui.box {
+	&BG = LIGHT_GRAY
+
+	title = &BG, DARK_GREEN
+	box = BLACK, &BG
+	border = DARK_GREEN, &BG
+	mount = DEFAULT, &BG
+}
+
+# Error message box
+ui.error_box {
+	&FG = WHITE
+	&BG = DARK_RED
+
+	title = &FG, BLACK
+	box = &FG, &BG
+	border = &FG, &BG
+	mount = &FG, &BG
+}
+
+# Panel widget
+ui.panel {
+	cwdtitle = BLACK, LIGHT_GRAY
+	panel = LIGHT_GRAY, DARK_GREEN
+	cursor = BLACK, LIGHT_GRAY
+	info = BLACK, LIGHT_GRAY
+	border = WHITE, DARK_GREEN
+}
+
+# XYZListBox
+ui.list_box {
+	title = DARK_GREEN, LIGHT_GRAY
+	selected = WHITE, DARK_GREEN
+}
+
+# Command line widget
+ui.cmd {
+	&BG = DARK_GREEN
+
+	prompt = WHITE, &BG
+	text = LIGHT_GRAY, &BG
+}
