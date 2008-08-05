@@ -57,6 +57,7 @@ ui.error_box {
 # Panel widget
 ui.panel {
 	cwdtitle = BLACK, LIGHT_GRAY
+	cwdtitleinact = WHITE, DARK_MAGENTA
 	panel = LIGHT_GRAY, DARK_MAGENTA
 	cursor = BLACK, LIGHT_GRAY
 	info = BLACK, LIGHT_GRAY
