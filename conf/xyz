@@ -16,9 +16,11 @@ plugins {
 }
 
 # Skin to use
-#skin = monochrome
-skin = seablue
+skin = glamour
 
 # Command line prompt
 # TODO: macros in prompt
 cmd_prompt = "|| "
+
+# Local encoding
+#local_encoding = "koi8-r"

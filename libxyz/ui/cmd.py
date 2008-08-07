@@ -25,6 +25,7 @@ from libxyz.ui import Prompt
 from libxyz.ui import ListEntry
 from libxyz.ui import XYZListBox
 from libxyz.ui import Keys
+from libxyz.ui.utils import refresh
 
 class Cmd(lowui.FlowWidget):
     """
@@ -104,8 +105,8 @@ class Cmd(lowui.FlowWidget):
         _cmd_plugin.VERSION = u"0.1"
         _cmd_plugin.BRIEF_DESCRIPTION = u"Command line plugin"
         _cmd_plugin.FULL_DESCRIPTION = u"Command line plugin. "\
-                                       u"It allows to enter, edit and execute "\
-                                       u"commands."
+                                       u"It allows to enter, edit and "\
+                                       u"execute commands."
         _cmd_plugin.DOC = u"Configuration variables:\n"\
                           u"undo_depth - Specifies how many undo levels to "\
                           u"keep. Default - 10\n"\
@@ -357,6 +358,7 @@ class Cmd(lowui.FlowWidget):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    @refresh
     def _delete(self, direction, chars=None, topred=None):
         """
         Generic delete routine
@@ -420,8 +422,6 @@ class Cmd(lowui.FlowWidget):
         if _delindex is not None:
             del(self._data[_delindex])
 
-        self._invalidate()
-
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     # Public methods
@@ -432,10 +432,6 @@ class Cmd(lowui.FlowWidget):
         """
 
         self._delete(self.LEFT, chars=1)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    #TODO: def del_char_right(self):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -588,6 +584,7 @@ class Cmd(lowui.FlowWidget):
         """
 
         self._undo.clear()
+        self._invalidate()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

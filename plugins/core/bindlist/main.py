@@ -46,6 +46,9 @@ class XYZPlugin(BasePlugin):
 
         for _context in sorted(_data.keys()):
             for _bind in sorted(_data[_context].keys()):
+                if _data[_context][_bind] is None:
+                    continue
+
                 _entries.append(lowui.Text(u"%-15s %-15s %s" %
                                 (_context,
                                  self._keys.raw_to_shortcut(_bind[0]),

@@ -24,6 +24,7 @@ __all__ = (
     'display',
     'align',
     'colors',
+    'utils',
     'Size',
     'Keys',
     'Border',
@@ -45,6 +46,7 @@ import urwid as lowui
 import display
 import align
 import colors
+import utils
 
 from size import Size
 

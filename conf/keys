@@ -4,14 +4,15 @@
 # Default keybinds
 #
 
-load :core:keycodes:*
 load :sys:run:shutdown
 load :sys:logger:*
 load :sys:cmd:*
+load :sys:panel:*
 load :core:pluginlist:show_list
+load :core:keycodes:*
+load :core:bindlist:show_binds
 load :ui:testinput:show_box
 load :misc:about:about
-load :core:bindlist:show_binds
 
 bind :sys:cmd:execute to ENTER context @
 bind :sys:cmd:history_prev to META-p context @
@@ -31,6 +32,12 @@ bind :sys:cmd:cursor_word_left to META-b context @
 bind :sys:cmd:cursor_word_right to META-f context @
 bind :sys:cmd:undo to CTRL-d context @
 bind :sys:cmd:show_history to META-h context @
+
+bind :sys:panel:entry_next to DOWN context @
+bind :sys:panel:entry_prev to UP context @
+bind :sys:panel:entry_top to HOME context @
+bind :sys:panel:entry_bottom to END context @
+bind :sys:panel:toggle_active to TAB context @
 
 bind :sys:logger:show_console to META-l
 bind :sys:run:shutdown to F10

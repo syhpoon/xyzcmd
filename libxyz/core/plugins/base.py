@@ -131,4 +131,4 @@ class BasePlugin(object):
         Export data
         """
 
-        pass
+        self.public_data[name] = data

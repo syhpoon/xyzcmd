@@ -76,7 +76,6 @@ class XYZListBox(lowui.WidgetWrap):
 
             if _i:
                 for _k in _i:
-                    xyzlog.log(_k, xyzlog.loglevel.ERROR)
                     if _k == self._keys.ESC:
                         return
                     elif _k == "j":

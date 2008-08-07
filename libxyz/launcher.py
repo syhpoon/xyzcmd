@@ -107,7 +107,7 @@ class Launcher(object):
         panel = uilib.Panel(self.xyz)
         self.xyz.top = lowui.Filler(panel)
 
-        panel.repl()
+        panel.loop()
 
         self.finalize()
 
