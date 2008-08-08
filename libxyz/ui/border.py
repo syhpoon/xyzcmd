@@ -31,18 +31,20 @@ class Border(lowui.WidgetWrap):
 
         utf8decode = lowui.escape.utf8decode
 
-        _title = None
+        self._title = None
 
         if title is not None:
             if isinstance(title, tuple):
                 _len = len(title[0])
-                _title = lowui.Text((title[1], " %s " % title[0]), align.CENTER)
+                self._title = lowui.AttrWrap(lowui.Text(" %s " % title[0],
+                                             align.CENTER), title[1])
             elif isinstance(title, basestring):
                 _len = len(title)
-                _title = lowui.Text(title, align.CENTER)
+                self._title = lowui.Text(title, align.CENTER)
             else:
                 raise UIError(_(u"Invalid title type %s. "\
-                                u"Tuple or basetring expected" % type(_title)))
+                                u"Tuple or basetring expected" %
+                                type(self._title)))
 
             _len += 2 # " text "
 
@@ -61,7 +63,7 @@ class Border(lowui.WidgetWrap):
         tline_widgets = [('fixed', 1, self.tlcorner), self.tline]
 
         if title is not None:
-            tline_widgets.append(("fixed", _len, _title))
+            tline_widgets.append(("fixed", _len, self._title))
 
         tline_widgets.extend([self.tline, ("fixed", 1, self.trcorner)])
 
@@ -85,3 +87,11 @@ class Border(lowui.WidgetWrap):
             return widget
 
         return lowui.AttrWrap(widget, self.attr)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def set_title_attr(self, attr):
+        """
+        """
+
+        self._title.set_attr(attr)

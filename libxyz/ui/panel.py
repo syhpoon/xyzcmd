@@ -219,14 +219,11 @@ class Block(lowui.BoxWidget):
 
         self.block = lowui.Frame(self, footer=self.info)
 
-        if self.active:
-            _title_attr = self.attr(u"cwdtitle")
-        else:
-            _title_attr = self.attr(u"cwdtitleinact")
+        _title_attr = self._get_title_attr()
 
-        self.block = libxyz.ui.Border(self.block, (_dir, _title_attr),
+        self.border = libxyz.ui.Border(self.block, (_dir, _title_attr),
                                       self.attr(u"border"))
-        self.block = lowui.AttrWrap(self.block, self.attr(u"panel"))
+        self.block = lowui.AttrWrap(self.border, self.attr(u"panel"))
 
         self.block = lowui.BoxAdapter(self.block, self.size.rows)
 
@@ -267,6 +264,18 @@ class Block(lowui.BoxWidget):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def _get_title_attr(self):
+        """
+        Return title attr
+        """
+
+        if self.active:
+            return self.attr(u"cwdtitle")
+        else:
+            return self.attr(u"cwdtitleinact")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     @refresh
     def deactivate(self):
         """
@@ -274,6 +283,7 @@ class Block(lowui.BoxWidget):
         """
 
         self.active = False
+        self.border.set_title_attr(self._get_title_attr())
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -284,6 +294,7 @@ class Block(lowui.BoxWidget):
         """
 
         self.active = True
+        self.border.set_title_attr(self._get_title_attr())
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
