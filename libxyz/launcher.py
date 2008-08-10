@@ -219,6 +219,7 @@ class Launcher(object):
                               (u"skin", const.DEFAULT_SKIN),
                               (u"plugins", parser.ParsedData(u"plugins")),
                               (u"cmd_prompt", u""),
+                              (u"local_encoding", u"utf-8"),
                              ):
                 if _required[0] not in data:
                     data[_required[0]] = _required[1]
@@ -235,7 +236,8 @@ class Launcher(object):
                         }
         _plugins_p = parser.BlockParser(_plugins_opts)
 
-        _flat_vars = (u"skin", u"log_level", u"log_lines", "cmd_prompt")
+        _flat_vars = (u"skin", u"log_level", u"log_lines", "cmd_prompt",
+                      u"local_encoding")
         _flat_opts = {
                       u"count": 1,
                       u"assignchar": u"=",

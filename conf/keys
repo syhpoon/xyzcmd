@@ -37,7 +37,7 @@ bind :sys:panel:entry_next to DOWN context @
 bind :sys:panel:entry_prev to UP context @
 bind :sys:panel:entry_top to HOME context @
 bind :sys:panel:entry_bottom to END context @
-bind :sys:panel:toggle_active to TAB context @
+bind :sys:panel:switch_active to TAB context @
 
 bind :sys:logger:show_console to META-l
 bind :sys:run:shutdown to F10

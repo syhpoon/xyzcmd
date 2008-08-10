@@ -62,7 +62,7 @@ ui.panel {
 	cwdtitleinact = WHITE, DEFAULT
 	panel = DEFAULT, DEFAULT
 	cursor = BLACK, &BG
-	info = BLACK, &BG
+	info = WHITE, DEFAULT
 	border = DEFAULT, DEFAULT
 }
 

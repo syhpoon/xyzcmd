@@ -60,7 +60,7 @@ ui.panel {
 	cwdtitleinact = WHITE, DARK_MAGENTA
 	panel = LIGHT_GRAY, DARK_MAGENTA
 	cursor = BLACK, LIGHT_GRAY
-	info = BLACK, LIGHT_GRAY
+	info = WHITE, DARK_MAGENTA
 	border = WHITE, DARK_MAGENTA
 }
 

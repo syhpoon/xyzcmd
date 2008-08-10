@@ -37,10 +37,11 @@ class Panel(lowui.WidgetWrap):
 
         _size = self.xyz.screen.get_cols_rows()
         _blocksize = libxyz.ui.Size(rows=_size[1] - 2, cols=_size[0] / 2 - 2)
+        _enc = xyz.conf[u"xyz"][u"local_encoding"]
 
         self.block1 = Block(_blocksize, LocalVFSObject("/tmp"), self._attr,
-                            active=True)
-        self.block2 = Block(_blocksize, LocalVFSObject("/"), self._attr)
+                            _enc, active=True)
+        self.block2 = Block(_blocksize, LocalVFSObject("/"), self._attr, _enc)
 
         columns = lowui.Columns([self.block1.block, self.block2.block], 0)
         _status = lowui.Text((self._attr(u"panel"), "Status bar"))
@@ -110,7 +111,7 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.entry_prev)
         _panel_plugin.export(self.entry_top)
         _panel_plugin.export(self.entry_bottom)
-        _panel_plugin.export(self.toggle_active)
+        _panel_plugin.export(self.switch_active)
 
         _panel_plugin.VERSION = u"0.1"
         _panel_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
@@ -170,9 +171,9 @@ class Panel(lowui.WidgetWrap):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def toggle_active(self):
+    def switch_active(self):
         """
-        Toggle active block
+        Switch active block
         """
 
         if self.block1.active:
@@ -189,32 +190,38 @@ class Block(lowui.BoxWidget):
     Single block
     """
 
-    def __init__(self, size, vfsobj, attr_func, active=False):
+    def __init__(self, size, vfsobj, attr_func, enc, active=False):
         """
         @param size: Block widget size
         @type size: L{libxyz.ui.Size}
         @param vfsobj:
-        @param attr_func:
-        @param active:
+        @param attr_func: Skin attribute access function
+        @param enc: Local encoding
+        @param active: Boolean flag, True if block is active
         """
 
         self.size = size
         self.attr = attr_func
 
         self.active = active
-        self.selected = 3
+        self.selected = 0
+
+        self._enc = enc
 
         _dir, _dirs, _files = vfsobj.walk()
 
-        _entries = [lowui.Text(u"..")]
-        _entries.extend([lowui.Text(u"%s%s "% (x.visual, x.name))
-                         for x in _dirs])
-        _entries.extend([lowui.Text(u"%s%s " % (x.visual, x.name))
-                         for x in _files])
+        _entries = [u".."]
+        _entries.extend([u"%s%s "% (x.visual, x.name.decode(self._enc))
+                        for x in _dirs])
+        _entries.extend([u"%s%s " % (x.visual, x.name.decode(self._enc))
+                        for x in _files])
+
         self.entries = _entries
 
-        self.info = lowui.Text(u"-rwx-rx-rx (1.5M) file2 ")
-        self.info = lowui.Padding(self.info, align.LEFT, self.size.cols)
+        self._len = len(self.entries)
+
+        self._info = lowui.Text(u"-rwx-rx-rx (1.5M) file2 ")
+        self.info = lowui.Padding(self._info, align.LEFT, self.size.cols)
         self.info = lowui.AttrWrap(self.info, self.attr(u"info"))
 
         self.block = lowui.Frame(self, footer=self.info)
@@ -236,24 +243,36 @@ class Block(lowui.BoxWidget):
 
     def render(self, (maxcol, maxrow), focus=False):
         """
-        Render container
+        Render block
         """
+
+        if self.selected >= maxrow:
+            _from = self.selected - maxrow + 1
+        else:
+            _from = 0
+
+        # We have less entries then maxrow
+        if self._len <= maxrow:
+            _to = self._len
+        else:
+            _to = maxrow + _from
+
+        _len = self._len - _from
 
         canvases = []
 
-        for i in range(len(self.entries)):
+        for i in range(_from, len(self.entries)):
+            _text = self._truncate(self.entries[i], maxcol)
+
             if self.active and i == self.selected:
-                x = lowui.TextCanvas(text=[
-                               self.entries[i].get_text()[0].encode("utf-8")],
-                               attr=[[(self.attr(u"cursor"), maxcol)]],
-                               maxcol=maxcol)
+                x = lowui.TextCanvas(text=[_text.encode(self._enc)],
+                                     attr=[[(self.attr(u"cursor"), maxcol)]],
+                                     maxcol=maxcol)
                 canvases.append((x, i, False))
             else:
-                canvases.append((self.entries[i].render((maxcol,)), i, False))
+                canvases.append((lowui.Text(_text).render((maxcol,)),i,False))
 
         combined = lowui.CanvasCombine(canvases)
-
-        _len = len(self.entries)
 
         if _len < maxrow:
             combined.pad_trim_top_bottom(0, maxrow - _len)
@@ -261,6 +280,20 @@ class Block(lowui.BoxWidget):
             combined.trim_end(_len - maxrow)
 
         return combined
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _truncate(self, text, cols):
+        """
+        Truncate text if its length exceeds cols
+        """
+
+        _len = len(text)
+
+        if _len < cols:
+            return text
+        else:
+            return "%s~" % text[:cols - 1]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

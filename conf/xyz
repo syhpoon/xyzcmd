@@ -16,11 +16,13 @@ plugins {
 }
 
 # Skin to use
-skin = glamour
+skin = monochrome
 
 # Command line prompt
 # TODO: macros in prompt
 cmd_prompt = "|| "
 
 # Local encoding
-#local_encoding = "koi8-r"
+# One of the available in python
+# (http://docs.python.org/lib/standard-encodings.html)
+local_encoding = "koi8-r"
