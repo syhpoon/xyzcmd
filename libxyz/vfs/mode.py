@@ -152,7 +152,7 @@ class Mode(object):
         elif _o_mode == stat.S_ISVTX:
             _bit = u"T"
         elif _o_mode == stat.S_IXOTH | stat.S_ISVTX:
-            _bit = u"s"
+            _bit = u"t"
         _str_mode.append(_bit)
 
         return _str_mode

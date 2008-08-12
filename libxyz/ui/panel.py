@@ -20,6 +20,7 @@ import libxyz.const
 
 from libxyz.ui import lowui
 from libxyz.ui import align
+from libxyz.ui import Separator
 from libxyz.ui.utils import refresh
 from libxyz.vfs.local import LocalVFSObject
 
@@ -36,18 +37,18 @@ class Panel(lowui.WidgetWrap):
         self._attr = lambda x: self.xyz.skin.attr(self.resolution, x)
 
         _size = self.xyz.screen.get_cols_rows()
-        _blocksize = libxyz.ui.Size(rows=_size[1] - 2, cols=_size[0] / 2 - 2)
+        _blocksize = libxyz.ui.Size(rows=_size[1] - 1, cols=_size[0] / 2 - 2)
         _enc = xyz.conf[u"xyz"][u"local_encoding"]
 
         self.block1 = Block(_blocksize, LocalVFSObject("/tmp"), self._attr,
                             _enc, active=True)
-        self.block2 = Block(_blocksize, LocalVFSObject("/"), self._attr, _enc)
+        self.block2 = Block(_blocksize, LocalVFSObject("/home/syhpoon"),
+                            self._attr, _enc)
 
         columns = lowui.Columns([self.block1.block, self.block2.block], 0)
-        _status = lowui.Text((self._attr(u"panel"), "Status bar"))
 
         self._cmd = libxyz.ui.Cmd(xyz, xyz.conf[u"xyz"][u"cmd_prompt"])
-        self._widget = lowui.Pile([columns, _status, self._cmd])
+        self._widget = lowui.Pile([columns, self._cmd])
         self._stop = False
 
         self._set_plugins()
@@ -210,21 +211,23 @@ class Block(lowui.BoxWidget):
 
         _dir, _dirs, _files = vfsobj.walk()
 
-        _entries = [u".."]
-        _entries.extend([u"%s%s "% (x.visual, x.name.decode(self._enc))
-                        for x in _dirs])
-        _entries.extend([u"%s%s " % (x.visual, x.name.decode(self._enc))
-                        for x in _files])
+        _entries = []
+
+        _entries.extend(_dirs)
+        _entries.extend(_files)
 
         self.entries = _entries
 
         self._len = len(self.entries)
 
-        self._info = lowui.Text(u"-rwx-rx-rx (1.5M) file2 ")
-        self.info = lowui.Padding(self._info, align.LEFT, self.size.cols)
-        self.info = lowui.AttrWrap(self.info, self.attr(u"info"))
+        self._winfo = lowui.Text(u"")
+        self._sep = Separator()
 
-        self.block = lowui.Frame(self, footer=self.info)
+        _info = lowui.Padding(self._winfo, align.LEFT, self.size.cols)
+        _info = lowui.AttrWrap(_info, self.attr(u"info"))
+        _info = lowui.Pile([self._sep, _info])
+
+        self.block = lowui.Frame(self, footer=_info)
 
         _title_attr = self._get_title_attr()
 
@@ -246,6 +249,8 @@ class Block(lowui.BoxWidget):
         Render block
         """
 
+        self._set_info(self.entries[self.selected], maxcol)
+
         if self.selected >= maxrow:
             _from = self.selected - maxrow + 1
         else:
@@ -262,7 +267,9 @@ class Block(lowui.BoxWidget):
         canvases = []
 
         for i in range(_from, len(self.entries)):
-            _text = self._truncate(self.entries[i], maxcol)
+            _obj = self.entries[i]
+            _text = u"%s%s "% (_obj.visual, _obj.name.decode(self._enc))
+            _text = self._truncate(_text, maxcol)
 
             if self.active and i == self.selected:
                 x = lowui.TextCanvas(text=[_text.encode(self._enc)],
@@ -306,6 +313,22 @@ class Block(lowui.BoxWidget):
             return self.attr(u"cwdtitle")
         else:
             return self.attr(u"cwdtitleinact")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _set_info(self, vfsobj, cols):
+        """
+        Set info text
+        """
+
+        _part2 = u"%s %s" % (vfsobj.size, vfsobj.mode)
+        _part1 = u"%s%s" % (vfsobj.visual, vfsobj.name.decode(self._enc))
+        _part1 = self._truncate(_part1, cols - len(_part2) - 2)
+
+        _text = u"%s%s%s" % (_part1, u" " * (cols - (len(_part1) +
+                             len(_part2)) - 1), _part2)
+
+        self._winfo.set_text(_text.encode(self._enc))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

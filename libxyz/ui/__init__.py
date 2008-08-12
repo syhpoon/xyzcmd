@@ -25,6 +25,7 @@ __all__ = (
     'align',
     'colors',
     'utils',
+    'Separator',
     'Size',
     'Keys',
     'Border',
@@ -38,7 +39,6 @@ __all__ = (
     'ListEntry',
     'Cmd',
     'Panel',
-    'Separator',
 )
 
 import urwid as lowui
@@ -49,6 +49,7 @@ import colors
 import utils
 
 from size import Size
+from separator import Separator
 
 from keys import Keys
 from border import Border
@@ -62,4 +63,3 @@ from xyzlistbox import XYZListBox
 from listentry import ListEntry
 from cmd import Cmd
 from panel import Panel
-from separator import Separator

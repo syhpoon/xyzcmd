@@ -43,9 +43,6 @@ class Skin(object):
         else:
             self.path = path
 
-        # Number of iterations to try to generate random attribute name
-        self._gen_rand_iter = 20
-
         self._data = {}
 
         self.screen = None
