@@ -24,7 +24,7 @@ HOMEPAGE = u"xyzcmd.syhpoon.name"
 USER_DIR = ".xyzcmd"
 
 # System directory
-SYSTEM_DIR = u"/tmp"
+SYSTEM_DIR = u"/usr/local/share/xyzcmd"
 
 # Subdirectory with configuration files
 CONF_DIR = u"conf"

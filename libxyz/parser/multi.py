@@ -76,7 +76,7 @@ class MultiParser(BaseParser):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def parse(self, source):
+    def parse(self, source, default_data=None):
         """
         Begin parsing
         """
@@ -105,6 +105,8 @@ class MultiParser(BaseParser):
         self._result = {}
         self._lexer = Lexer(source, self.tokens, self.comment)
 
+        _data = default_data or {}
+
         try:
             while True:
                 _res = self._lexer.lexer()
@@ -119,7 +121,8 @@ class MultiParser(BaseParser):
                 if _parser:
                     # Push read token back
                     self._lexer.unget(_val)
-                    self._result.update(_parser.parse(self._lexer.sdata))
+                    _data = _parser.parse(self._lexer.sdata, _data)
+                    self._result.update(_data)
                 else:
                     self.error(_(u"Unknown keyword: %s" % _val))
         except LexerError, e:

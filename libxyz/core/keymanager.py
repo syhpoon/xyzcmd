@@ -31,9 +31,9 @@ class KeyManager(object):
     CONTEXT_DEFAULT = u"DEFAULT"
     CONTEXT_SELF = u"@"
 
-    def __init__(self, xyz, confpath):
+    def __init__(self, xyz, confpathes):
         self.xyz = xyz
-        self.confpath = confpath
+        self.confpathes = confpathes
         self.keys = libxyz.ui.Keys()
 
         self._loaded_methods = {}
@@ -138,8 +138,10 @@ class KeyManager(object):
 
         _parser = libxyz.parser.RegexpParser(_cbpool)
 
+        # First mandatory system keys file
+
         try:
-            _file = open(self.confpath, "r")
+            _file = open(self.confpathes[0], "r")
         except IOError, e:
             raise XYZRuntimeError(_(u"Unable to open %s: %s" %
                                   (self.confpath, unicode(e))))
@@ -148,6 +150,18 @@ class KeyManager(object):
             _parser.parse(_file)
         finally:
             _file.close()
+
+        # Next optional user's keys file
+
+        try:
+            _file = open(self.confpathes[1], "r")
+        except IOError, e:
+            pass
+        else:
+            try:
+                _parser.parse(_file)
+            finally:
+                _file.close()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

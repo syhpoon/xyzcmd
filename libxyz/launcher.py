@@ -79,22 +79,14 @@ class Launcher(object):
 
         self.parse_args()
         self.parse_configs()
+        self.init_skin()
 
-        _skin = self._path_sel.get_skin(self.xyz.conf[u"xyz"][u"skin"])
-
-        # Skin specified in config not found, load default
-        if not _skin:
-            _skin = self._path_sel.get_skin(const.DEFAULT_SKIN)
-
-        self.xyz.skin = core.Skin(_skin)
         self.xyz.pm = PluginManager(self.xyz, self._path_sel.get_plugins_dir())
 
+        self.init_keys()
+
         self.init_logger()
-
-        self.xyz.km = core.KeyManager(self.xyz,
-                                 self._path_sel.get_conf(const.KEYS_CONF_FILE))
         self.xyz.input = core.InputWrapper(self.xyz)
-
         self.xyz.screen = uilib.display.init_display()
         self.xyz.screen.register_palette(self.xyz.skin.get_palette_list())
         self.xyz.skin.set_screen(self.xyz.screen)
@@ -180,6 +172,35 @@ class Launcher(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def init_skin(self):
+        """
+        Initialize skin
+        """
+
+        _system, _user = self._path_sel.get_skin(self.xyz.conf[u"xyz"][u"skin"])
+
+        _path = self._path_sel.get_first_of((_user, _system))
+
+        if _path is None:
+            _path = self._path_sel.get_skin(const.DEFAULT_SKIN)[0]
+
+        try:
+            self.xyz.skin = core.Skin(_system)
+        except SkinError, e:
+            self.error(_(u"Unable to load skin file: %s" % e))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def init_keys(self):
+        """
+        Initialize keys
+        """
+
+        self.xyz.km = core.KeyManager(self.xyz,
+                                  self._path_sel.get_conf(const.KEYS_CONF_FILE))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def parse_configs(self):
         """
         Parse configuration
@@ -212,22 +233,6 @@ class Launcher(object):
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        def _set_default(data):
-            # TODO: Remove required from here but parse default xyz conf
-            # in system dir instead
-            for _required in (
-                              (u"skin", const.DEFAULT_SKIN),
-                              (u"plugins", parser.ParsedData(u"plugins")),
-                              (u"cmd_prompt", u""),
-                              (u"local_encoding", u"utf-8"),
-                             ):
-                if _required[0] not in data:
-                    data[_required[0]] = _required[1]
-
-            return data
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
         _plugins_opts = {
                          u"count": 1,
                          u"varre": re.compile("^[\w:-]+$"),
@@ -250,24 +255,7 @@ class Launcher(object):
         _parser.register(u"plugins", _plugins_p)
         _parser.register(_flat_vars, _flat_p)
 
-        _path = self._path_sel.get_conf(const.XYZ_CONF_FILE)
-
-        try:
-            _file = open(_path, "r")
-        except IOError, e:
-            self.error(_(u"Unable to open configuration file: %s" % e))
-
-        try:
-            _data = _parser.parse(_file)
-        except ParseError, e:
-            self.error(str(e))
-        finally:
-            _file.close()
-
-        # Set default values if needed
-        _data = _set_default(_data)
-
-        return _data
+        return self._parse_conf_file(const.XYZ_CONF_FILE, _parser)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -283,19 +271,43 @@ class Launcher(object):
 
         _parser = parser.BlockParser(_opts)
 
-        _path = self._path_sel.get_conf(const.PLUGINS_CONF_FILE)
+        return self._parse_conf_file(const.PLUGINS_CONF_FILE, _parser)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _parse_conf_file(self, conf_file, parser):
+        """
+        Parse configuration files
+        @param conf_file: File to parse
+        @pararam parser: Parser instance
+        """
+
+        _confs = self._path_sel.get_conf(conf_file)
 
         try:
-            _file = open(_path, "r")
+            _file = open(_confs[0], "r")
         except IOError, e:
-            self.error(_(u"Unable to open configuration file: %s" % e))
+            self.error(_(u"Unable to open system configuration file: %s" % e))
 
         try:
-            _data = _parser.parse(_file)
+            _data = parser.parse(_file)
         except ParseError, e:
             self.error(str(e))
         finally:
             _file.close()
+
+        # Now try to parse users's conf, if exists
+        try:
+            _file = open(_confs[1], "r")
+        except IOError, e:
+            pass
+        else:
+            try:
+                _data = parser.parse(_file, _data)
+            except ParseError, e:
+                self.error(str(e))
+            finally:
+                _file.close()
 
         return _data
 

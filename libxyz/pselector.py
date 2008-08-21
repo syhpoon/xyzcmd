@@ -22,7 +22,7 @@ from libxyz import const
 class PathSelector(object):
     """
     Class is used to select first appropriate path.
-    Common rule is to load system file unless found in user ~/.xyzcmd
+    Common rule is to load system file first and then user's one
     """
 
     def __init__(self):
@@ -36,7 +36,7 @@ class PathSelector(object):
 
     def get_conf(self, conf):
         """
-        Return first found conf path
+        Return tuple of (system_conf_path, user_conf_path)
         """
 
         return self._get(self.conf_dir, conf)
@@ -45,7 +45,7 @@ class PathSelector(object):
     
     def get_skin(self, skin):
         """
-        Return first found skin path
+        Return tuple of (system_skin_path, user_skin_path)
         """
 
         return self._get(self.skins_dir, skin)
@@ -56,7 +56,7 @@ class PathSelector(object):
         _userpath = os.path.join(self.user_dir, subdir, obj)
         _systempath = os.path.join(self.system_dir, subdir, obj)
 
-        return self.get_first_of((_userpath, _systempath))
+        return (_systempath, _userpath)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

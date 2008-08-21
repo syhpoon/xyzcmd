@@ -59,4 +59,4 @@ class XYZPlugin(BasePlugin):
         _dim = tuple([x - 2 for x in self.xyz.screen.get_cols_rows()])
 
         uilib.XYZListBox(self.xyz, self.xyz.top, _walker,
-                         _(u"Keybindings list"), _dim).show()
+                         _(u"Keybindings"), _dim).show()

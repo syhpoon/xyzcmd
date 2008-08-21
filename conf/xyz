@@ -16,10 +16,9 @@ plugins {
 }
 
 # Skin to use
-skin = monochrome
+skin = glamour
 
 # Command line prompt
-# TODO: macros in prompt
 cmd_prompt = "|| "
 
 # Local encoding

@@ -47,7 +47,7 @@ class FlatParser(BaseParser):
                    u"list_separator": u",",
                    }
 
-    def __init__(self, opt=None, default_data=None):
+    def __init__(self, opt=None):
         """
         @param opt: Options
         @type opt: dict
@@ -73,13 +73,9 @@ class FlatParser(BaseParser):
             - list_separator: Character to separate elements in list
               Type: I{string (single char)}
               Default: ,
-
-        @param default_data: Dictionary with default values.
         """
 
         super(FlatParser, self).__init__()
-
-        self.default_data = default_data
 
         self._parsed = 0
         self._result = {}
@@ -100,12 +96,16 @@ class FlatParser(BaseParser):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def parse(self, source):
+    def parse(self, source, default_data=None):
         """
         Begin parsing
+        @param default_data: Dictionary with default values.
         """
 
         self._cleanup()
+
+        if default_data and isinstance(default_data, dict):
+            self._result = default_data.copy()
 
         _tokens = (
                    self.assignchar,
@@ -213,12 +213,10 @@ class FlatParser(BaseParser):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _cleanup(self):
-        if self.default_data and isinstance(self.default_data, dict):
-            self._result = self.default_data.copy()
-
         self._parsed = 0
         self._state = self.STATE_VARIABLE
         self._varname = None
+        self._result = {}
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

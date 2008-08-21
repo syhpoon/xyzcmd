@@ -27,8 +27,6 @@ class Color(object):
     ctype = u"base"
 
     def __init__(self, color):
-        # TODO: set colors as attributes by metclass??
-
         if color not in self.colors:
             raise XYZValueError(_(u"Invalid %s color: %s" % \
             (self.ctype, str(color))))

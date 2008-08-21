@@ -54,7 +54,7 @@ class BlockParser(BaseParser):
                    u"macrochar": u"&",
                    }
 
-    def __init__(self, opt=None, default_data=None):
+    def __init__(self, opt=None):
         """
         @param opt: Parser options.
         @type opt: dict
@@ -93,8 +93,6 @@ class BlockParser(BaseParser):
               Type: I{string (single char)}
               Default: &
 
-        @param default_data: Dictionary containing L{libxyz.parser.ParsedData}
-                             objects with default values.
         """
 
         super(BlockParser, self).__init__()
@@ -106,7 +104,7 @@ class BlockParser(BaseParser):
         self.opt = opt or self.DEFAULT_OPT
         self.set_opt(self.DEFAULT_OPT, self.opt)
 
-        self._default_data = default_data
+        self._default_data = None
         self._state = self.STATE_INIT
         self._parsed_obj = None
         self._varname = None
@@ -133,17 +131,19 @@ class BlockParser(BaseParser):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def parse(self, source):
+    def parse(self, source, default_data=None):
         """
         Parse blocks of text and return a dict of L{ParsedData} objects
         or raise L{libxyz.exceptions.ParseError} exception
 
         @param source: Source data
+        @param default_data: Dictionary containing L{libxyz.parser.ParsedData}
+                             objects with default values.
         """
 
         self._result = {}
-
         self._cleanup()
+        self._default_data = default_data
 
         _tokens = (self._openblock,
                    self._closeblock,
@@ -310,6 +310,7 @@ class BlockParser(BaseParser):
         self._in_quote = False
         self._current_list = []
         self._macros = {}
+        self._default_data = None
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
