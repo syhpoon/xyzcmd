@@ -39,10 +39,9 @@ class Cmd(lowui.FlowWidget):
     END = u"end"
     UNDER = u"under"
 
-    def __init__(self, xyz, prompt=u""):
+    def __init__(self, xyz):
         """
         @param xyz: XYZData instance
-        @param prompt: prompt text
 
         Resources used: text, prompt
         """
@@ -51,8 +50,6 @@ class Cmd(lowui.FlowWidget):
 
         self.xyz = xyz
         self._attr = lambda x: xyz.skin.attr(self.resolution, x)
-
-        self.prompt = Prompt(prompt, self._attr(u"prompt"))
 
         self._keys = Keys()
 
@@ -68,6 +65,7 @@ class Cmd(lowui.FlowWidget):
 
         _conf_vars = ((u"undo_depth", 10, int),
                       (u"history_depth", 50, int),
+                      (u"prompt", u"$ ", unicode),
                      )
 
         _conf = self.xyz.conf[u"plugins"]
@@ -75,9 +73,9 @@ class Cmd(lowui.FlowWidget):
         for _var, _def, _cast in _conf_vars:
             try:
                 if _cast is not None:
-                    _val  = _cast(_conf[self._plugin.ns.pfull][_var])
+                    _val  = _cast(_conf[self.context][_var])
                 else:
-                    _val  = _conf[self._plugin.ns.pfull][_var]
+                    _val  = _conf[self.context][_var]
             except KeyError:
                 _val = _def
             except ValueError, e:
@@ -89,6 +87,8 @@ class Cmd(lowui.FlowWidget):
                             xyzlog.loglevel.WARNING)
             finally:
                 setattr(self, u"_%s" % _var, _val)
+
+        self.prompt = Prompt(self._prompt, self._attr(u"prompt"))
 
         self._undo = libxyz.core.Queue(self._undo_depth)
         self._history = libxyz.core.Queue(self._history_depth)

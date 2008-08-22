@@ -47,7 +47,7 @@ class Panel(lowui.WidgetWrap):
 
         columns = lowui.Columns([self.block1.block, self.block2.block], 0)
 
-        self._cmd = libxyz.ui.Cmd(xyz, xyz.conf[u"xyz"][u"cmd_prompt"])
+        self._cmd = libxyz.ui.Cmd(xyz)
         self._widget = lowui.Pile([columns, self._cmd])
         self._stop = False
 

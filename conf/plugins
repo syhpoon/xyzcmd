@@ -1,6 +1,9 @@
-# Global plugins configuration file
+# Plugins configuration file. Default settings. Do not edit.
 
 :sys:cmd {
+	# Command line prompt
+	prompt = "$ "
+
 	# Size of undo buffer
 	undo_depth = 10
 

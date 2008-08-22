@@ -241,8 +241,7 @@ class Launcher(object):
                         }
         _plugins_p = parser.BlockParser(_plugins_opts)
 
-        _flat_vars = (u"skin", u"log_level", u"log_lines", "cmd_prompt",
-                      u"local_encoding")
+        _flat_vars = (u"skin", u"local_encoding")
         _flat_opts = {
                       u"count": 1,
                       u"assignchar": u"=",
@@ -295,6 +294,7 @@ class Launcher(object):
             self.error(str(e))
         finally:
             _file.close()
+
 
         # Now try to parse users's conf, if exists
         try:

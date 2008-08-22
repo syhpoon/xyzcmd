@@ -1,7 +1,7 @@
 #
 # Max E. Kuznecov <syhpoon@syhpoon.name> 2008
 #
-# Default keybindings
+# Default keybindings. Do not edit.
 #
 
 load :sys:run:shutdown

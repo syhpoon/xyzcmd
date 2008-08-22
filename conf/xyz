@@ -1,5 +1,5 @@
 #
-# Main configuration file
+# Main configuration file. Default settings. Do not edit.
 #
 
 # Enabled plugins
@@ -16,10 +16,7 @@ plugins {
 }
 
 # Skin to use
-skin = glamour
-
-# Command line prompt
-cmd_prompt = "|| "
+skin = seablue
 
 # Local encoding
 # One of the available in python

@@ -116,6 +116,7 @@ class BlockParser(BaseParser):
         self._lexer = None
         self._openblock = u"{"
         self._closeblock = u"}"
+        self._parsed = 0
 
         self._tok_type = None
 
@@ -141,8 +142,10 @@ class BlockParser(BaseParser):
                              objects with default values.
         """
 
-        self._result = {}
         self._cleanup()
+
+        self._result = default_data or {}
+        self._parsed = 0
         self._default_data = default_data
 
         _tokens = (self._openblock,
@@ -289,10 +292,11 @@ class BlockParser(BaseParser):
     def _complete_block(self):
         if self._parsed_obj:
             self._result[self._parsed_obj.name] = self._parsed_obj
+            self._parsed += 1
 
         self._cleanup()
 
-        if self.count > 0 and self.count == len(self._result):
+        if self.count > 0 and self.count == self._parsed:
             self._lexer.done()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
