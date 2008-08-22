@@ -199,6 +199,8 @@ class Block(lowui.BoxWidget):
         @param attr_func: Skin attribute access function
         @param enc: Local encoding
         @param active: Boolean flag, True if block is active
+
+        Required resources: cwdtitle,cwdtitleinact,panel,cursor,info,border
         """
 
         self.size = size

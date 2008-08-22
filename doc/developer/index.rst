@@ -11,6 +11,8 @@ Contents:
 
    parsers
    keycodes
+   parsers
+   plugins
 
 ------------------
 
