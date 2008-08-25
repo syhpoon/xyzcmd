@@ -36,7 +36,7 @@ class LocalVFSObject(vfsobj.VFSObject):
 
     def walk(self, top=None):
         """
-        Directory tree generator
+        Directory tree walker
         @param top: Top directory or self.path unless provided
         @return: tuple (dir, dirs, files) where:
                  dir - current dir name
@@ -47,6 +47,9 @@ class LocalVFSObject(vfsobj.VFSObject):
         top = top or self.path
         _dir, _dirs, _files = os.walk(top).next()
         _abstop = os.path.abspath(top)
+
+        _dirs.sort()
+        _files.sort()
 
         return [
                 _dir,

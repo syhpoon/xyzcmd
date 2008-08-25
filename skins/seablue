@@ -2,7 +2,7 @@ AUTHOR: "Max E. Kuznecov <syhpoon@syhpoon.name>"
 VERSION: "0.1"
 DESCRIPTION: "XYZCommander Seablue skin"
 
-# Filesystem objects
+### Filesystem objects
 
 fs.type {
 	file = LIGHT_GRAY

@@ -209,17 +209,20 @@ class Block(lowui.BoxWidget):
         self.active = active
         self.selected = 0
 
+        self._display = []
+        self._vindex = 0
+        self._from = 0
+        self._to = 0
+
         self._enc = enc
 
         _dir, _dirs, _files = vfsobj.walk()
 
         _entries = []
-
         _entries.extend(_dirs)
         _entries.extend(_files)
 
         self.entries = _entries
-
         self._len = len(self.entries)
 
         self._winfo = lowui.Text(u"")
@@ -253,27 +256,15 @@ class Block(lowui.BoxWidget):
 
         self._set_info(self.entries[self.selected], maxcol)
 
-        if self.selected >= maxrow:
-            _from = self.selected - maxrow + 1
-        else:
-            _from = 0
-
-        # We have less entries then maxrow
-        if self._len <= maxrow:
-            _to = self._len
-        else:
-            _to = maxrow + _from
-
-        _len = self._len - _from
+        self._display = self._get_display(maxrow, maxcol)
+        _len = len(self._display)
 
         canvases = []
 
-        for i in range(_from, len(self.entries)):
-            _obj = self.entries[i]
-            _text = u"%s%s "% (_obj.visual, _obj.name.decode(self._enc))
-            _text = self._truncate(_text, maxcol)
+        for i in range(0, _len):
+            _text = self._display[i]
 
-            if self.active and i == self.selected:
+            if self.active and i == self._vindex:
                 x = lowui.TextCanvas(text=[_text.encode(self._enc)],
                                      attr=[[(self.attr(u"cursor"), maxcol)]],
                                      maxcol=maxcol)
@@ -289,6 +280,49 @@ class Block(lowui.BoxWidget):
             combined.trim_end(_len - maxrow)
 
         return combined
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _get_display(self, rows, cols):
+        """
+        Get currently visible piece of entries
+        """
+
+        _len = len(self.entries)
+
+        _changed = False
+
+        if not self._display:
+            _changed = True
+            self._from = 0
+
+            if _len < rows:
+                self._to = _len
+            else:
+                self._to = rows
+        else:
+            if self._vindex >= rows:
+                _changed = True
+
+                self._vindex = 0
+                self._from = self._to
+                self._to += rows
+            elif self._vindex < 0:
+                _changed = True
+
+                self._vindex = rows - 1
+                self._from -= rows
+                self._to -= rows
+
+        if _changed:
+            self._display = []
+
+            for _obj in self.entries[self._from:self._to]:
+                _text = u"%s%s "% (_obj.visual, _obj.name.decode(self._enc))
+                _text = self._truncate(_text, cols)
+                self._display.append(_text)
+
+        return self._display
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -364,6 +398,7 @@ class Block(lowui.BoxWidget):
 
         if self.selected < len(self.entries) - 1:
             self.selected += 1
+            self._vindex += 1
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -375,6 +410,7 @@ class Block(lowui.BoxWidget):
 
         if self.selected > 0:
             self.selected -= 1
+            self._vindex -= 1
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -385,6 +421,8 @@ class Block(lowui.BoxWidget):
         """
 
         self.selected = 0
+        self._vindex = 0
+        self._display = []
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
