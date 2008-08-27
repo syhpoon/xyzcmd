@@ -30,7 +30,7 @@ syn match xyzLoad /load/ nextgroup=xyzNSPath skipwhite
 syn match xyzNSPath /\(\:[^ ]\+\)/ contained skipwhite
 
 "bind :misc:hello:say_hello to CTRL-R
-syn match xyzBind /bind\(!\)\?/ nextgroup=xyzBindPlugin skipwhite
+syn match xyzBind /bind/ nextgroup=xyzBindPlugin skipwhite
 syn match xyzBindPlugin /\(:\)\?\S\+/ nextgroup=xyzBindTo contained skipwhite
 syn match xyzBindTo /to/ contained skipwhite
 

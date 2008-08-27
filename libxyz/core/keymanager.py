@@ -80,10 +80,6 @@ class KeyManager(object):
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         def _bind_cb(mo):
-            _force = False
-            if mo.group("force") == "!":
-                _force = True
-
             _method = mo.group("method")
             _shortcut = mo.group("shortcut")
             _context = mo.group("context")
@@ -92,7 +88,7 @@ class KeyManager(object):
                 _context = Namespace(_method).pfull
 
             try:
-                self._bind(_method, _shortcut, _context, _force)
+                self._bind(_method, _shortcut, _context)
             except KeyManagerError, e:
                 raise XYZValueError(unicode(e))
 
@@ -114,7 +110,6 @@ class KeyManager(object):
         ^                   # begin
         \s*                 # leading spaces
         bind                # keywoard bind
-        (?P<force>\!?)      # Optional ! (force) mark
         \s+                 # one ore more spaces
         (?P<method>[\w:]+)  # plugin ns-path and/or method name
         \s+                 # one ore more spaces
@@ -185,7 +180,7 @@ class KeyManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _bind(self, method, shortcut, context=None, force=False):
+    def _bind(self, method, shortcut, context=None):
         _p = Namespace(method)
         _mobj = None
 
@@ -205,13 +200,13 @@ class KeyManager(object):
         if _mobj is None:
             # Wait until plugin method is available and then run callback
             self.xyz.pm.wait_for(_p, self._bind_wait_cb, _p.method, shortcut,
-                                 context, force)
+                                 context)
 
-        self.bind(_mobj, shortcut, context, force)
+        self.bind(_mobj, shortcut, context)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _bind_wait_cb(self, plugin_obj, method, shortcut, context, force):
+    def _bind_wait_cb(self, plugin_obj, method, shortcut, context):
         if method not in plugin_obj.public:
             xyzlog.log(_(u"Unable to bind method %s. "\
                          u"Plugin %s doesn't export it." %
@@ -219,11 +214,11 @@ class KeyManager(object):
                          xyzlog.loglevel.ERROR)
             return
 
-        self.bind(plugin_obj.public[method], shortcut, context, force)
+        self.bind(plugin_obj.public[method], shortcut, context)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def bind(self, mobj, shortcut, context=None, force=False):
+    def bind(self, mobj, shortcut, context=None):
         """
         Bind a shortcut to a method
         @return: True on success, False otherwise, also raises exception
@@ -237,10 +232,6 @@ class KeyManager(object):
 
         if context not in self._bind_data:
             self._bind_data[context] = {}
-        elif _shortcut in self._bind_data[context] and \
-        self._bind_data[context][_shortcut] is not None and not force:
-            # Already binded
-            return
 
         self._bind_data[context][_shortcut] = mobj
 

@@ -11,9 +11,8 @@ File syntax is following:
 
 * ``#`` Begins commentary to the end of line
 * ``load {plugin_path}`` loads plugin
-* ``bind[!] {method} to {shortcut} [context {contextname}]`` binds method 
+* ``bind {method} to {shortcut} [context {contextname}]`` binds method 
   to be invoked upon pressing shortcut in context.
-  If shortcut is already binded do nothing unless ``!`` flag is specified.
 
 Where:
 
