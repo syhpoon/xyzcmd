@@ -218,7 +218,7 @@ class Cmd(lowui.FlowWidget):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def get_cursor_coords(self,(maxcol,)):
+    def get_cursor_coords(self, (maxcol,)):
         """
         Return the (x,y) coordinates of cursor within widget.
         """
@@ -361,7 +361,7 @@ class Cmd(lowui.FlowWidget):
     @refresh
     def _delete(self, direction, chars=None, topred=None):
         """
-        Generic delete routine
+        Generic delete procedure
         @param direction: LEFT, RIGHT or UNDER
         @param chars: Number of characters to delete
         @param topred: Predicate function which must return True if char

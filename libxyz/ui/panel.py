@@ -112,6 +112,8 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.entry_prev)
         _panel_plugin.export(self.entry_top)
         _panel_plugin.export(self.entry_bottom)
+        _panel_plugin.export(self.block_next)
+        _panel_plugin.export(self.block_prev)
         _panel_plugin.export(self.switch_active)
 
         _panel_plugin.VERSION = u"0.1"
@@ -184,6 +186,24 @@ class Panel(lowui.WidgetWrap):
             self.block2.deactivate()
             self.block1.activate()
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def block_next(self):
+        """
+        Next block
+        """
+
+        return self.active.block_next()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def block_prev(self):
+        """
+        Previous block
+        """
+
+        return self.active.block_prev()
+
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 class Block(lowui.BoxWidget):
@@ -227,6 +247,7 @@ class Block(lowui.BoxWidget):
 
         self._winfo = lowui.Text(u"")
         self._sep = Separator()
+        self._pending = libxyz.core.Queue(20)
 
         _info = lowui.Padding(self._winfo, align.LEFT, self.size.cols)
         _info = lowui.AttrWrap(_info, self.attr(u"info"))
@@ -254,9 +275,18 @@ class Block(lowui.BoxWidget):
         Render block
         """
 
+        # Search for pending action
+        while True:
+            try:
+                _act = self._pending.pop()
+            except IndexError:
+                break
+            else:
+                _act(maxcol, maxrow)
+
         self._set_info(self.entries[self.selected], maxcol)
 
-        self._display = self._get_display(maxrow, maxcol)
+        self._display = self._get_visible(maxrow, maxcol)
         _len = len(self._display)
 
         canvases = []
@@ -283,38 +313,17 @@ class Block(lowui.BoxWidget):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _get_display(self, rows, cols):
+    def _get_visible(self, rows, cols):
         """
         Get currently visible piece of entries
         """
 
         _len = len(self.entries)
+        _from, _to, self._vindex = self._update_vindex(rows)
 
-        _changed = False
-
-        if not self._display:
-            _changed = True
-            self._from = 0
-
-            if _len < rows:
-                self._to = _len
-            else:
-                self._to = rows
-        else:
-            if self._vindex >= rows:
-                _changed = True
-
-                self._vindex = 0
-                self._from = self._to
-                self._to += rows
-            elif self._vindex < 0:
-                _changed = True
-
-                self._vindex = rows - 1
-                self._from -= rows
-                self._to -= rows
-
-        if _changed:
+        if (_from, _to) != (self._from, self._to):
+            self._from = _from
+            self._to = _to
             self._display = []
 
             for _obj in self.entries[self._from:self._to]:
@@ -336,7 +345,7 @@ class Block(lowui.BoxWidget):
         if _len < cols:
             return text
         else:
-            return "%s~" % text[:cols - 1]
+            return u"%s~" % text[:cols - 1]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -365,6 +374,21 @@ class Block(lowui.BoxWidget):
                              len(_part2)) - 1), _part2)
 
         self._winfo.set_text(_text.encode(self._enc))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _update_vindex(self, rows):
+        """
+        Calculate vindex according to selected position
+        """
+
+        pos = self.selected
+
+        _from = pos / rows * rows
+        _to = _from + rows
+        _vindex = pos - (rows * (pos / rows))
+
+        return (_from, _to, _vindex)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -398,7 +422,6 @@ class Block(lowui.BoxWidget):
 
         if self.selected < len(self.entries) - 1:
             self.selected += 1
-            self._vindex += 1
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -410,7 +433,6 @@ class Block(lowui.BoxWidget):
 
         if self.selected > 0:
             self.selected -= 1
-            self._vindex -= 1
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -421,8 +443,6 @@ class Block(lowui.BoxWidget):
         """
 
         self.selected = 0
-        self._vindex = 0
-        self._display = []
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -433,3 +453,42 @@ class Block(lowui.BoxWidget):
         """
 
         self.selected = len(self.entries) - 1
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @refresh
+    def block_next(self):
+        """
+        One block down
+        """
+
+        def _do_next_block(cols, rows):
+            if self.selected + rows > len(self.entries):
+                return self.bottom()
+            else:
+                self.selected += rows
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        # As we aren't aware of how many rows are contained in a single block at
+        # this moment, postpone jumping until render is called
+
+        self._pending.push(_do_next_block)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @refresh
+    def block_prev(self):
+        """
+        One block up
+        """
+
+        def _do_prev_block(cols, rows):
+            if self.selected - rows < 0:
+                return self.top()
+            else:
+                self.selected -= rows
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        self._pending.push(_do_prev_block)

@@ -38,6 +38,10 @@ bind :sys:panel:entry_prev to UP context @
 bind :sys:panel:entry_top to HOME context @
 bind :sys:panel:entry_bottom to END context @
 bind :sys:panel:switch_active to TAB context @
+bind :sys:panel:block_next to PAGE_DOWN context @
+bind :sys:panel:block_next to RIGHT context @
+bind :sys:panel:block_prev to PAGE_UP context @
+bind :sys:panel:block_prev to LEFT context @
 
 bind :sys:logger:show_console to META-l
 bind :sys:run:shutdown to F10

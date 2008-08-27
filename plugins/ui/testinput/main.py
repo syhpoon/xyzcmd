@@ -45,8 +45,10 @@ class XYZPlugin(BasePlugin):
 
         _escape = 0
 
+        _enc = self.xyz.conf[u"xyz"][u"local_encoding"]
+
         while True:
-            _input = InputBox(self.xyz, self.xyz.top, _msg,
+            _input = InputBox(self.xyz, self.xyz.top, _msg.encode(_enc),
                               _(u"Input test")).show(use_wrap=use_wrap)
 
             if self._keys.ESCAPE in _input:
@@ -59,9 +61,9 @@ class XYZPlugin(BasePlugin):
             _keys = []
 
             for _i in _input:
-                _keys.append(self._keys.raw_to_shortcut(_i))
+                _keys.append(self._keys.raw_to_shortcut(_i.decode(_enc)))
 
-            _low = [unicode(x) for x in _input]
+            _low = [x.decode(_enc) for x in _input]
             _msg = u"Shortcut: '%s'. Raw: '%s'" % \
                    (u"".join(_keys), u"".join(_low))
 

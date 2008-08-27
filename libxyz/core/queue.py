@@ -46,6 +46,16 @@ class Queue(list):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def pop(self):
+        """
+        Pop item from the beginning of the queue
+        Raise IndexError if queue is empty
+        """
+
+        return super(Queue,self).pop(0)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def clear(self):
         """
         Clear queue

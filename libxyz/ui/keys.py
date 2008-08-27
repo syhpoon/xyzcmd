@@ -103,7 +103,9 @@ class Keys(object):
         Make shortcut from raw keys received
         """
 
-        if len(raw) > 1: # Shortcut
+        if raw in (u"page up", u"page down"):
+            return self.get_key(raw)
+        elif len(raw) > 1: # Shortcut
             return u"-".join([self.get_key(x) or x for x in raw.split(u" ")])
         else:
             return raw
