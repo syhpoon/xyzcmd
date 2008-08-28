@@ -36,9 +36,7 @@ from libxyz.version import Version
 from libxyz.core.plugins import PluginManager
 from libxyz.core import logger
 
-from libxyz.exceptions import XYZValueError
-from libxyz.exceptions import XYZRuntimeError
-from libxyz.exceptions import ParseError
+from libxyz.exceptions import *
 
 class Launcher(object):
     """

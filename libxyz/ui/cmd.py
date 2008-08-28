@@ -111,7 +111,8 @@ class Cmd(lowui.FlowWidget):
                           u"undo_depth - Specifies how many undo levels to "\
                           u"keep. Default - 10\n"\
                           u"history_depth - Specifies how man entered "\
-                          u"commands to keep. Default - 50"
+                          u"commands to keep. Default - 50\n"\
+                          u"prompt - Command line prompt. Default - '$ '"
 
         _cmd_plugin.export(self.del_char)
         _cmd_plugin.export(self.del_char_left)

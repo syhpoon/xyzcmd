@@ -214,11 +214,11 @@ class KeyManager(object):
                          xyzlog.loglevel.ERROR)
             return
 
-        self.bind(plugin_obj.public[method], shortcut, context)
+        self.bind(plugin_obj.public[method], shortcut, context, force=False)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def bind(self, mobj, shortcut, context=None):
+    def bind(self, mobj, shortcut, context=None, force=True):
         """
         Bind a shortcut to a method
         @return: True on success, False otherwise, also raises exception
@@ -232,6 +232,10 @@ class KeyManager(object):
 
         if context not in self._bind_data:
             self._bind_data[context] = {}
+
+        if _shortcut in self._bind_data[context] and \
+        self._bind_data[context][_shortcut] is not None and not force:
+            return
 
         self._bind_data[context][_shortcut] = mobj
 
