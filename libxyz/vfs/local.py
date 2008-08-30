@@ -29,11 +29,6 @@ class LocalVFSObject(vfsobj.VFSObject):
     Local VFS object is used to access local filesystem
     """
 
-    def __init__(self, path):
-        super(LocalVFSObject, self).__init__(path)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     def walk(self, top=None):
         """
         Directory tree walker
@@ -53,8 +48,10 @@ class LocalVFSObject(vfsobj.VFSObject):
 
         return [
                 _dir,
-                [LocalVFSFile(os.path.join(_abstop, x)) for x in _dirs],
-                [LocalVFSFile(os.path.join(_abstop, x)) for x in _files],
+                [LocalVFSFile(os.path.join(_abstop, x), self.enc)
+                  for x in _dirs],
+                [LocalVFSFile(os.path.join(_abstop, x), self.enc)
+                  for x in _files],
                ]
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
@@ -64,11 +61,11 @@ class LocalVFSFile(vfsobj.VFSFile):
     Local file object
     """
 
-    def __init__(self, path):
-        super(LocalVFSFile, self).__init__(path)
+    def __init__(self, path, enc):
+        super(LocalVFSFile, self).__init__(path, enc)
 
         self.ftype = self._find_type(path)
-        self.visual = self.ftype.visual
+        self.vtype = self.ftype.vtype
 
         self._set_attributes()
 
@@ -103,6 +100,33 @@ class LocalVFSFile(vfsobj.VFSFile):
         Set file attibutes
         """
 
+        def set_link_attributes():
+            """
+            Set appropriate soft link attibutes
+            """
+
+            _realpath = os.readlink(self.path)
+            _fullpath = os.path.realpath(self.path)
+
+            if not os.path.exists(_fullpath):
+                self.vtype = u"!"
+
+            self.mode = u""
+            self.size = u""
+            self.visual = u"-> %s" % _realpath.decode(self.enc)
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        def set_char_attributes():
+            """
+            Set appropriate character device attibutes
+            """
+
+            _dev = self._stat.st_rdev
+            self.size = u"%s, %s" % (os.major(_dev), os.minor(_dev))
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         self.atime = self._stat.st_atime
         self.mtime = self._stat.st_mtime
         self.ctime = self._stat.st_ctime
@@ -110,3 +134,11 @@ class LocalVFSFile(vfsobj.VFSFile):
         self.uid = self._stat.st_uid
         self.gid = self._stat.st_gid
         self.mode = mode.Mode(self._stat.st_mode)
+        self.visual = u"%s%s" % (self.vtype, self.name.decode(self.enc))
+
+        if isinstance(self.ftype, types.VFSTypeLink):
+            set_link_attributes()
+        elif isinstance(self.ftype, types.VFSTypeChar):
+            set_char_attributes()
+        else:
+            self.visual = u"%s%s" % (self.vtype, self.name.decode(self.enc))

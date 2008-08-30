@@ -56,12 +56,15 @@ ui.error_box {
 
 # Panel widget
 ui.panel {
+	&BG = DARK_GREEN
+
 	cwdtitle = BLACK, LIGHT_GRAY
-	cwdtitleinact = WHITE, DARK_GREEN
-	panel = LIGHT_GRAY, DARK_GREEN
+	cwdtitleinact = WHITE, &BG
+	panel = LIGHT_GRAY, &BG
 	cursor = BLACK, LIGHT_GRAY
-	info = WHITE, DARK_GREEN
-	border = WHITE, DARK_GREEN
+	info = WHITE, &BG
+	border = WHITE, &BG
+	tagged = LIGHT_CYAN, &BG
 }
 
 # XYZListBox

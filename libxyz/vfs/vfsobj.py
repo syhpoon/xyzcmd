@@ -23,8 +23,9 @@ class VFSObject(object):
     Abstract interface for VFS objects
     """
 
-    def __init__(self, path):
+    def __init__(self, path, enc=None):
         self.path = path
+        self.enc = enc or "utf8"
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -42,8 +43,9 @@ class VFSFile(object):
     A VFS file information interface
     """
 
-    def __init__(self, path):
+    def __init__(self, path, enc=None):
         self.path = os.path.abspath(path)
+        self.enc = enc or "utf8"
 
         # File name
         self.name = os.path.basename(self.path)
@@ -72,7 +74,10 @@ class VFSFile(object):
         # Mode
         self.mode = VFS_NONE
 
-        # Visual filetype representation
+        # Visual file type
+        self.vtype = VFS_NONE
+
+        # Visual file representation
         self.visual = VFS_NONE
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

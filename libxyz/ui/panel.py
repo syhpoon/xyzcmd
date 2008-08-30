@@ -23,6 +23,7 @@ from libxyz.ui import align
 from libxyz.ui import Separator
 from libxyz.ui.utils import refresh
 from libxyz.vfs.local import LocalVFSObject
+from libxyz.vfs.types import VFSTypeFile
 
 class Panel(lowui.WidgetWrap):
     """
@@ -40,9 +41,10 @@ class Panel(lowui.WidgetWrap):
         _blocksize = libxyz.ui.Size(rows=_size[1] - 1, cols=_size[0] / 2 - 2)
         _enc = xyz.conf[u"xyz"][u"local_encoding"]
 
-        self.block1 = Block(_blocksize, LocalVFSObject("/tmp"), self._attr,
-                            _enc, active=True)
-        self.block2 = Block(_blocksize, LocalVFSObject("/home/syhpoon"),
+        self.block1 = Block(_blocksize, LocalVFSObject("/usr/local/www/syhpoon/DVD/", _enc),
+                            self._attr, _enc, active=True)
+
+        self.block2 = Block(_blocksize, LocalVFSObject("/home/syhpoon", _enc),
                             self._attr, _enc)
 
         columns = lowui.Columns([self.block1.block, self.block2.block], 0)
@@ -115,6 +117,11 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.block_next)
         _panel_plugin.export(self.block_prev)
         _panel_plugin.export(self.switch_active)
+        _panel_plugin.export(self.get_selected)
+        _panel_plugin.export(self.get_tagged)
+        _panel_plugin.export(self.toggle_tag)
+        _panel_plugin.export(self.tag_all)
+        _panel_plugin.export(self.untag_all)
 
         _panel_plugin.VERSION = u"0.1"
         _panel_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
@@ -204,6 +211,51 @@ class Panel(lowui.WidgetWrap):
 
         return self.active.block_prev()
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_selected(self):
+        """
+        Get selected VFSFile instance
+        """
+
+        return self.active.get_selected()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_tagged(self):
+        """
+        Return list of tagged VFSFile instances
+        """
+
+        return self.active.get_tagged()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def toggle_tag(self):
+        """
+        Tag selected file
+        """
+
+        return self.active.toggle_tag()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def tag_all(self):
+        """
+        Tag every single object in current dir
+        """
+
+        return self.active.tag_all()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def untag_all(self):
+        """
+        Untag every single object in current dir
+        """
+
+        return self.active.untag_all()
+
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 class Block(lowui.BoxWidget):
@@ -220,7 +272,8 @@ class Block(lowui.BoxWidget):
         @param enc: Local encoding
         @param active: Boolean flag, True if block is active
 
-        Required resources: cwdtitle,cwdtitleinact,panel,cursor,info,border
+        Required resources: cwdtitle, cwdtitleinact, panel, cursor, info
+                            border, tagged
         """
 
         self.size = size
@@ -233,6 +286,8 @@ class Block(lowui.BoxWidget):
         self._vindex = 0
         self._from = 0
         self._to = 0
+
+        self._tagged = []
 
         self._enc = enc
 
@@ -286,6 +341,20 @@ class Block(lowui.BoxWidget):
 
         self._set_info(self.entries[self.selected], maxcol)
 
+        _tlen = len(self._tagged)
+
+        if _tlen > 0:
+            _text = _(u"%s bytes (%d)") % (
+                    self._make_number_readable(
+                     reduce(lambda x, y: x + y,
+                           [self.entries[x].size for x in self._tagged
+                            if isinstance(self.entries[x].ftype, VFSTypeFile)
+                           ], 0)), _tlen)
+
+            self._sep.set_text(_text.encode(self._enc), self.attr(u"tagged"))
+        else:
+            self._sep.clear_text()
+
         self._display = self._get_visible(maxrow, maxcol)
         _len = len(self._display)
 
@@ -293,10 +362,16 @@ class Block(lowui.BoxWidget):
 
         for i in range(0, _len):
             _text = self._display[i]
+            _own_attr = None
 
             if self.active and i == self._vindex:
+                _own_attr = self.attr(u"cursor")
+            elif (self._from + i) in self._tagged:
+                _own_attr = self.attr(u"tagged")
+
+            if _own_attr is not None:
                 x = lowui.TextCanvas(text=[_text.encode(self._enc)],
-                                     attr=[[(self.attr(u"cursor"), maxcol)]],
+                                     attr=[[(_own_attr, maxcol)]],
                                      maxcol=maxcol)
                 canvases.append((x, i, False))
             else:
@@ -313,6 +388,23 @@ class Block(lowui.BoxWidget):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def _make_number_readable(self, num):
+        _strnum = unicode(num)
+
+        _res = []
+
+        for i in range(len(_strnum)):
+            if i % 3 == 0:
+                _res.append(u"_")
+
+            _res.append(_strnum[i])
+
+        #_res.reverse()
+
+        return u"".join(_res)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def _get_visible(self, rows, cols):
         """
         Get currently visible piece of entries
@@ -322,12 +414,12 @@ class Block(lowui.BoxWidget):
         _from, _to, self._vindex = self._update_vindex(rows)
 
         if (_from, _to) != (self._from, self._to):
-            self._from = _from
-            self._to = _to
+            self._from, self._to = _from, _to
             self._display = []
 
             for _obj in self.entries[self._from:self._to]:
-                _text = u"%s%s "% (_obj.visual, _obj.name.decode(self._enc))
+                #TODO: decode vfs.name in VFS object itself
+                _text = u"%s%s "% (_obj.vtype, _obj.name.decode(self._enc))
                 _text = self._truncate(_text, cols)
                 self._display.append(_text)
 
@@ -367,8 +459,7 @@ class Block(lowui.BoxWidget):
         """
 
         _part2 = u"%s %s" % (vfsobj.size, vfsobj.mode)
-        _part1 = u"%s%s" % (vfsobj.visual, vfsobj.name.decode(self._enc))
-        _part1 = self._truncate(_part1, cols - len(_part2) - 2)
+        _part1 = self._truncate(vfsobj.visual, cols - len(_part2) - 2)
 
         _text = u"%s%s%s" % (_part1, u" " * (cols - (len(_part1) +
                              len(_part2)) - 1), _part2)
@@ -463,15 +554,15 @@ class Block(lowui.BoxWidget):
         """
 
         def _do_next_block(cols, rows):
-            if self.selected + rows > len(self.entries):
+            if self.selected + rows >= len(self.entries):
                 return self.bottom()
             else:
                 self.selected += rows
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        # As we aren't aware of how many rows are contained in a single block at
-        # this moment, postpone jumping until render is called
+        # As we aren't aware of how many rows are contained in a single
+        # block at this moment, postpone jumping until render is called
 
         self._pending.push(_do_next_block)
 
@@ -492,3 +583,75 @@ class Block(lowui.BoxWidget):
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         self._pending.push(_do_prev_block)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_selected(self):
+        """
+        Get selected VFSFile instance
+        """
+
+        return self.entries[self.selected]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_tagged(self):
+        """
+        Return list of tagged VFSFile instances
+        """
+
+        return [self.entries[x] for x in self._tagged]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def toggle_tag(self):
+        """
+        Toggle tagged selected file
+        """
+
+        if self.selected in self._tagged:
+            self._tagged.remove(self.selected)
+        else:
+            self._tagged.append(self.selected)
+
+        self.next()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def tag_re(self):
+        """
+        Tag files by regexp
+        """
+
+        #TODO:
+        pass
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def untag_re(self):
+        """
+        Untag files by regexp
+        """
+
+        #TODO:
+        pass
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @refresh
+    def tag_all(self):
+        """
+        Tag every single object in current dir
+        """
+
+        self._tagged = [i for i in range(len(self.entries))]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @refresh
+    def untag_all(self):
+        """
+        Untag every single object in current dir
+        """
+
+        self._tagged = []

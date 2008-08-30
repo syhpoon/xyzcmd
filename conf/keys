@@ -42,6 +42,9 @@ bind :sys:panel:block_next to PAGE_DOWN context @
 bind :sys:panel:block_next to RIGHT context @
 bind :sys:panel:block_prev to PAGE_UP context @
 bind :sys:panel:block_prev to LEFT context @
+bind :sys:panel:toggle_tag to INSERT context @
+bind :sys:panel:tag_all to META-a context @
+bind :sys:panel:untag_all to META-A context @
 
 bind :sys:logger:show_console to META-l
 bind :sys:run:shutdown to F10
@@ -52,4 +55,4 @@ bind :core:bindlist:show_binds to META-r
 
 bind :ui:testinput:show_box to META-e
 
-bind :misc:about:about to META-a
+bind :misc:about:about to META-o

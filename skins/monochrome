@@ -64,6 +64,7 @@ ui.panel {
 	cursor = BLACK, &BG
 	info = WHITE, DEFAULT
 	border = DEFAULT, DEFAULT
+	tagged = WHITE, DEFAULT
 }
 
 # XYZListBox

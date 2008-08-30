@@ -36,6 +36,20 @@ class Separator(lowui.FlowWidget):
 
         super(Separator, self).__init__()
 
+        self.set_text(title, title_attr)
+
+        self.div_char = lowui.escape.utf8decode("─")
+        self.div_attr = div_attr
+        self.top = top
+        self.bottom = bottom
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def set_text(self, title, title_attr=None):
+        """
+        Set some text in the middle of seprator
+        """
+
         if title is not None:
             _title = " %s " % title
             self.title_len = len(_title)
@@ -48,10 +62,19 @@ class Separator(lowui.FlowWidget):
             self.text = None
             self.title_len = 0
 
-        self.div_char = lowui.escape.utf8decode("─")
-        self.div_attr = div_attr
-        self.top = top
-        self.bottom = bottom
+        self._invalidate()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def clear_text(self):
+        """
+        Remove text if any
+        """
+
+        self.text = None
+        self.title_len = 0
+
+        self._invalidate()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

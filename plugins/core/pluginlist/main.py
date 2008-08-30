@@ -56,8 +56,10 @@ class XYZPlugin(BasePlugin):
         self._walker = lowui.SimpleListWalker([PluginEntry(_obj, _sel_attr,
                                               self._info) for _obj in _plugins])
 
+        _dim = tuple([x - 2 for x in self.xyz.screen.get_cols_rows()])
+
         uilib.XYZListBox(self.xyz, self.xyz.top, self._walker,
-                         _(u"Active plugins list")).show()
+                         _(u"Active plugins list"), _dim).show()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -181,6 +183,7 @@ class XYZPlugin(BasePlugin):
         _add_public_methods()
 
         _method_walker = lowui.SimpleListWalker(_data)
+        _dim = tuple([x - 2 for x in self.xyz.screen.get_cols_rows()])
 
         uilib.XYZListBox(self.xyz, self.xyz.top, _method_walker,
-                         _(u"Plugin info %s" % _plugin.ns)).show()
+                         _(u"Plugin info %s" % _plugin.ns), _dim).show()

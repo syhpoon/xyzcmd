@@ -20,7 +20,7 @@ class VFSTypeFile(object):
     """
 
     str_type = u"-"
-    visual = u" "
+    vtype = u" "
 
     def __str__(self):
         return "<Regular file type>"
@@ -38,7 +38,7 @@ class VFSTypeBlock(object):
     """
 
     str_type = u"b"
-    visual = u"+"
+    vtype = u"+"
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -58,7 +58,7 @@ class VFSTypeChar(object):
     """
 
     str_type = u"c"
-    visual = u"-"
+    vtype = u"-"
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -78,7 +78,7 @@ class VFSTypeDir(object):
     """
 
     str_type = u"d"
-    visual = u"/"
+    vtype = u"/"
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -98,7 +98,7 @@ class VFSTypeLink(object):
     """
 
     str_type = u"l"
-    visual = u"@"
+    vtype = u"@"
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -118,7 +118,7 @@ class VFSTypeFifo(object):
     """
 
     str_type = u"p"
-    visual = u"|"
+    vtype = u"|"
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
@@ -138,7 +138,7 @@ class VFSTypeSocket(object):
     """
 
     str_type = u"s"
-    visual = u"="
+    vtype = u"="
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
