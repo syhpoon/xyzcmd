@@ -14,16 +14,19 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+import re
+import pwd
+import grp
+
 import libxyz.ui
 import libxyz.core
 import libxyz.const
 
 from libxyz.ui import lowui
 from libxyz.ui import align
-from libxyz.ui import Separator
 from libxyz.ui.utils import refresh
 from libxyz.vfs.local import LocalVFSObject
-from libxyz.vfs.types import VFSTypeFile
+from libxyz.vfs.types import *
 
 class Panel(lowui.WidgetWrap):
     """
@@ -41,21 +44,36 @@ class Panel(lowui.WidgetWrap):
         _blocksize = libxyz.ui.Size(rows=_size[1] - 1, cols=_size[0] / 2 - 2)
         _enc = xyz.conf[u"xyz"][u"local_encoding"]
 
-        self.block1 = Block(_blocksize, LocalVFSObject("/usr/local/www/syhpoon/DVD/", _enc),
+        self.block1 = Block(xyz, _blocksize,
+                            LocalVFSObject("/tmp", _enc),
                             self._attr, _enc, active=True)
 
-        self.block2 = Block(_blocksize, LocalVFSObject("/home/syhpoon", _enc),
+        self.block2 = Block(xyz, _blocksize,
+                            LocalVFSObject("/home/syhpoon", _enc),
                             self._attr, _enc)
 
+        self._stop = False
         columns = lowui.Columns([self.block1.block, self.block2.block], 0)
 
         self._cmd = libxyz.ui.Cmd(xyz)
         self._widget = lowui.Pile([columns, self._cmd])
-        self._stop = False
 
         self._set_plugins()
 
         super(Panel, self).__init__(self._widget)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def render(self, (maxcol,), focus=False):
+        """
+        Render panel
+        """
+
+        columns = lowui.Columns([self.block1.block, self.block2.block], 0)
+
+        self._widget = lowui.Pile([columns, self._cmd])
+
+        return self._widget.render((maxcol,))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -122,6 +140,9 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.toggle_tag)
         _panel_plugin.export(self.tag_all)
         _panel_plugin.export(self.untag_all)
+        _panel_plugin.export(self.invert_tag)
+        _panel_plugin.export(self.tag_re)
+        _panel_plugin.export(self.swap_blocks)
 
         _panel_plugin.VERSION = u"0.1"
         _panel_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
@@ -256,6 +277,36 @@ class Panel(lowui.WidgetWrap):
 
         return self.active.untag_all()
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def invert_tag(self):
+        """
+        Invert currently tagged files
+        """
+
+        return self.active.invert_tag()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def tag_re(self):
+        """
+        Tag files by regexp
+        """
+
+        return self.active.tag_re()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def swap_blocks(self):
+        """
+        Swap panel blocks
+        """
+
+        xyzlog.log("CHANGED", xyzlog.loglevel.ERROR)
+        self.block1, self.block2 = self.block2, self.block1
+
+        self._invalidate()
+
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 class Block(lowui.BoxWidget):
@@ -263,8 +314,9 @@ class Block(lowui.BoxWidget):
     Single block
     """
 
-    def __init__(self, size, vfsobj, attr_func, enc, active=False):
+    def __init__(self, xyz, size, vfsobj, attr_func, enc, active=False):
         """
+        @param xyz: XYZData instance
         @param size: Block widget size
         @type size: L{libxyz.ui.Size}
         @param vfsobj:
@@ -276,6 +328,7 @@ class Block(lowui.BoxWidget):
                             border, tagged
         """
 
+        self.xyz = xyz
         self.size = size
         self.attr = attr_func
 
@@ -300,8 +353,10 @@ class Block(lowui.BoxWidget):
         self.entries = _entries
         self._len = len(self.entries)
 
+        self._palettes = self._process_skin_rulesets()
+
         self._winfo = lowui.Text(u"")
-        self._sep = Separator()
+        self._sep = libxyz.ui.Separator()
         self._pending = libxyz.core.Queue(20)
 
         _info = lowui.Padding(self._winfo, align.LEFT, self.size.cols)
@@ -360,14 +415,17 @@ class Block(lowui.BoxWidget):
 
         canvases = []
 
-        for i in range(0, _len):
+        for i in xrange(0, _len):
             _text = self._display[i]
             _own_attr = None
+            _abs_i = self._from + i
 
             if self.active and i == self._vindex:
                 _own_attr = self.attr(u"cursor")
-            elif (self._from + i) in self._tagged:
+            elif _abs_i in self._tagged:
                 _own_attr = self.attr(u"tagged")
+            elif _abs_i in self._palettes:
+                _own_attr = self._palettes[_abs_i]
 
             if _own_attr is not None:
                 x = lowui.TextCanvas(text=[_text.encode(self._enc)],
@@ -375,7 +433,7 @@ class Block(lowui.BoxWidget):
                                      maxcol=maxcol)
                 canvases.append((x, i, False))
             else:
-                canvases.append((lowui.Text(_text).render((maxcol,)),i,False))
+                canvases.append((lowui.Text(_text).render((maxcol,)), i, False))
 
         combined = lowui.CanvasCombine(canvases)
 
@@ -389,17 +447,24 @@ class Block(lowui.BoxWidget):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _make_number_readable(self, num):
-        _strnum = unicode(num)
-
         _res = []
 
-        for i in range(len(_strnum)):
-            if i % 3 == 0:
+        i = 0
+        _sep = False
+
+        for x in reversed(unicode(num)):
+            if _sep:
                 _res.append(u"_")
+                _sep = False
 
-            _res.append(_strnum[i])
+            _res.append(x)
 
-        #_res.reverse()
+            if i > 0 and (i + 1) % 3 == 0:
+                _sep = True
+
+            i += 1
+
+        _res.reverse()
 
         return u"".join(_res)
 
@@ -410,7 +475,7 @@ class Block(lowui.BoxWidget):
         Get currently visible piece of entries
         """
 
-        _len = len(self.entries)
+        _len = self._len
         _from, _to, self._vindex = self._update_vindex(rows)
 
         if (_from, _to) != (self._from, self._to):
@@ -424,6 +489,168 @@ class Block(lowui.BoxWidget):
                 self._display.append(_text)
 
         return self._display
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _process_skin_rulesets(self):
+        """
+        """
+
+        def _setup_type():
+            _block = u"fs.type"
+
+            _palette = self.xyz.skin.get_palette
+
+            _data = {
+                     VFSTypeFile: _palette(_block, u"file"),
+                     VFSTypeDir: _palette(_block, u"dir"),
+                     VFSTypeLink: _palette(_block, u"link"),
+                     VFSTypeSocket: _palette(_block, u"socket"),
+                     VFSTypeFifo: _palette(_block, u"fifo"),
+                     VFSTypeChar: _palette(_block, u"char"),
+                     VFSTypeBlock: _palette(_block, u"block"),
+                    }
+
+            return _data
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        def _process_type(data, entry):
+            try:
+                return data[type(entry.ftype)]
+            except KeyError:
+                return None
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        def _setup_regexp():
+            try:
+                _regexp = self.xyz.skin["fs.regexp"]
+            except KeyError:
+                return None
+
+            _data = {}
+
+            for _re in _regexp:
+                _data[re.compile(_re, re.U)] = _regexp[_re]
+
+            return _data
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        def _process_regexp(data, entry):
+            if data is None:
+                return
+
+            for _re in data:
+                if _re.match(entry.name):
+                    return data[_re].name
+
+            return None
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        def _setup_owner():
+            def _get_uid_gid(raw):
+                _tmp = raw.split(":")
+
+                _uid = _tmp[0]
+
+                if not _uid.isdigit():
+                    try:
+                        _uid = pwd.getpwnam(_uid).pw_uid
+                    except (KeyError, TypeError):
+                        _uid = None
+                else:
+                    _uid = int(_uid)
+
+                if len(_tmp) > 1:
+                    _gid = _tmp[1]
+
+                    if not _gid.isdigit():
+                        try:
+                            _gid = grp.getgrnam(_gid).gr_gid
+                        except (KeyError, TypeError):
+                            _gid = None
+                    else:
+                        _gid = int(_gid)
+                else:
+                    _gid = None
+
+                return (_uid, _gid)
+
+            #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+            try:
+                _owner = self.xyz.skin["fs.owner"]
+            except KeyError:
+                return None
+
+            # Both uid:gid specified
+            _data_full = {}
+            # Only uid
+            _data_uid = {}
+            # Only gid
+            _data_gid = {}
+
+            for _raw in _owner:
+                _res = _get_uid_gid(_raw)
+
+                if _res[0] is not None and _res[1] is not None:
+                    _data_full[_res] = _owner[_raw].name
+                elif _res[0] is not None:
+                    _data_uid[_res] = _owner[_raw].name
+                elif _res[1] is not None:
+                    _data_gid[_res] = _owner[_raw].name
+
+            return (_data_full, _data_uid, _data_gid)
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        def _process_owner(data, entry):
+            if data is None:
+                return None
+
+            _full, _uid, _gid = data
+
+            for _obj in _full:
+                if entry.uid == _obj[0] and entry.gid == _obj[1]:
+                    return _full[_obj]
+
+            for _obj in _uid:
+                if entry.uid == _obj[0]:
+                    return _uid[_obj]
+
+            for _obj in _gid:
+                if entry.gid == _obj[1]:
+                    return _gid[_obj]
+
+            return None
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        #_priority = self.xyz.skin["fs.priority"]
+
+        _type_data = _setup_type()
+        _regexp_data = _setup_regexp()
+        _owner_data = _setup_owner()
+
+        _priority = [lambda x: _process_type(_type_data, x),
+                     lambda x: _process_regexp(_regexp_data, x),
+                     lambda x: _process_owner(_owner_data, x),
+                    ]
+
+        _result = {}
+
+        for i in xrange(self._len):
+            _results = filter(None, [_f(self.entries[i]) for _f in _priority])
+
+            if _results:
+                # According to priority the most appropriate result is at
+                # the end of results list
+                _result[i] = _results.pop()
+
+        return _result
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -511,7 +738,7 @@ class Block(lowui.BoxWidget):
         Next entry
         """
 
-        if self.selected < len(self.entries) - 1:
+        if self.selected < self._len - 1:
             self.selected += 1
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -543,7 +770,7 @@ class Block(lowui.BoxWidget):
         Bottom entry
         """
 
-        self.selected = len(self.entries) - 1
+        self.selected = self._len - 1
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -554,7 +781,7 @@ class Block(lowui.BoxWidget):
         """
 
         def _do_next_block(cols, rows):
-            if self.selected + rows >= len(self.entries):
+            if self.selected + rows >= self._len:
                 return self.bottom()
             else:
                 self.selected += rows
@@ -623,8 +850,9 @@ class Block(lowui.BoxWidget):
         Tag files by regexp
         """
 
-        #TODO:
-        pass
+        _input = libxyz.ui.InputBox(self.xyz, self.xyz.top, "AAA")
+        
+        _input.show()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -639,12 +867,23 @@ class Block(lowui.BoxWidget):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @refresh
+    def invert_tag(self):
+        """
+        Invert currently tagged files
+        """
+
+        self._tagged = [i for i in xrange(self._len)
+                        if i not in self._tagged]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @refresh
     def tag_all(self):
         """
         Tag every single object in current dir
         """
 
-        self._tagged = [i for i in range(len(self.entries))]
+        self._tagged = [i for i in xrange(self._len)]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -4,30 +4,6 @@ AUTHOR: "Max E. Kuznecov <syhpoon@syhpoon.name>"
 VERSION: "0.1"
 DESCRIPTION: "XYZCommander monochrome skin"
 
-# Filesystem objects
-
-fs.type {
-	file = LIGHT_GRAY
-	dir = WHITE
-	block = DARK_MAGENTA
-	char = LIGHT_MAGENTA
-	link = LIGHT_CYAN
-	fifo = DARK_CYAN
-	socket = DARK_RED
-}
-
-fs.regexp {
-	'''.+\.core$''' = DARK_RED,BROWN
-	'''\.+''' = LIGHT_GRAY
-}
-
-fs.priority {
-	type = 1
-   perm = 2
-   regexp = 3
-   owner = 4
-}
-
 ### User interface objects
 
 # Base widget

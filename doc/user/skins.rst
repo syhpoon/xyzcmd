@@ -21,7 +21,7 @@ path or in user .xyz/skins directory.
 .. note::
    For every palette defined in skin, a separate color pair is used, so
    keep in mind that a terminal has a limited number of available color pairs.
-   And there would be an error if you define too much of them.
+   And it's an error if you define too much of them.
 
 Constants
 ---------
@@ -167,6 +167,11 @@ symbolic or numeric::
       1050 = WHITE,DARK_RED
    }
 
+fs.owner ruleset internal resolution order is following:
+   1. ``uid:gid``
+   #. ``uid``
+   #. ``gid``
+
 Regular expressions based rules use filenames as match criteria.
 Regular expressions must use x-quoting: ``'''<re>'''``::
 
@@ -176,6 +181,9 @@ Regular expressions must use x-quoting: ``'''<re>'''``::
       # Hidden files
       '''\.+''' = LIGHT_GREY
    }
+
+If the filename could be matched against two or more defined regexps,
+system will pick up first of those in arbitrary order.
 
 Order
 -----

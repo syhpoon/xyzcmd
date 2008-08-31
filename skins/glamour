@@ -5,13 +5,15 @@ DESCRIPTION: "XYZCommander Strawberry skin"
 # Filesystem objects
 
 fs.type {
-	file = LIGHT_GRAY
-	dir = WHITE
-	block = DARK_MAGENTA
-	char = LIGHT_MAGENTA
-	link = LIGHT_CYAN
-	fifo = DARK_CYAN
-	socket = DARK_RED
+	&BG = DARK_MAGENTA
+
+	file = LIGHT_GRAY, &BG
+	dir = WHITE, &BG
+	link = LIGHT_CYAN, &BG
+	socket = LIGHT_MAGENTA, &BG
+	char = DARK_GRAY, &BG
+	fifo = LIGHT_BLUE, &BG
+	block = BLACK, &BG
 }
 
 fs.regexp {

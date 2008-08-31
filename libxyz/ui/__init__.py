@@ -33,6 +33,7 @@ __all__ = (
     'Box',
     'MessageBox',
     'YesNoBox',
+    'InputBox',
     'ErrorBox',
     'Prompt',
     'XYZListBox',
@@ -57,6 +58,7 @@ from xyzbutton import XYZButton
 from box import Box
 from box_message import MessageBox
 from box_yesno import YesNoBox
+from box_input import InputBox
 from box_error import ErrorBox
 from prompt import Prompt
 from xyzlistbox import XYZListBox

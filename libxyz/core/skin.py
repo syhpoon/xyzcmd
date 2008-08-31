@@ -49,9 +49,9 @@ class Skin(object):
 
         # Default fallback palette
         self._default = uilib.colors.Palette(u"default",
-                           uilib.colors.Foreground(u"DEFAULT"),
-                           uilib.colors.Background(u"DEFAULT"),
-                           uilib.colors.Monochrome(u"DEFAULT"))
+                        uilib.colors.Foreground(u"DEFAULT"),
+                        uilib.colors.Background(u"DEFAULT"),
+                        uilib.colors.Monochrome(u"DEFAULT"))
 
         # 1. Parse
         self._data = self._parse()
@@ -221,7 +221,7 @@ class Skin(object):
     def attr(self, resolution, name, default=True):
         """
         Search for first matching attribute <name> according to resolution
-        @param resolution:
+        @param resolution: Sequence of ruleset names
         @param name: Attribute name
         @param default: If True, return default palette in case attr
                         is not found, otherwise return None
@@ -250,4 +250,12 @@ class Skin(object):
         if default:
             return self._default
         else:
+            return None
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_palette(self, block, name):
+        try:
+            return self._data[block][name].name
+        except KeyError:
             return None

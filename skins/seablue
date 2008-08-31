@@ -5,18 +5,24 @@ DESCRIPTION: "XYZCommander Seablue skin"
 ### Filesystem objects
 
 fs.type {
-	file = LIGHT_GRAY
-	dir = WHITE
-	block = DARK_MAGENTA
-	char = LIGHT_MAGENTA
-	link = LIGHT_CYAN
-	fifo = DARK_CYAN
-	socket = DARK_RED
+	&BG = DARK_BLUE
+
+	file = LIGHT_GRAY, &BG
+	dir = WHITE, &BG
+	link = LIGHT_CYAN, &BG
+	socket = LIGHT_MAGENTA, &BG
+	fifo = LIGHT_BLUE, &BG
+	char = DARK_GRAY, &BG
+	block = DARK_MAGENTA, &BG
 }
 
 fs.regexp {
-	'''.+\.core$''' = DARK_RED,BROWN
-	'''\.+''' = LIGHT_GRAY
+	'''.*\.core$''' = DARK_RED, DARK_BLUE
+	'''\.+''' = DARK_GRAY, DARK_BLUE
+}
+
+fs.owner {
+	root:wheel = WHITE, DARK_RED
 }
 
 fs.priority {
