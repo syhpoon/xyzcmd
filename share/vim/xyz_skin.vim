@@ -19,6 +19,13 @@
 
 runtime! syntax/xyz_block.vim
 
+syn match xyz_skinRuleset /fs\.type/
+syn match xyz_skinRuleset /fs\.regexp/
+syn match xyz_skinRuleset /fs\.owner/
+syn match xyz_skinRuleset /fs\.perm/
+syn match xyz_skinRuleset /fs\.priority/
+syn match xyz_skinRuleset /ui\.\S\+/
+
 syn keyword xyz_skinColor BLACK BROWN YELLOW WHITE DEFAULT DARK_BLUE
 syn keyword xyz_skinColor DARK_RED DARK_GREEN DARK_GRAY LIGHT_GRAY LIGHT_RED
 syn keyword xyz_skinColor LIGHT_BLUE LIGHT_MAGENTA LIGHT_CYAN BOLD UNDERLINE
@@ -30,3 +37,4 @@ syn match xyz_skinMetavar /^\s*DESCRIPTION/
 
 highlight link xyz_skinColor Keyword
 highlight link xyz_skinMetavar Identifier
+highlight link xyz_skinRuleset Keyword
