@@ -17,12 +17,14 @@ fs.type {
 }
 
 fs.regexp {
-	'''.*\.core$''' = DARK_RED, DARK_BLUE
-	'''\.+''' = DARK_GRAY, DARK_BLUE
+	&BG = DARK_BLUE
+
+	'''.*\.core$''' = DARK_RED, &BG
+	'''\.+''' = DARK_GRAY, &BG
 }
 
-fs.owner {
-	root:wheel = WHITE, DARK_RED
+fs.perm {
+	2000 = LIGHT_GREEN, DARK_BLUE
 }
 
 fs.priority {

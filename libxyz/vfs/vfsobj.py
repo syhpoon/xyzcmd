@@ -80,6 +80,9 @@ class VFSFile(object):
         # Visual file representation
         self.visual = VFS_NONE
 
+        # File info
+        self.info = VFS_NONE
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def open(self):

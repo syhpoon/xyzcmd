@@ -17,6 +17,8 @@
 import re
 import pwd
 import grp
+import os
+import stat
 
 import libxyz.ui
 import libxyz.core
@@ -579,7 +581,8 @@ class Block(lowui.BoxWidget):
 
                 return (_uid, _gid)
 
-            #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
             try:
                 _owner = self.xyz.skin["fs.owner"]
@@ -629,15 +632,58 @@ class Block(lowui.BoxWidget):
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+        def _setup_perm():
+            try:
+                _perm = self.xyz.skin["fs.perm"]
+            except KeyError:
+                return None
+
+            _data_all = {}
+            _data_any = {}
+
+            for _p in _perm:
+                if _p.startswith(u"+"):
+                    _data_any[int(_p[1:], 8)] = _perm[_p].name
+                else:
+                    _data_all[int(_p, 8)] = _perm[_p].name
+
+            return _data_all, _data_any
+
+            #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        def _process_perm(data, entry):
+            if entry.mode is None:
+                return None
+
+            _data_all, _data_any = data
+
+            _mode = stat.S_IMODE(entry.mode.raw)
+
+            for _m in _data_all:
+                if _mode == _m:
+                    return _data_all[_m]
+
+            for _m in _data_any:
+                if _mode & _m:
+                    return _data_any[_m]
+
+            return None
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        #TODO:
         #_priority = self.xyz.skin["fs.priority"]
 
         _type_data = _setup_type()
         _regexp_data = _setup_regexp()
         _owner_data = _setup_owner()
+        _perm_data = _setup_perm()
 
-        _priority = [lambda x: _process_type(_type_data, x),
+        _priority = [
+                     lambda x: _process_type(_type_data, x),
                      lambda x: _process_regexp(_regexp_data, x),
                      lambda x: _process_owner(_owner_data, x),
+                     lambda x: _process_perm(_perm_data, x),
                     ]
 
         _result = {}
@@ -685,7 +731,7 @@ class Block(lowui.BoxWidget):
         Set info text
         """
 
-        _part2 = u"%s %s" % (vfsobj.size, vfsobj.mode)
+        _part2 = vfsobj.info
         _part1 = self._truncate(vfsobj.visual, cols - len(_part2) - 2)
 
         _text = u"%s%s%s" % (_part1, u" " * (cols - (len(_part1) +

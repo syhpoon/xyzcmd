@@ -111,8 +111,8 @@ class LocalVFSFile(vfsobj.VFSFile):
             if not os.path.exists(_fullpath):
                 self.vtype = u"!"
 
-            self.mode = u""
-            self.size = u""
+            self.info = u""
+            self.size = 0
             self.visual = u"-> %s" % _realpath.decode(self.enc)
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -123,7 +123,8 @@ class LocalVFSFile(vfsobj.VFSFile):
             """
 
             _dev = self._stat.st_rdev
-            self.size = u"%s, %s" % (os.major(_dev), os.minor(_dev))
+            self.info = u"%s, %s %s" % (os.major(_dev), os.minor(_dev),
+                                        self.mode)
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -135,6 +136,7 @@ class LocalVFSFile(vfsobj.VFSFile):
         self.gid = self._stat.st_gid
         self.mode = mode.Mode(self._stat.st_mode)
         self.visual = u"%s%s" % (self.vtype, self.name.decode(self.enc))
+        self.info = u"%s %s" % (self.size, self.mode)
 
         if isinstance(self.ftype, types.VFSTypeLink):
             set_link_attributes()
