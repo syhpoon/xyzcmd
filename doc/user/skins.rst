@@ -70,6 +70,7 @@ General fs ruleset definition syntax::
 * perm     - Permission bits
 * owner    - Owner
 * regexp   - Regular expression
+* combined - Combinations of the aboe rules
 
 ``<var> = <FG>,[,<BG>][,<MA1>[,<MA2>,...]]`` is a definition of object visual
 representation.
@@ -118,6 +119,9 @@ representation.
 
    Monochrome attribute can hold more than one value.
 
+fs.type
++++++++
+
 Example::
 
    fs.type {
@@ -136,6 +140,9 @@ other rulesets) will appear in LIGHT_GRAY color.
 will appear in dark red text on light gray background using bold and underline
 attributes.
 
+fs.perm
++++++++
+
 Permission bits can be specified in following formats:
 
 **[+]dddd**
@@ -152,6 +159,9 @@ Permission bits can be specified in following formats:
          # Match only files with exactly set mode - 755
          0755 = DARK_GREEN
       }
+
+fs.owner
+++++++++
 
 Owner/group can be specified as ``[uid][:gid]``. uid and gid both can be either
 symbolic or numeric::
@@ -172,6 +182,9 @@ fs.owner ruleset internal resolution order is following:
    #. ``uid``
    #. ``gid``
 
+fs.regexp
++++++++++
+
 Regular expressions based rules use filenames as match criteria.
 Regular expressions must use x-quoting: ``'''<re>'''``::
 
@@ -184,6 +197,50 @@ Regular expressions must use x-quoting: ``'''<re>'''``::
 
 If the filename could be matched against two or more defined regexps,
 system will pick up first of those in arbitrary order.
+
+fs.combined
++++++++++++
+All rulesets described above work fine in most simple cases.
+But it is impossible to describe, say, combined logical rules.
+For example we want to create a rule to highlight all regular files with
+executable bit set.
+
+That, the fs.combined ruleset is for. You can describe arbitrary complex 
+logical expressions.
+The format if following::
+
+ fs.combined {
+   "rule" = <ATTRS>
+ }
+
+Where  <ATTRS> are the rule attributes in the same format as in the other
+rulesets, and "rule" is a string expression.
+General rule format is::
+
+ <ftype>{<arg>} [<op> ...]
+
+Where ``<ftype>`` is a rule type, matching the names of fs.* rulesets.
+``<arg>`` is an argument and ``<op>`` is a logical operator (and, or)
+joining two or more expressions.
+So, the example described above could be matched using rule::
+
+   fs.combined {
+      "type{file} and perm{+0111}" = WHITE, BLACK
+   }
+
+More complex rules can be split along several lines using x-quoted strings::
+
+   fs.combined {
+      '''
+      type{dir} or type{file}
+      and (owner{user} or owner{root})
+      and perm{+4000}
+      ''' = DARK_RED, BLACK
+      }
+
+In fact, in fs.combined ruleset you can match any supported combination
+of VFS objects properties, including those, used in other fs.* rulesets.
+So it's only a matter of taste which one to choose.
 
 Order
 -----
