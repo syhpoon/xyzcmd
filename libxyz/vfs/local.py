@@ -112,7 +112,6 @@ class LocalVFSFile(vfsobj.VFSFile):
                 self.vtype = u"!"
 
             self.info = u""
-            self.size = 0
             self.visual = u"-> %s" % _realpath.decode(self.enc)
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
