@@ -40,19 +40,16 @@ class Panel(lowui.WidgetWrap):
 
     def __init__(self, xyz):
         self.xyz = xyz
-        self._attr = lambda x: self.xyz.skin.attr(self.resolution, x)
 
         _size = self.xyz.screen.get_cols_rows()
         _blocksize = libxyz.ui.Size(rows=_size[1] - 1, cols=_size[0] / 2 - 2)
         _enc = xyz.conf[u"xyz"][u"local_encoding"]
 
         self.block1 = Block(xyz, _blocksize,
-                            LocalVFSObject("/tmp", _enc),
-                            self._attr, _enc, active=True)
+                            LocalVFSObject("/tmp", _enc), _enc, active=True)
 
         self.block2 = Block(xyz, _blocksize,
-                            LocalVFSObject("/home/syhpoon", _enc),
-                            self._attr, _enc)
+                            LocalVFSObject("/home/syhpoon", _enc), _enc)
 
         self._stop = False
         columns = lowui.Columns([self.block1.block, self.block2.block], 0)
@@ -142,8 +139,9 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.toggle_tag)
         _panel_plugin.export(self.tag_all)
         _panel_plugin.export(self.untag_all)
-        _panel_plugin.export(self.invert_tag)
+        _panel_plugin.export(self.tag_invert)
         _panel_plugin.export(self.tag_re)
+        _panel_plugin.export(self.untag_re)
         _panel_plugin.export(self.swap_blocks)
 
         _panel_plugin.VERSION = u"0.1"
@@ -160,7 +158,7 @@ class Panel(lowui.WidgetWrap):
         Quit program
         """
 
-        _q = _(u"Really quit %s?" % libxyz.const.PROG)
+        _q = _(u"Really quit %s?") % libxyz.const.PROG
         _title = libxyz.const.PROG
 
         if libxyz.ui.YesNoBox(self.xyz, self.xyz.top, _q, _title).show():
@@ -281,12 +279,12 @@ class Panel(lowui.WidgetWrap):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def invert_tag(self):
+    def tag_invert(self):
         """
         Invert currently tagged files
         """
 
-        return self.active.invert_tag()
+        return self.active.tag_invert()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -296,6 +294,15 @@ class Panel(lowui.WidgetWrap):
         """
 
         return self.active.tag_re()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def untag_re(self):
+        """
+        Untag files by regexp
+        """
+
+        return self.active.untag_re()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -313,16 +320,15 @@ class Panel(lowui.WidgetWrap):
 
 class Block(lowui.BoxWidget):
     """
-    Single block
+    Single panel block
     """
 
-    def __init__(self, xyz, size, vfsobj, attr_func, enc, active=False):
+    def __init__(self, xyz, size, vfsobj, enc, active=False):
         """
         @param xyz: XYZData instance
         @param size: Block widget size
         @type size: L{libxyz.ui.Size}
         @param vfsobj:
-        @param attr_func: Skin attribute access function
         @param enc: Local encoding
         @param active: Boolean flag, True if block is active
 
@@ -332,7 +338,7 @@ class Block(lowui.BoxWidget):
 
         self.xyz = xyz
         self.size = size
-        self.attr = attr_func
+        self.attr = lambda x: self.xyz.skin.attr(Panel.resolution, x)
 
         self.active = active
         self.selected = 0
@@ -403,7 +409,7 @@ class Block(lowui.BoxWidget):
         if _tlen > 0:
             _text = _(u"%s bytes (%d)") % (
                     self._make_number_readable(
-                     reduce(lambda x, y: x + y,
+                        reduce(lambda x, y: x + y,
                            [self.entries[x].size for x in self._tagged
                             if isinstance(self.entries[x].ftype, VFSTypeFile)
                            ], 0)), _tlen)
@@ -496,6 +502,7 @@ class Block(lowui.BoxWidget):
 
     def _process_skin_rulesets(self):
         """
+        Process defined fs.* rulesets
         """
 
         def _setup_type():
@@ -582,7 +589,6 @@ class Block(lowui.BoxWidget):
                 return (_uid, _gid)
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
             try:
                 _owner = self.xyz.skin["fs.owner"]
@@ -834,7 +840,7 @@ class Block(lowui.BoxWidget):
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        # As we aren't aware of how many rows are contained in a single
+        # As we aren't aware of how many rows are in a single
         # block at this moment, postpone jumping until render is called
 
         self._pending.push(_do_next_block)
@@ -891,29 +897,50 @@ class Block(lowui.BoxWidget):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    @refresh
     def tag_re(self):
         """
         Tag files by regexp
         """
 
-        _input = libxyz.ui.InputBox(self.xyz, self.xyz.top, "AAA")
+        _input = libxyz.ui.InputBox(self.xyz, self.xyz.top, "",
+                                    title=_(u"Tag group"), text=ur".*")
         
-        _input.show()
+        _raw = _input.show()
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        if _raw is None:
+            return
+        else:
+            _re = re.compile(_raw, re.U)
 
-    def untag_re(self):
-        """
-        Untag files by regexp
-        """
-
-        #TODO:
-        pass
+        self._tagged = [i for i in xrange(self._len) if
+                        _re.search(self.entries[i].name)]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @refresh
-    def invert_tag(self):
+    def untag_re(self):
+        """
+        Untag files by regexp
+        """
+        
+        _input = libxyz.ui.InputBox(self.xyz, self.xyz.top, "",
+                                    title=_(u"Untag group"), text=ur".*")
+        
+        _raw = _input.show()
+
+        if _raw is None:
+            return
+        else:
+            _re = re.compile(_raw, re.U)
+
+        self._tagged = [i for i in self._tagged if not
+                        _re.search(self.entries[i].name)]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @refresh
+    def tag_invert(self):
         """
         Invert currently tagged files
         """
