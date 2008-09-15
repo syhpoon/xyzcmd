@@ -29,7 +29,7 @@ class InputBox(Box):
     # Skin rulesets resolution order
     resolution = (u"input_box", u"box", u"widget")
 
-    def __init__(self, xyz, body, message, title="", width=60):
+    def __init__(self, xyz, body, message, title="", text="", width=70):
         """
         @param xyz: XYZ dictionary
         @param body: Top-level widget
@@ -37,19 +37,16 @@ class InputBox(Box):
         @param title: Box title
         @param width: Box width (including mount box)
 
-        Required resources: title, box, border, mount, button
+        Required resources: title, box, border, mount, input, button
         """
 
         super(InputBox, self).__init__(xyz, body, message, title, width)
-        self.calc_size(6)
+        self.calc_size(7)
 
         self.keys = libxyz.ui.Keys()
 
-        self._ok_txt = _(u"OK")
-        self._cancel_txt = _(u"Cancel")
-        self._value = False
-
-        self._buttons = self._init_buttons()
+        _hint = lowui.Text(_(u"Press ENTER to submit value. ESCAPE to quit"),
+                           align=align.CENTER)
 
         _title = self._strip_title(title.replace(u"\n", u" "))
 
@@ -65,9 +62,10 @@ class InputBox(Box):
         _text = lowui.Text((self._attr(u"box"), message), align.CENTER)
         _blank = lowui.Text((self._attr(u"box"), ""))
 
-        _edit = lowui.Edit()
+        self._edit = lowui.AttrWrap(lowui.Edit(wrap="clip", edit_text=text),
+                                    self._attr(u"input"))
 
-        _widgets = [_text, _blank, _edit, _blank, self._buttons]
+        _widgets = [_text, _blank, self._edit, _blank, _hint]
         _box = lowui.Filler(lowui.Pile(_widgets), valign=align.BOTTOM)
         _box = Border(_box, _title, self._attr(u"border"))
         _box = lowui.AttrWrap(_box, self._attr(u"box"))
@@ -83,82 +81,26 @@ class InputBox(Box):
 
     def show(self, dim=None):
         """
-        Show box and return pressed button.
-        True if YES pressed, False if NO
+        Show box and return input value.
+        Return None if Escape was pressed
         """
 
         if dim is None:
             dim = self.screen.get_cols_rows()
         while True:
             try:
-                self.screen.draw_screen(dim, self.render(dim, True))
+                self.screen.draw_screen(dim, self.render(dim, focus=True))
 
                 _keys = self.xyz.input.get()
 
-                if [x for x in (self.keys.LEFT,
-                                self.keys.RIGHT,
-                                self.keys.UP,
-                                self.keys.DOWN,
-                                ) if x in _keys]:
-                    self._change_focus(_keys)
-
                 if self.keys.ESCAPE in _keys:
-                    return False
+                    return None
 
                 if self.keys.ENTER in _keys:
-                    _button = self._buttons.focus_cell.get_w()
-                    self._pressed(_button)
-                    return self._value
+                    return self._edit.get_edit_text()
+
+                for k in _keys:
+                    #TODO: decode input!
+                    self._edit.keypress((dim[0],), k)
             except KeyboardInterrupt:
                 continue
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _init_buttons(self):
-        _ok_len = len(self._ok_txt)
-        _cancel_len = len(self._cancel_txt)
-        _b_attr = self._attr("button")
-        _b_size = max(_ok_len, _cancel_len) + 4 # [ ... ]
-
-        self._b_ok = lowui.AttrWrap(libxyz.ui.XYZButton(self._ok_txt),_b_attr)
-        self._b_cancel = lowui.AttrWrap(libxyz.ui.XYZButton(self._cancel_txt),
-                                        _b_attr)
-
-        return lowui.GridFlow([self._b_ok, self._b_cancel], _b_size, 2, 0,
-                              align.CENTER)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _change_focus(self, keys):
-        """
-        Move focus
-        """
-
-        for key in keys:
-            _widget = None
-
-            # Move right
-            if key in (self.keys.RIGHT, self.keys.UP):
-                _widget = 1 # index
-            # Move left
-            elif key in (self.keys.LEFT, self.keys.DOWN):
-                _widget = 0
-            else:
-                pass
-
-            if _widget is not None:
-                self._buttons.set_focus(_widget)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _pressed(self, button):
-        """
-        Button pressed
-        """
-
-        _label = button.get_label()
-
-        if _label == self._ok_txt:
-            self._value = True
-        else:
-            self._value = False
