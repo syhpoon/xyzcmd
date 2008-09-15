@@ -4,6 +4,10 @@ DESCRIPTION: "XYZCommander Seablue skin"
 
 ### Filesystem objects
 
+fs.combined {
+	"type{file} and perm{+0111}" = LIGHT_GREEN, DARK_BLUE
+}
+
 fs.type {
 	&BG = DARK_BLUE
 
@@ -60,6 +64,11 @@ ui.error_box {
 	box = &FG, &BG
 	border = &FG, &BG
 	mount = &FG, &BG
+}
+
+# Input box
+ui.input_box {
+	input = WHITE, DARK_BLUE
 }
 
 # Panel widget

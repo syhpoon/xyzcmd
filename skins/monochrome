@@ -31,6 +31,11 @@ ui.error_box {
 	mount = WHITE, &BG
 }
 
+# Input box
+ui.input_box {
+	input = WHITE, DEFAULT
+}
+
 ui.panel {
 	&BG = LIGHT_GRAY
 

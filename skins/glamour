@@ -56,6 +56,11 @@ ui.error_box {
 	mount = &FG, &BG
 }
 
+# Input box
+ui.input_box {
+	input = WHITE, DARK_MAGENTA
+}
+
 # Panel widget
 ui.panel {
 	&BG = DARK_MAGENTA
