@@ -658,7 +658,7 @@ class Block(lowui.BoxWidget):
             #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         def _process_perm(data, entry):
-            if entry.mode is None:
+            if None in (entry.mode, data):
                 return None
 
             _data_all, _data_any = data
