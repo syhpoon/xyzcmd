@@ -100,7 +100,6 @@ class InputBox(Box):
                     return self._edit.get_edit_text()
 
                 for k in _keys:
-                    #TODO: decode input!
                     self._edit.keypress((dim[0],), k)
             except KeyboardInterrupt:
                 continue

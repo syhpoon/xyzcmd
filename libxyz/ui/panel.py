@@ -491,8 +491,7 @@ class Block(lowui.BoxWidget):
             self._display = []
 
             for _obj in self.entries[self._from:self._to]:
-                #TODO: decode vfs.name in VFS object itself
-                _text = u"%s%s "% (_obj.vtype, _obj.name.decode(self._enc))
+                _text = u"%s%s "% (_obj.vtype, _obj.name)
                 _text = self._truncate(_text, cols)
                 self._display.append(_text)
 
@@ -904,7 +903,7 @@ class Block(lowui.BoxWidget):
         """
 
         _input = libxyz.ui.InputBox(self.xyz, self.xyz.top, "",
-                                    title=_(u"Tag group"), text=ur".*")
+                                    title=_(u"Tag group"), text=r".*")
         
         _raw = _input.show()
 
@@ -914,7 +913,7 @@ class Block(lowui.BoxWidget):
             _re = re.compile(_raw, re.U)
 
         self._tagged = [i for i in xrange(self._len) if
-                        _re.search(self.entries[i].name)]
+                        _re.search(self.entries[i].name.encode(self._enc))]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -925,7 +924,7 @@ class Block(lowui.BoxWidget):
         """
         
         _input = libxyz.ui.InputBox(self.xyz, self.xyz.top, "",
-                                    title=_(u"Untag group"), text=ur".*")
+                                    title=_(u"Untag group"), text=r".*")
         
         _raw = _input.show()
 
@@ -935,7 +934,7 @@ class Block(lowui.BoxWidget):
             _re = re.compile(_raw, re.U)
 
         self._tagged = [i for i in self._tagged if not
-                        _re.search(self.entries[i].name)]
+                        _re.search(self.entries[i].name.encode(self._enc))]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
