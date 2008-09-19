@@ -354,7 +354,7 @@ class Block(lowui.BoxWidget):
 
         _dir, _dirs, _files = vfsobj.walk()
 
-        _entries = []
+        _entries = [_dir]
         _entries.extend(_dirs)
         _entries.extend(_files)
 
@@ -375,7 +375,7 @@ class Block(lowui.BoxWidget):
 
         _title_attr = self._get_title_attr()
 
-        self.border = libxyz.ui.Border(self.block, (_dir, _title_attr),
+        self.border = libxyz.ui.Border(self.block, (_dir.path, _title_attr),
                                       self.attr(u"border"))
         self.block = lowui.AttrWrap(self.border, self.attr(u"panel"))
 
