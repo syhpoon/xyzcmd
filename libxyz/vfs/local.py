@@ -34,7 +34,7 @@ class LocalVFSObject(vfsobj.VFSObject):
         Directory tree walker
         @param top: Top directory or self.path unless provided
         @return: tuple (dir, dirs, files) where:
-                 dir - current dir name
+                 dir - current dir LocalVFSFile instance
                  dirs - list of LocalVFSFile objects of directories
                  files - list of LocalVFSFile objects of files
         """
@@ -46,12 +46,16 @@ class LocalVFSObject(vfsobj.VFSObject):
         _dirs.sort()
         _files.sort()
 
+        _dir = LocalVFSFile(_dir, self.enc)
+        _dir.name = u".."
+        _dir.visual = u"/.."
+
         return [
                 _dir,
                 [LocalVFSFile(os.path.join(_abstop, x), self.enc)
-                  for x in _dirs],
+                 for x in _dirs],
                 [LocalVFSFile(os.path.join(_abstop, x), self.enc)
-                  for x in _files],
+                 for x in _files],
                ]
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
@@ -134,7 +138,7 @@ class LocalVFSFile(vfsobj.VFSFile):
         self.uid = self._stat.st_uid
         self.gid = self._stat.st_gid
         self.mode = mode.Mode(self._stat.st_mode)
-        self.visual = u"%s%s" % (self.vtype, self.name.decode(self.enc))
+        self.visual = u"%s%s" % (self.vtype, self.name)
         self.info = u"%s %s" % (self.size, self.mode)
 
         if isinstance(self.ftype, types.VFSTypeLink):
@@ -142,4 +146,4 @@ class LocalVFSFile(vfsobj.VFSFile):
         elif isinstance(self.ftype, types.VFSTypeChar):
             set_char_attributes()
         else:
-            self.visual = u"%s%s" % (self.vtype, self.name.decode(self.enc))
+            self.visual = u"%s%s" % (self.vtype, self.name)

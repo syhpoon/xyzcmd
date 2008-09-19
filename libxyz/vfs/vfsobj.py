@@ -48,7 +48,7 @@ class VFSFile(object):
         self.enc = enc or "utf8"
 
         # File name
-        self.name = os.path.basename(self.path)
+        self.name = os.path.basename(self.path).decode(self.enc)
 
         # File type
         self.ftype = VFS_NONE
