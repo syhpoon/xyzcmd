@@ -145,5 +145,10 @@ class LocalVFSFile(vfsobj.VFSFile):
             set_link_attributes()
         elif isinstance(self.ftype, types.VFSTypeChar):
             set_char_attributes()
-        else:
-            self.visual = u"%s%s" % (self.vtype, self.name)
+        elif isinstance(self.ftype, types.VFSTypeFile):
+            _mode = stat.S_IMODE(self.mode.raw)
+
+            # Executable
+            if _mode & 0111:
+                self.vtype = u"*"
+                self.visual = u"*%s" % self.name
