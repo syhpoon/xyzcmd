@@ -24,7 +24,7 @@ fs.regexp {
 	&BG = DARK_BLUE
 
 	'''.*\.core$''' = DARK_RED, &BG
-	'''\.+''' = DARK_GRAY, &BG
+	'''\.{1}[^.]+''' = DARK_GRAY, &BG
 }
 
 fs.perm {

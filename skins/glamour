@@ -18,7 +18,7 @@ fs.type {
 
 fs.regexp {
 	'''.+\.core$''' = DARK_RED,BROWN
-	'''\.+''' = LIGHT_GRAY
+	'''\.{1}[^.]+''' = LIGHT_GRAY
 }
 
 fs.priority {
