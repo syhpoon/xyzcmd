@@ -19,7 +19,15 @@ Here is the list of standard *:core:* plugins:
 
 ``:core:bindlist``
 ++++++++++++++++++
-**TODO**
+Plugin provides list of currently used keybindings.
+
+Public methods:
+
+**show_binds()**
+   The output list has three columns: *Context*, *Bind* and *Method*.
+   *Context* columns contains context which was used upon binding.
+   *Bind* colums contains keybinding and *Method* columns contains full method 
+   name.
 
 ``:core:console``
 +++++++++++++++++
