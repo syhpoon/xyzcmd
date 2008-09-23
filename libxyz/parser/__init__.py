@@ -19,6 +19,7 @@ Different parsers
 """
 
 __all__ = (
+    'lr',
     'Lexer',
     'BaseParser',
     'BlockParser',
@@ -28,6 +29,8 @@ __all__ = (
     'ParsedData',
     'SourceData',
 )
+
+import lr
 
 from parseddata import ParsedData
 from sourcedata import SourceData
