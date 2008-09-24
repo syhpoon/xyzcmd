@@ -213,11 +213,11 @@ The format if following::
    "rule" = <ATTRS>
  }
 
-Where  <ATTRS> are the rule attributes in the same format as in the other
+Where ``<ATTRS>`` are the rule attributes in the same format as in the other
 rulesets, and "rule" is a string expression.
 General rule format is::
 
- <ftype>{<arg>} [<op> ...]
+ [not] <ftype>{<arg>} [<op> ...]
 
 Where ``<ftype>`` is a rule type, matching the names of fs.* rulesets.
 ``<arg>`` is an argument and ``<op>`` is a logical operator (and, or)
@@ -238,7 +238,7 @@ More complex rules can be split along several lines using x-quoted strings::
       ''' = DARK_RED, BLACK
       }
 
-In fact, in fs.combined ruleset you can match any supported combination
+In fact, using fs.combined ruleset you can match any supported combination
 of VFS objects properties, including those, used in other fs.* rulesets.
 So it's only a matter of taste which one to choose.
 
@@ -253,6 +253,7 @@ Default rules priorities:
    #. By permission
    #. By regular expression
    #. By file-type
+   #. Combined
 
 So if we have following rulesets defined::
 
@@ -267,9 +268,10 @@ Priorities can be customized. This can be done using priority ruleset::
 
    fs.priority {
       type = 1
-      perm = 2
-      regexp = 3
-      owner = 4
+      combined = 2
+      perm = 3
+      regexp = 4
+      owner = 5
    }
 
 User interface (UI) widgets

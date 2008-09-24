@@ -46,7 +46,7 @@ Also some optional attributes can be defined:
    If none defined, plugin will be available to use with any |XYZ| version.
 
 **DOC**
-   Plugin documentation. Usually here configuration variables described.
+   Plugin documentation. Usually configuration variables described here.
 
 **HOMEPAGE**
    Plugin home-page
@@ -87,7 +87,7 @@ PluginManger supports following methods:
 **from_load_data(<plugin>, <obj>)**
    Load public data <obj> from <plugin>.
 
-In both cases <plugin> is a plugin namespace path.
+In all cases <plugin> is a plugin namespace path.
 
 Once loaded plugin is stored in cache, so subsequent calls will simply return
 it from cache. If reloading needed ``reload`` method is used.
@@ -108,7 +108,7 @@ Plugin can export methods and data.
 Plugin exports its public methods via 'public' dictionary of BasePlugin class.
 Access to public methods can be performed as:
 
-   - ``plugin.public[u"method"]()``
+   - ``plugin.public["method"]()``
    - ``plugin.method()``
 
 Second variant is simpler, cleaner and therefore preferable.
@@ -116,33 +116,33 @@ Second variant is simpler, cleaner and therefore preferable.
 Plugin exports its public data via 'public_data' dictionary of BasePlugin class.
 Access to public data can be performed as:
 
-   - ``plugin.public_data[u"obj"]``
-   - ``plugin[u"obj"]``
+   - ``plugin.public_data["obj"]``
+   - ``plugin["obj"]``
 
 So, in general, access to public methods is performed as attribute access:
 ``plugin.method()``, and access to public data is performed as dict-item access:
-``plugin[u"data_obj"]``.
+``plugin["data_obj"]``.
 
 Following is an example of typical plugin usage in python code
 (other cases will be described later)::
 
    # Load plugin
-   hello = self.xyz.pm.load(u":misc:hello")
+   hello = self.xyz.pm.load(":misc:hello")
 
    # Call public method say_hello() directly
    hello.say_hello()
 
    # Access public data `some_object`
-   print hello[u"some_object"]
+   print hello["some_object"]
 
    # Or load only the method itself using from_load
-   say_hello = self.xyz.pm.from_load(u":misc:hello", u"say_hello")
+   say_hello = self.xyz.pm.from_load(":misc:hello", "say_hello")
 
    # And then call
    say_hello()
 
    # Load only the data object itself using from_load_data
-   some_object = self.xyz.pm.from_load_data(u":misc:hello", u"some_object")
+   some_object = self.xyz.pm.from_load_data(":misc:hello", "some_object")
 
 Also see the `keys configuration file`_ for how to bind plugin methods to
 keyboard shortcuts.
