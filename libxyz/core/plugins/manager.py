@@ -85,7 +85,7 @@ class PluginManager(object):
 
         virtual = self.is_virtual(plugin)
 
-        if not virtual and plugin.pfull not in self.enabled:
+        if plugin.pfull not in self.enabled:
             raise PluginError(_(u"Plugin %s is disabled or does not exist" %
                                 plugin))
 
