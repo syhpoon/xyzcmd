@@ -7,12 +7,19 @@
 #   {plugin_ns_path} > {ENABLE | DISABLE}
 
 plugins {
-	:misc:hello > ENABLE
+	:sys:run > ENABLE
+	:sys:cmd > ENABLE
+	:sys:panel > ENABLE
+	:sys:logger > ENABLE
+
 	:core:keycodes > ENABLE
 	:core:pluginlist > ENABLE
 	:core:bindlist > ENABLE
-	:ui:testinput > ENABLE
+
+	:misc:hello > ENABLE
 	:misc:about > ENABLE
+
+	:ui:testinput > ENABLE
 }
 
 # Skin to use
