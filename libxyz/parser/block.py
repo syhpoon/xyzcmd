@@ -52,6 +52,7 @@ class BlockParser(BaseParser):
                    u"count": 0,
                    u"list_separator": u",",
                    u"macrochar": u"&",
+                   u"var_transform": None,
                    }
 
     def __init__(self, opt=None):
@@ -78,7 +79,7 @@ class BlockParser(BaseParser):
               Default: ()
             - value_validator: Value validator
               Type: A function that takes three args:
-              current block, var and value and validates them.
+              current block name, var and value and validates them.
               In case value is invalid, XYZValueError must be raised.
               Otherwise function must return required value, possibly modified.
               Default: None
@@ -92,7 +93,9 @@ class BlockParser(BaseParser):
             - macrochar: Macro character (None to disable macros)
               Type: I{string (single char)}
               Default: &
-
+            - var_transform: A function which is called with variable name
+              as single argument, and which returns new variable object
+              or raises XYZValueError
         """
 
         super(BlockParser, self).__init__()
@@ -211,11 +214,18 @@ class BlockParser(BaseParser):
             self._macroname = word
         else:
             if self.validvars and word not in self.validvars:
-                self.error(_(u"Unknown variable %s" % word))
+                self.error(_(u"Unknown variable %s") % word)
             elif self.varre.match(word) is None:
-                self.error(_(u"Invalid variable name: %s" % word))
+                self.error(_(u"Invalid variable name: %s") % word)
 
-            self._varname = word
+            if callable(self.var_transform):
+                try:
+                    self._varname = self.var_transform(word)
+                except XYZValueError, e:
+                    self.error(_(u"Variable transformation error: %s") %
+                               unicode(e))
+            else:
+                self._varname = word
 
         self._state = self.STATE_ASSIGN
 

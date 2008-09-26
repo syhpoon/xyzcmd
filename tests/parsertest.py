@@ -207,6 +207,21 @@ class BlockParsing(unittest.TestCase):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def testVarTransformation1(self):
+        """
+        Check for correct var transformation
+        """
+
+        def _f(a):
+            raise XYZValueError(a)
+
+        _opt = {"var_transform": _f}
+        _p = BlockParser(_opt)
+
+        self.assertRaises(ParseError, _p.parse, "block { a = VALUE }")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def testValueValidator2(self):
         """
         Check for value_validator correct value
@@ -222,7 +237,6 @@ class BlockParsing(unittest.TestCase):
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         _opt = {"value_validator": _f}
-
         _p = BlockParser(_opt)
 
         self.assert_(len(_p.parse("block { a = CORRECT_VALUE }")))
@@ -248,6 +262,20 @@ class BlockParsing(unittest.TestCase):
         _p = BlockParser(_opt)
 
         self.assert_(len(_p.parse("block { &m = CORRECT_VALUE\n a = &m }")))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testVarTransformation2(self):
+        """
+        Check for correct var transformation
+        """
+
+        _opt = {"var_transform": lambda x: x * 3}
+
+        _p = BlockParser(_opt)
+        _data = _p.parse("block { X = 1 }")
+
+        self.assert_("XXX" in _data["block"])
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
