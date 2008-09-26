@@ -1,8 +1,8 @@
 .. |XYZ| replace:: XYZCommander
 
------------------------------
-|XYZ| Developer documentation
------------------------------
+----------------------
+|XYZ| Developer manual
+----------------------
 
 Contents:
 
@@ -11,7 +11,6 @@ Contents:
 
    parsers
    keycodes
-   parsers
    plugins
 
 ------------------

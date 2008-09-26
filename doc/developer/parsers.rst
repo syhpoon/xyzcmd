@@ -151,7 +151,7 @@ of any error, or return anything otherwise.
    RegexpParser is a line-based parser. Thus it is not suitable for parsing
    any non-linear multiline structures. Use BlockParser instead.
 
-If RegexpParser is unable to match a line within none of provided parsers,
+If RegexpParser is unable to match a line within any of provided parsers,
 it will raise :exc:`libxyz.exceptions.ParseError`
 
 Example
