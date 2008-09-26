@@ -39,7 +39,7 @@ class ParsedData(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __str__(self):
-        return u"<ParsedData object: %s>" % id(self)
+        return u"<ParsedData object: %s>" % unicode([(k, v) for k, v in self.iteritems()])
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -87,5 +87,11 @@ class ParsedData(object):
         Set new value to variable
         """
 
-        self._keys.append(var)
-        self._values.append(val)
+        # Replace existing key
+        try:
+            _at = self._keys.index(var)
+            self._keys[_at] = var
+            self._values[_at] = val
+        except ValueError:
+            self._keys.append(var)
+            self._values.append(val)
