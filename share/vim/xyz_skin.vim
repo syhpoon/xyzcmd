@@ -19,11 +19,7 @@
 
 runtime! syntax/xyz_block.vim
 
-syn match xyz_skinRuleset /fs\.type/
-syn match xyz_skinRuleset /fs\.regexp/
-syn match xyz_skinRuleset /fs\.owner/
-syn match xyz_skinRuleset /fs\.perm/
-syn match xyz_skinRuleset /fs\.priority/
+syn match xyz_skinRuleset /fs\.rules/
 syn match xyz_skinRuleset /ui\.\S\+/
 
 syn keyword xyz_skinColor BLACK BROWN YELLOW WHITE DEFAULT DARK_BLUE
