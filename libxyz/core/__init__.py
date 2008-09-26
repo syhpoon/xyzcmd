@@ -16,6 +16,7 @@
 
 __all__ = (
     'Skin',
+    'CombinedRule',
     'XYZData',
     'UserData',
     'KeyManager',
@@ -24,6 +25,7 @@ __all__ = (
     )
 
 from skin import Skin
+from skin import CombinedRule
 from xyzdata import XYZData
 from userdata import UserData
 from keymanager import KeyManager

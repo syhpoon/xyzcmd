@@ -18,21 +18,28 @@ class ParsedData(object):
     """
     Parsed data
     Provides dictionary-like access to parsed values
+    Input order is kept
     """
 
     def __init__(self, name=None):
         self.name = name
-        self._data = {}
+        self._keys = []
+        self._values = []
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def next(self):
+        return self
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def iteritems(self):
-        return self._data.iteritems()
+        return ((_k, _v) for _k, _v in zip(self._keys, self._values))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __str__(self):
-        return u"<ParsedData object: %s>" % str(self._data)
+        return u"<ParsedData object: %s>" % id(self)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -52,23 +59,24 @@ class ParsedData(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __contains__(self, key):
-        return key in self._data
+        return key in self._keys
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __iter__(self):
-        return self._data.__iter__()
+        return (_k for _k in self._keys)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def lookup(self, var):
         """
         Lookup for value of variable
-        If variable does not exist, return None
+        If variable does not exist raise KeyError
         """
 
-        if var in self._data:
-            return self._data[var]
+        for _k, _v in zip(self._keys, self._values):
+            if var == _k:
+                return _v
         else:
             raise KeyError()
 
@@ -79,4 +87,5 @@ class ParsedData(object):
         Set new value to variable
         """
 
-        self._data[var] = val
+        self._keys.append(var)
+        self._values.append(val)

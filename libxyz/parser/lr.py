@@ -105,3 +105,18 @@ class Rules(object):
         """
 
         return self._rules[ruleno]
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class Tree(list):
+    """
+    Tree class
+    """
+
+    def __init__(self):
+        super(Tree, self).__init__()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def add(self, obj):
+        self.append(obj)

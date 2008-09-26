@@ -15,10 +15,7 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 import re
-import pwd
-import grp
 import os
-import stat
 
 import libxyz.ui
 import libxyz.core
@@ -504,202 +501,18 @@ class Block(lowui.BoxWidget):
         Process defined fs.* rulesets
         """
 
-        def _setup_type():
-            _block = u"fs.type"
-
-            _palette = self.xyz.skin.get_palette
-
-            _data = {
-                     VFSTypeFile: _palette(_block, u"file"),
-                     VFSTypeDir: _palette(_block, u"dir"),
-                     VFSTypeLink: _palette(_block, u"link"),
-                     VFSTypeSocket: _palette(_block, u"socket"),
-                     VFSTypeFifo: _palette(_block, u"fifo"),
-                     VFSTypeChar: _palette(_block, u"char"),
-                     VFSTypeBlock: _palette(_block, u"block"),
-                    }
-
-            return _data
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        def _process_type(data, entry):
-            try:
-                return data[type(entry.ftype)]
-            except KeyError:
-                return None
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        def _setup_regexp():
-            try:
-                _regexp = self.xyz.skin["fs.regexp"]
-            except KeyError:
-                return None
-
-            _data = {}
-
-            for _re in _regexp:
-                _data[re.compile(_re, re.U)] = _regexp[_re]
-
-            return _data
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        def _process_regexp(data, entry):
-            if data is None:
-                return
-
-            for _re in data:
-                if _re.match(entry.name):
-                    return data[_re].name
-
-            return None
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        def _setup_owner():
-            def _get_uid_gid(raw):
-                _tmp = raw.split(":")
-
-                _uid = _tmp[0]
-
-                if not _uid.isdigit():
-                    try:
-                        _uid = pwd.getpwnam(_uid).pw_uid
-                    except (KeyError, TypeError):
-                        _uid = None
-                else:
-                    _uid = int(_uid)
-
-                if len(_tmp) > 1:
-                    _gid = _tmp[1]
-
-                    if not _gid.isdigit():
-                        try:
-                            _gid = grp.getgrnam(_gid).gr_gid
-                        except (KeyError, TypeError):
-                            _gid = None
-                    else:
-                        _gid = int(_gid)
-                else:
-                    _gid = None
-
-                return (_uid, _gid)
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-            try:
-                _owner = self.xyz.skin["fs.owner"]
-            except KeyError:
-                return None
-
-            # Both uid:gid specified
-            _data_full = {}
-            # Only uid
-            _data_uid = {}
-            # Only gid
-            _data_gid = {}
-
-            for _raw in _owner:
-                _res = _get_uid_gid(_raw)
-
-                if _res[0] is not None and _res[1] is not None:
-                    _data_full[_res] = _owner[_raw].name
-                elif _res[0] is not None:
-                    _data_uid[_res] = _owner[_raw].name
-                elif _res[1] is not None:
-                    _data_gid[_res] = _owner[_raw].name
-
-            return (_data_full, _data_uid, _data_gid)
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        def _process_owner(data, entry):
-            if data is None:
-                return None
-
-            _full, _uid, _gid = data
-
-            for _obj in _full:
-                if entry.uid == _obj[0] and entry.gid == _obj[1]:
-                    return _full[_obj]
-
-            for _obj in _uid:
-                if entry.uid == _obj[0]:
-                    return _uid[_obj]
-
-            for _obj in _gid:
-                if entry.gid == _obj[1]:
-                    return _gid[_obj]
-
-            return None
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        def _setup_perm():
-            try:
-                _perm = self.xyz.skin["fs.perm"]
-            except KeyError:
-                return None
-
-            _data_all = {}
-            _data_any = {}
-
-            for _p in _perm:
-                if _p.startswith(u"+"):
-                    _data_any[int(_p[1:], 8)] = _perm[_p].name
-                else:
-                    _data_all[int(_p, 8)] = _perm[_p].name
-
-            return _data_all, _data_any
-
-            #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        def _process_perm(data, entry):
-            if None in (entry.mode, data):
-                return None
-
-            _data_all, _data_any = data
-
-            _mode = stat.S_IMODE(entry.mode.raw)
-
-            for _m in _data_all:
-                if _mode == _m:
-                    return _data_all[_m]
-
-            for _m in _data_any:
-                if _mode & _m:
-                    return _data_any[_m]
-
-            return None
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        #TODO:
-        #_priority = self.xyz.skin["fs.priority"]
-
-        _type_data = _setup_type()
-        _regexp_data = _setup_regexp()
-        _owner_data = _setup_owner()
-        _perm_data = _setup_perm()
-
-        _priority = [
-                     lambda x: _process_type(_type_data, x),
-                     lambda x: _process_regexp(_regexp_data, x),
-                     lambda x: _process_owner(_owner_data, x),
-                     lambda x: _process_perm(_perm_data, x),
-                    ]
-
         _result = {}
 
-        for i in xrange(self._len):
-            _results = filter(None, [_f(self.entries[i]) for _f in _priority])
+        try:
+            _rules = self.xyz.skin["fs.rules"]
+        except KeyError:
+            return _result
 
-            if _results:
-                # According to priority the most appropriate result is at
-                # the end of results list
-                _result[i] = _results.pop()
+        for i in xrange(self._len):
+            for _exp, _attr in _rules.iteritems():
+                if _exp.match(self.entries[i]):
+                    _result[i] = _attr.name
+                    break
 
         return _result
 

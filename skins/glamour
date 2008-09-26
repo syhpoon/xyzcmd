@@ -3,29 +3,21 @@ VERSION: "0.1"
 DESCRIPTION: "XYZCommander Strawberry skin"
 
 # Filesystem objects
-
-fs.type {
+fs.rules {
 	&BG = DARK_MAGENTA
 
-	file = LIGHT_GRAY, &BG
-	dir = WHITE, &BG
-	link = LIGHT_CYAN, &BG
-	socket = LIGHT_MAGENTA, &BG
-	char = DARK_GRAY, &BG
-	fifo = LIGHT_BLUE, &BG
-	block = BLACK, &BG
-}
+	"type{file} and perm{+0111}" = LIGHT_GREEN, &BG
 
-fs.regexp {
-	'''.+\.core$''' = DARK_RED,BROWN
-	'''\.{1}[^.]+''' = LIGHT_GRAY
-}
+	'''regexp{".*\\.core$"}''' = DARK_RED, &BG
+	'''regexp{"^\\.{1}[^.]"}''' = DARK_GRAY, &BG
 
-fs.priority {
-	type = 1
-   perm = 2
-   regexp = 3
-   owner = 4
+	"type{file}" = LIGHT_GRAY, &BG
+	"type{dir}" = WHITE, &BG
+	"type{link}" = LIGHT_CYAN, &BG
+	"type{socket}" = BLACK, &BG
+	"type{fifo}" = LIGHT_BLUE, &BG
+	"type{char}" = DARK_GRAY, &BG
+	"type{block}" = LIGHT_MAGENTA, &BG
 }
 
 ### User interface objects

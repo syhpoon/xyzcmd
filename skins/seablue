@@ -1,41 +1,23 @@
 AUTHOR: "Max E. Kuznecov <syhpoon@syhpoon.name>"
-VERSION: "0.1"
+VERSION: "0.2"
 DESCRIPTION: "XYZCommander Seablue skin"
 
-### Filesystem objects
-
-fs.combined {
-	"type{file} and perm{+0111}" = LIGHT_GREEN, DARK_BLUE
-}
-
-fs.type {
+# Filesystem objects
+fs.rules {
 	&BG = DARK_BLUE
 
-	file = LIGHT_GRAY, &BG
-	dir = WHITE, &BG
-	link = LIGHT_CYAN, &BG
-	socket = LIGHT_MAGENTA, &BG
-	fifo = LIGHT_BLUE, &BG
-	char = DARK_GRAY, &BG
-	block = DARK_MAGENTA, &BG
-}
+	"type{file} and perm{+0111}" = LIGHT_GREEN, &BG
 
-fs.regexp {
-	&BG = DARK_BLUE
+	'''regexp{".*\\.core$"}''' = DARK_RED, &BG
+	'''regexp{"^\\.{1}[^.]"}''' = DARK_GRAY, &BG
 
-	'''.*\.core$''' = DARK_RED, &BG
-	'''\.{1}[^.]+''' = DARK_GRAY, &BG
-}
-
-fs.perm {
-	2000 = LIGHT_GREEN, DARK_BLUE
-}
-
-fs.priority {
-	type = 1
-   perm = 2
-   regexp = 3
-   owner = 4
+	"type{file}" = LIGHT_GRAY, &BG
+	"type{dir}" = WHITE, &BG
+	"type{link}" = LIGHT_CYAN, &BG
+	"type{socket}" = LIGHT_MAGENTA, &BG
+	"type{fifo}" = LIGHT_BLUE, &BG
+	"type{char}" = DARK_GRAY, &BG
+	"type{block}" = DARK_MAGENTA, &BG
 }
 
 ### User interface objects
