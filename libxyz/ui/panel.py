@@ -140,6 +140,7 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.tag_re)
         _panel_plugin.export(self.untag_re)
         _panel_plugin.export(self.swap_blocks)
+        _panel_plugin.export(self.reload)
 
         _panel_plugin.VERSION = u"0.1"
         _panel_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
@@ -313,6 +314,15 @@ class Panel(lowui.WidgetWrap):
 
         self._invalidate()
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def reload(self):
+        """
+        Reload contents
+        """
+
+        return self.active.reload()
+
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 class Block(lowui.BoxWidget):
@@ -344,21 +354,12 @@ class Block(lowui.BoxWidget):
         self._vindex = 0
         self._from = 0
         self._to = 0
-
-        self._tagged = []
+        self._force_reload = False
 
         self._enc = enc
+        self._vfsobj = vfsobj
 
-        _dir, _dirs, _files = vfsobj.walk()
-
-        _entries = [_dir]
-        _entries.extend(_dirs)
-        _entries.extend(_files)
-
-        self.entries = _entries
-        self._len = len(self.entries)
-
-        self._palettes = self._process_skin_rulesets()
+        self._setup()
 
         self._winfo = lowui.Text(u"")
         self._sep = libxyz.ui.Separator()
@@ -372,11 +373,27 @@ class Block(lowui.BoxWidget):
 
         _title_attr = self._get_title_attr()
 
-        self.border = libxyz.ui.Border(self.block, (_dir.path, _title_attr),
+        self.border = libxyz.ui.Border(self.block, (self._title, _title_attr),
                                       self.attr(u"border"))
         self.block = lowui.AttrWrap(self.border, self.attr(u"panel"))
 
         self.block = lowui.BoxAdapter(self.block, self.size.rows)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _setup(self):
+        _dir, _dirs, _files = self._vfsobj.walk()
+
+        _entries = [_dir]
+        _entries.extend(_dirs)
+        _entries.extend(_files)
+
+        self._title = _dir.path
+        self._tagged = []
+
+        self.entries = _entries
+        self._len = len(self.entries)
+        self._palettes = self._process_skin_rulesets()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -415,7 +432,9 @@ class Block(lowui.BoxWidget):
         else:
             self._sep.clear_text()
 
-        self._display = self._get_visible(maxrow, maxcol)
+        self._display = self._get_visible(maxrow, maxcol, self._force_reload)
+        self._force_reload = False
+
         _len = len(self._display)
 
         canvases = []
@@ -438,7 +457,7 @@ class Block(lowui.BoxWidget):
                                      maxcol=maxcol)
                 canvases.append((x, i, False))
             else:
-                canvases.append((lowui.Text(_text).render((maxcol,)), i, False))
+                canvases.append((lowui.Text(_text).render((maxcol,)), i,False))
 
         combined = lowui.CanvasCombine(canvases)
 
@@ -475,7 +494,7 @@ class Block(lowui.BoxWidget):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _get_visible(self, rows, cols):
+    def _get_visible(self, rows, cols, reload=False):
         """
         Get currently visible piece of entries
         """
@@ -483,7 +502,7 @@ class Block(lowui.BoxWidget):
         _len = self._len
         _from, _to, self._vindex = self._update_vindex(rows)
 
-        if (_from, _to) != (self._from, self._to):
+        if reload or ((_from, _to) != (self._from, self._to)):
             self._from, self._to = _from, _to
             self._display = []
 
@@ -504,7 +523,7 @@ class Block(lowui.BoxWidget):
         _result = {}
 
         try:
-            _rules = self.xyz.skin["fs.rules"]
+            _rules = self.xyz.skin[u"fs.rules"]
         except KeyError:
             return _result
 
@@ -779,3 +798,35 @@ class Block(lowui.BoxWidget):
         """
 
         self._tagged = []
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @refresh
+    def reload(self):
+        """
+        Reload contents
+        """
+
+        _selected = self.entries[self.selected]
+
+        self._setup()
+        self._force_reload = True
+
+        if self.selected >= self._len:
+            self.selected = self._len - 1
+
+        # Try to find previously selected object
+        if self.entries[self.selected].name != _selected.name:
+            for i in xrange(self._len):
+                if self.entries[i].name == _selected.name:
+                    self.selected = i
+                    break
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def action(self):
+        """
+        Perform action on selected file
+        """
+
+        pass

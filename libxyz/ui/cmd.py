@@ -73,9 +73,9 @@ class Cmd(lowui.FlowWidget):
         for _var, _def, _cast in _conf_vars:
             try:
                 if _cast is not None:
-                    _val  = _cast(_conf[self.context][_var])
+                    _val = _cast(_conf[self.context][_var])
                 else:
-                    _val  = _conf[self.context][_var]
+                    _val = _conf[self.context][_var]
             except KeyError:
                 _val = _def
             except ValueError, e:
