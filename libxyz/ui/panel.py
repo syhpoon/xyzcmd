@@ -26,6 +26,7 @@ from libxyz.ui import align
 from libxyz.ui.utils import refresh
 from libxyz.vfs.local import LocalVFSObject
 from libxyz.vfs.types import *
+from libxyz.exceptions import ParseError
 
 class Panel(lowui.WidgetWrap):
     """
@@ -139,6 +140,8 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.tag_invert)
         _panel_plugin.export(self.tag_re)
         _panel_plugin.export(self.untag_re)
+        _panel_plugin.export(self.tag_rule)
+        _panel_plugin.export(self.untag_rule)
         _panel_plugin.export(self.swap_blocks)
         _panel_plugin.export(self.reload)
 
@@ -304,6 +307,24 @@ class Panel(lowui.WidgetWrap):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def tag_rule(self):
+        """
+        Tag files by combined rule
+        """
+
+        return self.active.tag_rule()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def untag_rule(self):
+        """
+        Untag files by combined rules
+        """
+
+        return self.active.untag_rule()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def swap_blocks(self):
         """
         Swap panel blocks
@@ -364,6 +385,9 @@ class Block(lowui.BoxWidget):
         self._winfo = lowui.Text(u"")
         self._sep = libxyz.ui.Separator()
         self._pending = libxyz.core.Queue(20)
+
+        self._re_raw = r".*"
+        self._rule_raw = ""
 
         _info = lowui.Padding(self._winfo, align.LEFT, self.size.cols)
         _info = lowui.AttrWrap(_info, self.attr(u"info"))
@@ -735,7 +759,7 @@ class Block(lowui.BoxWidget):
         """
 
         _input = libxyz.ui.InputBox(self.xyz, self.xyz.top, "",
-                                    title=_(u"Tag group"), text=r".*")
+                                    title=_(u"Tag group"), text=self._re_raw)
         
         _raw = _input.show()
 
@@ -743,6 +767,7 @@ class Block(lowui.BoxWidget):
             return
         else:
             _re = re.compile(_raw, re.U)
+            self._re_raw = _re
 
         self._tagged = [i for i in xrange(self._len) if
                         _re.search(self.entries[i].name.encode(self._enc))]
@@ -756,7 +781,7 @@ class Block(lowui.BoxWidget):
         """
         
         _input = libxyz.ui.InputBox(self.xyz, self.xyz.top, "",
-                                    title=_(u"Untag group"), text=r".*")
+                                    title=_(u"Untag group"), text=self._re_raw)
         
         _raw = _input.show()
 
@@ -764,9 +789,67 @@ class Block(lowui.BoxWidget):
             return
         else:
             _re = re.compile(_raw, re.U)
+            self._re_raw = _re
 
         self._tagged = [i for i in self._tagged if not
                         _re.search(self.entries[i].name.encode(self._enc))]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @refresh
+    def tag_rule(self):
+        """
+        Tag files by combined rule
+        """
+
+        _input = libxyz.ui.InputBox(self.xyz, self.xyz.top,
+                                    _("Type Combined Rule"),
+                                    title=_(u"Tag group"), text=self._rule_raw)
+        
+        _raw = _input.show()
+
+        if _raw is None:
+            return
+        else:
+            self._rule_raw = _raw
+
+        try:
+            _rule = libxyz.core.CombinedRule(_raw.decode(self._enc))
+        except ParseError, e:
+            xyzlog.log(str(e), xyzlog.loglevel.ERROR)
+            return
+
+        self._tagged = [i for i in xrange(self._len) if
+                        _rule.match(self.entries[i])]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @refresh
+    def untag_rule(self):
+        """
+        Untag files by combined rule
+        """
+
+        _input = libxyz.ui.InputBox(self.xyz, self.xyz.top,
+                                    _("Type Combined Rule"),
+                                    title=_(u"Untag group"),
+                                    text=self._rule_raw)
+        
+        _raw = _input.show()
+
+        if _raw is None:
+            return
+        else:
+            self._rule_raw = _raw
+
+        try:
+            _rule = libxyz.core.CombinedRule(_raw.decode(self._enc))
+        except ParseError, e:
+            xyzlog.log(str(e), xyzlog.loglevel.ERROR)
+            return
+        
+        self._tagged = [i for i in self._tagged if not
+                        _rule.match(self.entries[i])]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -119,7 +119,7 @@ class Skin(object):
 
             try:
                 return CombinedRule(rule)
-            except (ParseError, LexerError), e:
+            except ParseError, e:
                 raise XYZValueError(e)
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -698,7 +698,7 @@ class CombinedRule(parser.BaseParser):
                 _f(_tok, _arg)
 
         except LexerError, e:
-            raise
+            self.error(e)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
