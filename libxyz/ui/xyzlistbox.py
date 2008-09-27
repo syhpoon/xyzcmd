@@ -47,10 +47,11 @@ class XYZListBox(lowui.WidgetWrap):
         self._walker = walker
         self._keys = Keys()
 
-        _listbox = lowui.AttrWrap(lowui.ListBox(walker), self._attr(u"box"))
+        self._listbox = lowui.AttrWrap(lowui.ListBox(walker),
+                                       self._attr(u"box"))
 
-        _box = Border(_listbox, (title, (self._attr(u"title"))),
-                            self._attr(u"border"))
+        _box = Border(self._listbox, title, self._attr(u"title"),
+                      self._attr(u"border"))
 
         _box = lowui.Overlay(_box, body, align.CENTER, _dim[0],
                              align.MIDDLE, _dim[1])
@@ -83,7 +84,7 @@ class XYZListBox(lowui.WidgetWrap):
                     elif _k == "k":
                         _k = self._keys.UP
 
-                    self.keypress(dim, _k)
+                    self._listbox.keypress(dim, _k)
 
                     # Also quit on specified keys if any
                     if _k in exit_keys:
