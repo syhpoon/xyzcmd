@@ -871,7 +871,7 @@ class Expression(object):
         """
 
         def _match_type(obj, arg):
-            return type(obj.ftype) == arg
+            return isinstance(obj.ftype, arg)
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
