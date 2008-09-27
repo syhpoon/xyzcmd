@@ -33,7 +33,8 @@ class LocalVFSObject(vfsobj.VFSObject):
         """
         Directory tree walker
         @param top: Top directory or self.path unless provided
-        @return: tuple (dir, dirs, files) where:
+        @return: tuple (parent, dir, dirs, files) where:
+                 parent - parent dir LocalVFSFile instance
                  dir - current dir LocalVFSFile instance
                  dirs - list of LocalVFSFile objects of directories
                  files - list of LocalVFSFile objects of files
@@ -46,12 +47,13 @@ class LocalVFSObject(vfsobj.VFSObject):
         _dirs.sort()
         _files.sort()
 
-        _dir = LocalVFSFile(_dir, self.enc)
-        _dir.name = u".."
-        _dir.visual = u"/.."
+        _parent = LocalVFSFile(os.path.dirname(_dir), self.enc)
+        _parent.name = u".."
+        _parent.visual = u"/.."
 
         return [
-                _dir,
+                _parent,
+                LocalVFSFile(_dir, self.enc),
                 [LocalVFSFile(os.path.join(_abstop, x), self.enc)
                  for x in _dirs],
                 [LocalVFSFile(os.path.join(_abstop, x), self.enc)
@@ -114,6 +116,8 @@ class LocalVFSFile(vfsobj.VFSFile):
 
             if not os.path.exists(_fullpath):
                 self.vtype = u"!"
+            else:
+                self.data = LocalVFSFile(_fullpath, self.enc)
 
             self.info = u""
             self.visual = u"-> %s" % _realpath.decode(self.enc)

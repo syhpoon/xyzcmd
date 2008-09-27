@@ -83,6 +83,9 @@ class VFSFile(object):
         # File info
         self.info = VFS_NONE
 
+        # Any type-specific data
+        self.data = VFS_NONE
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def open(self):
