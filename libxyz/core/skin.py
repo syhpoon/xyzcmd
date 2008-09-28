@@ -272,6 +272,10 @@ class CombinedRule(parser.BaseParser):
     TOKEN_PERM = "perm"
     TOKEN_OWNER = "owner"
     TOKEN_REGEXP = "regexp"
+    TOKEN_LINK_TYPE = "link_type"
+    TOKEN_LINK_PERM = "link_perm"
+    TOKEN_LINK_OWNER = "link_owner"
+    TOKEN_LINK_REGEXP = "link_regexp"
     TOKEN_AND = "and"
     TOKEN_OR = "or"
     TOKEN_NOT = "not"
@@ -284,7 +288,9 @@ class CombinedRule(parser.BaseParser):
     EOF = None
 
     TOKENS = (TOKEN_TYPE, TOKEN_PERM, TOKEN_OWNER, TOKEN_REGEXP,
-              TOKEN_AND, TOKEN_OR, TOKEN_NOT, TOKEN_OPEN_BR, TOKEN_CLOSE_BR,
+              TOKEN_LINK_TYPE, TOKEN_LINK_PERM, TOKEN_LINK_OWNER,
+              TOKEN_LINK_REGEXP, TOKEN_AND, TOKEN_OR, TOKEN_NOT,
+              TOKEN_OPEN_BR, TOKEN_CLOSE_BR,
               TOKEN_OPEN_PAR, TOKEN_CLOSE_PAR, TOKEN_DEFAULT, EOF)
 
     # Nonterminals
@@ -299,6 +305,10 @@ class CombinedRule(parser.BaseParser):
              TOKEN_PERM,
              TOKEN_OWNER,
              TOKEN_REGEXP,
+             TOKEN_LINK_TYPE,
+             TOKEN_LINK_PERM,
+             TOKEN_LINK_OWNER,
+             TOKEN_LINK_REGEXP,
             )
 
     INFIX_OP = (TOKEN_AND, TOKEN_OR)
@@ -337,23 +347,31 @@ class CombinedRule(parser.BaseParser):
         # 11      | PERM
         # 12      | OWNER
         # 13      | REGEXP
+        # 131     | LINK_TYPE
+        #         | LINK_PERM
+        #         | LINK_OWNER
+        #         | LINK_REGEXP
         # 14 expr_body: NOT ftype "{" ARG "}"
 
         # Closures
 
         # state 0
         #    0 $accept: . start $end
-        #    NOT     shift, and go to state 1
-        #    TYPE    shift, and go to state 2
-        #    PERM    shift, and go to state 3
-        #    OWNER   shift, and go to state 4
-        #    REGEXP  shift, and go to state 5
-        #    "("     shift, and go to state 6
-        #    start      go to state 7
-        #    rule       go to state 8
-        #    expr       go to state 9
-        #    expr_body  go to state 10
-        #    ftype      go to state 11
+        #    NOT         shift, and go to state 1
+        #    TYPE        shift, and go to state 2
+        #    PERM        shift, and go to state 3
+        #    OWNER       shift, and go to state 4
+        #    REGEXP      shift, and go to state 5
+        #    LINK_TYPE   shift, and go to state 27
+        #    LINK_PERM   shift, and go to state 27
+        #    LINK_OWNER  shift, and go to state 27
+        #    LINK_REGEXP shift, and go to state 27
+        #    "("         shift, and go to state 6
+        #    start       go to state 7
+        #    rule        go to state 8
+        #    expr        go to state 9
+        #    expr_body   go to state 10
+        #    ftype       go to state 11
 
         # state 1
         #    5 expr: NOT . expr_body
@@ -361,6 +379,10 @@ class CombinedRule(parser.BaseParser):
         #    PERM    shift, and go to state 3
         #    OWNER   shift, and go to state 4
         #    REGEXP  shift, and go to state 5
+        #    LINK_TYPE   shift, and go to state 27
+        #    LINK_PERM   shift, and go to state 27
+        #    LINK_OWNER  shift, and go to state 27
+        #    LINK_REGEXP shift, and go to state 27
         #    expr_body  go to state 12
         #    ftype      go to state 23
 
@@ -387,6 +409,10 @@ class CombinedRule(parser.BaseParser):
         #    PERM    shift, and go to state 3
         #    OWNER   shift, and go to state 4
         #    REGEXP  shift, and go to state 5
+        #    LINK_TYPE   shift, and go to state 27
+        #    LINK_PERM   shift, and go to state 27
+        #    LINK_OWNER  shift, and go to state 27
+        #    LINK_REGEXP shift, and go to state 27
         #    "("     shift, and go to state 6
         #    rule       go to state 13
         #    expr       go to state 9
@@ -444,6 +470,10 @@ class CombinedRule(parser.BaseParser):
         #    PERM    shift, and go to state 3
         #    OWNER   shift, and go to state 4
         #    REGEXP  shift, and go to state 5
+        #    LINK_TYPE   shift, and go to state 27
+        #    LINK_PERM   shift, and go to state 27
+        #    LINK_OWNER  shift, and go to state 27
+        #    LINK_REGEXP shift, and go to state 27
         #    "("     shift, and go to state 6
         #    rule       go to state 20
         #    expr       go to state 9
@@ -482,9 +512,13 @@ class CombinedRule(parser.BaseParser):
         #    7 expr_body: NOT ftype "{" ARG . "}"
         #    "}"  shift, and go to state 26
 
-        # !state 26
+        # state 26
         #    7 expr_body: NOT ftype "{" ARG "}" .
         #    $default  reduce using rule 14 (expr_body)
+
+        # state 27
+        #    10 ftype: LINK_FTYPE .
+        #    $default  reduce using rule 131 (ftype)
 
         _s = self._shift
         _r = self._reduce
@@ -493,6 +527,10 @@ class CombinedRule(parser.BaseParser):
         self._action.add(0, self.TOKEN_PERM, (_s, 3))
         self._action.add(0, self.TOKEN_OWNER, (_s, 4))
         self._action.add(0, self.TOKEN_REGEXP, (_s, 5))
+        self._action.add(0, self.TOKEN_LINK_TYPE, (_s, 27))
+        self._action.add(0, self.TOKEN_LINK_PERM, (_s, 27))
+        self._action.add(0, self.TOKEN_LINK_OWNER, (_s, 27))
+        self._action.add(0, self.TOKEN_LINK_REGEXP, (_s, 27))
         self._action.add(0, self.TOKEN_NOT, (_s, 1))
         self._action.add(0, self.TOKEN_OPEN_PAR, (_s, 6))
 
@@ -500,6 +538,10 @@ class CombinedRule(parser.BaseParser):
         self._action.add(1, self.TOKEN_PERM, (_s, 3))
         self._action.add(1, self.TOKEN_OWNER, (_s, 4))
         self._action.add(1, self.TOKEN_REGEXP, (_s, 5))
+        self._action.add(1, self.TOKEN_LINK_TYPE, (_s, 27))
+        self._action.add(1, self.TOKEN_LINK_PERM, (_s, 27))
+        self._action.add(1, self.TOKEN_LINK_OWNER, (_s, 27))
+        self._action.add(1, self.TOKEN_LINK_REGEXP, (_s, 27))
 
         self._action.add(2, self.TOKEN_DEFAULT, (_r, 10))
         self._action.add(3, self.TOKEN_DEFAULT, (_r, 11))
@@ -510,6 +552,10 @@ class CombinedRule(parser.BaseParser):
         self._action.add(6, self.TOKEN_PERM, (_s, 3))
         self._action.add(6, self.TOKEN_OWNER, (_s, 4))
         self._action.add(6, self.TOKEN_REGEXP, (_s, 5))
+        self._action.add(6, self.TOKEN_LINK_TYPE, (_s, 27))
+        self._action.add(6, self.TOKEN_LINK_PERM, (_s, 27))
+        self._action.add(6, self.TOKEN_LINK_OWNER, (_s, 27))
+        self._action.add(6, self.TOKEN_LINK_REGEXP, (_s, 27))
         self._action.add(6, self.TOKEN_NOT, (_s, 1))
         self._action.add(6, self.TOKEN_OPEN_PAR, (_s, 6))
 
@@ -532,6 +578,10 @@ class CombinedRule(parser.BaseParser):
         self._action.add(17, self.TOKEN_PERM, (_s, 3))
         self._action.add(17, self.TOKEN_OWNER, (_s, 4))
         self._action.add(17, self.TOKEN_REGEXP, (_s, 5))
+        self._action.add(17, self.TOKEN_LINK_TYPE, (_s, 27))
+        self._action.add(17, self.TOKEN_LINK_PERM, (_s, 27))
+        self._action.add(17, self.TOKEN_LINK_OWNER, (_s, 27))
+        self._action.add(17, self.TOKEN_LINK_REGEXP, (_s, 27))
         self._action.add(17, self.TOKEN_NOT, (_s, 1))
         self._action.add(17, self.TOKEN_OPEN_PAR, (_s, 6))
 
@@ -544,6 +594,7 @@ class CombinedRule(parser.BaseParser):
         self._action.add(24, self.TOKEN_ARG, (_s, 25))
         self._action.add(25, self.TOKEN_CLOSE_BR, (_s, 26))
         self._action.add(26, self.TOKEN_DEFAULT, (_r, 14))
+        self._action.add(27, self.TOKEN_DEFAULT, (_r, 131))
 
         self._rules = parser.lr.Rules()
 
@@ -561,6 +612,7 @@ class CombinedRule(parser.BaseParser):
         self._rules.add(12, self.NTOKEN_FTYPE, 1)
         self._rules.add(13, self.NTOKEN_FTYPE, 1)
         self._rules.add(14, self.NTOKEN_EXPR_BODY, 5)
+        self._rules.add(131, self.NTOKEN_FTYPE, 1)
 
         # Goto table
         self._goto = parser.lr.GotoTable()
@@ -730,6 +782,10 @@ class CombinedRule(parser.BaseParser):
                       u"regexp": self._regexp,
                       u"owner": self._owner,
                       u"perm": self._perm,
+                      u"link_type": self._type,
+                      u"link_regexp": self._regexp,
+                      u"link_owner": self._owner,
+                      u"link_perm": self._perm,
                      }
 
         try:
@@ -737,7 +793,7 @@ class CombinedRule(parser.BaseParser):
         except KeyError:
             self.error(token)
 
-        if rule in (10, 11, 12, 13):
+        if rule in (10, 11, 12, 13, 131):
             self._cur_obj = Expression()
             self._cur_obj.otype = self._stack[-2]
         elif rule in (7, 14):
@@ -853,6 +909,21 @@ class CombinedRule(parser.BaseParser):
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
+def link(func):
+    """
+    Wrap matching func to aplly only for links
+    """
+
+    def _trans(vfsobj, arg):
+        if isinstance(vfsobj.ftype, VFSTypeLink) and vfsobj.data is not None:
+            return func(vfsobj.data, arg)
+        else:
+            return False
+
+    return _trans
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
 class Expression(object):
     """
     Combined rule expression class
@@ -911,11 +982,22 @@ class Expression(object):
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+        _match_link_type = link(_match_type)
+        _match_link_regexp = link(_match_regexp)
+        _match_link_owner = link(_match_owner)
+        _match_link_perm = link(_match_perm)
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         _match_f = {
                     u"type": _match_type,
                     u"regexp": _match_regexp,
                     u"owner": _match_owner,
                     u"perm": _match_perm,
+                    u"link_type": _match_link_type,
+                    u"link_regexp": _match_link_regexp,
+                    u"link_owner": _match_link_owner,
+                    u"link_perm": _match_link_perm,
                    }
 
         _res = _match_f[self.otype](vfsobj, self.arg)
