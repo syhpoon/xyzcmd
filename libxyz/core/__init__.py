@@ -15,8 +15,8 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 __all__ = (
+    'FSRule',
     'Skin',
-    'CombinedRule',
     'XYZData',
     'UserData',
     'KeyManager',
@@ -24,8 +24,8 @@ __all__ = (
     'Queue',
     )
 
+from fsrule import FSRule
 from skin import Skin
-from skin import CombinedRule
 from xyzdata import XYZData
 from userdata import UserData
 from keymanager import KeyManager
