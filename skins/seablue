@@ -6,9 +6,13 @@ DESCRIPTION: "XYZCommander Seablue skin"
 fs.rules {
 	&BG = DARK_BLUE
 
+	# Broken links
+	"type{link} and not link_exists{?}" = DARK_RED, &BG
+	# Executables
 	"type{file} and perm{+0111}" = LIGHT_GREEN, &BG
-
+	# core files
 	'''regexp{".*\\.core$"}''' = DARK_RED, &BG
+	# Hidden files
 	'''regexp{"^\\.{1}[^.]"}''' = DARK_GRAY, &BG
 
 	"type{file}" = LIGHT_GRAY, &BG

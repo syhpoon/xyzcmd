@@ -6,6 +6,9 @@ DESCRIPTION: "XYZCommander Strawberry skin"
 fs.rules {
 	&BG = DARK_MAGENTA
 
+	# Broken links
+	"type{link} and not link_exists{?}" = DARK_RED, &BG
+	# Executables
 	"type{file} and perm{+0111}" = LIGHT_GREEN, &BG
 
 	'''regexp{".*\\.core$"}''' = DARK_RED, &BG

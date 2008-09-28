@@ -6,6 +6,9 @@ DESCRIPTION: "XYZCommander Grass skin"
 fs.rules {
 	&BG = DARK_GREEN
 
+	# Broken links
+	"type{link} and not link_exists{?}" = DARK_RED, &BG
+	# Executables
 	"type{file} and perm{+0111}" = LIGHT_BLUE, &BG
 
 	'''regexp{".*\\.core$"}''' = DARK_RED, &BG
