@@ -19,57 +19,65 @@ from libxyz.ui import align
 
 from libxyz.exceptions import UIError
 
-class Border(lowui.WidgetWrap):
-    def __init__(self, widget, title=None, attr=None):
+class Border(lowui.FlowWidget):
+    def __init__(self, widget, title=None, title_attr=None, attr=None):
         """
         Draw a line border around widget and set up a title
         @param widget: Widget to wrap
-        @param title: (title, attribute) tuple or basestring
+        @param title: Title
         @type title: libxyz.ui.lowui.Text object
+        @param title_attr: Title attribute
         @param attr: Attribute of border
         """
 
-        utf8decode = lowui.escape.utf8decode
+        super(Border, self).__init__()
 
-        self._title = None
+        self.widget = widget
+        self.title = title
+        self.title_attr = title_attr
+        self.attr = attr
+        self._attr = self.attr
 
-        if title is not None:
-            if isinstance(title, tuple):
-                _len = len(title[0])
-                self._title = lowui.AttrWrap(lowui.Text(" %s " % title[0],
-                                             align.CENTER), title[1])
-            elif isinstance(title, basestring):
-                _len = len(title)
-                self._title = lowui.Text(title, align.CENTER)
+        self.utf8decode = lowui.escape.utf8decode
+
+        self.tline = self._get_attr(lowui.Divider(self.utf8decode("─")))
+        self.bline = self._get_attr(lowui.Divider(self.utf8decode("─")))
+        self.lline = self._get_attr(lowui.SolidFill(self.utf8decode("│")))
+        self.rline = self._get_attr(lowui.SolidFill(self.utf8decode("│")))
+
+        self.tlcorner = self._get_attr(lowui.Text(self.utf8decode("┌")))
+        self.trcorner = self._get_attr(lowui.Text(self.utf8decode("┐")))
+        self.blcorner = self._get_attr(lowui.Text(self.utf8decode("└")))
+        self.brcorner = self._get_attr(lowui.Text(self.utf8decode("┘")))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def render(self, (maxcol, maxrow), focus=False):
+        """
+        Render widget
+        """
+
+        if self.title is not None:
+            _len = len(self.title)
+
+            if self.title_attr is not None:
+                self._title = lowui.AttrWrap(lowui.Text(" %s " % self.title,
+                                             align.CENTER), self.title_attr)
             else:
-                raise UIError(_(u"Invalid title type %s. "\
-                                u"Tuple or basetring expected" %
-                                type(self._title)))
+                self._title = lowui.Text(self.title, align.CENTER)
 
             _len += 2 # " text "
 
-        self.attr = attr
-
-        self.tline = self._attr(lowui.Divider(utf8decode("─")))
-        self.bline = self._attr(lowui.Divider(utf8decode("─")))
-        self.lline = self._attr(lowui.SolidFill(utf8decode("│")))
-        self.rline = self._attr(lowui.SolidFill(utf8decode("│")))
-
-        self.tlcorner = self._attr(lowui.Text(utf8decode("┌")))
-        self.trcorner = self._attr(lowui.Text(utf8decode("┐")))
-        self.blcorner = self._attr(lowui.Text(utf8decode("└")))
-        self.brcorner = self._attr(lowui.Text(utf8decode("┘")))
-
         tline_widgets = [('fixed', 1, self.tlcorner), self.tline]
 
-        if title is not None:
+        if self.title is not None:
             tline_widgets.append(("fixed", _len, self._title))
 
         tline_widgets.extend([self.tline, ("fixed", 1, self.trcorner)])
 
         self.top = lowui.Columns(tline_widgets)
         self.middle = lowui.Columns([('fixed', 1, self.lline),
-                                    widget, ('fixed', 1, self.rline)],
+                                    self.widget, ('fixed', 1, self.rline)],
                                     box_columns=[0,2], focus_column=1)
 
         self.bottom = lowui.Columns([('fixed', 1, self.blcorner),
@@ -78,11 +86,11 @@ class Border(lowui.WidgetWrap):
         self.pile = lowui.Pile([('flow',self.top), self.middle,
                                ('flow', self.bottom)], focus_item=1)
 
-        super(Border, self).__init__(self.pile)
+        return self.pile.render((maxcol, maxrow), focus)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _attr(self, widget):
+    def _get_attr(self, widget):
         if self.attr is None:
             return widget
 
@@ -92,6 +100,18 @@ class Border(lowui.WidgetWrap):
 
     def set_title_attr(self, attr):
         """
+        Set title attribute
         """
 
-        self._title.set_attr(attr)
+        self.title_attr = attr
+        self._invalidate()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def set_title(self, text):
+        """
+        Set title
+        """
+
+        self.title = text
+        self._invalidate()

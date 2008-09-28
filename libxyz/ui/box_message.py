@@ -46,16 +46,16 @@ class MessageBox(Box):
         _title = self._strip_title(title.replace(u"\n", u" "))
 
         if _title:
-            _title = (_title, self._attr(u"title"))
+            _title_attr = self._attr(u"title")
         else:
-            _title = None
+            _title, _title_attr = None, None
 
         _mount = lowui.AttrWrap(lowui.Filler(lowui.Text(u"")),
                                 self._attr(u"mount"))
 
         _text = lowui.Text(message, align.CENTER)
         _box = lowui.Filler(_text)
-        _box = Border(_box, _title, self._attr(u"border"))
+        _box = Border(_box, _title, _title_attr, self._attr(u"border"))
         _box = lowui.AttrWrap(_box, self._attr(u"box"))
 
         _mount = lowui.Overlay(_mount, body, align.CENTER, self.full_width,

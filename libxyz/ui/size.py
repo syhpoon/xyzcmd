@@ -22,3 +22,13 @@ class Size(object):
     def __init__(self, rows, cols):
         self.rows = rows
         self.cols = cols
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __str__(self):
+        return "<Size: %d, %d>" % (self.rows, self.cols)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __repr__(self):
+        return self.__str__()
