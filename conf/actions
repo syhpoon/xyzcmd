@@ -1,0 +1,1 @@
+"type{dir} or (link_type{dir} and link_exists{?})" > :sys:panel:chdir(%O)
