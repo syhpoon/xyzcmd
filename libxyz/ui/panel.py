@@ -20,13 +20,13 @@ import os
 import libxyz.ui
 import libxyz.core
 import libxyz.const
+import libxyz.exceptions
 
 from libxyz.ui import lowui
 from libxyz.ui import align
 from libxyz.ui.utils import refresh
 from libxyz.vfs.local import LocalVFSObject
 from libxyz.vfs.types import *
-from libxyz.exceptions import ParseError
 
 class Panel(lowui.WidgetWrap):
     """
@@ -122,6 +122,7 @@ class Panel(lowui.WidgetWrap):
         _run_plugin.VERSION = u"0.1"
         _run_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
         _run_plugin.BRIEF_DESCRIPTION = u"Run plugin"
+        _run_plugin.HOMEPAGE = u"xyzcmd.syhpoon.name"
 
         # :sys:panel
         _panel_plugin = libxyz.core.plugins.VirtualPlugin(self.xyz, u"panel")
@@ -138,16 +139,16 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.tag_all)
         _panel_plugin.export(self.untag_all)
         _panel_plugin.export(self.tag_invert)
-        _panel_plugin.export(self.tag_re)
-        _panel_plugin.export(self.untag_re)
         _panel_plugin.export(self.tag_rule)
         _panel_plugin.export(self.untag_rule)
         _panel_plugin.export(self.swap_blocks)
         _panel_plugin.export(self.reload)
+        _panel_plugin.export(self.action)
 
         _panel_plugin.VERSION = u"0.1"
         _panel_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
         _panel_plugin.BRIEF_DESCRIPTION = u"Panel plugin"
+        _panel_plugin.HOMEPAGE = u"xyzcmd.syhpoon.name"
 
         self.xyz.pm.register(_run_plugin)
         self.xyz.pm.register(_panel_plugin)
@@ -289,24 +290,6 @@ class Panel(lowui.WidgetWrap):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def tag_re(self):
-        """
-        Tag files by regexp
-        """
-
-        return self.active.tag_re()
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def untag_re(self):
-        """
-        Untag files by regexp
-        """
-
-        return self.active.untag_re()
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     def tag_rule(self):
         """
         Tag files by combined rule
@@ -330,7 +313,6 @@ class Panel(lowui.WidgetWrap):
         Swap panel blocks
         """
 
-        xyzlog.log("CHANGED", xyzlog.loglevel.ERROR)
         self.block1, self.block2 = self.block2, self.block1
 
         self._invalidate()
@@ -343,6 +325,15 @@ class Panel(lowui.WidgetWrap):
         """
 
         return self.active.reload()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def action(self):
+        """
+        Perfrom action on selected object
+        """
+
+        return self.active.action()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -397,27 +388,34 @@ class Block(lowui.BoxWidget):
 
         _title_attr = self._get_title_attr()
 
-        self.border = libxyz.ui.Border(self.block, (self._title, _title_attr),
-                                      self.attr(u"border"))
+        self.border = libxyz.ui.Border(self.block, self._title,
+                                       _title_attr, self.attr(u"border"))
         self.block = lowui.AttrWrap(self.border, self.attr(u"panel"))
-
         self.block = lowui.BoxAdapter(self.block, self.size.rows)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _setup(self):
-        _dir, _dirs, _files = self._vfsobj.walk()
+        _parent, _dir, _dirs, _files = self._vfsobj.walk()
 
-        _entries = [_dir]
+        self._dir = _dir
+
+        _entries = [_parent]
         _entries.extend(_dirs)
         _entries.extend(_files)
 
-        self._title = _dir.path
+        self._title = self._truncate(_dir.path, self.size.cols - 4, True)
+
+        if hasattr(self, "border"):
+            self.border.set_title(self._title)
+
         self._tagged = []
 
         self.entries = _entries
         self._len = len(self.entries)
         self._palettes = self._process_skin_rulesets()
+
+        self._force_reload = True
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -561,17 +559,24 @@ class Block(lowui.BoxWidget):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _truncate(self, text, cols):
+    def _truncate(self, text, cols, backward=False):
         """
         Truncate text if its length exceeds cols
+        If backward is True, text will be truncated from the beginning
         """
+
+        if not type(text) == unicode:
+            text = text.decode(self._enc)
 
         _len = len(text)
 
         if _len < cols:
             return text
         else:
-            return u"%s~" % text[:cols - 1]
+            if backward:
+                return u"~%s" % text[-(cols - 1):]
+            else:
+                return u"%s~" % text[:cols - 1]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -753,74 +758,12 @@ class Block(lowui.BoxWidget):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @refresh
-    def tag_re(self):
-        """
-        Tag files by regexp
-        """
-
-        _input = libxyz.ui.InputBox(self.xyz, self.xyz.top, "",
-                                    title=_(u"Tag group"), text=self._re_raw)
-        
-        _raw = _input.show()
-
-        if _raw is None:
-            return
-        else:
-            _re = re.compile(_raw, re.U)
-            self._re_raw = _re
-
-        self._tagged = [i for i in xrange(self._len) if
-                        _re.search(self.entries[i].name.encode(self._enc))]
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    @refresh
-    def untag_re(self):
-        """
-        Untag files by regexp
-        """
-        
-        _input = libxyz.ui.InputBox(self.xyz, self.xyz.top, "",
-                                    title=_(u"Untag group"), text=self._re_raw)
-        
-        _raw = _input.show()
-
-        if _raw is None:
-            return
-        else:
-            _re = re.compile(_raw, re.U)
-            self._re_raw = _re
-
-        self._tagged = [i for i in self._tagged if not
-                        _re.search(self.entries[i].name.encode(self._enc))]
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    @refresh
     def tag_rule(self):
         """
         Tag files by combined rule
         """
 
-        _input = libxyz.ui.InputBox(self.xyz, self.xyz.top,
-                                    _("Type Combined Rule"),
-                                    title=_(u"Tag group"), text=self._rule_raw)
-        
-        _raw = _input.show()
-
-        if _raw is None:
-            return
-        else:
-            self._rule_raw = _raw
-
-        try:
-            _rule = libxyz.core.CombinedRule(_raw.decode(self._enc))
-        except ParseError, e:
-            xyzlog.log(str(e), xyzlog.loglevel.ERROR)
-            return
-
-        self._tagged = [i for i in xrange(self._len) if
-                        _rule.match(self.entries[i])]
+        self._tag_rule(tag=True)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -830,10 +773,19 @@ class Block(lowui.BoxWidget):
         Untag files by combined rule
         """
 
+        self._tag_rule(tag=False)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _tag_rule(self, tag=True):
+        if tag:
+            _title = _(u"Tag group")
+        else:
+            _title = _(u"Untag group")
+
         _input = libxyz.ui.InputBox(self.xyz, self.xyz.top,
-                                    _("Type Combined Rule"),
-                                    title=_(u"Untag group"),
-                                    text=self._rule_raw)
+                                    _("Type FS Rule"),
+                                    title=_title, text=self._rule_raw)
         
         _raw = _input.show()
 
@@ -843,13 +795,17 @@ class Block(lowui.BoxWidget):
             self._rule_raw = _raw
 
         try:
-            _rule = libxyz.core.CombinedRule(_raw.decode(self._enc))
-        except ParseError, e:
+            _rule = libxyz.core.FSRule(_raw.decode(self._enc))
+        except libxyz.exceptions.ParseError, e:
             xyzlog.log(str(e), xyzlog.loglevel.ERROR)
             return
-        
-        self._tagged = [i for i in self._tagged if not
-                        _rule.match(self.entries[i])]
+
+        if tag:
+            self._tagged = [i for i in xrange(self._len) if
+                            _rule.match(self.entries[i])]
+        else:
+            self._tagged = [i for i in self._tagged if not
+                           _rule.match(self.entries[i])]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -893,7 +849,6 @@ class Block(lowui.BoxWidget):
         _selected = self.entries[self.selected]
 
         self._setup()
-        self._force_reload = True
 
         if self.selected >= self._len:
             self.selected = self._len - 1
@@ -912,4 +867,43 @@ class Block(lowui.BoxWidget):
         Perform action on selected file
         """
 
-        pass
+        _selected = self.entries[self.selected]
+
+        if isinstance(_selected.ftype, VFSTypeDir) or \
+        (isinstance(_selected.ftype, VFSTypeLink) and \
+        _selected.data is not None and \
+        isinstance(_selected.data.ftype, VFSTypeDir)):
+            self.chdir(_selected.path)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @refresh
+    def chdir(self, path):
+        """
+        Change directory
+        """
+
+        _parent = os.path.normpath(self.entries[0].path)
+        _path = os.path.normpath(path)
+        _old = self._dir.name
+        _old_vfs = self._vfsobj
+
+        try:
+            self._vfsobj = LocalVFSObject(path, self._enc)
+        except libxyz.exceptions.VFSError, e:
+            xyzlog.log("Unable to chdir to %s: %s" % (path, str(e)),
+                       xyzlog.loglevel.ERROR)
+            return
+
+        self._setup()
+        self.selected = 0
+
+        # We've just stepped out from dir, try to focus on it
+        if _parent == _path:
+            for x in xrange(self._len):
+                if self.entries[x].name == _old:
+                    self.selected = x
+                    break
+
+        # TODO: 2-3 level cache
+        del(_old_vfs)
