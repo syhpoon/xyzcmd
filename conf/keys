@@ -46,10 +46,8 @@ bind :sys:panel:toggle_tag to INSERT context @
 bind :sys:panel:tag_all to META-a context @
 bind :sys:panel:untag_all to META-A context @
 bind :sys:panel:tag_invert to META-i context @
-bind :sys:panel:tag_re to META-+ context @
-bind :sys:panel:untag_re to META-\ context @
-bind :sys:panel:tag_rule to META-' context @
-bind :sys:panel:untag_rule to META-` context @
+bind :sys:panel:tag_rule to META-+ context @
+bind :sys:panel:untag_rule to META-\ context @
 bind :sys:panel:swap_blocks to CTRL-w context @
 bind :sys:panel:reload to CTRL-r context @
 bind :sys:panel:action to ENTER context @
