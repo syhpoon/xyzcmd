@@ -49,7 +49,9 @@ class LocalVFSObject(vfsobj.VFSObject):
 
         _parent = LocalVFSFile(os.path.dirname(_dir), self.enc)
         _parent.name = u".."
-        _parent.visual = u"/.."
+
+        if not isinstance(_parent.ftype, types.VFSTypeLink):
+            _parent.visual = u"/.."
 
         return [
                 _parent,
@@ -117,7 +119,14 @@ class LocalVFSFile(vfsobj.VFSFile):
             if not os.path.exists(_fullpath):
                 self.vtype = u"!"
             else:
-                self.data = LocalVFSFile(_fullpath, self.enc)
+                try:
+                    self.data = LocalVFSFile(_fullpath, self.enc)
+                except VFSError, e:
+                    xyzlog.log(_("Error creating VFS object: %s") % str(e),
+                              xyzlog.loglevel.ERROR)
+                else:
+                    if isinstance(self.data.ftype, types.VFSTypeDir):
+                        self.vtype = u"~"
 
             self.info = u""
             self.visual = u"-> %s" % _realpath.decode(self.enc)

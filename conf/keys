@@ -52,6 +52,7 @@ bind :sys:panel:tag_rule to META-' context @
 bind :sys:panel:untag_rule to META-` context @
 bind :sys:panel:swap_blocks to CTRL-w context @
 bind :sys:panel:reload to CTRL-r context @
+bind :sys:panel:action to ENTER context @
 
 bind :sys:logger:show_console to META-l
 bind :sys:run:shutdown to F10
