@@ -248,7 +248,7 @@ class Launcher(object):
                      }
         _flat_p = parser.FlatParser(_flat_opts)
 
-        _parser = parser.MultiParser({})
+        _parser = parser.MultiParser({}, {u"tokens": (u">", u"=")})
         _parser.register(u"plugins", _plugins_p)
         _parser.register(_flat_vars, _flat_p)
 
