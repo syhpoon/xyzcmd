@@ -369,9 +369,7 @@ class Block(lowui.BoxWidget):
         self._force_reload = False
 
         self._enc = enc
-        self._vfsobj = vfsobj
-
-        self._setup()
+        self._setup(vfsobj)
 
         self._winfo = lowui.Text(u"")
         self._sep = libxyz.ui.Separator()
@@ -395,8 +393,8 @@ class Block(lowui.BoxWidget):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _setup(self):
-        _parent, _dir, _dirs, _files = self._vfsobj.walk()
+    def _setup(self, vfsobj):
+        _parent, _dir, _dirs, _files = vfsobj.walk()
 
         self._dir = _dir
 
@@ -414,6 +412,7 @@ class Block(lowui.BoxWidget):
         self.entries = _entries
         self._len = len(self.entries)
         self._palettes = self._process_skin_rulesets()
+        self._vfsobj = vfsobj
 
         self._force_reload = True
 
@@ -848,7 +847,7 @@ class Block(lowui.BoxWidget):
 
         _selected = self.entries[self.selected]
 
-        self._setup()
+        self._setup(self._vfsobj)
 
         if self.selected >= self._len:
             self.selected = self._len - 1
@@ -889,13 +888,19 @@ class Block(lowui.BoxWidget):
         _old_vfs = self._vfsobj
 
         try:
-            self._vfsobj = LocalVFSObject(path, self._enc)
+            _vfsobj = LocalVFSObject(path, self._enc)
         except libxyz.exceptions.VFSError, e:
             xyzlog.log("Unable to chdir to %s: %s" % (path, str(e)),
                        xyzlog.loglevel.ERROR)
             return
 
-        self._setup()
+        try:
+            self._setup(_vfsobj)
+        except libxyz.exceptions.XYZRuntimeError, e:
+            xyzlog.log("Unable to chdir to %s: %s" % (path, str(e)),
+                       xyzlog.loglevel.INFO)
+            return
+
         self.selected = 0
 
         # We've just stepped out from dir, try to focus on it
