@@ -16,6 +16,8 @@
 
 from libxyz.parser import Lexer
 from libxyz.parser import BaseParser
+from libxyz.parser import ParsedData
+
 from libxyz.exceptions import XYZValueError
 from libxyz.exceptions import ParseError
 from libxyz.exceptions import LexerError
@@ -78,7 +80,7 @@ class FlatParser(BaseParser):
         super(FlatParser, self).__init__()
 
         self._parsed = 0
-        self._result = {}
+        self._result = ParsedData()
         self._current_list = []
         self._lexer = None
         self._state = self.STATE_VARIABLE
@@ -216,7 +218,7 @@ class FlatParser(BaseParser):
         self._parsed = 0
         self._state = self.STATE_VARIABLE
         self._varname = None
-        self._result = {}
+        self._result = ParsedData()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

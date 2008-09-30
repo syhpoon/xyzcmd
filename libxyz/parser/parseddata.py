@@ -14,7 +14,9 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-class ParsedData(object):
+from UserDict import DictMixin
+
+class ParsedData(DictMixin):
     """
     Parsed data
     Provides dictionary-like access to parsed values
@@ -35,6 +37,16 @@ class ParsedData(object):
 
     def iteritems(self):
         return ((_k, _v) for _k, _v in zip(self._keys, self._values))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def keys(self):
+        return self._keys
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def values(self):
+        return self._values
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
