@@ -26,7 +26,8 @@ class LogLevel(object):
                         "INFO": 4,
                         "DEBUG": 8,
                         "UNKNOWN": 16,
-                        "ALL": 31,
+                        "PANIC": 32,
+                        "ALL": 63,
                         }
 
         self._str_levels = dict([(v, k) for k, v in self._levels.iteritems()])

@@ -28,7 +28,8 @@ class Logger(object):
     """
     Logger console is used to collect system messages.
     There are several message levels:
-    ERROR: Critical error.
+    PANIC: Critical error.
+    ERROR: Non-critical error.
     WARNING: Non-critical warning.
     INFO: Informational message.
     DEBUG: Debug messages.
