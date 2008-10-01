@@ -2,15 +2,14 @@
 FSRules
 =======
 
-FSRules - это широко используемый в |XYZ| мини-DSL для создания правил
-описания объектов файловой системы.
+FSRules is a tiny DSL, widely-used in |XYZ| for describing filesystem
+objects.
 
-Каждое правило это предикат - то есть передавая ему аргументом объект
-VFS мы получаем значение :const:`True` либо :const:`False` в зависимости
-от того, совпадает ли параметры, указанные в правиле с параметрами
-данного конкретного объекта.
+Each rule produces a predicate, that is passing a VFS object as argument,
+rule yields either :const:`True` or :const:`False` depending if
+described attributes match the actual ones of passed object.
 
-Грамматика правил ``FSRules`` (БНФ)
+FSRules grammar (BNF)
 
 .. productionlist::
     rule          : expr $
@@ -24,8 +23,7 @@ VFS мы получаем значение :const:`True` либо :const:`False`
                   : "link_type" | "link_perm" | "link_owner"
                   : "link_regexp" | "link_exists"
 
-Каждое правило состоит из одного или более выражений объединённых логическими
-операторами.
+Rule consists of one or more expressions combined with logical operators.
 
 Как видно из грамматики, выражение имеет вид ``<type>{<arg>}``.
 Доступные типы выражений:
@@ -43,8 +41,7 @@ VFS мы получаем значение :const:`True` либо :const:`False`
 ``link_type, link_perm, link_owner, link_regexp`` are the same expressions
 as corresponding above, but they're applied only for symbolic links targets.
 
-Логический смысл выражения можно изменить на противоположный добавив оператор
-``not`` перед ним.
+Expression can be negated by prepending operator ``not`` in front of it.
 
 Expressions in a rule are combined using logical operators 
 :ref:`and <logical_op>` and :ref:`or <logical_op>`.
@@ -54,7 +51,7 @@ Expressions in a rule are combined using logical operators
 type
 ----
 
-Выражение ``type`` используется для определения типа файлового объекта.
+``type`` expression is used to match object based on its type.
 Available arguments:
 
 *file*
@@ -86,9 +83,8 @@ So, to match all regular files and directories use:
 perm
 ----
 
-Выражение ``perm`` определяет биты доступа файлового объекта.
-Аргумент задаётся в формате: ``[+]dddd``.
-
+``perm`` expression is used to match objects by permission bits.
+An argument is specified as ``[+]dddd``.
 Where ``dddd`` is an octal number. If number is preceeded by '+' this will
 match objects with any of mode bits set. Otherwise it will
 match only files with exactly the same mode as given.
@@ -150,7 +146,7 @@ link_exists
 (i.e. the object the link refers to) exists.
 
 Actually ``link_exists`` expression does not need any arguments, but
-as ``FSRules`` parser requires the expressions to have exactly one
+because of ``FSRules`` parser requires the expressions to have exactly one
 argument, a ``?`` character is usually specified::
 
     # Match all broken links
