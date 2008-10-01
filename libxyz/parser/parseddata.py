@@ -80,6 +80,18 @@ class ParsedData(DictMixin):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def index(self, index):
+        """
+        Lookup variable by index
+        """
+
+        if index >= len(self._values):
+            raise AttributeError()
+        else:
+            return self._values[index]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def lookup(self, var):
         """
         Lookup for value of variable
