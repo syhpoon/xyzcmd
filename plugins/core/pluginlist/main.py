@@ -49,12 +49,15 @@ class XYZPlugin(BasePlugin):
         Show plugins list
         """
 
+        _enc = self.xyz.conf[u"xyz"][u"local_encoding"]
+
         _plugins = sorted(self.xyz.pm.get_all_loaded().values(),
                           lambda x, y: cmp(x.ns, y.ns))
 
-        _sel_attr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"selected")
+        _sel_attr = self.xyz.skin.attr(uilib.XYZListBox.resolution,u"selected")
         self._walker = lowui.SimpleListWalker([PluginEntry(_obj, _sel_attr,
-                                              self._info) for _obj in _plugins])
+                                              self._info, _enc)
+                                              for _obj in _plugins])
 
         _dim = tuple([x - 2 for x in self.xyz.screen.get_cols_rows()])
 

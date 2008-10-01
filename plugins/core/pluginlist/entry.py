@@ -19,21 +19,24 @@ import traceback
 import libxyz.ui as uilib
 
 from libxyz.ui import lowui
+from libxyz.ui.utils import truncate
 
 class PluginEntry(lowui.FlowWidget):
     """
     Plugins list entry
     """
 
-    def __init__(self, plugin, selected_attr, enter_cb):
+    def __init__(self, plugin, selected_attr, enter_cb, enc):
         super(PluginEntry, self).__init__()
 
         self.plugin = plugin
         self.enter_cb = enter_cb
 
+        self._enc = enc
         self._keys = uilib.Keys()
 
-        self._text = u"%s%*s (%s)"
+        self._text = u"%s%*s - %s"
+
         self._attr = selected_attr
         self._content = lowui.Text(self._text)
 
@@ -55,11 +58,15 @@ class PluginEntry(lowui.FlowWidget):
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        _pad = percent(40, maxcol) - len(self.plugin.ns)
+        _pad = percent(35, maxcol) - len(self.plugin.ns)
 
         _text = self._text % (self.plugin.ns, _pad,
                               self.plugin.VERSION,
                               self.plugin.BRIEF_DESCRIPTION)
+
+        if len(_text) >= maxcol:
+            _text = truncate(_text, maxcol, self._enc)
+
         if focus:
             self._content.set_text((self._attr, _text))
         else:
