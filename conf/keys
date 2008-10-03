@@ -12,6 +12,7 @@ load :core:pluginlist:show_list
 load :core:keycodes:*
 load :core:bindlist:show_binds
 load :ui:testinput:show_box
+load :ui:bookmarks:*
 load :misc:about:about
 
 bind :sys:cmd:execute to ENTER context @
@@ -47,7 +48,7 @@ bind :sys:panel:tag_all to META-a context @
 bind :sys:panel:untag_all to META-A context @
 bind :sys:panel:tag_invert to META-i context @
 bind :sys:panel:tag_rule to META-+ context @
-bind :sys:panel:untag_rule to META-\ context @
+bind :sys:panel:untag_rule to META-/ context @
 bind :sys:panel:swap_blocks to CTRL-w context @
 bind :sys:panel:reload to CTRL-r context @
 bind :sys:panel:action to ENTER context @
@@ -60,5 +61,6 @@ bind :core:keycodes:learn_keys to META-s
 bind :core:bindlist:show_binds to META-r
 
 bind :ui:testinput:show_box to META-e
+bind :ui:bookmarks:show_bookmarks to META-\ context :sys:panel
 
 bind :misc:about:about to META-o

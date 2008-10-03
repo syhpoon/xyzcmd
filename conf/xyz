@@ -20,6 +20,7 @@ plugins {
 	:misc:about > ENABLE
 
 	:ui:testinput > ENABLE
+	:ui:bookmarks > ENABLE
 }
 
 # Skin to use
@@ -28,4 +29,4 @@ skin = seablue
 # Local encoding
 # One of the available in python
 # (http://docs.python.org/lib/standard-encodings.html)
-local_encoding = "koi8-r"
+local_encoding = "utf-8"

@@ -13,7 +13,7 @@
 
 :sys:logger {
 	# Log levels to track
-	levels = ERROR,WARNING,INFO
+	levels = PANIC,ERROR,WARNING,INFO
 
 	# Maximum number of entries to keep
 	lines = 100
