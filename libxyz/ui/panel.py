@@ -16,6 +16,7 @@
 
 import re
 import os
+import traceback
 
 import libxyz.ui
 import libxyz.core
@@ -25,6 +26,7 @@ import libxyz.exceptions
 from libxyz.ui import lowui
 from libxyz.ui import align
 from libxyz.ui.utils import refresh
+from libxyz.ui.utils import truncate
 from libxyz.vfs.local import LocalVFSObject
 from libxyz.vfs.types import *
 
@@ -39,15 +41,19 @@ class Panel(lowui.WidgetWrap):
     def __init__(self, xyz):
         self.xyz = xyz
 
+        self._keys = libxyz.ui.Keys()
+
         _size = self.xyz.screen.get_cols_rows()
         _blocksize = libxyz.ui.Size(rows=_size[1] - 1, cols=_size[0] / 2 - 2)
-        _enc = xyz.conf[u"xyz"][u"local_encoding"]
+        self._enc = xyzenc
 
         self.block1 = Block(xyz, _blocksize,
-                            LocalVFSObject("/tmp", _enc), _enc, active=True)
+                            LocalVFSObject("/tmp", self._enc), self._enc,
+                                           active=True)
 
         self.block2 = Block(xyz, _blocksize,
-                            LocalVFSObject("/home/syhpoon", _enc), _enc)
+                            LocalVFSObject("/home/syhpoon", self._enc),
+                                           self._enc)
 
         self._stop = False
         columns = lowui.Columns([self.block1.block, self.block2.block], 0)
@@ -106,7 +112,14 @@ class Panel(lowui.WidgetWrap):
                 if _meth is None:
                     self._cmd.keypress(_dim, _input)
                 else:
-                    _meth()
+                    try:
+                        _meth()
+                    except StandardError, e:
+                        xyzlog.log(_("Error executing bind (%s): %s") %
+                                  (self._keys.raw_to_shortcut(_input[0]),
+                                   str(e)), xyzlog.loglevel.ERROR)
+                        xyzlog.log(traceback.format_exc().decode(self._enc),
+                                   xyzlog.loglevel.DEBUG)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -144,6 +157,7 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.swap_blocks)
         _panel_plugin.export(self.reload)
         _panel_plugin.export(self.action)
+        _panel_plugin.export(self.chdir)
 
         _panel_plugin.VERSION = u"0.1"
         _panel_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
@@ -335,6 +349,15 @@ class Panel(lowui.WidgetWrap):
 
         return self.active.action()
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def chdir(self, path):
+        """
+        Change directory
+        """
+
+        return self.active.chdir(path)
+
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 class Block(lowui.BoxWidget):
@@ -402,7 +425,7 @@ class Block(lowui.BoxWidget):
         _entries.extend(_dirs)
         _entries.extend(_files)
 
-        self._title = self._truncate(_dir.path, self.size.cols - 4, True)
+        self._title = truncate(_dir.path, self.size.cols - 4, self._enc, True)
 
         if hasattr(self, "border"):
             self.border.set_title(self._title)
@@ -529,7 +552,7 @@ class Block(lowui.BoxWidget):
 
             for _obj in self.entries[self._from:self._to]:
                 _text = u"%s%s "% (_obj.vtype, _obj.name)
-                _text = self._truncate(_text, cols)
+                _text = truncate(_text, cols, self._enc)
                 self._display.append(_text)
 
         return self._display
@@ -558,27 +581,6 @@ class Block(lowui.BoxWidget):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _truncate(self, text, cols, backward=False):
-        """
-        Truncate text if its length exceeds cols
-        If backward is True, text will be truncated from the beginning
-        """
-
-        if not type(text) == unicode:
-            text = text.decode(self._enc)
-
-        _len = len(text)
-
-        if _len < cols:
-            return text
-        else:
-            if backward:
-                return u"~%s" % text[-(cols - 1):]
-            else:
-                return u"%s~" % text[:cols - 1]
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     def _get_title_attr(self):
         """
         Return title attr
@@ -597,7 +599,7 @@ class Block(lowui.BoxWidget):
         """
 
         _part2 = vfsobj.info
-        _part1 = self._truncate(vfsobj.visual, cols - len(_part2) - 2)
+        _part1 = truncate(vfsobj.visual, cols - len(_part2) - 2, self._enc)
 
         _text = u"%s%s%s" % (_part1, u" " * (cols - (len(_part1) +
                              len(_part2)) - 1), _part2)

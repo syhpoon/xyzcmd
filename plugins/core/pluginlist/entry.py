@@ -26,13 +26,12 @@ class PluginEntry(lowui.FlowWidget):
     Plugins list entry
     """
 
-    def __init__(self, plugin, selected_attr, enter_cb, enc):
+    def __init__(self, plugin, selected_attr, enter_cb):
         super(PluginEntry, self).__init__()
 
         self.plugin = plugin
         self.enter_cb = enter_cb
 
-        self._enc = enc
         self._keys = uilib.Keys()
 
         self._text = u"%s%*s - %s"
@@ -65,7 +64,7 @@ class PluginEntry(lowui.FlowWidget):
                               self.plugin.BRIEF_DESCRIPTION)
 
         if len(_text) >= maxcol:
-            _text = truncate(_text, maxcol, self._enc)
+            _text = truncate(_text, maxcol, xyzenc)
 
         if focus:
             self._content.set_text((self._attr, _text))
@@ -80,9 +79,10 @@ class PluginEntry(lowui.FlowWidget):
         if key == self._keys.ENTER:
             try:
                 self.enter_cb()
-            except Exception, e:
-                xyzlog.log(_(u"Error in callback: %s" % unicode(e)),
-                             xyzlog.loglevel.ERROR)
-                xyzlog.log(traceback.format_exc(), xyzlog.loglevel.DEBUG)
+            except StandardError, e:
+                xyzlog.log(_(u"Error in entry callback: %s" %
+                           unicode(e, xyzenc)), xyzlog.loglevel.ERROR)
+                xyzlog.log(traceback.format_exc().decode(xyzenc),
+                           xyzlog.loglevel.DEBUG)
         else:
             return key

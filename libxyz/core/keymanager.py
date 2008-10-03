@@ -120,7 +120,7 @@ class KeyManager(object):
         \s+                 # one ore more spaces
         context             # keyword context
         \s+                 # one ore more spaces
-        (?P<context>[\w_%s]+) # context name
+        (?P<context>[:\w_%s]+) # context name
         )?                  # context group end
         \s*                 # trailing spaces
         $                   # end

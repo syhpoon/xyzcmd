@@ -24,6 +24,7 @@ from libxyz.ui import lowui
 from libxyz.ui import Prompt
 from libxyz.ui import ListEntry
 from libxyz.ui import XYZListBox
+from libxyz.ui import NumEntry
 from libxyz.ui import Keys
 from libxyz.ui.utils import refresh
 
@@ -68,14 +69,14 @@ class Cmd(lowui.FlowWidget):
                       (u"prompt", u"$ ", unicode),
                      )
 
-        _conf = self.xyz.conf[u"plugins"]
+        _conf = self._plugin.conf
 
         for _var, _def, _cast in _conf_vars:
             try:
                 if _cast is not None:
-                    _val = _cast(_conf[self.context][_var])
+                    _val = _cast(_conf[_var])
                 else:
-                    _val = _conf[self.context][_var]
+                    _val = _conf[_var]
             except KeyError:
                 _val = _def
             except ValueError, e:
@@ -641,7 +642,7 @@ class Cmd(lowui.FlowWidget):
         _wdata = []
 
         for i in range(len(self._history)):
-            _wdata.append(Entry(u"".join(self._history[i]), _sel_attr, i,
+            _wdata.append(NumEntry(u"".join(self._history[i]), _sel_attr, i,
                           enter_cb=_enter_cb))
 
         _walker = lowui.SimpleListWalker(_wdata)
@@ -653,55 +654,3 @@ class Cmd(lowui.FlowWidget):
 
         XYZListBox(self.xyz, self.xyz.top, _walker, _(u"History"),
                    _dim).show(exit_keys=_ek)
-
-#++++++++++++++++++++++++++++++++++++++++++++++++
-
-class Entry(ListEntry):
-    """
-    Commands history entry
-    """
-
-    def __init__(self, msg, selected_attr, num_order, entry_attr=None,
-                 enter_cb=None):
-        """
-        @param msg: Message
-        @param selected_attr: Atrribute of selected entry
-        @param entry_attr: Entry text attribute
-        @param num_order: Entry number
-        @param enter_cb: Callback to be ran upon ENTER pressed
-        """
-
-        self._num = []
-
-        if callable(enter_cb):
-            self._enter_cb = enter_cb
-        else:
-            self._enter_cb = None
-
-        self.num_order = num_order
-        self._keys = Keys()
-        _msg = u"%d: %s" % (num_order, msg)
-
-        super(Entry, self).__init__(_msg, selected_attr, entry_attr)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def keypress(self, (maxcol,), key):
-        if key == self._keys.ENTER and self._enter_cb:
-            if self._num:
-                _index = int("".join(self._num))
-                self._num = []
-            else:
-                _index = self.num_order
-            try:
-                self._enter_cb(_index)
-            except Exception, e:
-                xyzlog.log(_(u"Error in callback: %s" % unicode(e)),
-                           xyzlog.loglevel.ERROR)
-                xyzlog.log(traceback.format_exc(), xyzlog.loglevel.DEBUG)
-            finally:
-                return key
-        elif key.isdigit():
-            self._num.append(key)
-        else:
-            return key

@@ -38,6 +38,7 @@ __all__ = (
     'Prompt',
     'XYZListBox',
     'ListEntry',
+    'NumEntry',
     'Cmd',
     'Panel',
 )
@@ -62,6 +63,7 @@ from box_input import InputBox
 from box_error import ErrorBox
 from prompt import Prompt
 from xyzlistbox import XYZListBox
-from listentry import ListEntry
+from entry import ListEntry
+from entry import NumEntry
 from cmd import Cmd
 from panel import Panel

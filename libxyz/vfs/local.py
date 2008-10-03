@@ -19,6 +19,7 @@ import os.path
 import stat
 
 from libxyz.exceptions import VFSError
+from libxyz.exceptions import XYZRuntimeError
 from libxyz.vfs import vfsobj
 from libxyz.vfs import types
 from libxyz.vfs import util
@@ -41,7 +42,12 @@ class LocalVFSObject(vfsobj.VFSObject):
         """
 
         top = top or self.path
-        _dir, _dirs, _files = os.walk(top).next()
+
+        try:
+            _dir, _dirs, _files = os.walk(top).next()
+        except StopIteration:
+            raise XYZRuntimeError(_(u"Unable to walk on %s") % top)
+
         _abstop = os.path.abspath(top)
 
         _dirs.sort()

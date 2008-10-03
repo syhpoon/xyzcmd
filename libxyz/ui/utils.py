@@ -26,3 +26,24 @@ def refresh(func):
         return _res
 
     return _touch
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def truncate(text, cols, enc, backward=False):
+    """
+    Truncate text if its length exceeds cols
+    If backward is True, text will be truncated from the beginning
+    """
+
+    if not type(text) == unicode:
+        text = text.decode(enc)
+
+    _len = len(text)
+
+    if _len < cols:
+        return text
+    else:
+        if backward:
+            return u"~%s" % text[-(cols - 1):]
+        else:
+            return u"%s~" % text[:cols - 1]

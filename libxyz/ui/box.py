@@ -41,7 +41,7 @@ class Box(lowui.WidgetWrap):
         self.skin = xyz.skin
         self.message = message
         self.full_width = width
-        self._enc = xyz.conf[u"xyz"][u"local_encoding"]
+        self._enc = xyzenc
 
         self.mount_span = {u"vertical": 2, u"horizontal": 2}
 

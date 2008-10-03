@@ -24,8 +24,12 @@ class VFSObject(object):
     """
 
     def __init__(self, path, enc=None):
-        self.path = path
-        self.enc = enc or "utf8"
+        self.enc = enc or xyzenc
+
+        if isinstance(path, unicode):
+            self.path = path.encode(self.enc)
+        else:
+            self.path = path
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

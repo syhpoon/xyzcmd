@@ -15,6 +15,7 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 from libxyz.ui import lowui
+import libxyz.ui
 
 class ListEntry(lowui.FlowWidget):
     """
@@ -62,3 +63,56 @@ class ListEntry(lowui.FlowWidget):
 
     def keypress(self, (maxcol,), key):
         return key
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+class NumEntry(ListEntry):
+    """
+    Entry in list box which can be activated by pressing corresponding number
+    """
+
+    def __init__(self, msg, selected_attr, num_order, entry_attr=None,
+                 enter_cb=None):
+        """
+        @param msg: Message
+        @param selected_attr: Atrribute of selected entry
+        @param entry_attr: Entry text attribute
+        @param num_order: Entry number
+        @param enter_cb: Callback to be executed upon ENTER pressed
+        """
+
+        self._num = []
+
+        if callable(enter_cb):
+            self._enter_cb = enter_cb
+        else:
+            self._enter_cb = None
+
+        self.num_order = num_order
+        self._keys = libxyz.ui.Keys()
+        _msg = u"%d: %s" % (num_order, msg)
+
+        super(NumEntry, self).__init__(_msg, selected_attr, entry_attr)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def keypress(self, (maxcol,), key):
+        if key == self._keys.ENTER and callable(self._enter_cb):
+            if self._num:
+                _index = int("".join(self._num))
+                self._num = []
+            else:
+                _index = self.num_order
+            try:
+                self._enter_cb(_index)
+            except StandardError, e:
+                xyzlog.log(_(u"Error in entry callback: %s" %
+                           str(e)), xyzlog.loglevel.ERROR)
+                xyzlog.log(traceback.format_exc().decode(xyzenc),
+                           xyzlog.loglevel.DEBUG)
+            finally:
+                return key
+        elif key.isdigit():
+            self._num.append(key)
+        else:
+            return key
