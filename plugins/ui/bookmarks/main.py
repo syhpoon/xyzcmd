@@ -14,52 +14,189 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+from libxyz.ui import lowui
+from libxyz.ui import Keys
+from libxyz.ui import XYZListBox
+from libxyz.ui import NumEntry
+
 from libxyz.core.plugins import BasePlugin
+from libxyz.core import UserData
+from libxyz.parser import FlatParser
+from libxyz.parser import ParsedData
+
+from libxyz.exceptions import XYZRuntimeError
+from libxyz.exceptions import ParseError
 
 class XYZPlugin(BasePlugin):
-    "Plugin bookmarks"
+    "Bookmarks - frequently used directories list"
 
-    # Plugin name
     NAME = u"bookmarks"
-
-    # AUTHOR: Author name
     AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
-
-    # VERSION: Plugin version
     VERSION = u"0.1"
-
-    # Brief one line description
-    BRIEF_DESCRIPTION = u""
-
-    # Full plugin description
+    BRIEF_DESCRIPTION = u"Frequently used directories"
     FULL_DESCRIPTION = u""
-
-    # NAMESPACE: Plugin namespace. For detailed information about
-    #            namespaces see Plugins chapter of XYZCommander user manual.
-    #            Full namespace path to method is:
-    #            xyz:plugins:misc:hello:SayHello
-
     NAMESPACE = u"ui"
-
-    # MIN_XYZ_VERSION: Minimal XYZCommander version
-    #                  the plugin is compatible with
     MIN_XYZ_VERSION = None
-
-    # Plugin documentation
     DOC = None
-
-    # Plugin home-page
-    HOMEPAGE = None
+    HOMEPAGE = u"http://xyzcmd.syhpoon.name/"
 
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 
+        self.export(self.add_bookmark)
+        self.export(self.del_bookmark)
+        self.export(self.show_bookmarks)
+        self.export(self.get_path)
+
+        self._bmsubdir = "data"
+        self._bmfile = "bookmarks"
+        self._ud = UserData()
+        self._keys = Keys()
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def prepare(self):
-        pass
+    def add_bookmark(self, path, name=None):
+        """
+        Add new bookmark entry
+        If name is not specified, path is used instead
+        """
+
+        if name is None:
+            name = path
+
+        path = self._2u(path)
+        name = self._2u(name)
+
+        _data = self._load_data()
+
+        if _data is not None:
+            _data[name] = path
+
+        return self._save_data(_data)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def finalize(self):
-        pass
+    def del_bookmark(self, name):
+        """
+        Delete saved bookmark entry by name
+        """
+
+        name = self._2u(name)
+
+        _data = self._load_data()
+
+        if _data is not None and name in _data:
+            del(_data[name])
+            return self._save_data(_data)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_path(self, name):
+        """
+        Get bookmark path by name
+        """
+
+        name = self._2u(name)
+
+        _data = self._load_data()
+
+        if _data is not None and name in _data:
+            return _data[name]
+
+        return None
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def show_bookmarks(self):
+        """
+        Show currently saved bookmarks and chdir to one of them if needed
+        """
+
+        def _enter_cb(num):
+            if num >= len(_bookmarks):
+                return
+
+            _chdir(_bookmarks.index(num))
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        _bookmarks = self._load_data()
+
+        if _bookmarks is None:
+            return
+
+        _chdir = self.xyz.pm.from_load(u":sys:panel", u"chdir")
+
+        _sel_attr = self.xyz.skin.attr(XYZListBox.resolution, u"selected")
+        _wdata = []
+
+        i = 0
+
+        for b in _bookmarks:
+            _wdata.append(NumEntry(b, _sel_attr, i, enter_cb=_enter_cb))
+            i += 1
+
+        _walker = lowui.SimpleListWalker(_wdata)
+        _dim = tuple([x - 2 for x in self.xyz.screen.get_cols_rows()])
+        _ek = [self._keys.ENTER]
+
+        XYZListBox(self.xyz, self.xyz.top, _walker, _(u"Bookmarks"),
+                   _dim).show(exit_keys=_ek)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _load_data(self):
+        """
+        Load and parse saved bookmarks from file
+        """
+
+        try:
+            _file = self._ud.openfile(self._bmfile, "r", self._bmsubdir)
+        except XYZRuntimeError, e:
+            xyzlog.log(_(u"Unable to open bookmarks file: %s") % str(e),
+                       xyzlog.loglevel.INFO)
+            return ParsedData()
+
+        _parser = FlatParser()
+
+        try:
+            return _parser.parse(_file)
+        except ParseError, e:
+            xyzlog.log(_(u"Error parsing bookmarks file: %s") % str(e),
+                       xyzlog.loglevel.ERROR)
+            return None
+        finally:
+            _file.close()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _save_data(self, data):
+        """
+        Save data to bookmarks file
+        data is a mapping: {name: path}
+        """
+
+        try:
+            _file = self._ud.openfile(self._bmfile, "w", self._bmsubdir)
+        except XYZRuntimeError, e:
+            xyzlog.log("Unable to open bookmarks file: %s" % str(e),
+                       xyzlog.loglevel.INFO)
+            return None
+
+        for _name, _path in data.iteritems():
+            _file.write('"%s": "%s"\n' %
+                        (_name.encode(xyzenc), _path.encode(xyzenc)))
+
+        _file.close()
+
+        return True
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _2u(self, arg):
+        """
+        Convert to unicode if needed
+        """
+
+        if not isinstance(arg, unicode):
+            return arg.decode(xyzenc)
