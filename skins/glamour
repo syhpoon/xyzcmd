@@ -11,7 +11,7 @@ fs.rules {
 	# Executables
 	"type{file} and perm{+0111}" = LIGHT_GREEN, &BG
 
-	'''regexp{".*\\.core$"}''' = DARK_RED, &BG
+	'''type{file} and regexp{".*\\.core$"}''' = DARK_RED, &BG
 	'''regexp{"^\\.{1}[^.]"}''' = DARK_GRAY, &BG
 
 	"type{file}" = LIGHT_GRAY, &BG
