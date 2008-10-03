@@ -37,14 +37,14 @@
      inkscape:pageshadow="2"
      inkscape:zoom="0.85970889"
      inkscape:cx="174.5"
-     inkscape:cy="608.94991"
+     inkscape:cy="590.67385"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:window-width="1280"
-     inkscape:window-height="773"
+     inkscape:window-width="1276"
+     inkscape:window-height="771"
      inkscape:window-x="0"
      inkscape:window-y="0" />
   <metadata
@@ -62,75 +62,38 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <g
-       id="g2536"
-       inkscape:export-filename="/usr/home/syhpoon/UNIX/Работа/Программирование/Языки/python/Проекты/xyzcmd/xyzcmd-work/img/logo.png"
+    <text
+       xml:space="preserve"
+       style="font-size:56px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:CASMIRA;-inkscape-font-specification:CASMIRA Bold"
+       x="68.627884"
+       y="298.61868"
+       id="text2390"
+       sodipodi:linespacing="125%"
        inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90">
-      <g
-         transform="matrix(0.5924321,0,0,0.527073,121.91289,220.54402)"
-         id="g2473">
-        <rect
-           style="opacity:1;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.48198497;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:6.19999981;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-           id="rect2465"
-           width="8.2460146"
-           height="227.246"
-           x="154.877"
-           y="213.23918" />
-        <rect
-           style="opacity:1;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.48198497;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:6.19999981;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-           id="rect2469"
-           width="8.2460146"
-           height="227.246"
-           x="-300.8197"
-           y="356.05948"
-           transform="matrix(0.5000449,-0.8659995,0.8659995,0.5000449,0,0)"
-           inkscape:transform-center-x="20"
-           inkscape:transform-center-y="53" />
-        <rect
-           style="opacity:1;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.48198497;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:6.19999981;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-           id="rect2471"
-           width="8.2460146"
-           height="227.246"
-           x="452.20102"
-           y="-304.33255"
-           transform="matrix(0.5000449,0.8659995,0.8659995,-0.5000449,0,0)"
-           inkscape:transform-center-x="19.999982"
-           inkscape:transform-center-y="-52.999987" />
-      </g>
-      <text
-         sodipodi:linespacing="125%"
-         id="text2496"
-         y="574.0545"
-         x="60.343716"
-         style="font-size:165.05944824px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:CASMIRA;-inkscape-font-specification:CASMIRA Bold"
-         xml:space="preserve"><tspan
-           y="574.0545"
-           x="60.343716"
-           id="tspan2500"
-           sodipodi:role="line">X</tspan></text>
-      <text
-         sodipodi:linespacing="125%"
-         id="text2502"
-         y="346.89569"
-         x="192.21771"
-         style="font-size:165.05944824px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:CASMIRA;-inkscape-font-specification:CASMIRA Bold"
-         xml:space="preserve"><tspan
-           y="346.89569"
-           x="192.21771"
-           id="tspan2506"
-           sodipodi:role="line">Y</tspan></text>
-      <text
-         sodipodi:linespacing="125%"
-         id="text2508"
-         y="560.20984"
-         x="303.6669"
-         style="font-size:165.05944824px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:CASMIRA;-inkscape-font-specification:CASMIRA Bold"
-         xml:space="preserve"><tspan
-           y="560.20984"
-           x="303.6669"
-           id="tspan2512"
-           sodipodi:role="line">Z</tspan></text>
-    </g>
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan2392"
+         x="68.627884"
+         y="298.61868">XYZCommander</tspan></text>
+    <rect
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.72799999;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:6.19999981;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect2424"
+       width="339.64984"
+       height="125.62392"
+       x="69.791069"
+       y="381.20477" />
+    <text
+       xml:space="preserve"
+       style="font-size:56px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:CASMIRA;-inkscape-font-specification:CASMIRA Bold"
+       x="103.20473"
+       y="471.37982"
+       id="text2426"
+       sodipodi:linespacing="125%"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan2428"
+         x="103.20473"
+         y="471.37982">XYZCommander</tspan></text>
   </g>
 </svg>
