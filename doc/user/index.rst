@@ -10,6 +10,7 @@ Contents:
    :maxdepth: 2
 
    configs
+   fs_rules
    skins
    plugins
    stdplugins

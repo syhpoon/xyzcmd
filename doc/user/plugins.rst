@@ -168,7 +168,9 @@ For example, if we'd have following block in plugins config::
    }
 
 Plugin :misc:hello can access ``show_version`` variable as::
+   show_version = self.conf[u"show_version"]
 
+or::
    show_version = xyz.conf[u"plugins"][u":misc:hello"][u"show_version"]
 
 Virtual plugins
