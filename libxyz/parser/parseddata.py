@@ -51,7 +51,8 @@ class ParsedData(DictMixin):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __str__(self):
-        return u"<ParsedData object: %s>" % unicode([(k, v) for k, v in self.iteritems()])
+        return u"<ParsedData object: %s>" % unicode([(k, v)
+                                                for k, v in self.iteritems()])
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -70,6 +71,16 @@ class ParsedData(DictMixin):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def __delitem__(self, var):
+        try:
+            _at = self._keys.index(var)
+            del(self._keys[_at])
+            del(self._values[_at])
+        except ValueError:
+            raise KeyError()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def __contains__(self, key):
         return key in self._keys
 
@@ -77,6 +88,18 @@ class ParsedData(DictMixin):
 
     def __iter__(self):
         return (_k for _k in self._keys)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get(self, var, default):
+        """
+        Lookup for var or return default
+        """
+
+        try:
+            self.lookup(var)
+        except KeyError:
+            return default
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -68,6 +68,9 @@ class SourceData(object):
         else:
             _res = self._next_me()
 
+        if not isinstance(_res, unicode):
+            _res = _res.decode(xyzenc)
+
         if _res == u"\n":
             self.lineno += 1
 
@@ -94,7 +97,7 @@ class SourceData(object):
             raise StopIteration()
 
         if not self._bytes:
-            _nl = self._source.find("\n")
+            _nl = self._source.find(u"\n")
 
             if _nl == -1:
                 _data = self._source[self._index:]
