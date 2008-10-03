@@ -69,6 +69,11 @@ class BasePlugin(object):
 
         self.ns = Namespace(u":".join(("", self.NAMESPACE, self.NAME)))
 
+        try:
+            self.conf = self.xyz.conf[u"plugins"][self.ns.pfull]
+        except KeyError:
+            self.conf = {}
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __getattr__(self, method):
