@@ -22,8 +22,10 @@ import sys
 import gettext
 import getopt
 import re
+import locale
 import os
 import os.path
+import __builtin__
 
 import libxyz
 import libxyz.ui as uilib
@@ -75,6 +77,8 @@ class Launcher(object):
         Run commander
         """
 
+        self._set_enc()
+
         self.parse_args()
         self.parse_configs()
         self.init_skin()
@@ -89,6 +93,17 @@ class Launcher(object):
         self.xyz.screen.register_palette(self.xyz.skin.get_palette_list())
         self.xyz.skin.set_screen(self.xyz.screen)
         self.xyz.screen.run_wrapper(self._run)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _set_enc(self):
+        """
+        Try to preset local_encoding using current locale settings.
+        After xyz conf is parsed, this value will be overriden by
+        local_encoding from conf if was defined
+        """
+
+        __builtin__.__dict__["xyzenc"] = locale.getpreferredencoding()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -129,10 +144,8 @@ class Launcher(object):
 
     def init_logger(self):
         """
-        Initiate Logger object and set it to builtin namespace
+        Initiate Logger object and put it to builtin namespace
         """
-
-        import __builtin__
 
         _log = logger.LogLevel()
 
@@ -206,6 +219,11 @@ class Launcher(object):
 
         self.xyz.conf[u"xyz"] = self._parse_conf_xyz()
         self.xyz.conf[u"plugins"] = self._parse_conf_plugins()
+
+        # local_encoding set, override guessed encoding
+        if u"local_encoding" in self.xyz.conf[u"xyz"]:
+            __builtin__.__dict__["xyzenc"] = \
+                                      self.xyz.conf[u"xyz"][u"local_encoding"]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
