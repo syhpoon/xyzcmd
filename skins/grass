@@ -64,6 +64,7 @@ ui.panel {
 	cwdtitleinact = WHITE, &BG
 	panel = LIGHT_GRAY, &BG
 	cursor = BLACK, LIGHT_GRAY
+	search = WHITE, DARK_CYAN
 	info = WHITE, &BG
 	border = WHITE, &BG
 	tagged = LIGHT_CYAN, &BG

@@ -43,6 +43,7 @@ ui.panel {
 	cwdtitleinact = WHITE, DEFAULT
 	panel = DEFAULT, DEFAULT
 	cursor = BLACK, &BG
+	search = WHITE, DEFAULT
 	info = WHITE, DEFAULT
 	border = DEFAULT, DEFAULT
 	tagged = WHITE, DEFAULT

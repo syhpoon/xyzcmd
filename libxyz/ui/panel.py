@@ -158,6 +158,8 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.reload)
         _panel_plugin.export(self.action)
         _panel_plugin.export(self.chdir)
+        _panel_plugin.export(self.search_forward)
+        _panel_plugin.export(self.search_backward)
 
         _panel_plugin.VERSION = u"0.1"
         _panel_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
@@ -358,6 +360,24 @@ class Panel(lowui.WidgetWrap):
 
         return self.active.chdir(path)
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def search_forward(self):
+        """
+        Enable forward search-when-you-type mode
+        """
+
+        self.active.search_forward()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def search_backward(self):
+        """
+        Enable backward search-when-you-type mode
+        """
+
+        self.active.search_backward()
+
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 class Block(lowui.BoxWidget):
@@ -390,6 +410,10 @@ class Block(lowui.BoxWidget):
         self._from = 0
         self._to = 0
         self._force_reload = False
+
+        self._cursor_attr = None
+        self._custom_info = None
+        self._keys = libxyz.ui.Keys()
 
         self._enc = enc
         self._setup(vfsobj)
@@ -460,7 +484,10 @@ class Block(lowui.BoxWidget):
             else:
                 _act(maxcol, maxrow)
 
-        self._set_info(self.entries[self.selected], maxcol)
+        if self._custom_info is not None:
+            self._set_custom_info(self._custom_info, maxcol)
+        else:
+            self._set_info(self.entries[self.selected], maxcol)
 
         _tlen = len(self._tagged)
 
@@ -488,7 +515,9 @@ class Block(lowui.BoxWidget):
             _own_attr = None
             _abs_i = self._from + i
 
-            if self.active and i == self._vindex:
+            if self._cursor_attr is not None and i == self._vindex:
+                _own_attr = self._cursor_attr
+            elif self.active and i == self._vindex:
                 _own_attr = self.attr(u"cursor")
             elif _abs_i in self._tagged:
                 _own_attr = self.attr(u"tagged")
@@ -604,6 +633,16 @@ class Block(lowui.BoxWidget):
         _text = u"%s%s%s" % (_part1, u" " * (cols - (len(_part1) +
                              len(_part2)) - 1), _part2)
 
+        self._winfo.set_text(_text.encode(self._enc))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _set_custom_info(self, custom_text, cols):
+        """
+        Set custom info text
+        """
+
+        _text = truncate(custom_text, cols, self._enc, True)
         self._winfo.set_text(_text.encode(self._enc))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -914,3 +953,70 @@ class Block(lowui.BoxWidget):
 
         # TODO: 2-3 level cache
         del(_old_vfs)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @refresh
+    def search_forward(self):
+        """
+        Search forward for matching object while user types
+        """
+
+        return self._search_engine(lambda x: (xrange(x, self._len)))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @refresh
+    def search_backward(self):
+        """
+        Search backward for matching object while user types
+        """
+
+        return self._search_engine(lambda x: (xrange(x, 0, -1)))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _search_engine(self, order):
+        """
+        Search for matching filenames while user types
+        @param order: A function that returns generator for search order
+        """
+
+        self._cursor_attr = self.attr(u"search")
+
+        _dim = self.xyz.screen.get_cols_rows()
+        _collected = []
+
+        _current_pos = self.selected
+
+        # Starting internal read loop
+        while True:
+            self._custom_info = u"".join(_collected)
+
+            self._invalidate()
+            self.xyz.screen.draw_screen(_dim, self.xyz.top.render(_dim, True))
+
+            try:
+                _raw = self.xyz.input.get()
+
+                if self._keys.ESCAPE in _raw or self._keys.ENTER in _raw:
+                    break
+                elif self._keys.BACKSPACE in _raw:
+                    if _collected:
+                        _collected.pop()
+
+                _tmp = _collected[:]
+                _tmp.extend([x.decode(self._enc) for x in _raw if len(x) == 1])
+                _pattern = u"".join(_tmp)
+            except Exception:
+                break
+
+            # Search
+            for i in order(_current_pos):
+                if self.entries[i].name.startswith(_pattern):
+                    self.selected = i
+                    _collected = _tmp
+                    break
+
+        self._cursor_attr = None
+        self._custom_info = None
