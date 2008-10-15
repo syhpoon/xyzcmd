@@ -41,3 +41,24 @@ def get_file_type(st_mode):
             return _type()
 
     return vfstypes.VFSTypeUnknown()
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def format_size(size):
+    """
+    Format file-object size
+    """
+
+    _s = long(size)
+
+    _data = (
+             (1024 * 1024 * 1024, u"G", lambda x, y: u"%.2f" % (float(x) / y)),
+             (1024 * 1024, u"M", lambda x, y: unicode(x / y)),
+             (1024, u"K", lambda x, y: unicode(x / y)),
+             )
+
+    for _size, _suffix, _func in _data:
+        if _s >= _size:
+            return u"%s%s" % (_func(_s, _size), _suffix)
+
+    return size

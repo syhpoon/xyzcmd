@@ -158,7 +158,7 @@ class LocalVFSFile(vfsobj.VFSFile):
         self.gid = self._stat.st_gid
         self.mode = mode.Mode(self._stat.st_mode)
         self.visual = u"%s%s" % (self.vtype, self.name)
-        self.info = u"%s %s" % (self.size, self.mode)
+        self.info = u"%s %s" % (util.format_size(self.size), self.mode)
 
         if isinstance(self.ftype, types.VFSTypeLink):
             set_link_attributes()
