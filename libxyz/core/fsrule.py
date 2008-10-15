@@ -26,202 +26,6 @@ from libxyz.exceptions import LexerError
 from libxyz.vfs.vfsobj import  VFSFile
 from libxyz.vfs.types import *
 
-# Here go grammar and closures
-# Grammar
-
-# 0 $accept: start $end
-# 1 start: rule
-# 2 rule: expr
-# 3     | expr op rule
-# 4 expr: expr_body
-# 5     | NOT expr_body
-# 6     | "(" rule ")"
-# 7 expr_body: ftype "{" ARG "}"
-# 8 op: AND
-# 9   | OR
-# 10 ftype: TYPE
-# 11      | PERM
-# 12      | OWNER
-# 13      | REGEXP
-# 131     | LINK_TYPE
-#         | LINK_PERM
-#         | LINK_OWNER
-#         | LINK_REGEXP
-#         | LINK_EXISTS
-# 14 expr_body: NOT ftype "{" ARG "}"
-
-# Closures
-
-# state 0
-#    0 $accept: . start $end
-#    NOT         shift, and go to state 1
-#    TYPE        shift, and go to state 2
-#    PERM        shift, and go to state 3
-#    OWNER       shift, and go to state 4
-#    REGEXP      shift, and go to state 5
-#    LINK_TYPE   shift, and go to state 27
-#    LINK_PERM   shift, and go to state 27
-#    LINK_OWNER  shift, and go to state 27
-#    LINK_REGEXP shift, and go to state 27
-#    LINK_EXISTS shift, and go to state 27
-#    "("         shift, and go to state 6
-#    start       go to state 7
-#    rule        go to state 8
-#    expr        go to state 9
-#    expr_body   go to state 10
-#    ftype       go to state 11
-
-# state 1
-#    5 expr: NOT . expr_body
-#    TYPE    shift, and go to state 2
-#    PERM    shift, and go to state 3
-#    OWNER   shift, and go to state 4
-#    REGEXP  shift, and go to state 5
-#    LINK_TYPE   shift, and go to state 27
-#    LINK_PERM   shift, and go to state 27
-#    LINK_OWNER  shift, and go to state 27
-#    LINK_REGEXP shift, and go to state 27
-#    LINK_EXISTS shift, and go to state 27
-#    expr_body  go to state 12
-#    ftype      go to state 23
-
-# state 2
-#    10 ftype: TYPE .
-#    $default  reduce using rule 10 (ftype)
-
-# state 3
-#    11 ftype: PERM .
-#    $default  reduce using rule 11 (ftype)
-
-# state 4
-#    12 ftype: OWNER .
-#    $default  reduce using rule 12 (ftype)
-
-# state 5
-#    13 ftype: REGEXP .
-#    $default  reduce using rule 13 (ftype)
-
-# state 6
-#    6 expr: "(" . rule ")"
-#    NOT     shift, and go to state 1
-#    TYPE    shift, and go to state 2
-#    PERM    shift, and go to state 3
-#    OWNER   shift, and go to state 4
-#    REGEXP  shift, and go to state 5
-#    LINK_TYPE   shift, and go to state 27
-#    LINK_PERM   shift, and go to state 27
-#    LINK_OWNER  shift, and go to state 27
-#    LINK_REGEXP shift, and go to state 27
-#    LINK_EXISTS shift, and go to state 27
-#    "("     shift, and go to state 6
-#    rule       go to state 13
-#    expr       go to state 9
-#    expr_body  go to state 10
-#    ftype      go to state 11
-
-# state 7
-#    0 $accept: start . $end
-#    $end  shift, and go to state 14
-
-# state 8
-#    1 start: rule .
-#    $default  reduce using rule 1 (start)
-
-# state 9
-#    2 rule: expr .
-#    3     | expr . op rule
-#    AND  shift, and go to state 15
-#    OR   shift, and go to state 16
-#    $default  reduce using rule 2 (rule)
-#    op  go to state 17
-
-# state 10
-#    4 expr: expr_body .
-#    $default  reduce using rule 4 (expr)
-
-# state 11
-#    7 expr_body: ftype . "{" ARG "}"
-#    "{"  shift, and go to state 18
-
-# state 12
-#    5 expr: NOT expr_body .
-#    $default  reduce using rule 5 (expr)
-
-# state 13
-#    6 expr: "(" rule . ")"
-#    ")"  shift, and go to state 19
-
-# state 14
-#    0 $accept: start $end .
-#    $default  accept
-
-# state 15
-#    8 op: AND .
-#    $default  reduce using rule 8 (op)
-
-# state 16
-#    9 op: OR .
-#    $default  reduce using rule 9 (op)
-
-#state 17
-#    3 rule: expr op . rule
-#    NOT     shift, and go to state 1
-#    TYPE    shift, and go to state 2
-#    PERM    shift, and go to state 3
-#    OWNER   shift, and go to state 4
-#    REGEXP  shift, and go to state 5
-#    LINK_TYPE   shift, and go to state 27
-#    LINK_PERM   shift, and go to state 27
-#    LINK_OWNER  shift, and go to state 27
-#    LINK_REGEXP shift, and go to state 27
-#    LINK_EXISTS shift, and go to state 27
-#    "("     shift, and go to state 6
-#    rule       go to state 20
-#    expr       go to state 9
-#    expr_body  go to state 10
-#    ftype      go to state 11
-
-# state 18
-#    7 expr_body: ftype "{" . ARG "}"
-#    ARG  shift, and go to state 21
-
-# state 19
-#    6 expr: "(" rule ")" .
-#    $default  reduce using rule 6 (expr)
-
-# state 20
-#    3 rule: expr op rule .
-#    $default  reduce using rule 3 (rule)
-
-# state 21
-#    7 expr_body: ftype "{" ARG . "}"
-#    "}"  shift, and go to state 22
-
-# state 22
-#    7 expr_body: ftype "{" ARG "}" .
-#    $default  reduce using rule 7 (expr_body)
-
-# state 23
-#    7 expr_body: NOT ftype . "{" ARG "}"
-#    "{"  shift, and go to state 24
-
-# state 24
-#    7 expr_body: NOT ftype "{" . ARG "}"
-#    ARG  shift, and go to state 25
-
-# state 25
-#    7 expr_body: NOT ftype "{" ARG . "}"
-#    "}"  shift, and go to state 26
-
-# state 26
-#    7 expr_body: NOT ftype "{" ARG "}" .
-#    $default  reduce using rule 14 (expr_body)
-
-# state 27
-#    10 ftype: LINK_FTYPE .
-#    $default  reduce using rule 131 (ftype)
-
-
 class FSRule(parser.BaseParser):
     """
     FS rule parser
@@ -238,6 +42,7 @@ class FSRule(parser.BaseParser):
     ftype           ::= TYPE | PERM | OWNER | REGEXP
                         | LINK_TYPE | LINK_PERM | LINK_OWNER | LINK_REGEXP
                         | LINK_EXISTS
+                        | SIZE | LINK_SIZE
 
     Examples:
 
@@ -250,11 +55,13 @@ class FSRule(parser.BaseParser):
     TOKEN_PERM = "perm"
     TOKEN_OWNER = "owner"
     TOKEN_REGEXP = "regexp"
+    TOKEN_SIZE = "size"
     TOKEN_LINK_TYPE = "link_type"
     TOKEN_LINK_PERM = "link_perm"
     TOKEN_LINK_OWNER = "link_owner"
     TOKEN_LINK_REGEXP = "link_regexp"
     TOKEN_LINK_EXISTS = "link_exists"
+    TOKEN_LINK_SIZE = "link_size"
     TOKEN_AND = "and"
     TOKEN_OR = "or"
     TOKEN_NOT = "not"
@@ -270,7 +77,8 @@ class FSRule(parser.BaseParser):
               TOKEN_LINK_TYPE, TOKEN_LINK_PERM, TOKEN_LINK_OWNER,
               TOKEN_LINK_REGEXP, TOKEN_LINK_EXISTS, TOKEN_AND, TOKEN_OR,
               TOKEN_NOT, TOKEN_OPEN_BR, TOKEN_CLOSE_BR,
-              TOKEN_OPEN_PAR, TOKEN_CLOSE_PAR, TOKEN_DEFAULT, EOF)
+              TOKEN_OPEN_PAR, TOKEN_CLOSE_PAR, TOKEN_DEFAULT,
+              TOKEN_SIZE, TOKEN_LINK_SIZE, EOF)
 
     # Nonterminals
     NTOKEN_START = 100
@@ -284,11 +92,13 @@ class FSRule(parser.BaseParser):
              TOKEN_PERM,
              TOKEN_OWNER,
              TOKEN_REGEXP,
+             TOKEN_SIZE,
              TOKEN_LINK_TYPE,
              TOKEN_LINK_PERM,
              TOKEN_LINK_OWNER,
              TOKEN_LINK_REGEXP,
              TOKEN_LINK_EXISTS,
+             TOKEN_LINK_SIZE,
             )
 
     INFIX_OP = (TOKEN_AND, TOKEN_OR)
@@ -317,11 +127,13 @@ class FSRule(parser.BaseParser):
         self._action.add(0, self.TOKEN_PERM, (_s, 3))
         self._action.add(0, self.TOKEN_OWNER, (_s, 4))
         self._action.add(0, self.TOKEN_REGEXP, (_s, 5))
+        self._action.add(0, self.TOKEN_SIZE, (_s, 27))
         self._action.add(0, self.TOKEN_LINK_TYPE, (_s, 27))
         self._action.add(0, self.TOKEN_LINK_PERM, (_s, 27))
         self._action.add(0, self.TOKEN_LINK_OWNER, (_s, 27))
         self._action.add(0, self.TOKEN_LINK_REGEXP, (_s, 27))
         self._action.add(0, self.TOKEN_LINK_EXISTS, (_s, 27))
+        self._action.add(0, self.TOKEN_LINK_SIZE, (_s, 27))
         self._action.add(0, self.TOKEN_NOT, (_s, 1))
         self._action.add(0, self.TOKEN_OPEN_PAR, (_s, 6))
 
@@ -329,11 +141,13 @@ class FSRule(parser.BaseParser):
         self._action.add(1, self.TOKEN_PERM, (_s, 3))
         self._action.add(1, self.TOKEN_OWNER, (_s, 4))
         self._action.add(1, self.TOKEN_REGEXP, (_s, 5))
+        self._action.add(1, self.TOKEN_SIZE, (_s, 27))
         self._action.add(1, self.TOKEN_LINK_TYPE, (_s, 27))
         self._action.add(1, self.TOKEN_LINK_PERM, (_s, 27))
         self._action.add(1, self.TOKEN_LINK_OWNER, (_s, 27))
         self._action.add(1, self.TOKEN_LINK_REGEXP, (_s, 27))
         self._action.add(1, self.TOKEN_LINK_EXISTS, (_s, 27))
+        self._action.add(1, self.TOKEN_LINK_SIZE, (_s, 27))
 
         self._action.add(2, self.TOKEN_DEFAULT, (_r, 10))
         self._action.add(3, self.TOKEN_DEFAULT, (_r, 11))
@@ -344,11 +158,13 @@ class FSRule(parser.BaseParser):
         self._action.add(6, self.TOKEN_PERM, (_s, 3))
         self._action.add(6, self.TOKEN_OWNER, (_s, 4))
         self._action.add(6, self.TOKEN_REGEXP, (_s, 5))
+        self._action.add(6, self.TOKEN_SIZE, (_s, 27))
         self._action.add(6, self.TOKEN_LINK_TYPE, (_s, 27))
         self._action.add(6, self.TOKEN_LINK_PERM, (_s, 27))
         self._action.add(6, self.TOKEN_LINK_OWNER, (_s, 27))
         self._action.add(6, self.TOKEN_LINK_REGEXP, (_s, 27))
         self._action.add(6, self.TOKEN_LINK_EXISTS, (_s, 27))
+        self._action.add(6, self.TOKEN_LINK_SIZE, (_s, 27))
         self._action.add(6, self.TOKEN_NOT, (_s, 1))
         self._action.add(6, self.TOKEN_OPEN_PAR, (_s, 6))
 
@@ -371,11 +187,13 @@ class FSRule(parser.BaseParser):
         self._action.add(17, self.TOKEN_PERM, (_s, 3))
         self._action.add(17, self.TOKEN_OWNER, (_s, 4))
         self._action.add(17, self.TOKEN_REGEXP, (_s, 5))
+        self._action.add(17, self.TOKEN_SIZE, (_s, 27))
         self._action.add(17, self.TOKEN_LINK_TYPE, (_s, 27))
         self._action.add(17, self.TOKEN_LINK_PERM, (_s, 27))
         self._action.add(17, self.TOKEN_LINK_OWNER, (_s, 27))
         self._action.add(17, self.TOKEN_LINK_REGEXP, (_s, 27))
         self._action.add(17, self.TOKEN_LINK_EXISTS, (_s, 27))
+        self._action.add(17, self.TOKEN_LINK_SIZE, (_s, 27))
         self._action.add(17, self.TOKEN_NOT, (_s, 1))
         self._action.add(17, self.TOKEN_OPEN_PAR, (_s, 6))
 
@@ -576,10 +394,12 @@ class FSRule(parser.BaseParser):
                       u"regexp": self._regexp,
                       u"owner": self._owner,
                       u"perm": self._perm,
+                      u"size": self._size,
                       u"link_type": self._type,
                       u"link_regexp": self._regexp,
                       u"link_owner": self._owner,
                       u"link_perm": self._perm,
+                      u"link_size": self._size,
                      }
 
         try:
@@ -701,6 +521,31 @@ class FSRule(parser.BaseParser):
 
         return (_any, _perm)
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _size(self, arg):
+        _bytes = {
+                  u"B": 1,
+                  u"K": 1024,
+                  u"M": 1024 * 1024,
+                  u"G": 1024 * 1024 * 1024,
+                  u"T": 1024 * 1024 * 1024 * 1024,
+                 }
+
+        _re = re.match(r"^\s*([<>]?\=?)\s*(\d+)\s*([BbKkMmGgTt]?)\s*$", arg)
+
+        if _re is None:
+            self.error(_(u"Invalid size{} argument: %s") % arg)
+        else:
+            _op = _re.group(1) or u"="
+            _size = long(_re.group(2))
+            _mod = _re.group(3) or None
+
+        if _mod is not None:
+            _size *= _bytes[_mod.upper()]
+
+        return (_op, _size)
+
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 def link(func):
@@ -752,18 +597,19 @@ class Expression(object):
             if arg[0] is not None and arg[1] is not None:
                 if (obj.uid, obj.gid) == arg:
                     return True
-            elif arg[0] is not None:
-                if obj.uid == arg[0]:
-                    return True
-            elif arg[1] is not None:
-                if obj.gid == arg[1]:
-                    return True
+            elif arg[0] is not None and obj.uid == arg[0]:
+                return True
+            elif arg[1] is not None and obj.gid == arg[1]:
+                return True
 
             return False
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         def _match_perm(obj, arg):
+            if obj.mode is None:
+                return False
+
             _any, _m = arg
             _mode = stat.S_IMODE(obj.mode.raw)
 
@@ -776,10 +622,23 @@ class Expression(object):
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        _match_link_type = link(_match_type)
-        _match_link_regexp = link(_match_regexp)
-        _match_link_owner = link(_match_owner)
-        _match_link_perm = link(_match_perm)
+        def _match_size(obj, args):
+            if obj.size is None:
+                return False
+
+            _op, _size = args
+
+            _data = {u">": lambda x, y: x > y,
+                     u">=": lambda x, y: x >= y,
+                     u"<": lambda x, y: x < y,
+                     u"<=": lambda x, y: x <= y,
+                     u"=": lambda x, y: x == y,
+                    }
+
+            if _op in _data and _data[_op](obj.size, _size):
+                return True
+
+            return False
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -791,16 +650,26 @@ class Expression(object):
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+        _match_link_type = link(_match_type)
+        _match_link_regexp = link(_match_regexp)
+        _match_link_owner = link(_match_owner)
+        _match_link_perm = link(_match_perm)
+        _match_link_size = link(_match_size)
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         _match_f = {
                     u"type": _match_type,
                     u"regexp": _match_regexp,
                     u"owner": _match_owner,
                     u"perm": _match_perm,
+                    u"size": _match_size,
                     u"link_type": _match_link_type,
                     u"link_regexp": _match_link_regexp,
                     u"link_owner": _match_link_owner,
                     u"link_perm": _match_link_perm,
                     u"link_exists": _match_link_exists,
+                    u"link_size": _match_link_size,
                    }
 
         _res = _match_f[self.otype](vfsobj, self.arg)
