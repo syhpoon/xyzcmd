@@ -23,6 +23,7 @@ import libxyz.parser as parser
 
 from libxyz.exceptions import XYZValueError
 from libxyz.exceptions import LexerError
+from libxyz.exceptions import FSRuleError
 from libxyz.vfs.vfsobj import  VFSFile
 from libxyz.vfs.types import *
 
@@ -73,12 +74,15 @@ class FSRule(parser.BaseParser):
     TOKEN_ARG = False
     EOF = None
 
-    TOKENS = (TOKEN_TYPE, TOKEN_PERM, TOKEN_OWNER, TOKEN_REGEXP,
+    TOKENS_EXTENDED = []
+    TRANSFORM_EXTENDED = {}
+
+    TOKENS = [TOKEN_TYPE, TOKEN_PERM, TOKEN_OWNER, TOKEN_REGEXP,
               TOKEN_LINK_TYPE, TOKEN_LINK_PERM, TOKEN_LINK_OWNER,
               TOKEN_LINK_REGEXP, TOKEN_LINK_EXISTS, TOKEN_AND, TOKEN_OR,
               TOKEN_NOT, TOKEN_OPEN_BR, TOKEN_CLOSE_BR,
               TOKEN_OPEN_PAR, TOKEN_CLOSE_PAR, TOKEN_DEFAULT,
-              TOKEN_SIZE, TOKEN_LINK_SIZE, EOF)
+              TOKEN_SIZE, TOKEN_LINK_SIZE, EOF]
 
     # Nonterminals
     NTOKEN_START = 100
@@ -88,7 +92,7 @@ class FSRule(parser.BaseParser):
     NTOKEN_OP = 104
     NTOKEN_FTYPE = 105
 
-    FTYPE = (TOKEN_TYPE,
+    FTYPE = [TOKEN_TYPE,
              TOKEN_PERM,
              TOKEN_OWNER,
              TOKEN_REGEXP,
@@ -99,9 +103,69 @@ class FSRule(parser.BaseParser):
              TOKEN_LINK_REGEXP,
              TOKEN_LINK_EXISTS,
              TOKEN_LINK_SIZE,
-            )
+            ]
 
     INFIX_OP = (TOKEN_AND, TOKEN_OR)
+
+    @classmethod
+    def extend(cls, token, trans_func, match_func):
+        """
+        Extend FSRule parser with new expressions
+        @param token: new token expression
+        @param trans_func: Transformation function
+        @param match_func: Match function
+        """
+
+        if token in cls.TOKENS_EXTENDED or token in cls.TOKENS or \
+        token in cls.FTYPE:
+            raise FSRuleError(_(u"Error extending FSRule: "\
+                                u"token %s already registered") % token)
+
+        # 1. Append token to lists
+        cls.TOKENS_EXTENDED.append(token)
+        cls.TOKENS.append(token)
+        cls.FTYPE.append(token)
+
+        # 2. Add transformation func
+        if trans_func is not None:
+            cls.TRANSFORM_EXTENDED[token] = trans_func
+
+        # 3. Add match func
+        Expression.extend(token, match_func)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def unextend(cls, token):
+        """
+        Remove extended expression from parser
+        """
+
+        if token not in cls.TOKENS_EXTENDED:
+            return False
+
+        try:
+            cls.TOKENS_EXTENDED.remove(token)
+        except ValueError:
+            pass
+
+        try:
+            cls.TOKENS.remove(token)
+        except ValueError:
+            pass
+
+        try:
+            cls.FTYPE.remove(token)
+        except ValueError:
+            pass
+
+        try:
+            del(cls.TRANSFORM_EXTENDED[token])
+        except KeyError:
+            pass
+
+        Expression.unextend(token)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __init__(self, rule):
         """
@@ -207,6 +271,11 @@ class FSRule(parser.BaseParser):
         self._action.add(25, self.TOKEN_CLOSE_BR, (_s, 26))
         self._action.add(26, self.TOKEN_DEFAULT, (_r, 14))
         self._action.add(27, self.TOKEN_DEFAULT, (_r, 131))
+
+        # For extended functionality
+        for _ext_token in self.TOKENS_EXTENDED:
+            for _state in (0, 1, 6, 17):
+                self._action.add(_state, _ext_token, (_s, 27))
 
         self._rules = parser.lr.Rules()
 
@@ -412,11 +481,14 @@ class FSRule(parser.BaseParser):
             self._cur_obj.otype = self._stack[-2]
         elif rule in (7, 14):
             _arg = self._stack[-4]
+            _cur = self._cur_obj
 
-            if self._cur_obj.otype in _transform:
-                self._cur_obj.arg = _transform[self._cur_obj.otype](_arg)
+            if _cur.otype in _transform:
+                _cur.arg = _transform[_cur.otype](_arg)
+            elif _cur.otype in self.TRANSFORM_EXTENDED:
+                _cur.arg = self.TRANSFORM_EXTENDED[_cur.otype](_arg)
             else:
-                self._cur_obj.arg = _arg
+                _cur.arg = _arg
 
             if rule == 14:
                 self._cur_obj.negative = True
@@ -568,6 +640,23 @@ class Expression(object):
     FS rule expression class
     """
 
+    MATCH_EXTENDED = {}
+
+    @classmethod
+    def extend(cls, token, match_func):
+        cls.MATCH_EXTENDED[token] = match_func
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    def unextend(cls, token):
+        try:
+            del(cls.MATCH_EXTENDED[token])
+        except KeyError:
+            pass
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def __init__(self):
         self.otype = None
         self.arg = None
@@ -672,7 +761,13 @@ class Expression(object):
                     u"link_size": _match_link_size,
                    }
 
-        _res = _match_f[self.otype](vfsobj, self.arg)
+        if self.otype in _match_f:
+            _res = _match_f[self.otype](vfsobj, self.arg)
+        elif self.otype in self.MATCH_EXTENDED:
+            _res = self.MATCH_EXTENDED[self.otype](vfsobj, self.arg)
+        else:
+            raise FSRuleError(_(u"Unable to find match function for token: %s")
+                              % self.otype)
 
         if self.negative:
             return not _res
