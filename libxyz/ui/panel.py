@@ -48,11 +48,11 @@ class Panel(lowui.WidgetWrap):
         self._enc = xyzenc
 
         self.block1 = Block(xyz, _blocksize,
-                            LocalVFSObject("/tmp", self._enc), self._enc,
+                            LocalVFSObject("/", self._enc), self._enc,
                                            active=True)
 
         self.block2 = Block(xyz, _blocksize,
-                            LocalVFSObject("/home/syhpoon", self._enc),
+                            LocalVFSObject("/", self._enc),
                                            self._enc)
 
         self._stop = False
