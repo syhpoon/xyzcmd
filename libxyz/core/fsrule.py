@@ -127,14 +127,14 @@ class FSRule(parser.BaseParser):
         cls.FTYPE.append(token)
 
         # 2. Add transformation func
-        if trans_func is not None:
-            cls.TRANSFORM_EXTENDED[token] = trans_func
+        cls.TRANSFORM_EXTENDED[token] = trans_func
 
         # 3. Add match func
         Expression.extend(token, match_func)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    @classmethod
     def unextend(cls, token):
         """
         Remove extended expression from parser
