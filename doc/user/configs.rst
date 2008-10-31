@@ -2,6 +2,25 @@
 Configuration files
 ===================
 
+|XYZ| uses the two-layered scheme for configuration files:
+
+*System configuration files*
+   |XYZ| relies on system configuration files to perform a 
+   correct initialization as almost all default values are kept in those
+   configs and not hardcoded in |XYZ| itself. |XYZ| looks for
+   system configs in the main installation directory (usualy
+   :file:`/usr/local/share/xyzcmd` or :file:`/usr/share/xyzcmd`).
+   System configs aren't supposed to be edited.
+
+*User configuration files*
+   All configuration is done in user configs. They can be held in user home
+   dir: :file:`~/.xyzcmd`. So if you need to make any change - just copy
+   corresponding config from system configs or create an empty one and make
+   all the neccessary changes.
+
+At startup |XYZ| first reads default values from system configs and
+then tries to open and parse user's ones.
+
 keys
 ----
 ``keys`` configuration file is used to bind methods, exported by plugins
