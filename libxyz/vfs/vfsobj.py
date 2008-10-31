@@ -16,8 +16,6 @@
 
 import os.path
 
-VFS_NONE = None
-
 class VFSObject(object):
     """
     Abstract interface for VFS objects
@@ -38,7 +36,7 @@ class VFSObject(object):
         Directory tree generator
         """
 
-        return VFS_NONE
+        return None
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -55,62 +53,65 @@ class VFSFile(object):
         self.name = os.path.basename(self.path).decode(self.enc)
 
         # File type
-        self.ftype = VFS_NONE
+        self.ftype = None
 
         # Access time
-        self.atime = VFS_NONE
+        self.atime = None
 
         # Modified time
-        self.mtime = VFS_NONE
+        self.mtime = None
 
         # Changed time
-        self.ctime = VFS_NONE
+        self.ctime = None
 
         # Size in bytes
-        self.size = VFS_NONE
+        self.size = None
 
         # Owner UID
-        self.uid = VFS_NONE
+        self.uid = None
 
         # Group
-        self.gid = VFS_NONE
+        self.gid = None
 
         # Mode
-        self.mode = VFS_NONE
+        self.mode = None
+
+        # Inode
+        self.inode = None
 
         # Visual file type
-        self.vtype = VFS_NONE
+        self.vtype = None
 
         # Visual file representation
-        self.visual = VFS_NONE
+        self.visual = None
 
         # File info
-        self.info = VFS_NONE
+        self.info = None
 
         # Any type-specific data
-        self.data = VFS_NONE
+        self.data = None
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def open(self):
-        return VFS_NONE
+        return None
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def close(self):
-        return VFS_NONE
+        return None
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def read(self):
-        return VFS_NONE
+        return None
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def write(self):
-        return VFS_NONE
+        return None
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def flush(self):
-        return VFS_NONE
+        return None
