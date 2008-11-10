@@ -840,12 +840,18 @@ class Block(lowui.BoxWidget):
             xyzlog.log(str(e), xyzlog.loglevel.ERROR)
             return
 
-        if tag:
-            self._tagged = [i for i in xrange(self._len) if
-                            _rule.match(self.entries[i])]
-        else:
-            self._tagged = [i for i in self._tagged if not
-                           _rule.match(self.entries[i])]
+        try:
+            if tag:
+                self._tagged = [i for i in xrange(self._len) if
+                                _rule.match(self.entries[i])]
+            else:
+                self._tagged = [i for i in self._tagged if not
+                               _rule.match(self.entries[i])]
+        except libxyz.exceptions.FSRuleError, e:
+            self._tagged = []
+
+            xyzlog.log(str(e), xyzlog.loglevel.ERROR)
+            return
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

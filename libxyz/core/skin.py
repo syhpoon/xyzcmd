@@ -22,6 +22,7 @@ import libxyz.parser as parser
 from libxyz.exceptions import ParseError
 from libxyz.exceptions import SkinError
 from libxyz.exceptions import XYZValueError
+from libxyz.exceptions import FSRuleError
 from libxyz.core import FSRule
 
 import libxyz.ui as uilib
@@ -112,7 +113,7 @@ class Skin(object):
 
             try:
                 return FSRule(rule)
-            except ParseError, e:
+            except (ParseError, FSRuleError), e:
                 raise XYZValueError(e)
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

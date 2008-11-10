@@ -100,7 +100,7 @@ class Launcher(object):
         """
         Try to preset local_encoding using current locale settings.
         After xyz conf is parsed, this value will be overriden by
-        local_encoding from conf if was defined
+        local_encoding from conf if defined
         """
 
         __builtin__.__dict__["xyzenc"] = locale.getpreferredencoding()
