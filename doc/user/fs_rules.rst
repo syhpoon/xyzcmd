@@ -18,13 +18,6 @@ FSRules grammar (BNF)
                   : NOT expr_body
                   : "(" rule ")"
     expr_body     : ftype "{" ARG "}"
-<<<<<<< /home/syhpoon/UNIX/Работа/Программирование/Языки/python/Проекты/xyzcmd/xyzcmd-trunk/doc/user/fs_rules.rst
-    op            : "and" | "or"
-    ftype         : "type" | "perm" | "owner" | "regexp"
-                  : "link_type" | "link_perm" | "link_owner"
-                  : "link_regexp" | "link_exists"
-                  : "size"
-=======
     op            : "and"
                   : "or"
     ftype         : "type"
@@ -38,17 +31,10 @@ FSRules grammar (BNF)
                   : "link_regexp"
                   : "link_exists"
                   : "link_size"
->>>>>>> /tmp/fs_rules.rst~other.pmcEt-
 
 Rule consists of one or more expressions combined with logical operators.
-<<<<<<< /home/syhpoon/UNIX/Работа/Программирование/Языки/python/Проекты/xyzcmd/xyzcmd-trunk/doc/user/fs_rules.rst
-
-п п╟п╨ п╡п╦п╢п╫п╬ п╦п╥ пЁя─п╟п╪п╪п╟я┌п╦п╨п╦, п╡я▀я─п╟п╤п╣п╫п╦п╣ п╦п╪п╣п╣я┌ п╡п╦п╢ ``<type>{<arg>}``.
-Available expressions are:
-=======
 Expression has the following format: ``<type>{<arg>}``.
 Available expressions are:
->>>>>>> /tmp/fs_rules.rst~other.pmcEt-
 
 * :ref:`type`
 * :ref:`perm`
@@ -163,20 +149,6 @@ the whole argument so it would be interpreted correctly by lexer::
       # Hidden files
       '''regexp{"^\\.{1}[^.]"}'''
 
-<<<<<<< /home/syhpoon/UNIX/Работа/Программирование/Языки/python/Проекты/xyzcmd/xyzcmd-trunk/doc/user/fs_rules.rst
-.. _size:
-
-size
-----
-``size`` expressions are used to match object based on its size.
-
-An argument has following format::
-
-    [><][=]<size>[BKMGT]
-
-A
-
-=======
 .. _size:
 
 size
@@ -205,7 +177,6 @@ Some examples::
    # Exactly 700 bytes, also can be written as size{"=700B"}
    size{700}
 
->>>>>>> /tmp/fs_rules.rst~other.pmcEt-
 .. _link_exists:
 
 link_exists
