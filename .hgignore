@@ -3,3 +3,5 @@ _todo
 NOTES
 TODO
 VFS
+syntax: glob
+**/*.pyc

@@ -211,12 +211,13 @@ available to all :class:`FSRule` instances.
 
 Let's say we're writing a plugin which adds a new :class:`FSRule` expression,
 say: ``inode{inode}`` whose purpose is to match objects with provided inode.
+Not very useful indeed, but good as for example.
 
 So we need to prepare a transformation function and a match function.
 
 Transformation function takes a string which was passed as an argument
 and returns whatever is neccessary to match on later. In our case an argument
-is an inode, so it would be enough to make sure the it is number::
+is an inode, so it would be enough to make sure it is number::
 
    transform = lambda arg: int(arg)
 

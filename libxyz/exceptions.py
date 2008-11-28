@@ -64,8 +64,7 @@ class UIError(XYZError):
 
 class KeyManagerError(XYZError):
     pass
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#++++++++++++++++++++++++++++++++++++++++++++++++
 
 class FSRuleError(XYZError):
     pass
