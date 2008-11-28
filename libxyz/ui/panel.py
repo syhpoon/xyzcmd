@@ -401,6 +401,8 @@ class Block(lowui.BoxWidget):
         self.xyz = xyz
         self.size = size
         self.attr = lambda x: self.xyz.skin.attr(Panel.resolution, x)
+        # Length of the string in terms of terminal columns
+        self.term_width = lambda x: lowui.util.calc_width(x, 0, len(x))
 
         self.active = active
         self.selected = 0
@@ -493,12 +495,12 @@ class Block(lowui.BoxWidget):
 
         if _tlen > 0:
             _text = _(u"%s bytes (%d)") % (
-                    self._make_number_readable(
-                        reduce(lambda x, y: x + y,
+                self._make_number_readable(
+                    reduce(lambda x, y: x + y,
                            [self.entries[x].size for x in self._tagged
                             if isinstance(self.entries[x].ftype, VFSTypeFile)
-                           ], 0)), _tlen)
-
+                            ], 0)), _tlen)
+            
             self._sep.set_text(_text.encode(self._enc), self.attr(u"tagged"))
         else:
             self._sep.clear_text()
@@ -630,9 +632,11 @@ class Block(lowui.BoxWidget):
         _part2 = vfsobj.info
         _part1 = truncate(vfsobj.visual, cols - len(_part2) - 2, self._enc)
 
-        _text = u"%s%s%s" % (_part1, u" " * (cols - (len(_part1) +
-                             len(_part2)) - 1), _part2)
-
+        _text = u"%s%s%s" % (_part1,
+                             u" " * (cols - (self.term_width(_part1) +
+                                             self.term_width(_part2)) -
+                                     1), _part2)
+        
         self._winfo.set_text(_text.encode(self._enc))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
