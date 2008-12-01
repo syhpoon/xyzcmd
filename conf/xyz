@@ -21,6 +21,8 @@ plugins {
 
 	:ui:testinput > ENABLE
 	:ui:bookmarks > ENABLE
+
+	:vfs:fileinfo > ENABLE
 }
 
 # Skin to use
