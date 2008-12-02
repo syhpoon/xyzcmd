@@ -17,6 +17,9 @@
 import os
 import os.path
 import stat
+import time
+import pwd
+import grp
 
 from libxyz.exceptions import VFSError
 from libxyz.exceptions import XYZRuntimeError
@@ -76,6 +79,32 @@ class LocalVFSFile(vfsobj.VFSFile):
     """
 
     def __init__(self, path, enc):
+        def _uid(uid):
+            try:
+                _name = pwd.getpwuid(uid).pw_name
+            except (KeyError, TypeError):
+                _name = None
+                
+            if _name is not None:
+                return u"%s (%s)" % (unicode(uid), _name)
+            else:
+                return unicode(uid)
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        def _gid(gid):
+            try:
+                _name = grp.getgrgid(gid).gr_name
+            except (KeyError, TypeError):
+                _name = None
+
+            if _name is not None:
+                return u"%s (%s)" % (unicode(gid), _name)
+            else:
+                return unicode(gid)
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         super(LocalVFSFile, self).__init__(path, enc)
 
         self.ftype = self._find_type(path)
@@ -83,10 +112,27 @@ class LocalVFSFile(vfsobj.VFSFile):
 
         self._set_attributes()
 
+        _time = lambda x: time.ctime(x).decode(xyzenc)
+                
+        self.attributes = (
+            (_(u"Name"), self.name),
+            (_(u"Type"), self.ftype),
+            (_(u"Access time"), _time(self.atime)),
+            (_(u"Modification time"), _time(self.mtime)),
+            (_(u"Change time"), _time(self.ctime)),
+            (_(u"Size in bytes"), unicode(self.size)),
+            (_(u"Owner"), _uid(self.uid)),
+            (_(u"Group"), _gid(self.gid)),
+            (_(u"Access mode"), unicode(self.mode)),
+            (_(u"Inode"), unicode(self.inode)),
+            (_(u"Type-specific data"), self.data),
+            )
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __str__(self):
-        return "<LocalVFSFile object: %s>" % os.path.join(self.path, self.name)
+        return "<LocalVFSFile object: %s>" % os.path.join(self.path,
+                                                          self.name)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

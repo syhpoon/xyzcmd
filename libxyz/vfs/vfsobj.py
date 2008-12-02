@@ -91,6 +91,9 @@ class VFSFile(object):
         # Any type-specific data
         self.data = None
 
+        # List of significant attributes
+        self.attributes = ()
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def open(self):
