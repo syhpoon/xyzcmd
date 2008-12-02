@@ -211,7 +211,7 @@ available to all :class:`FSRule` instances.
 
 Let's say we're writing a plugin which adds a new :class:`FSRule` expression,
 say: ``inode{inode}`` whose purpose is to match objects with provided inode.
-Not very useful indeed, but good as for example.
+Not very useful in fact, but good as for example.
 
 So we need to prepare a transformation function and a match function.
 
