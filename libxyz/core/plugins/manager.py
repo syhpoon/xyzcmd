@@ -292,7 +292,7 @@ class PluginManager(object):
         def _fin(p):
             try:
                 self._loaded[p].finalize()
-            except StandardError:
+            except Exception:
                 pass
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

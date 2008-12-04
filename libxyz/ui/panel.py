@@ -114,7 +114,7 @@ class Panel(lowui.WidgetWrap):
                 else:
                     try:
                         _meth()
-                    except StandardError, e:
+                    except Exception, e:
                         xyzlog.log(_("Error executing bind (%s): %s") %
                                   (self._keys.raw_to_shortcut(_input[0]),
                                    str(e)), xyzlog.loglevel.ERROR)
