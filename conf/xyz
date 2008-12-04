@@ -15,6 +15,7 @@ plugins {
 	:core:keycodes > ENABLE
 	:core:pluginlist > ENABLE
 	:core:bindlist > ENABLE
+        :core:viewer > ENABLE
 
 	:misc:hello > ENABLE
 	:misc:about > ENABLE

@@ -84,3 +84,11 @@ ui.cmd {
 	prompt = WHITE, &BG
 	text = LIGHT_GRAY, &BG
 }
+
+# Skin settings for :core:viewer plugin
+plugin.viewer {
+        &BG = DARK_BLUE
+
+        statusbar = WHITE, DARK_CYAN
+        window = WHITE, &BG
+}

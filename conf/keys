@@ -11,6 +11,7 @@ load :sys:panel:*
 load :core:pluginlist:show_list
 load :core:keycodes:*
 load :core:bindlist:show_binds
+load :core:viewer:*
 load :ui:testinput:show_box
 load :ui:bookmarks:*
 load :misc:about:about
@@ -69,3 +70,6 @@ bind :ui:bookmarks:show_bookmarks to META-\ context :sys:panel
 bind :vfs:fileinfo:fileinfo to F2 context :sys:panel
 
 bind :misc:about:about to META-o
+
+# Temporary bindings
+bind :core:viewer:view to F3 context :sys:panel
