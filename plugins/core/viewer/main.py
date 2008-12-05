@@ -1,6 +1,6 @@
 #-*- coding: utf8 -*
 #
-# Max E. Kuznecov <syhpoon@syhpoon.name 2008
+# Max E. Kuznecov <syhpoon@syhpoon.name> 2008
 #
 
 import libxyz
@@ -33,7 +33,7 @@ class XYZPlugin(BasePlugin):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def view(self, filename="/tmp/A"):
+    def view(self, filename):
         """
         View file
         """

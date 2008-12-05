@@ -72,4 +72,4 @@ bind :vfs:fileinfo:fileinfo to F2 context :sys:panel
 bind :misc:about:about to META-o
 
 # Temporary bindings
-bind :core:viewer:view to F3 context :sys:panel
+bind :core:viewer:view("/tmp/XXX") to F3 context :sys:panel

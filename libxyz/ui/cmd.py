@@ -242,17 +242,17 @@ class Cmd(lowui.FlowWidget):
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         
         # First lookup for bind in own context
-        _meth = self.xyz.km.process(key, self.context)
+        (_meth, _args) = self.xyz.km.process(key, self.context)
 
         if _meth is not None:
-            _meth()
+            _meth(*_args)
             return
 
         # Next in default one
-        _meth = self.xyz.km.process(key)
+        (_meth, _args) = self.xyz.km.process(key)
 
         if _meth is not None:
-            return _meth()
+            return _meth(*_args)
         else:
             _good = [x for x in key if len(x) == 1]
 
