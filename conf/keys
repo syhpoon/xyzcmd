@@ -4,6 +4,8 @@
 # Default keybindings. Do not edit.
 #
 
+# include </path/to/local/keys>
+
 load :sys:run:shutdown
 load :sys:logger:*
 load :sys:cmd:*

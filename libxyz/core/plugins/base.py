@@ -17,8 +17,6 @@
 from libxyz.exceptions import PluginError
 from libxyz.core.plugins import Namespace
 
-#++++++++++++++++++++++++++++++++++++++++++++++++
-
 class BasePlugin(object):
     """
     Parent class for all xyz-plugins
@@ -137,3 +135,13 @@ class BasePlugin(object):
         """
 
         self.public_data[name] = data
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def run_hook(self, hook, *args, **kwargs):
+        """
+        Run hook
+        """
+
+        self.xyz.hm.dispatch("hook%s:%s" % (self.ns.pfull, hook),
+                             *args, **kwargs)

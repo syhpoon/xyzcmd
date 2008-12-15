@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+from libxyz.core.plugins import with_hook
+
 import re
 import os
 import traceback

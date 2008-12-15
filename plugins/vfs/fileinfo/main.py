@@ -35,6 +35,8 @@ class XYZPlugin(BasePlugin):
 
         _selected = self.xyz.pm.from_load(":sys:panel", "get_selected")()
 
+        self.run_hook("fileinfo", _selected)
+
         _data = []
         _na = lambda x: lowui.Text(u"%-30s: N/A" % x)
 

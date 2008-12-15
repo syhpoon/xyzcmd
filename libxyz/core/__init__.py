@@ -22,6 +22,7 @@ __all__ = (
     'KeyManager',
     'InputWrapper',
     'Queue',
+    'HookManager',
     )
 
 from fsrule import FSRule
@@ -31,3 +32,4 @@ from userdata import UserData
 from keymanager import KeyManager
 from inputwrapper import InputWrapper
 from queue import Queue
+from hookmanager import HookManager

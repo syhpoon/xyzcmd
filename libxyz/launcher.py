@@ -86,6 +86,7 @@ class Launcher(object):
         self.xyz.pm = PluginManager(self.xyz, self._path_sel.get_plugins_dir())
 
         self.init_keys()
+        self.xyz.hm = core.HookManager()
 
         self.init_logger()
         self.xyz.input = core.InputWrapper(self.xyz)
@@ -93,6 +94,7 @@ class Launcher(object):
         self.xyz.screen.register_palette(self.xyz.skin.get_palette_list())
         self.xyz.skin.set_screen(self.xyz.screen)
         self.xyz.screen.run_wrapper(self._run)
+
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

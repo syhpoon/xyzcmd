@@ -136,6 +136,15 @@ class KeyManager(object):
 
         _comment_re = re.compile(r"^\s*#.*$")
 
+        _include_re = re.compile(r"""
+        ^                  # begin
+        \s*                # leading spaces
+        include            # keyword include
+        \s+                # on or more spaces
+TODO
+        $                  # EOL        
+        """, re.VERBOSE)
+
         _load_re = re.compile(r"""
         ^                  # begin
         \s*                # leading spaces
@@ -152,7 +161,7 @@ class KeyManager(object):
         bind                # keywoard bind
         \s+                 # one ore more spaces
         (?P<method>[\w:]+)  # plugin method name
-        \s*                 # on or more spaces
+        \s*                 # spaces
         (\((?P<args>.*)\))? # arguments                
         \s+                 # one ore more spaces
         to                  # keyword to
