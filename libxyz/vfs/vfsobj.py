@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+from libxyz.core import utils
+
 import os.path
 
 class VFSObject(object):
@@ -22,12 +24,8 @@ class VFSObject(object):
     """
 
     def __init__(self, path, enc=None):
-        self.enc = enc or xyzenc
-
-        if isinstance(path, unicode):
-            self.path = path.encode(self.enc)
-        else:
-            self.path = path
+        self.enc = enc
+        self.path = utils.bstring(path, enc)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -50,7 +48,7 @@ class VFSFile(object):
         self.enc = enc or "utf8"
 
         # File name
-        self.name = os.path.basename(self.path).decode(self.enc)
+        self.name = os.path.basename(utils.ustring(self.path, self.enc))
 
         # File type
         self.ftype = None

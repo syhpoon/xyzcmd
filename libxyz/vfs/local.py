@@ -131,8 +131,7 @@ class LocalVFSFile(vfsobj.VFSFile):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __str__(self):
-        return "<LocalVFSFile object: %s>" % os.path.join(self.path,
-                                                          self.name)
+        return "<LocalVFSFile object: %s>" % self.path
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

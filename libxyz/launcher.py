@@ -83,10 +83,10 @@ class Launcher(object):
         self.parse_configs()
         self.init_skin()
 
+        self.xyz.hm = core.HookManager()
         self.xyz.pm = PluginManager(self.xyz, self._path_sel.get_plugins_dir())
 
         self.init_keys()
-        self.xyz.hm = core.HookManager()
 
         self.init_logger()
         self.xyz.input = core.InputWrapper(self.xyz)

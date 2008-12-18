@@ -14,8 +14,6 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-from libxyz.core.plugins import with_hook
-
 import re
 import os
 import traceback
@@ -25,6 +23,7 @@ import libxyz.core
 import libxyz.const
 import libxyz.exceptions
 
+from libxyz.core.utils import ustring, bstring
 from libxyz.ui import lowui
 from libxyz.ui import align
 from libxyz.ui.utils import refresh
@@ -120,7 +119,7 @@ class Panel(lowui.WidgetWrap):
                         xyzlog.log(_("Error executing bind (%s): %s") %
                                   (self._keys.raw_to_shortcut(_input[0]),
                                    str(e)), xyzlog.loglevel.ERROR)
-                        xyzlog.log(traceback.format_exc().decode(self._enc),
+                        xyzlog.log(ustring(traceback.format_exc(), self._enc),
                                    xyzlog.loglevel.DEBUG)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -503,7 +502,7 @@ class Block(lowui.BoxWidget):
                             if isinstance(self.entries[x].ftype, VFSTypeFile)
                             ], 0)), _tlen)
             
-            self._sep.set_text(_text.encode(self._enc), self.attr(u"tagged"))
+            self._sep.set_text(bstring(_text, self._enc), self.attr(u"tagged"))
         else:
             self._sep.clear_text()
 
@@ -529,7 +528,7 @@ class Block(lowui.BoxWidget):
                 _own_attr = self._palettes[_abs_i]
 
             if _own_attr is not None:
-                x = lowui.TextCanvas(text=[_text.encode(self._enc)],
+                x = lowui.TextCanvas(text=[bstring(_text, self._enc)],
                                      attr=[[(_own_attr, maxcol)]],
                                      maxcol=maxcol)
                 canvases.append((x, i, False))
@@ -639,7 +638,7 @@ class Block(lowui.BoxWidget):
                                              self.term_width(_part2)) -
                                      1), _part2)
         
-        self._winfo.set_text(_text.encode(self._enc))
+        self._winfo.set_text(bstring(_text, self._enc))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -649,7 +648,7 @@ class Block(lowui.BoxWidget):
         """
 
         _text = truncate(custom_text, cols, self._enc, True)
-        self._winfo.set_text(_text.encode(self._enc))
+        self._winfo.set_text(bstring(_text, self._enc))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -841,7 +840,7 @@ class Block(lowui.BoxWidget):
             self._rule_raw = _raw
 
         try:
-            _rule = libxyz.core.FSRule(_raw.decode(self._enc))
+            _rule = libxyz.core.FSRule(ustring(_raw, self._enc))
         except libxyz.exceptions.ParseError, e:
             xyzlog.log(str(e), xyzlog.loglevel.ERROR)
             return
@@ -1018,7 +1017,8 @@ class Block(lowui.BoxWidget):
                         _collected.pop()
 
                 _tmp = _collected[:]
-                _tmp.extend([x.decode(self._enc) for x in _raw if len(x) == 1])
+                _tmp.extend([ustring(x, self._enc) for x in _raw
+                             if len(x) == 1])
                 _pattern = u"".join(_tmp)
             except Exception:
                 break
