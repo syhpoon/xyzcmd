@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+from libxyz.core.utils import ustring
+
 class HookManager(object):
     """
     Hooks dispatcher
@@ -67,7 +69,7 @@ class HookManager(object):
                 proc(*args, **kwargs)
             except Exception, e:
                 xyzlog.log(_(u"Error running callback procedure for hook %s") %
-                           str(e).decode(xyzenc), xyzlog.loglevel.ERROR)
+                           ustring(str(e)), xyzlog.loglevel.ERROR)
                 return False
 
         return True

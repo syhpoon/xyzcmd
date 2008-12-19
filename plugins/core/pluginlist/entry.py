@@ -20,6 +20,7 @@ import libxyz.ui as uilib
 
 from libxyz.ui import lowui
 from libxyz.ui.utils import truncate
+from libxyz.core.utils import ustring
 
 class PluginEntry(lowui.FlowWidget):
     """
@@ -81,8 +82,8 @@ class PluginEntry(lowui.FlowWidget):
                 self.enter_cb()
             except Exception, e:
                 xyzlog.log(_(u"Error in entry callback: %s" %
-                           unicode(e.strerror, xyzenc)), xyzlog.loglevel.ERROR)
-                xyzlog.log(traceback.format_exc().decode(xyzenc),
+                           ustring(e.strerror)), xyzlog.loglevel.ERROR)
+                xyzlog.log(ustring(traceback.format_exc()),
                            xyzlog.loglevel.DEBUG)
         else:
             return key

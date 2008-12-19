@@ -19,6 +19,7 @@ import re
 import libxyz
 
 from libxyz.core.plugins import Namespace
+from libxyz.core.utils import ustring
 from libxyz.exceptions import PluginError
 from libxyz.exceptions import KeyManagerError
 from libxyz.exceptions import XYZValueError
@@ -87,7 +88,7 @@ class KeyManager(object):
             try:
                 self._load(mo.group("method"))
             except PluginError, e:
-                raise XYZValueError(unicode(e))
+                raise XYZValueError(ustring(str(e)))
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -99,7 +100,7 @@ class KeyManager(object):
             try:
                 _args = _parse_args(mo.group("args"))
             except LexerError, e:
-               raise XYZValueError(unicode(e, xyzenc))
+               raise XYZValueError(ustring(str(e)))
 
             if _context == self.CONTEXT_SELF:
                 _context = Namespace(_method).pfull
@@ -107,7 +108,7 @@ class KeyManager(object):
             try:
                 self._bind(_method, _shortcut, _context, _args)
             except KeyManagerError, e:
-                raise XYZValueError(unicode(e, xyzenc))
+                raise XYZValueError(ustring(str(e)))
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -190,7 +191,7 @@ TODO
             _file = open(self.confpathes[0], "r")
         except IOError, e:
             raise XYZRuntimeError(_(u"Unable to open %s: %s" %
-                                  (self.confpath, unicode(e))))
+                                  (self.confpath, ustring(str(e)))))
 
         try:
             _parser.parse(_file)

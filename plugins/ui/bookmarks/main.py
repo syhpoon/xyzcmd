@@ -21,6 +21,7 @@ from libxyz.ui import NumEntry
 
 from libxyz.core.plugins import BasePlugin
 from libxyz.core import UserData
+from libxyz.core.utils import ustring, bstring
 from libxyz.parser import FlatParser
 from libxyz.parser import ParsedData
 
@@ -64,8 +65,8 @@ class XYZPlugin(BasePlugin):
         if name is None:
             name = path
 
-        path = self._2u(path)
-        name = self._2u(name)
+        path = ustring(path)
+        name = ustring(name)
 
         _data = self._load_data()
 
@@ -81,7 +82,7 @@ class XYZPlugin(BasePlugin):
         Delete saved bookmark entry by name
         """
 
-        name = self._2u(name)
+        name = ustring(name)
 
         _data = self._load_data()
 
@@ -96,7 +97,7 @@ class XYZPlugin(BasePlugin):
         Get bookmark path by name
         """
 
-        name = self._2u(name)
+        name = ustring(name)
 
         _data = self._load_data()
 
@@ -154,8 +155,7 @@ class XYZPlugin(BasePlugin):
             _file = self._ud.openfile(self._bmfile, "r", self._bmsubdir)
         except XYZRuntimeError, e:
             xyzlog.log(_(u"Unable to open bookmarks file: %s") %
-                       unicode(e.message.strerror, xyzenc),
-                       xyzlog.loglevel.INFO)
+                       ustring(e.message.strerror), xyzlog.loglevel.INFO)
             return ParsedData()
 
         _parser = FlatParser()
@@ -181,24 +181,13 @@ class XYZPlugin(BasePlugin):
             _file = self._ud.openfile(self._bmfile, "w", self._bmsubdir)
         except XYZRuntimeError, e:
             xyzlog.log("Unable to open bookmarks file: %s" %
-                       unicode(e.message.strerror, xyzenc),
-                       xyzlog.loglevel.INFO)
+                       ustring(e.message.strerror), xyzlog.loglevel.INFO)
             return None
 
         for _name, _path in data.iteritems():
             _file.write('"%s": "%s"\n' %
-                        (_name.encode(xyzenc), _path.encode(xyzenc)))
+                        (bstring(_name), bstring(_path)))
 
         _file.close()
 
         return True
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _2u(self, arg):
-        """
-        Convert to unicode if needed
-        """
-
-        if not isinstance(arg, unicode):
-            return arg.decode(xyzenc)

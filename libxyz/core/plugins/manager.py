@@ -23,6 +23,7 @@ from libxyz.exceptions import PluginError
 from libxyz.exceptions import XYZValueError
 from libxyz.core.plugins import BasePlugin
 from libxyz.core.plugins import Namespace
+from libxyz.core.utils import ustring
 
 def ns_transform(func):
     """
@@ -240,7 +241,7 @@ class PluginManager(object):
                     _cb(inst, *_args)
                 except Exception, e:
                     xyzlog.log(_(u"Error in wait_for() callback: %s" %
-                               unicode(e)), xyzlog.loglevel.WARNING)
+                               ustring(str(e))), xyzlog.loglevel.WARNING)
             del(self._waiting[plugin.pfull])
 
         self._loaded[plugin.pfull] = inst

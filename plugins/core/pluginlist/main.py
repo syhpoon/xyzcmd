@@ -20,6 +20,7 @@ import libxyz.ui as uilib
 
 from libxyz.ui import lowui
 from libxyz.core.plugins import BasePlugin
+from libxyz.core.utils import ustring
 
 from entry import PluginEntry
 
@@ -111,7 +112,7 @@ class XYZPlugin(BasePlugin):
                     _args = _args[_delta:]
 
                 for _a, _d in zip(_args, _def):
-                    _tmp.append(u"=".join((unicode(_a), unicode(_d))))
+                    _tmp.append(u"=".join((ustring(_a), ustring(_d))))
 
             return u",".join(_tmp)
 

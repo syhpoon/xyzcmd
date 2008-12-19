@@ -27,6 +27,7 @@ from libxyz.vfs import vfsobj
 from libxyz.vfs import types
 from libxyz.vfs import util
 from libxyz.vfs import mode
+from libxyz.core.utils import ustring
 
 class LocalVFSObject(vfsobj.VFSObject):
     """
@@ -86,9 +87,9 @@ class LocalVFSFile(vfsobj.VFSFile):
                 _name = None
                 
             if _name is not None:
-                return u"%s (%s)" % (unicode(uid), _name)
+                return u"%s (%s)" % (ustring(uid), _name)
             else:
-                return unicode(uid)
+                return ustring(uid)
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -99,9 +100,9 @@ class LocalVFSFile(vfsobj.VFSFile):
                 _name = None
 
             if _name is not None:
-                return u"%s (%s)" % (unicode(gid), _name)
+                return u"%s (%s)" % (ustring(gid), _name)
             else:
-                return unicode(gid)
+                return ustring(gid)
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -112,7 +113,7 @@ class LocalVFSFile(vfsobj.VFSFile):
 
         self._set_attributes()
 
-        _time = lambda x: time.ctime(x).decode(xyzenc)
+        _time = lambda x: ustring(time.ctime(x))
                 
         self.attributes = (
             (_(u"Name"), self.name),
@@ -120,11 +121,11 @@ class LocalVFSFile(vfsobj.VFSFile):
             (_(u"Access time"), _time(self.atime)),
             (_(u"Modification time"), _time(self.mtime)),
             (_(u"Change time"), _time(self.ctime)),
-            (_(u"Size in bytes"), unicode(self.size)),
+            (_(u"Size in bytes"), ustring(self.size)),
             (_(u"Owner"), _uid(self.uid)),
             (_(u"Group"), _gid(self.gid)),
-            (_(u"Access mode"), unicode(self.mode)),
-            (_(u"Inode"), unicode(self.inode)),
+            (_(u"Access mode"), ustring(self.mode)),
+            (_(u"Inode"), ustring(self.inode)),
             (_(u"Type-specific data"), self.data),
             )
 
@@ -180,7 +181,7 @@ class LocalVFSFile(vfsobj.VFSFile):
                         self.vtype = u"~"
 
             self.info = u""
-            self.visual = u"-> %s" % _realpath.decode(self.enc)
+            self.visual = u"-> %s" % ustring(_realpath, self.enc)
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

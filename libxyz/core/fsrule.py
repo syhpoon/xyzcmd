@@ -26,6 +26,7 @@ from libxyz.exceptions import LexerError
 from libxyz.exceptions import FSRuleError
 from libxyz.vfs.vfsobj import  VFSFile
 from libxyz.vfs.types import *
+from libxyz.core.utils import ustring
 
 class FSRule(parser.BaseParser):
     """
@@ -494,7 +495,7 @@ class FSRule(parser.BaseParser):
                     _cur.arg = self.TRANSFORM_EXTENDED[_cur.otype](_arg)
                 except Exception, e:
                     self.error(_(u"Error in calling extended transformation "\
-                                 u"function: %s") % str(e).decode(xyzenc))
+                                 u"function: %s") % ustring(str(e)))
             else:
                 _cur.arg = _arg
 
@@ -776,7 +777,7 @@ class Expression(object):
                 _res = self.MATCH_EXTENDED[self.otype](vfsobj, self.arg)
             except Exception, e:
                 self.error(_(u"Error in calling extended match "\
-                             u"function: %s") % str(e).decode(xyzenc))
+                             u"function: %s") % ustring(str(e)))
         else:
             raise FSRuleError(_(u"Unable to find match function for token: %s")
                               % self.otype)

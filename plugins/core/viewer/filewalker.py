@@ -6,6 +6,7 @@
 import libxyz
 
 from libxyz.ui import lowui
+from libxyz.core.utils import ustring
 from libxyz.exceptions import XYZError
 
 class FileWalker(lowui.ListWalker):
@@ -24,8 +25,8 @@ class FileWalker(lowui.ListWalker):
             self._file = open(filename)
         except IOError, e:
             raise XYZError(_(u"Unable to open file %s: %s") %
-                           (filename.decode(xyzenc),
-                            e.message.decode(xyzenc)))
+                           (ustring(filename),
+                            ustring(e.message)))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -37,6 +37,7 @@ from libxyz.ui import lowui
 from libxyz.version import Version
 from libxyz.core.plugins import PluginManager
 from libxyz.core import logger
+from libxyz.core.utils import ustring
 
 from libxyz.exceptions import *
 
@@ -164,7 +165,7 @@ class Launcher(object):
         except Exception:
             raise XYZValueError(_(u"Invalid value %s.\n"\
                                   u"A list of valid log levels expected"
-                                  % unicode(_levels)))
+                                  % ustring(_levels)))
 
         try:
             _lines = self.xyz.conf[u"plugins"][u":sys:logger"][u"lines"]
@@ -177,7 +178,7 @@ class Launcher(object):
         except ValueError:
             raise XYZValueError(_(u"Invalid value %s. "\
                                   u"A positive integer expected" %
-                                  unicode(_lines)))
+                                  ustring(_lines)))
 
         _logger = core.logger.Logger(self.xyz, _levels, _lines)
 
