@@ -22,7 +22,7 @@ from libxyz.parser import ParsedData
 from libxyz.exceptions import XYZValueError
 from libxyz.exceptions import LexerError
 
-from libxyz.core.utils import ustring
+import libxyz
 
 class BlockParser(BaseParser):
     """
@@ -225,7 +225,7 @@ class BlockParser(BaseParser):
                     self._varname = self.var_transform(word)
                 except XYZValueError, e:
                     self.error(_(u"Variable transformation error: %s") %
-                               ustring(str(e)))
+                               libxyz.core.utils.ustring(str(e)))
             else:
                 self._varname = word
 

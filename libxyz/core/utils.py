@@ -26,8 +26,12 @@ def ustring(string, enc=None):
     if enc is None:
         enc = xyzenc
 
+    if not isinstance(string, str):
+        return unicode(string)
+
+    # String
     return string.decode(enc, 'replace')
-    
+
 def bstring(bstring, enc=None):
     """
     Return encoded byte string
@@ -39,5 +43,7 @@ def bstring(bstring, enc=None):
     if enc is None:
         enc = xyzenc
 
-    return bstring.encode(enc, 'replace')
+    if not isinstance(bstring, unicode):
+        return str(bstring)
 
+    return bstring.encode(enc, 'replace')

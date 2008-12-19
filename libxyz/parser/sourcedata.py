@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-from libxyz.core.utils import ustring
+import libxyz
 
 class SourceData(object):
     """
@@ -51,7 +51,7 @@ class SourceData(object):
             self._len = len(self._source)
         # Open file-like object supposed
         else:
-            self._intern = ustring(source.name)
+            self._intern = libxyz.core.utils.ustring(source.name)
             self._type = self.FILE
             self._next_me = self._next_file
 
@@ -70,7 +70,7 @@ class SourceData(object):
         else:
             _res = self._next_me()
 
-        _res = ustring(_res)
+        _res = libxyz.core.utils.ustring(_res)
 
         if _res == u"\n":
             self.lineno += 1
