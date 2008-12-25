@@ -255,7 +255,7 @@ class Launcher(object):
         _plugins_opts = {
                          u"count": 1,
                          u"varre": re.compile("^[\w:-]+$"),
-                         u"assignchar": ">",
+                         u"assignchar": "=",
                          u"value_validator": _validate_plugins,
                         }
         _plugins_p = parser.BlockParser(_plugins_opts)
