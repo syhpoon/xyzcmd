@@ -15,7 +15,7 @@ FSRules grammar (BNF)
     rule          : expr $
                   : expr op rule
     expr          : expr_body
-                  : NOT expr_body
+                  : "not" expr_body
                   : "(" rule ")"
     expr_body     : ftype "{" ARG "}"
     op            : "and"
@@ -98,7 +98,7 @@ perm
 An argument is specified as ``[+]dddd``.
 Where ``dddd`` is an octal number. If number is preceeded by '+' this will
 match objects with any of mode bits set. Otherwise it will
-match only files with exactly the same mode as given.
+match only objects with exactly the same mode as given.
 
 Examples::
 
@@ -161,17 +161,17 @@ An operator can be preprended to size, one of: ``>, <, >=, <=, =``.
 If operator is omitted, ``=`` is assumed.
 Also a modifier can be appended::
 
-   bB - The size in bytes (default)
-   kK - The size in kilobytes
-   mM - The size in megabytes
-   gG - The size in gigabytes
-   tG - The size in terabytes
+   [bB] - The size in bytes (default)
+   [kK] - The size in kilobytes
+   [mM] - The size in megabytes
+   [gG] - The size in gigabytes
+   [tT] - The size in terabytes
 
-If no modifier is used, the size is considered to be in bytes.
+If no modifier is used, the size is assumed to be in bytes.
 
 Some examples::
 
-   # Files larger than 100 megabytes
+   # Objects larger or equal to 100 megabytes
    size{">=100M"}
 
    # Exactly 700 bytes, also can be written as size{"=700B"}
@@ -185,7 +185,7 @@ link_exists
 (i.e. the object the link refers to) exists.
 
 Actually ``link_exists`` expression does not need any arguments, but
-because of ``FSRules`` parser requires the expressions to have exactly one
+as ``FSRules`` parser requires the expressions to have exactly one
 argument, a ``?`` character is usually specified::
 
     # Match all broken links
@@ -211,7 +211,7 @@ available to all :class:`FSRule` instances.
 
 Let's say we're writing a plugin which adds a new :class:`FSRule` expression,
 say: ``inode{inode}`` whose purpose is to match objects with provided inode.
-Not very useful in fact, but good as for example.
+Not very useful in fact, but good as example.
 
 So we need to prepare a transformation function and a match function.
 
@@ -249,5 +249,5 @@ And in :func:`finalize` remove extended expression::
    def finalize(self):
       libxyz.core.FSRule.unextend("inode")
 
-That's is, after |XYZ| loads our plugin, we can start using ``inode{}``
-in our FSRule expressions.
+That's pretty much it. After |XYZ| loads our plugin, we can start
+using ``inode{}`` in our FSRule expressions.

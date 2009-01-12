@@ -58,6 +58,19 @@ Public methods:
    If all is True, return all saved data for all terminal types,
    otherwise return only current terminal type data.
 
+``:core:pluginlist``
+++++++++++++++++++
+PluginList plugin is used to display a list of all currently active
+plugins.
+
+Public methods:
+
+**show_list()**
+   Show a list of all active plugins. All the list elements are browseble,
+   i.e. pressing `ENTER` will bring a detailed plugin information, including
+   full plugin description, version, available configuration variables
+   and all the public methods and data.
+
 ``:ui:`` plugins
 ----------------
 **TODO**

@@ -142,7 +142,7 @@ class KeyManager(object):
         \s*                # leading spaces
         include            # keyword include
         \s+                # on or more spaces
-TODO
+        TODO
         $                  # EOL        
         """, re.VERBOSE)
 
