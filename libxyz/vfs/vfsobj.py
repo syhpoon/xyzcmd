@@ -14,9 +14,9 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-import os.path
+from libxyz.core import utils
 
-VFS_NONE = None
+import os.path
 
 class VFSObject(object):
     """
@@ -24,12 +24,8 @@ class VFSObject(object):
     """
 
     def __init__(self, path, enc=None):
-        self.enc = enc or xyzenc
-
-        if isinstance(path, unicode):
-            self.path = path.encode(self.enc)
-        else:
-            self.path = path
+        self.enc = enc
+        self.path = utils.bstring(path, enc)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -38,7 +34,7 @@ class VFSObject(object):
         Directory tree generator
         """
 
-        return VFS_NONE
+        return None
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -52,65 +48,71 @@ class VFSFile(object):
         self.enc = enc or "utf8"
 
         # File name
-        self.name = os.path.basename(self.path).decode(self.enc)
+        self.name = os.path.basename(utils.ustring(self.path, self.enc))
 
         # File type
-        self.ftype = VFS_NONE
+        self.ftype = None
 
         # Access time
-        self.atime = VFS_NONE
+        self.atime = None
 
         # Modified time
-        self.mtime = VFS_NONE
+        self.mtime = None
 
         # Changed time
-        self.ctime = VFS_NONE
+        self.ctime = None
 
         # Size in bytes
-        self.size = VFS_NONE
+        self.size = None
 
         # Owner UID
-        self.uid = VFS_NONE
+        self.uid = None
 
         # Group
-        self.gid = VFS_NONE
+        self.gid = None
 
         # Mode
-        self.mode = VFS_NONE
+        self.mode = None
+
+        # Inode
+        self.inode = None
 
         # Visual file type
-        self.vtype = VFS_NONE
+        self.vtype = None
 
         # Visual file representation
-        self.visual = VFS_NONE
+        self.visual = None
 
         # File info
-        self.info = VFS_NONE
+        self.info = None
 
         # Any type-specific data
-        self.data = VFS_NONE
+        self.data = None
+
+        # List of significant attributes
+        self.attributes = ()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def open(self):
-        return VFS_NONE
+        return None
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def close(self):
-        return VFS_NONE
+        return None
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def read(self):
-        return VFS_NONE
+        return None
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def write(self):
-        return VFS_NONE
+        return None
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def flush(self):
-        return VFS_NONE
+        return None

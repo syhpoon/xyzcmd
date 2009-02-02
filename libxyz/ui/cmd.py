@@ -27,6 +27,7 @@ from libxyz.ui import XYZListBox
 from libxyz.ui import NumEntry
 from libxyz.ui import Keys
 from libxyz.ui.utils import refresh
+from libxyz.core.utils import ustring
 
 class Cmd(lowui.FlowWidget):
     """
@@ -83,7 +84,7 @@ class Cmd(lowui.FlowWidget):
                 _val = _def
                 xyzlog.log(_(u"%s: Invalid argument type %s: %s. "\
                              u"Using default: %s" %
-                            (self._plugin.ns.pfull, _var, unicode(e),
+                            (self._plugin.ns.pfull, _var, ustring(str(e)),
                              unicode(_def))),
                             xyzlog.loglevel.WARNING)
             finally:
@@ -242,17 +243,17 @@ class Cmd(lowui.FlowWidget):
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         
         # First lookup for bind in own context
-        _meth = self.xyz.km.process(key, self.context)
+        (_meth, _args) = self.xyz.km.process(key, self.context)
 
         if _meth is not None:
-            _meth()
+            _meth(*_args)
             return
 
         # Next in default one
-        _meth = self.xyz.km.process(key)
+        (_meth, _args) = self.xyz.km.process(key)
 
         if _meth is not None:
-            return _meth()
+            return _meth(*_args)
         else:
             _good = [x for x in key if len(x) == 1]
 
@@ -260,8 +261,9 @@ class Cmd(lowui.FlowWidget):
                 try:
                     map(lambda x: _add(x), _good)
                 except Exception, e:
-                    xyzlog.log(_(unicode(e)), xyzlog.loglevel.ERROR)
-                    xyzlog.log(traceback.format_exc(), xyzlog.loglevel.DEBUG)
+                    xyzlog.log(_(ustring(str(e))), xyzlog.loglevel.ERROR)
+                    xyzlog.log(ustring(traceback.format_exc()),
+                               xyzlog.loglevel.DEBUG)
                 else:
                     self._invalidate()
 

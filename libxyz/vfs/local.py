@@ -17,6 +17,9 @@
 import os
 import os.path
 import stat
+import time
+import pwd
+import grp
 
 from libxyz.exceptions import VFSError
 from libxyz.exceptions import XYZRuntimeError
@@ -24,6 +27,7 @@ from libxyz.vfs import vfsobj
 from libxyz.vfs import types
 from libxyz.vfs import util
 from libxyz.vfs import mode
+from libxyz.core.utils import ustring
 
 class LocalVFSObject(vfsobj.VFSObject):
     """
@@ -76,6 +80,32 @@ class LocalVFSFile(vfsobj.VFSFile):
     """
 
     def __init__(self, path, enc):
+        def _uid(uid):
+            try:
+                _name = pwd.getpwuid(uid).pw_name
+            except (KeyError, TypeError):
+                _name = None
+                
+            if _name is not None:
+                return u"%s (%s)" % (ustring(uid), _name)
+            else:
+                return ustring(uid)
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        def _gid(gid):
+            try:
+                _name = grp.getgrgid(gid).gr_name
+            except (KeyError, TypeError):
+                _name = None
+
+            if _name is not None:
+                return u"%s (%s)" % (ustring(gid), _name)
+            else:
+                return ustring(gid)
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         super(LocalVFSFile, self).__init__(path, enc)
 
         self.ftype = self._find_type(path)
@@ -83,10 +113,26 @@ class LocalVFSFile(vfsobj.VFSFile):
 
         self._set_attributes()
 
+        _time = lambda x: ustring(time.ctime(x))
+                
+        self.attributes = (
+            (_(u"Name"), self.name),
+            (_(u"Type"), self.ftype),
+            (_(u"Access time"), _time(self.atime)),
+            (_(u"Modification time"), _time(self.mtime)),
+            (_(u"Change time"), _time(self.ctime)),
+            (_(u"Size in bytes"), ustring(self.size)),
+            (_(u"Owner"), _uid(self.uid)),
+            (_(u"Group"), _gid(self.gid)),
+            (_(u"Access mode"), ustring(self.mode)),
+            (_(u"Inode"), ustring(self.inode)),
+            (_(u"Type-specific data"), self.data),
+            )
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __str__(self):
-        return "<LocalVFSFile object: %s>" % os.path.join(self.path, self.name)
+        return "<LocalVFSFile object: %s>" % self.path
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -128,14 +174,14 @@ class LocalVFSFile(vfsobj.VFSFile):
                 try:
                     self.data = LocalVFSFile(_fullpath, self.enc)
                 except VFSError, e:
-                    xyzlog.log(_("Error creating VFS object: %s") % str(e),
+                    xyzlog.log(_(u"Error creating VFS object: %s") % str(e),
                               xyzlog.loglevel.ERROR)
                 else:
                     if isinstance(self.data.ftype, types.VFSTypeDir):
                         self.vtype = u"~"
 
             self.info = u""
-            self.visual = u"-> %s" % _realpath.decode(self.enc)
+            self.visual = u"-> %s" % ustring(_realpath, self.enc)
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -156,6 +202,7 @@ class LocalVFSFile(vfsobj.VFSFile):
         self.size = self._stat.st_size
         self.uid = self._stat.st_uid
         self.gid = self._stat.st_gid
+        self.inode = self._stat.st_ino
         self.mode = mode.Mode(self._stat.st_mode)
         self.visual = u"%s%s" % (self.vtype, self.name)
         self.info = u"%s %s" % (util.format_size(self.size), self.mode)

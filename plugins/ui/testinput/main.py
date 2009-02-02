@@ -5,6 +5,7 @@
 
 from libxyz.core.plugins import BasePlugin
 from libxyz.ui import lowui
+from libxyz.core.utils import ustring, bstring
 
 import libxyz.ui as uilib
 
@@ -46,7 +47,7 @@ class XYZPlugin(BasePlugin):
         _escape = 0
 
         while True:
-            _input = InputBox(self.xyz, self.xyz.top, _msg.encode(xyzenc),
+            _input = InputBox(self.xyz, self.xyz.top, bstring(_msg),
                               _(u"Input test")).show(use_wrap=use_wrap)
 
             if self._keys.ESCAPE in _input:
@@ -59,9 +60,9 @@ class XYZPlugin(BasePlugin):
             _keys = []
 
             for _i in _input:
-                _keys.append(self._keys.raw_to_shortcut(_i.decode(xyzenc)))
+                _keys.append(self._keys.raw_to_shortcut(ustring(_i)))
 
-            _low = [x.decode(xyzenc) for x in _input]
+            _low = [ustring(x) for x in _input]
             _msg = u"Shortcut: '%s'. Raw: '%s'" % \
                    (u"".join(_keys), u"".join(_low))
 

@@ -1,7 +1,8 @@
 #-*- coding: utf8 -*
 #
-# Max E. Kuznecov ~syhpoon <syhpoon@syhpoon.name> 2008
+# Max E. Kuznecov ~syhpoon <mek@mek.uz.ua> 2008
 #
+
 # This file is part of XYZCommander.
 # XYZCommander is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser Public License as published by
@@ -14,24 +15,35 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-__all__ = (
-    'FSRule',
-    'Skin',
-    'XYZData',
-    'UserData',
-    'KeyManager',
-    'InputWrapper',
-    'Queue',
-    'HookManager',
-    'utils',
-    )
+def ustring(string, enc=None):
+    """
+    Return unicode string
+    """
 
-from fsrule import FSRule
-from skin import Skin
-from xyzdata import XYZData
-from userdata import UserData
-from keymanager import KeyManager
-from inputwrapper import InputWrapper
-from queue import Queue
-from hookmanager import HookManager
-import utils
+    if isinstance(string, unicode):
+        return string
+
+    if enc is None:
+        enc = xyzenc
+
+    if not isinstance(string, str):
+        return unicode(string)
+
+    # String
+    return string.decode(enc, 'replace')
+
+def bstring(bstring, enc=None):
+    """
+    Return encoded byte string
+    """
+
+    if isinstance(bstring, str):
+        return bstring
+
+    if enc is None:
+        enc = xyzenc
+
+    if not isinstance(bstring, unicode):
+        return str(bstring)
+
+    return bstring.encode(enc, 'replace')

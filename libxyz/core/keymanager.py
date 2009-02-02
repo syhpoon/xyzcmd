@@ -19,9 +19,11 @@ import re
 import libxyz
 
 from libxyz.core.plugins import Namespace
+from libxyz.core.utils import ustring
 from libxyz.exceptions import PluginError
 from libxyz.exceptions import KeyManagerError
 from libxyz.exceptions import XYZValueError
+from libxyz.exceptions import LexerError
 
 class KeyManager(object):
     """
@@ -38,6 +40,7 @@ class KeyManager(object):
 
         self._loaded_methods = {}
         self._bind_data = {}
+        self._args_data = {}
 
         self._path_sel = libxyz.PathSelector()
 
@@ -48,20 +51,30 @@ class KeyManager(object):
     def process(self, pressed, context=None):
         """
         Process pressed keys
+
+        @return: Tuple (method, arguments)
         """
 
         context = context or self.CONTEXT_DEFAULT
 
         _p = tuple(pressed)
 
+        _method = None
+        _args = []
+
         # Look for binded shortcut
         try:
             _method = self._bind_data[context][_p]
         except KeyError:
             # No bind
-            return None
+            pass
+        else:
+            try:
+                _args = self._args_data[context][_method]
+            except KeyError:
+                pass
 
-        return _method
+        return (_method, _args)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -75,7 +88,7 @@ class KeyManager(object):
             try:
                 self._load(mo.group("method"))
             except PluginError, e:
-                raise XYZValueError(unicode(e))
+                raise XYZValueError(ustring(str(e)))
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -84,17 +97,54 @@ class KeyManager(object):
             _shortcut = mo.group("shortcut")
             _context = mo.group("context")
 
+            try:
+                _args = _parse_args(mo.group("args"))
+            except LexerError, e:
+               raise XYZValueError(ustring(str(e)))
+
             if _context == self.CONTEXT_SELF:
                 _context = Namespace(_method).pfull
 
             try:
-                self._bind(_method, _shortcut, _context)
+                self._bind(_method, _shortcut, _context, _args)
             except KeyManagerError, e:
-                raise XYZValueError(unicode(e))
+                raise XYZValueError(ustring(str(e)))
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+        def _parse_args(raw):
+            _args = []
+
+            if not raw:
+                return _args
+
+            _tokens = ("\n", ",")
+
+            _lexer = libxyz.parser.Lexer(raw, _tokens,
+                                         comment=None, macro=None)
+
+            while True:
+                _res = _lexer.lexer()
+                
+                if _res is None:
+                    break
+                else:
+                    _args.append(_res[1])
+
+            return filter(lambda x: x != u",", _args)
+            
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         _comment_re = re.compile(r"^\s*#.*$")
+
+        _include_re = re.compile(r"""
+        ^                  # begin
+        \s*                # leading spaces
+        include            # keyword include
+        \s+                # on or more spaces
+        TODO
+        $                  # EOL        
+        """, re.VERBOSE)
 
         _load_re = re.compile(r"""
         ^                  # begin
@@ -111,7 +161,9 @@ class KeyManager(object):
         \s*                 # leading spaces
         bind                # keywoard bind
         \s+                 # one ore more spaces
-        (?P<method>[\w:]+)  # plugin ns-path and/or method name
+        (?P<method>[\w:]+)  # plugin method name
+        \s*                 # spaces
+        (\((?P<args>.*)\))? # arguments                
         \s+                 # one ore more spaces
         to                  # keyword to
         \s+                 # one ore more spaces
@@ -139,7 +191,7 @@ class KeyManager(object):
             _file = open(self.confpathes[0], "r")
         except IOError, e:
             raise XYZRuntimeError(_(u"Unable to open %s: %s" %
-                                  (self.confpath, unicode(e))))
+                                  (self.confpath, ustring(str(e)))))
 
         try:
             _parser.parse(_file)
@@ -180,7 +232,7 @@ class KeyManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _bind(self, method, shortcut, context=None):
+    def _bind(self, method, shortcut, context=None, args=None):
         _p = Namespace(method)
         _mobj = None
 
@@ -200,13 +252,13 @@ class KeyManager(object):
         if _mobj is None:
             # Wait until plugin method is available and then run callback
             self.xyz.pm.wait_for(_p, self._bind_wait_cb, _p.method, shortcut,
-                                 context)
+                                 context, args)
 
-        self.bind(_mobj, shortcut, context)
+        self.bind(_mobj, shortcut, context, args)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _bind_wait_cb(self, plugin_obj, method, shortcut, context):
+    def _bind_wait_cb(self, plugin_obj, method, shortcut, context, args):
         if method not in plugin_obj.public:
             xyzlog.log(_(u"Unable to bind method %s. "\
                          u"Plugin %s doesn't export it." %
@@ -214,11 +266,12 @@ class KeyManager(object):
                          xyzlog.loglevel.ERROR)
             return
 
-        self.bind(plugin_obj.public[method], shortcut, context, force=False)
+        self.bind(plugin_obj.public[method], shortcut, context, args,
+                  force=False)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def bind(self, mobj, shortcut, context=None, force=True):
+    def bind(self, mobj, shortcut, context=None, args=None, force=True):
         """
         Bind a shortcut to a method
         @return: True on success, False otherwise, also raises exception
@@ -233,11 +286,19 @@ class KeyManager(object):
         if context not in self._bind_data:
             self._bind_data[context] = {}
 
+        if context not in self._args_data:
+            self._args_data[context] = {}
+
         if _shortcut in self._bind_data[context] and \
         self._bind_data[context][_shortcut] is not None and not force:
             return
 
         self._bind_data[context][_shortcut] = mobj
+
+        if args is None:
+            args = []
+
+        self._args_data[context][mobj] = args
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

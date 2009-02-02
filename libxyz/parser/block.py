@@ -22,6 +22,8 @@ from libxyz.parser import ParsedData
 from libxyz.exceptions import XYZValueError
 from libxyz.exceptions import LexerError
 
+import libxyz
+
 class BlockParser(BaseParser):
     """
     BaseParser is used to parse block structures.
@@ -223,7 +225,7 @@ class BlockParser(BaseParser):
                     self._varname = self.var_transform(word)
                 except XYZValueError, e:
                     self.error(_(u"Variable transformation error: %s") %
-                               unicode(e))
+                               libxyz.core.utils.ustring(str(e)))
             else:
                 self._varname = word
 

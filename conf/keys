@@ -4,6 +4,8 @@
 # Default keybindings. Do not edit.
 #
 
+# include </path/to/local/keys>
+
 load :sys:run:shutdown
 load :sys:logger:*
 load :sys:cmd:*
@@ -11,9 +13,11 @@ load :sys:panel:*
 load :core:pluginlist:show_list
 load :core:keycodes:*
 load :core:bindlist:show_binds
+load :core:viewer:*
 load :ui:testinput:show_box
 load :ui:bookmarks:*
 load :misc:about:about
+load :vfs:fileinfo:fileinfo
 
 bind :sys:cmd:execute to ENTER context @
 bind :sys:cmd:history_prev to META-p context @
@@ -65,4 +69,9 @@ bind :core:bindlist:show_binds to META-r
 bind :ui:testinput:show_box to META-e
 bind :ui:bookmarks:show_bookmarks to META-\ context :sys:panel
 
+bind :vfs:fileinfo:fileinfo to F2 context :sys:panel
+
 bind :misc:about:about to META-o
+
+# Temporary bindings
+bind :core:viewer:view("/tmp/XXX") to F3 context :sys:panel

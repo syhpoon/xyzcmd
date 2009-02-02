@@ -121,10 +121,10 @@ class Skin(object):
         # Prepare parsers
 
         _fs_rules_opt = {u"count": 1,
-                            u"value_validator": palette_validator,
-                            u"varre": re.compile(r".+"),
-                            u"var_transform": trans_cr,
-                           }
+                         u"value_validator": palette_validator,
+                         u"varre": re.compile(r".+"),
+                         u"var_transform": trans_cr,
+                         }
 
         _fs_rules_p = parser.BlockParser(_fs_rules_opt)
 
@@ -133,12 +133,18 @@ class Skin(object):
                    }
         _ui_p = parser.BlockParser(_ui_opt)
 
+        _plugin_opt = {u"count": 1,
+                       u"value_validator": palette_validator,
+                       }
+        _plugin_p = parser.BlockParser(_plugin_opt)
+
         _flat_opt = {u"count": 1}
         _flat_p = parser.FlatParser(_flat_opt)
 
         _parsers = {
                     u"fs.rules": _fs_rules_p,
                     re.compile(r"ui\.(\w)+"): _ui_p,
+                    re.compile(r"plugin\.([\w_-])+"): _plugin_p,
                     (u"AUTHOR", u"VERSION", u"DESCRIPTION"): _flat_p,
                     }
 

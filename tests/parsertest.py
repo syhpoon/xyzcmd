@@ -5,9 +5,13 @@
 
 import re
 import unittest
+import locale
+import __builtin__
 
 from libxyz.parser import BlockParser, MultiParser, FlatParser, RegexpParser
 from libxyz.exceptions import ParseError, XYZValueError
+
+__builtin__.__dict__["xyzenc"] = locale.getpreferredencoding()
 
 class BlockParsing(unittest.TestCase):
     def testOptType(self):

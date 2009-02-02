@@ -24,6 +24,7 @@ class XYZData(object):
                  "skin",
                  "pm",
                  "km",
+                 "hm",
                  "conf",
                  "input",
                 ]
@@ -34,6 +35,7 @@ class XYZData(object):
         object.__setattr__(self, "skin", None)
         object.__setattr__(self, "pm", None)
         object.__setattr__(self, "km", None)
+        object.__setattr__(self, "hm", None)
         object.__setattr__(self, "conf", None)
         object.__setattr__(self, "input", None)
 

@@ -26,6 +26,7 @@ from libxyz.exceptions import LexerError
 from libxyz.exceptions import FSRuleError
 from libxyz.vfs.vfsobj import  VFSFile
 from libxyz.vfs.types import *
+from libxyz.core.utils import ustring
 
 class FSRule(parser.BaseParser):
     """
@@ -40,10 +41,9 @@ class FSRule(parser.BaseParser):
                         | "(" rule ")"
     expr_body       ::= ftype "{" ARG "}"
     op              ::= AND | OR
-    ftype           ::= TYPE | PERM | OWNER | REGEXP
+    ftype           ::= TYPE | PERM | OWNER | REGEXP | SIZE
                         | LINK_TYPE | LINK_PERM | LINK_OWNER | LINK_REGEXP
-                        | LINK_EXISTS
-                        | SIZE | LINK_SIZE
+                        | LINK_EXISTS | LINK_SIZE
 
     Examples:
 
@@ -121,20 +121,25 @@ class FSRule(parser.BaseParser):
             raise FSRuleError(_(u"Error extending FSRule: "\
                                 u"token %s already registered") % token)
 
+        if not callable(trans_func) or not callable(match_func):
+            raise FSRuleError(_(u"Error extending FSRule: "\
+                                u"trans_func and match_func arguments "\
+                                u"must be functions."))
+
         # 1. Append token to lists
         cls.TOKENS_EXTENDED.append(token)
         cls.TOKENS.append(token)
         cls.FTYPE.append(token)
 
         # 2. Add transformation func
-        if trans_func is not None:
-            cls.TRANSFORM_EXTENDED[token] = trans_func
+        cls.TRANSFORM_EXTENDED[token] = trans_func
 
         # 3. Add match func
         Expression.extend(token, match_func)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    @classmethod
     def unextend(cls, token):
         """
         Remove extended expression from parser
@@ -163,7 +168,7 @@ class FSRule(parser.BaseParser):
         except KeyError:
             pass
 
-        Expression.unextend(token)
+        return Expression.unextend(token)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -486,7 +491,11 @@ class FSRule(parser.BaseParser):
             if _cur.otype in _transform:
                 _cur.arg = _transform[_cur.otype](_arg)
             elif _cur.otype in self.TRANSFORM_EXTENDED:
-                _cur.arg = self.TRANSFORM_EXTENDED[_cur.otype](_arg)
+                try:
+                    _cur.arg = self.TRANSFORM_EXTENDED[_cur.otype](_arg)
+                except Exception, e:
+                    self.error(_(u"Error in calling extended transformation "\
+                                 u"function: %s") % ustring(str(e)))
             else:
                 _cur.arg = _arg
 
@@ -764,7 +773,11 @@ class Expression(object):
         if self.otype in _match_f:
             _res = _match_f[self.otype](vfsobj, self.arg)
         elif self.otype in self.MATCH_EXTENDED:
-            _res = self.MATCH_EXTENDED[self.otype](vfsobj, self.arg)
+            try:
+                _res = self.MATCH_EXTENDED[self.otype](vfsobj, self.arg)
+            except Exception, e:
+                self.error(_(u"Error in calling extended match "\
+                             u"function: %s") % ustring(str(e)))
         else:
             raise FSRuleError(_(u"Unable to find match function for token: %s")
                               % self.otype)

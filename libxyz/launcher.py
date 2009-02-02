@@ -37,6 +37,7 @@ from libxyz.ui import lowui
 from libxyz.version import Version
 from libxyz.core.plugins import PluginManager
 from libxyz.core import logger
+from libxyz.core.utils import ustring
 
 from libxyz.exceptions import *
 
@@ -83,6 +84,7 @@ class Launcher(object):
         self.parse_configs()
         self.init_skin()
 
+        self.xyz.hm = core.HookManager()
         self.xyz.pm = PluginManager(self.xyz, self._path_sel.get_plugins_dir())
 
         self.init_keys()
@@ -93,6 +95,7 @@ class Launcher(object):
         self.xyz.screen.register_palette(self.xyz.skin.get_palette_list())
         self.xyz.skin.set_screen(self.xyz.screen)
         self.xyz.screen.run_wrapper(self._run)
+
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -162,7 +165,7 @@ class Launcher(object):
         except Exception:
             raise XYZValueError(_(u"Invalid value %s.\n"\
                                   u"A list of valid log levels expected"
-                                  % unicode(_levels)))
+                                  % ustring(_levels)))
 
         try:
             _lines = self.xyz.conf[u"plugins"][u":sys:logger"][u"lines"]
@@ -175,7 +178,7 @@ class Launcher(object):
         except ValueError:
             raise XYZValueError(_(u"Invalid value %s. "\
                                   u"A positive integer expected" %
-                                  unicode(_lines)))
+                                  ustring(_lines)))
 
         _logger = core.logger.Logger(self.xyz, _levels, _lines)
 
@@ -252,7 +255,7 @@ class Launcher(object):
         _plugins_opts = {
                          u"count": 1,
                          u"varre": re.compile("^[\w:-]+$"),
-                         u"assignchar": ">",
+                         u"assignchar": "=",
                          u"value_validator": _validate_plugins,
                         }
         _plugins_p = parser.BlockParser(_plugins_opts)

@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+import libxyz
+
 class SourceData(object):
     """
     Source data iterator class
@@ -49,7 +51,7 @@ class SourceData(object):
             self._len = len(self._source)
         # Open file-like object supposed
         else:
-            self._intern = source.name.decode()
+            self._intern = libxyz.core.utils.ustring(source.name)
             self._type = self.FILE
             self._next_me = self._next_file
 
@@ -68,8 +70,7 @@ class SourceData(object):
         else:
             _res = self._next_me()
 
-        if not isinstance(_res, unicode):
-            _res = _res.decode(xyzenc)
+        _res = libxyz.core.utils.ustring(_res)
 
         if _res == u"\n":
             self.lineno += 1

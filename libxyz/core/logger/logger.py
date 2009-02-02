@@ -30,7 +30,7 @@ class Logger(object):
     There are several message levels:
     PANIC: Critical error.
     ERROR: Non-critical error.
-    WARNING: Non-critical warning.
+    WARNING: Warning.
     INFO: Informational message.
     DEBUG: Debug messages.
     ALL: All of the above.

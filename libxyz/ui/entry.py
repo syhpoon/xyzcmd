@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+from libxyz.core.utils import ustring
 from libxyz.ui import lowui
 import libxyz.ui
 
@@ -105,10 +106,10 @@ class NumEntry(ListEntry):
                 _index = self.num_order
             try:
                 self._enter_cb(_index)
-            except StandardError, e:
+            except Exception, e:
                 xyzlog.log(_(u"Error in entry callback: %s" %
                            str(e)), xyzlog.loglevel.ERROR)
-                xyzlog.log(traceback.format_exc().decode(xyzenc),
+                xyzlog.log(ustring(traceback.format_exc()),
                            xyzlog.loglevel.DEBUG)
             finally:
                 return key

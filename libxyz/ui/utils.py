@@ -14,6 +14,9 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+from libxyz.ui import lowui
+from libxyz.core.utils import ustring
+
 def refresh(func):
     """
     Invalidate canvas after calling function
@@ -35,10 +38,9 @@ def truncate(text, cols, enc, backward=False):
     If backward is True, text will be truncated from the beginning
     """
 
-    if not type(text) == unicode:
-        text = text.decode(enc)
+    text = ustring(text, enc)
 
-    _len = len(text)
+    _len = lowui.util.calc_width(text, 0, len(text))
 
     if _len < cols:
         return text

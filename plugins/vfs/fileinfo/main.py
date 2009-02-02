@@ -5,51 +5,49 @@
 
 from libxyz.core.plugins import BasePlugin
 
+from libxyz.ui import lowui
+from libxyz.ui import XYZListBox
+
 class XYZPlugin(BasePlugin):
     "Plugin fileinfo"
 
-    # Plugin name
     NAME = u"fileinfo"
-
-    # AUTHOR: Author name
     AUTHOR = u"Max E. Kuznecov"
-
-    # VERSION: Plugin version
     VERSION = u"0.1"
-
-    # Brief one line description
-    BRIEF_DESCRIPTION = u""
-
-    # Full plugin description
+    BRIEF_DESCRIPTION = u"Show VFS object information"
     FULL_DESCRIPTION = u""
-
-    # NAMESPACE: Plugin namespace. For detailed information about
-    #            namespaces see Plugins chapter of XYZCommander user manual.
-    #            Full namespace path to method is:
-    #            xyz:plugins:misc:hello:SayHello
-
     NAMESPACE = u"vfs"
-
-    # MIN_XYZ_VERSION: Minimal XYZCommander version
-    #                  the plugin is compatible with
     MIN_XYZ_VERSION = None
-
-    # Plugin documentation
     DOC = None
-
-    # Plugin home-page
-    HOMEPAGE = None
+    HOMEPAGE = u"xyzcmd.syhpoon.name"
 
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def prepare(self):
-        pass
+        self.export(self.fileinfo)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def finalize(self):
-        pass
+    def fileinfo(self):
+        """
+        Show VFS object info
+        """
 
+        _selected = self.xyz.pm.from_load(":sys:panel", "get_selected")()
+
+        self.run_hook("fileinfo", _selected)
+
+        _data = []
+        _na = lambda x: lowui.Text(u"%-30s: N/A" % x)
+
+        for _name, _value in _selected.attributes:
+            if _value is None:
+                _data.append(_na(_name))
+            else:
+                _data.append(lowui.Text(u"%-30s: %s" % (_name, _value)))
+
+        _walker = lowui.SimpleListWalker(_data)
+        _dim = tuple([x - 2 for x in self.xyz.screen.get_cols_rows()])
+
+        XYZListBox(self.xyz, self.xyz.top, _walker, _(u"VFS Object Info"),
+                   _dim).show()

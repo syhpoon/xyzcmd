@@ -23,6 +23,7 @@ import libxyz.core
 import libxyz.const
 import libxyz.exceptions
 
+from libxyz.core.utils import ustring, bstring
 from libxyz.ui import lowui
 from libxyz.ui import align
 from libxyz.ui.utils import refresh
@@ -48,11 +49,11 @@ class Panel(lowui.WidgetWrap):
         self._enc = xyzenc
 
         self.block1 = Block(xyz, _blocksize,
-                            LocalVFSObject("/tmp", self._enc), self._enc,
+                            LocalVFSObject("/", self._enc), self._enc,
                                            active=True)
 
         self.block2 = Block(xyz, _blocksize,
-                            LocalVFSObject("/home/syhpoon", self._enc),
+                            LocalVFSObject("/", self._enc),
                                            self._enc)
 
         self._stop = False
@@ -106,19 +107,19 @@ class Panel(lowui.WidgetWrap):
             _input = self.xyz.input.get()
 
             if _input:
-                _meth = self.xyz.km.process(_input, self.context)
+                (_meth, _args) = self.xyz.km.process(_input, self.context)
 
                 # No binds for PANEL context
                 if _meth is None:
                     self._cmd.keypress(_dim, _input)
                 else:
                     try:
-                        _meth()
-                    except StandardError, e:
+                        _meth(*_args)
+                    except Exception, e:
                         xyzlog.log(_("Error executing bind (%s): %s") %
                                   (self._keys.raw_to_shortcut(_input[0]),
                                    str(e)), xyzlog.loglevel.ERROR)
-                        xyzlog.log(traceback.format_exc().decode(self._enc),
+                        xyzlog.log(ustring(traceback.format_exc(), self._enc),
                                    xyzlog.loglevel.DEBUG)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -401,6 +402,8 @@ class Block(lowui.BoxWidget):
         self.xyz = xyz
         self.size = size
         self.attr = lambda x: self.xyz.skin.attr(Panel.resolution, x)
+        # Length of the string in terms of terminal columns
+        self.term_width = lambda x: lowui.util.calc_width(x, 0, len(x))
 
         self.active = active
         self.selected = 0
@@ -493,13 +496,13 @@ class Block(lowui.BoxWidget):
 
         if _tlen > 0:
             _text = _(u"%s bytes (%d)") % (
-                    self._make_number_readable(
-                        reduce(lambda x, y: x + y,
+                self._make_number_readable(
+                    reduce(lambda x, y: x + y,
                            [self.entries[x].size for x in self._tagged
                             if isinstance(self.entries[x].ftype, VFSTypeFile)
-                           ], 0)), _tlen)
-
-            self._sep.set_text(_text.encode(self._enc), self.attr(u"tagged"))
+                            ], 0)), _tlen)
+            
+            self._sep.set_text(bstring(_text, self._enc), self.attr(u"tagged"))
         else:
             self._sep.clear_text()
 
@@ -525,7 +528,7 @@ class Block(lowui.BoxWidget):
                 _own_attr = self._palettes[_abs_i]
 
             if _own_attr is not None:
-                x = lowui.TextCanvas(text=[_text.encode(self._enc)],
+                x = lowui.TextCanvas(text=[bstring(_text, self._enc)],
                                      attr=[[(_own_attr, maxcol)]],
                                      maxcol=maxcol)
                 canvases.append((x, i, False))
@@ -630,10 +633,12 @@ class Block(lowui.BoxWidget):
         _part2 = vfsobj.info
         _part1 = truncate(vfsobj.visual, cols - len(_part2) - 2, self._enc)
 
-        _text = u"%s%s%s" % (_part1, u" " * (cols - (len(_part1) +
-                             len(_part2)) - 1), _part2)
-
-        self._winfo.set_text(_text.encode(self._enc))
+        _text = u"%s%s%s" % (_part1,
+                             u" " * (cols - (self.term_width(_part1) +
+                                             self.term_width(_part2)) -
+                                     1), _part2)
+        
+        self._winfo.set_text(bstring(_text, self._enc))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -643,7 +648,7 @@ class Block(lowui.BoxWidget):
         """
 
         _text = truncate(custom_text, cols, self._enc, True)
-        self._winfo.set_text(_text.encode(self._enc))
+        self._winfo.set_text(bstring(_text, self._enc))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -835,7 +840,7 @@ class Block(lowui.BoxWidget):
             self._rule_raw = _raw
 
         try:
-            _rule = libxyz.core.FSRule(_raw.decode(self._enc))
+            _rule = libxyz.core.FSRule(ustring(_raw, self._enc))
         except libxyz.exceptions.ParseError, e:
             xyzlog.log(str(e), xyzlog.loglevel.ERROR)
             return
@@ -1012,7 +1017,8 @@ class Block(lowui.BoxWidget):
                         _collected.pop()
 
                 _tmp = _collected[:]
-                _tmp.extend([x.decode(self._enc) for x in _raw if len(x) == 1])
+                _tmp.extend([ustring(x, self._enc) for x in _raw
+                             if len(x) == 1])
                 _pattern = u"".join(_tmp)
             except Exception:
                 break

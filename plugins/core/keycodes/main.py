@@ -21,6 +21,7 @@ import libxyz.ui as uilib
 
 from libxyz.core.plugins import BasePlugin
 from libxyz.core import UserData
+from libxyz.core.utils import ustring
 from libxyz.exceptions import PluginError
 from libxyz.exceptions import XYZRuntimeError
 
@@ -190,7 +191,7 @@ class XYZPlugin(BasePlugin):
         try:
             _file = self._ud.openfile(self._keysfile, "wb", self._keyssubdir)
         except XYZRuntimeError, e:
-            raise PluginError(_(u"Unable to open file: %s" % unicode(e)))
+            raise PluginError(_(u"Unable to open file: %s" % ustring(str(e))))
 
         try:
             cPickle.dump(data, _file)
