@@ -22,20 +22,23 @@ FSRules grammar (BNF)
     ftype         : "type" | "perm" | "owner" | "regexp"
                   : "link_type" | "link_perm" | "link_owner"
                   : "link_regexp" | "link_exists"
+                  : "size"
 
 Rule consists of one or more expressions combined with logical operators.
 
 Как видно из грамматики, выражение имеет вид ``<type>{<arg>}``.
-Доступные типы выражений:
+Available expressions are:
 
 * :ref:`type`
 * :ref:`perm`
 * :ref:`owner`
 * :ref:`regexp`
+* :ref:`size`
 * :ref:`link_type <type>`
 * :ref:`link_perm <perm>`
 * :ref:`link_owner <owner>`
 * :ref:`link_regexp <regexp>`
+* :ref:`link_size <size>`
 * :ref:`link_exists`
 
 ``link_type, link_perm, link_owner, link_regexp`` are the same expressions
@@ -137,6 +140,18 @@ the whole argument so it would be interpreted correctly by lexer::
 
       # Hidden files
       '''regexp{"^\\.{1}[^.]"}'''
+
+.. _size:
+
+size
+----
+``size`` expressions are used to match object based on its size.
+
+An argument has following format::
+
+    [><][=]<size>[BKMGT]
+
+A
 
 .. _link_exists:
 

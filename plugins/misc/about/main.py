@@ -44,6 +44,7 @@ class XYZPlugin(BasePlugin):
 
         _w.append(lowui.Text((_attr, u"%s - Console file manager" %
                              libxyz.const.PROG), align=uilib.align.CENTER))
+
         _w.append(lowui.Text((_attr, u"Version: %s" %
                                 Version.string_version),
                               align=uilib.align.CENTER))
