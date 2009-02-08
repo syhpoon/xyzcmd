@@ -25,6 +25,7 @@ import re
 import locale
 import os
 import os.path
+import termios
 import __builtin__
 
 import libxyz
@@ -79,6 +80,7 @@ class Launcher(object):
         """
 
         self._set_enc()
+        self.setup_term()
 
         self.parse_args()
         self.parse_configs()
@@ -212,6 +214,43 @@ class Launcher(object):
 
         self.xyz.km = core.KeyManager(self.xyz,
                                   self._path_sel.get_conf(const.KEYS_CONF_FILE))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def setup_term(self):
+        """
+        Make additional terminal initializtion
+        """
+
+        stdin = sys.stdin.fileno()
+
+        # WTF?
+        if not os.isatty(stdin):
+            return
+
+        try:
+            vdisable = os.fpathconf(stdin, "PC_VDISABLE")
+        except ValueError:
+            return
+
+        term = termios.tcgetattr(stdin)
+
+        # Disable special symbols
+        _todisable = [getattr(termios, x) for x in ("VQUIT",     #^\
+                                                    "VINTR",     # ^C
+                                                    "VSUSP",     # ^Z
+                                                    "VLNEXT",    # ^V
+                                                    "VSTART",    # ^Q
+                                                    "VSTOP",     # ^S
+                                                    "VDISCARD",  # ^O
+                                                    )]
+
+        for _key in _todisable:
+            term[-1][_key] = vdisable
+
+        termios.tcsetattr(stdin, termios.TCSANOW, term)
+
+        return
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
