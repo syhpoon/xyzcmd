@@ -26,6 +26,7 @@ import locale
 import os
 import os.path
 import termios
+import copy
 import __builtin__
 
 import libxyz
@@ -60,6 +61,7 @@ class Launcher(object):
 
         self._path_sel = libxyz.PathSelector()
         self._conf_dir = None
+        self._saved_term = None
 
         self._init_default()
 
@@ -87,7 +89,8 @@ class Launcher(object):
         self.init_skin()
 
         self.xyz.hm = core.HookManager()
-        self.xyz.pm = PluginManager(self.xyz, self._path_sel.get_plugins_dir())
+        self.xyz.pm = PluginManager(self.xyz,
+                                    self._path_sel.get_plugins_dir())
 
         self.init_keys()
 
@@ -98,6 +101,7 @@ class Launcher(object):
         self.xyz.skin.set_screen(self.xyz.screen)
         self.xyz.screen.run_wrapper(self._run)
 
+        self.finalize()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -118,8 +122,6 @@ class Launcher(object):
         self.xyz.top = lowui.Filler(panel)
 
         panel.loop()
-
-        self.finalize()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -212,8 +214,8 @@ class Launcher(object):
         Initialize keys
         """
 
-        self.xyz.km = core.KeyManager(self.xyz,
-                                  self._path_sel.get_conf(const.KEYS_CONF_FILE))
+        self.xyz.km = core.KeyManager(self.xyz, self._path_sel.get_conf(
+                                                const.KEYS_CONF_FILE))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -234,9 +236,10 @@ class Launcher(object):
             return
 
         term = termios.tcgetattr(stdin)
+        self._saved_term = copy.deepcopy(term[-1])
 
         # Disable special symbols
-        _todisable = [getattr(termios, x) for x in ("VQUIT",     #^\
+        _todisable = [getattr(termios, x) for x in ("VQUIT",     # ^\
                                                     "VINTR",     # ^C
                                                     "VSUSP",     # ^Z
                                                     "VLNEXT",    # ^V
@@ -425,4 +428,11 @@ Usage: %s [-c dir][-vh]
         Perform shutdown procedures
         """
 
-        pass
+        if self._saved_term is not None:
+            stdin = sys.stdin.fileno()
+
+            term = termios.tcgetattr(stdin)
+            term[-1] = self._saved_term
+
+            if os.isatty(stdin):
+                termios.tcsetattr(stdin, termios.TCSANOW, term)
