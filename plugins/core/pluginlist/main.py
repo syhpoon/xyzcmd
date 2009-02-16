@@ -53,7 +53,7 @@ class XYZPlugin(BasePlugin):
         _plugins = sorted(self.xyz.pm.get_all_loaded().values(),
                           lambda x, y: cmp(x.ns, y.ns))
 
-        _sel_attr = self.xyz.skin.attr(uilib.XYZListBox.resolution,u"selected")
+        _sel_attr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"selected")
         self._walker = lowui.SimpleListWalker([PluginEntry(_obj, _sel_attr,
                                               self._info)
                                               for _obj in _plugins])
@@ -142,6 +142,9 @@ class XYZPlugin(BasePlugin):
                                          title_attr=_titleattr,
                                          div_attr=_divattr))
 
+            keys = uilib.Keys()
+            _bind_data = self.xyz.km.get_binds()
+
             _len = len(_plugin.public)
             _i = 0
 
@@ -153,8 +156,16 @@ class XYZPlugin(BasePlugin):
                 else:
                     _doc = v.__doc__
 
-                _data.append(lowui.Text(u"%s(%s): %s" %
-                             (k, make_args(v), _doc)))
+                _cur_bind = _(ustring("N/A"))
+
+                # Try to find current binding for the method
+                for context in _bind_data:
+                    for bind in _bind_data[context]:
+                        if _bind_data[context][bind] is v:
+                            _cur_bind = keys.raw_to_shortcut(bind[0])
+
+                _data.append(lowui.Text(u"%s(%s) [%s]: %s" %
+                             (k, make_args(v), _cur_bind, _doc)))
 
                 _i += 1
 

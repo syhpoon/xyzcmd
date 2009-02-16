@@ -53,10 +53,7 @@ class PluginEntry(lowui.FlowWidget):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def render(self, (maxcol,), focus=False):
-        def percent(per, total):
-            return int((total / 100.0) * per)
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        percent = lambda per, total: int((total / 100.0) * per)
 
         _pad = percent(35, maxcol) - len(self.plugin.ns)
 
@@ -82,7 +79,7 @@ class PluginEntry(lowui.FlowWidget):
                 self.enter_cb()
             except Exception, e:
                 xyzlog.log(_(u"Error in entry callback: %s" %
-                           ustring(e.strerror)), xyzlog.loglevel.ERROR)
+                           ustring(str(e))), xyzlog.loglevel.ERROR)
                 xyzlog.log(ustring(traceback.format_exc()),
                            xyzlog.loglevel.DEBUG)
         else:
