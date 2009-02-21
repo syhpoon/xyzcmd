@@ -156,7 +156,7 @@ class XYZPlugin(BasePlugin):
                 else:
                     _doc = v.__doc__
 
-                _cur_bind = _(ustring("N/A"))
+                _cur_bind = _(u"N/A")
 
                 # Try to find current binding for the method
                 for context in _bind_data:
