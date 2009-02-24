@@ -161,6 +161,7 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.chdir)
         _panel_plugin.export(self.search_forward)
         _panel_plugin.export(self.search_backward)
+        _panel_plugin.export(self.show_tagged)
 
         _panel_plugin.VERSION = u"0.1"
         _panel_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
@@ -379,6 +380,15 @@ class Panel(lowui.WidgetWrap):
 
         self.active.search_backward()
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def show_tagged(self):
+        """
+        Show only tagged entries
+        """
+
+        self.active.show_tagged()
+
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 class Block(lowui.BoxWidget):
@@ -469,7 +479,7 @@ class Block(lowui.BoxWidget):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def selectable(self):
-        return True
+        return  True
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -985,6 +995,34 @@ class Block(lowui.BoxWidget):
 
         return self._search_engine(lambda x: (xrange(x, 0, -1)))
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @refresh
+    def show_tagged(self):
+        """
+        Show only tagged entries
+        """
+
+        if not self._tagged:
+            return
+
+        self.entries = [self.entries[x] for x in self._tagged]
+        self._len = len(self.entries)
+        self.selected = 0
+        self._tagged = []
+        self._palettes = self._process_skin_rulesets()
+
+        _tagged = _(u"TAGGED")
+
+        if not self._title.endswith(_tagged):
+            self._title = truncate(u"%s:%s" % (self._title, _tagged),
+                                   self.size.cols - 4, self._enc, True)
+        
+            if hasattr(self, "border"):
+                self.border.set_title(self._title)
+
+        self._force_reload = True
+        
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _search_engine(self, order):
