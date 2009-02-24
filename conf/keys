@@ -18,6 +18,7 @@ load :ui:testinput:show_box
 load :ui:bookmarks:*
 load :misc:about:about
 load :vfs:fileinfo:fileinfo
+load :core:shell:*
 
 bind :sys:cmd:execute to ENTER context @
 bind :sys:cmd:history_prev to META-p context @
@@ -58,6 +59,7 @@ bind :sys:panel:reload to CTRL-r context @
 bind :sys:panel:action to ENTER context @
 bind :sys:panel:search_forward to META-s context @
 bind :sys:panel:search_backward to META-w context @
+bind :sys:panel:show_tagged to META-g context @
 
 bind :sys:logger:show_console to META-l
 bind :sys:run:shutdown to F10
@@ -75,3 +77,4 @@ bind :misc:about:about to META-o
 
 # Temporary bindings
 bind :core:viewer:view("/tmp/XXX") to F3 context :sys:panel
+bind :core:shell:execute("ls") to F4 context :sys:panel
