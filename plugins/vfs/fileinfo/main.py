@@ -4,6 +4,7 @@
 #
 
 from libxyz.core.plugins import BasePlugin
+from libxyz.core.utils import ustring
 
 from libxyz.ui import lowui
 from libxyz.ui import XYZListBox
@@ -15,7 +16,7 @@ class XYZPlugin(BasePlugin):
     AUTHOR = u"Max E. Kuznecov"
     VERSION = u"0.1"
     BRIEF_DESCRIPTION = u"Show VFS object information"
-    FULL_DESCRIPTION = u""
+    FULL_DESCRIPTION = u"Show detailed information provided by VFS layer"
     NAMESPACE = u"vfs"
     MIN_XYZ_VERSION = None
     DOC = None
@@ -44,6 +45,9 @@ class XYZPlugin(BasePlugin):
             if _value is None:
                 _data.append(_na(_name))
             else:
+                if not isinstance(_value, basestring):
+                    _value = ustring(str(_value))
+
                 _data.append(lowui.Text(u"%-30s: %s" % (_name, _value)))
 
         _walker = lowui.SimpleListWalker(_data)
