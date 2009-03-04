@@ -221,7 +221,7 @@ class Launcher(object):
 
     def setup_term(self):
         """
-        Make additional terminal initializtion
+        Make additional terminal initialization
         """
 
         stdin = sys.stdin.fileno()
@@ -237,6 +237,8 @@ class Launcher(object):
 
         term = termios.tcgetattr(stdin)
         self._saved_term = copy.deepcopy(term[-1])
+        #TODO
+        __builtin__.__dict__["savedterm"] = term
 
         # Disable special symbols
         _todisable = [getattr(termios, x) for x in ("VQUIT",     # ^\

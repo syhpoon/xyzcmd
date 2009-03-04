@@ -48,18 +48,16 @@ class Panel(lowui.WidgetWrap):
         _blocksize = libxyz.ui.Size(rows=_size[1] - 1, cols=_size[0] / 2 - 2)
         self._enc = xyzenc
 
-        self.block1 = Block(xyz, _blocksize,
-                            LocalVFSObject("/", self._enc), self._enc,
-                                           active=True)
+        _cwd = os.getcwd()
 
-        self.block2 = Block(xyz, _blocksize,
-                            LocalVFSObject("/", self._enc),
-                                           self._enc)
+        self._cmd = libxyz.ui.Cmd(xyz)
+        self.block1 = Block(xyz, _blocksize, _cwd, self._enc, active=True)
+
+        self.block2 = Block(xyz, _blocksize, _cwd, self._enc)
 
         self._stop = False
         columns = lowui.Columns([self.block1.block, self.block2.block], 0)
 
-        self._cmd = libxyz.ui.Cmd(xyz)
         self._widget = lowui.Pile([columns, self._cmd])
 
         self._set_plugins()
@@ -396,7 +394,7 @@ class Block(lowui.BoxWidget):
     Single panel block
     """
 
-    def __init__(self, xyz, size, vfsobj, enc, active=False):
+    def __init__(self, xyz, size, path, enc, active=False):
         """
         @param xyz: XYZData instance
         @param size: Block widget size
@@ -423,13 +421,16 @@ class Block(lowui.BoxWidget):
         self._from = 0
         self._to = 0
         self._force_reload = False
+        self.entries = []
+        self._dir = None
 
         self._cursor_attr = None
         self._custom_info = None
         self._keys = libxyz.ui.Keys()
+        self._cmd = self.xyz.pm.load(":sys:cmd")
 
         self._enc = enc
-        self._setup(vfsobj)
+        self.chdir(path)
 
         self._winfo = lowui.Text(u"")
         self._sep = libxyz.ui.Separator()
@@ -696,6 +697,7 @@ class Block(lowui.BoxWidget):
 
         self.active = True
         self.border.set_title_attr(self._get_title_attr())
+        self.chdir(self._dir.path, reload=False)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -928,6 +930,10 @@ class Block(lowui.BoxWidget):
         Perform action on selected file
         """
 
+        # If cmd line is not empty - run execute
+        if not self._cmd.is_empty():
+            return self._cmd.execute()
+
         _selected = self.entries[self.selected]
 
         if isinstance(_selected.ftype, VFSTypeDir) or \
@@ -939,41 +945,51 @@ class Block(lowui.BoxWidget):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @refresh
-    def chdir(self, path):
+    def chdir(self, path, reload=True):
         """
         Change directory
+        If reload is not True only execute os.chdir, without reloading
+        directory contents
         """
 
-        _parent = os.path.normpath(self.entries[0].path)
-        _path = os.path.normpath(path)
-        _old = self._dir.name
-        _old_vfs = self._vfsobj
+        if reload:
+            _path = os.path.normpath(path)
+            _parent = None
+            _old_vfs = None
 
-        try:
-            _vfsobj = LocalVFSObject(path, self._enc)
-        except libxyz.exceptions.VFSError, e:
-            xyzlog.log("Unable to chdir to %s: %s" % (path, str(e)),
-                       xyzlog.loglevel.ERROR)
-            return
+            if self.entries:
+                _parent = os.path.normpath(self.entries[0].path)
+                _old = self._dir.name
+                _old_vfs = self._vfsobj
 
-        try:
-            self._setup(_vfsobj)
-        except libxyz.exceptions.XYZRuntimeError, e:
-            xyzlog.log("Unable to chdir to %s: %s" % (path, str(e)),
-                       xyzlog.loglevel.INFO)
-            return
+            try:
+                _vfsobj = LocalVFSObject(path, self._enc)
+            except libxyz.exceptions.VFSError, e:
+                xyzlog.log("Unable to chdir to %s: %s" % (path, str(e)),
+                           xyzlog.loglevel.ERROR)
+                return
 
-        self.selected = 0
+            try:
+                self._setup(_vfsobj)
+            except libxyz.exceptions.XYZRuntimeError, e:
+                xyzlog.log("Unable to chdir to %s: %s" % (path, str(e)),
+                           xyzlog.loglevel.INFO)
+                return
 
-        # We've just stepped out from dir, try to focus on it
-        if _parent == _path:
-            for x in xrange(self._len):
-                if self.entries[x].name == _old:
-                    self.selected = x
-                    break
+            self.selected = 0
 
-        # TODO: 2-3 level cache
-        del(_old_vfs)
+            # We've just stepped out from dir, try to focus on it
+            if _parent == _path:
+                for x in xrange(self._len):
+                    if self.entries[x].name == _old:
+                        self.selected = x
+                        break
+
+            # TODO: 2-3 level cache
+            if _old_vfs:
+                del(_old_vfs)
+
+        os.chdir(path)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

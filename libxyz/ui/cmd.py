@@ -558,6 +558,12 @@ class Cmd(lowui.FlowWidget):
             return
 
         self._save_history()
+
+        if not hasattr(self, "_execf"):
+            self._execf = self.xyz.pm.from_load(":core:shell", "execute")
+
+        self._execf("".join(self._data))
+        
         self._clear_cmd()
         self._invalidate()
 
