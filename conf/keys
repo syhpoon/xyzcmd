@@ -6,7 +6,7 @@
 
 # include </path/to/local/keys>
 
-load :sys:run:shutdown
+load :sys:run:*
 load :sys:logger:*
 load :sys:cmd:*
 load :sys:panel:*
@@ -63,6 +63,7 @@ bind :sys:panel:show_tagged to META-g context @
 
 bind :sys:logger:show_console to META-l
 bind :sys:run:shutdown to F10
+bind :sys:run:repaint to CTRL-l
 
 bind :core:pluginlist:show_list to META-t
 bind :core:keycodes:learn_keys to META-y

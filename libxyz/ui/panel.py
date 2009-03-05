@@ -130,6 +130,7 @@ class Panel(lowui.WidgetWrap):
         # :sys:run
         _run_plugin = libxyz.core.plugins.VirtualPlugin(self.xyz, u"run")
         _run_plugin.export(self.shutdown)
+        _run_plugin.export(self.repaint)
 
         _run_plugin.VERSION = u"0.1"
         _run_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
@@ -181,6 +182,15 @@ class Panel(lowui.WidgetWrap):
 
         if libxyz.ui.YesNoBox(self.xyz, self.xyz.top, _q, _title).show():
             self._stop = True
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def repaint(self):
+        """
+        Reparint screen
+        """
+
+        self.xyz.screen.clear()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -513,7 +523,8 @@ class Block(lowui.BoxWidget):
                             if isinstance(self.entries[x].ftype, VFSTypeFile)
                             ], 0)), _tlen)
             
-            self._sep.set_text(bstring(_text, self._enc), self.attr(u"tagged"))
+            self._sep.set_text(bstring(_text, self._enc),
+                               self.attr(u"tagged"))
         else:
             self._sep.clear_text()
 
@@ -544,7 +555,8 @@ class Block(lowui.BoxWidget):
                                      maxcol=maxcol)
                 canvases.append((x, i, False))
             else:
-                canvases.append((lowui.Text(_text).render((maxcol,)), i,False))
+                canvases.append((lowui.Text(_text).render((maxcol,)),
+                                 i, False))
 
         combined = lowui.CanvasCombine(canvases)
 

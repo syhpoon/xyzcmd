@@ -8,6 +8,9 @@ import termios
 import os
 import pty
 import signal
+import struct
+import fcntl
+import tty
 
 from libxyz.core.plugins import BasePlugin
 
@@ -24,11 +27,34 @@ class XYZPlugin(BasePlugin):
     DOC = None
     HOMEPAGE = "http://xyzcmd.syhpoon.name"
 
+    shell_args = {"sh": ["-c"],
+                  "bash": ["-c"],
+                  "zsh": ["-c"]
+                  }
+
     def __init__(self, xyz):
+        
         super(XYZPlugin, self).__init__(xyz)
 
         self.export(self.execute)
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def prepare(self):
+        # Determine shell
+
+        shell = os.getenv("SHELL")
+
+        if not shell:
+            shell = "/bin/sh"
+
+        _shell = os.path.basename(shell)
+
+        if _shell not in self.shell_args:
+            shell, _shell = "/bin/sh", "sh"
+
+        self.shell = [shell] + self.shell_args[_shell]
+        
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def execute(self, cmd):
@@ -38,34 +64,39 @@ class XYZPlugin(BasePlugin):
 
         self.xyz.screen.clear()
         stdin = sys.stdin.fileno()
+        stdout = sys.stdout
         current = termios.tcgetattr(stdin)
-        #TODO: savedterm!
-        termios.tcsetattr(stdin, termios.TCSADRAIN, savedterm)
+        termios.tcsetattr(stdin, termios.TCSADRAIN, self.xyz.term)
         #TODO: make it more portable!
-        sys.stdout.write("\x1b[H\x1b[2J")
+        stdout.write("\x1b[H\x1b[2J")
 
-        sys.stdout.write("%s%s\n" %
-                         (self.xyz.conf[u"plugins"][":sys:cmd"][u"prompt"],
-                          cmd))
-        sys.stdout.flush()
+        stdout.write("%s%s\n" %
+                     (self.xyz.conf[u"plugins"][":sys:cmd"][u"prompt"],
+                      cmd))
+        stdout.flush()
             
+        winsize = fcntl.ioctl(stdout.fileno(), termios.TIOCGWINSZ, '1234')
+
         pid, fd = pty.fork()
 
-        # Child
+        # Child - Exec passed cmd
         if pid == 0:
-            # TODO: actual user shell
-            os.execvp("/usr/local/bin/zsh",
-                      ["/usr/local/bin/zsh", "-c", cmd])
+            # Restore window size
+            fcntl.ioctl(stdout.fileno(), termios.TIOCSWINSZ, winsize)
+            os.execvp(self.shell[0], self.shell + [cmd])
 
             # WTF?
             sys.exit()
-        # Parent
+        # Parent - Fork. In child redirect stdin > pty child.
+        # In parent redirect pty child > stdout
         else:
             child = os.fdopen(fd, "r+")
 
             xpid = os.fork()
 
             if xpid == 0:
+                tty.setcbreak(stdin)
+
                 while True:
                     try:
                         line = os.read(stdin, 1024)
@@ -87,11 +118,11 @@ class XYZPlugin(BasePlugin):
                         if not line:
                             break
 
-                        sys.stdout.write(line)
-                        sys.stdout.flush()
+                        stdout.write(line)
+                        stdout.flush()
                     except Exception:
                         break
 
             os.kill(xpid, signal.SIGTERM)
-            raw_input("Press RETURN to continue...")
+            raw_input(_(u"Press RETURN to continue..."))
             termios.tcsetattr(stdin, termios.TCSADRAIN, current)

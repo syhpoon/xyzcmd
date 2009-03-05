@@ -237,8 +237,7 @@ class Launcher(object):
 
         term = termios.tcgetattr(stdin)
         self._saved_term = copy.deepcopy(term[-1])
-        #TODO
-        __builtin__.__dict__["savedterm"] = term
+        self.xyz.term = term
 
         # Disable special symbols
         _todisable = [getattr(termios, x) for x in ("VQUIT",     # ^\
