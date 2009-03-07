@@ -15,7 +15,6 @@ plugins {
    :core:keycodes = ENABLE
    :core:pluginlist = ENABLE
    :core:bindlist = ENABLE
-   :core:viewer = ENABLE
    :core:shell = ENABLE
 
    :misc:hello = ENABLE
@@ -25,6 +24,7 @@ plugins {
    :ui:bookmarks = ENABLE
 
    :vfs:fileinfo = ENABLE
+   :vfs:vfsutils = ENABLE
 }
 
 # Skin to use

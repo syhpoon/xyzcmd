@@ -89,12 +89,21 @@ class Logger(object):
         if level is None:
             level = self.loglevel.UNKNOWN
 
-        _sel_attr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"selected")
+        _sel_attr = self.xyz.skin.attr(uilib.XYZListBox.resolution,
+                                       u"selected")
 
         if self.tracked_levels & level:
             self._data.append(LogEntry(msg, self.loglevel.str_level(level),
                               _sel_attr))
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    panic = lambda self, msg: self.log(msg, level=self.loglevel.PANIC)
+    error = lambda self, msg: self.log(msg, level=self.loglevel.ERROR)
+    warning = lambda self, msg: self.log(msg, level=self.loglevel.WARNING)
+    info = lambda self, msg: self.log(msg, level=self.loglevel.INFO)
+    debug = lambda self, msg: self.log(msg, level=self.loglevel.DEBUG)
+    
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def clear(self):

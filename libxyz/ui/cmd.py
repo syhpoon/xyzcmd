@@ -85,11 +85,11 @@ class Cmd(lowui.FlowWidget):
                 _val = _def
             except ValueError, e:
                 _val = _def
-                xyzlog.log(_(u"%s: Invalid argument type %s: %s. "\
-                             u"Using default: %s" %
-                            (self._plugin.ns.pfull, _var, ustring(str(e)),
-                             unicode(_def))),
-                            xyzlog.loglevel.WARNING)
+                xyzlog.warning(_(u"%s: Invalid argument type %s: %s. "\
+                                 u"Using default: %s" %
+                                 (self._plugin.ns.pfull,
+                                  _var, ustring(str(e)),
+                                  unicode(_def))))
             finally:
                 setattr(self, u"_%s" % _var, _val)
 
@@ -268,9 +268,8 @@ class Cmd(lowui.FlowWidget):
                 try:
                     map(lambda x: _add(x), _good)
                 except Exception, e:
-                    xyzlog.log(_(ustring(str(e))), xyzlog.loglevel.ERROR)
-                    xyzlog.log(ustring(traceback.format_exc()),
-                               xyzlog.loglevel.DEBUG)
+                    xyzlog.error(_(ustring(str(e))))
+                    xyzlog.debug(ustring(traceback.format_exc()))
                 else:
                     self._invalidate()
 
@@ -723,7 +722,11 @@ class Cmd(lowui.FlowWidget):
 
 def escape_objname(obj):
     result = []
-    toescape = [" ", "'", '"', ]
+    toescape = [" ", "'", '"', "*", "?", "\\",
+                "(", ")",
+                "[", "]",
+                "{", "}",
+                ]
 
     for x in obj:
         if x in toescape:

@@ -36,8 +36,7 @@ class HookManager(object):
             self._data[hook] = []
 
         if not callable(proc):
-            xyzlog.log(_(u"HookManager: Callable argument expected"),
-                       xyzlog.loglevel.ERROR)
+            xyzlog.error(_(u"HookManager: Callable argument expected"))
             return False
 
         self._data[hook].append(proc)
@@ -68,8 +67,9 @@ class HookManager(object):
             try:
                 proc(*args, **kwargs)
             except Exception, e:
-                xyzlog.log(_(u"Error running callback procedure for hook %s") %
-                           ustring(str(e)), xyzlog.loglevel.ERROR)
+                xyzlog.error(
+                    _(u"Error running callback procedure for hook %s") %
+                    ustring(str(e)))
                 return False
 
         return True

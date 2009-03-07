@@ -126,5 +126,5 @@ class XYZPlugin(BasePlugin):
                         break
 
             os.kill(xpid, signal.SIGTERM)
-            raw_input(_(u"Press RETURN to continue..."))
+            raw_input(_(u"Press ENTER to continue..."))
             termios.tcsetattr(stdin, termios.TCSADRAIN, current)

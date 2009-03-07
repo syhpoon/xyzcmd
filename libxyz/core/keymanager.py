@@ -260,10 +260,9 @@ class KeyManager(object):
 
     def _bind_wait_cb(self, plugin_obj, method, shortcut, context, args):
         if method not in plugin_obj.public:
-            xyzlog.log(_(u"Unable to bind method %s. "\
+            xyzlog.error(_(u"Unable to bind method %s. "\
                          u"Plugin %s doesn't export it." %
-                         (method, plugin_obj.ns.pfull)),
-                         xyzlog.loglevel.ERROR)
+                         (method, plugin_obj.ns.pfull)))
             return
 
         self.bind(plugin_obj.public[method], shortcut, context, args,

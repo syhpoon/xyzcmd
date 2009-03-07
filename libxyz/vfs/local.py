@@ -174,8 +174,8 @@ class LocalVFSFile(vfsobj.VFSFile):
                 try:
                     self.data = LocalVFSFile(_fullpath, self.enc)
                 except VFSError, e:
-                    xyzlog.log(_(u"Error creating VFS object: %s") % str(e),
-                              xyzlog.loglevel.ERROR)
+                    xyzlog.error(_(u"Error creating VFS object: %s") %
+                                 ustring(str(e)))
                 else:
                     if isinstance(self.data.ftype, types.VFSTypeDir):
                         self.vtype = u"~"

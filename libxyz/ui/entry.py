@@ -107,10 +107,9 @@ class NumEntry(ListEntry):
             try:
                 self._enter_cb(_index)
             except Exception, e:
-                xyzlog.log(_(u"Error in entry callback: %s" %
-                           str(e)), xyzlog.loglevel.ERROR)
-                xyzlog.log(ustring(traceback.format_exc()),
-                           xyzlog.loglevel.DEBUG)
+                xyzlog.error(_(u"Error in entry callback: %s" %
+                           ustring(str(e))))
+                xyzlog.debug(ustring(traceback.format_exc()))
             finally:
                 return key
         elif key.isdigit():

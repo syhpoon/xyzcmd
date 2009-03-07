@@ -124,11 +124,11 @@ class Panel(lowui.WidgetWrap):
                     try:
                         _meth(*_args)
                     except Exception, e:
-                        xyzlog.log(_("Error executing bind (%s): %s") %
-                                  (self._keys.raw_to_shortcut(_input[0]),
-                                   str(e)), xyzlog.loglevel.ERROR)
-                        xyzlog.log(ustring(traceback.format_exc(), self._enc),
-                                   xyzlog.loglevel.DEBUG)
+                        xyzlog.error(_("Error executing bind (%s): %s") %
+                                     (self._keys.raw_to_shortcut(_input[0]),
+                                      str(e)))
+                        xyzlog.debug(ustring(traceback.format_exc(),
+                                             self._enc))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -172,6 +172,7 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.search_forward)
         _panel_plugin.export(self.search_backward)
         _panel_plugin.export(self.show_tagged)
+        _panel_plugin.export(self.select)
 
         _panel_plugin.VERSION = u"0.1"
         _panel_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
@@ -416,6 +417,15 @@ class Panel(lowui.WidgetWrap):
         """
 
         self.active.show_tagged()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def select(self, name):
+        """
+        Select VFS object by given name in current directory
+        """
+
+        self.active.select(name)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -886,7 +896,7 @@ class Block(lowui.BoxWidget):
         try:
             _rule = libxyz.core.FSRule(ustring(_raw, self._enc))
         except libxyz.exceptions.ParseError, e:
-            xyzlog.log(str(e), xyzlog.loglevel.ERROR)
+            xyzlog.error(ustring(str(e)))
             return
 
         try:
@@ -899,7 +909,7 @@ class Block(lowui.BoxWidget):
         except libxyz.exceptions.FSRuleError, e:
             self._tagged = []
 
-            xyzlog.log(str(e), xyzlog.loglevel.ERROR)
+            xyzlog.error(ustring(str(e)))
             return
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -950,10 +960,20 @@ class Block(lowui.BoxWidget):
 
         # Try to find previously selected object
         if self.entries[self.selected].name != _selected.name:
-            for i in xrange(self._len):
-                if self.entries[i].name == _selected.name:
-                    self.selected = i
-                    break
+            self.select(_selected.name)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @refresh
+    def select(self, name):
+        """
+        Select VFS object by given name in current directory
+        """
+
+        for i in xrange(self._len):
+            if self.entries[i].name == name:
+                self.selected = i
+                break
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -997,15 +1017,13 @@ class Block(lowui.BoxWidget):
             try:
                 _vfsobj = LocalVFSObject(path, self._enc)
             except libxyz.exceptions.VFSError, e:
-                xyzlog.log("Unable to chdir to %s: %s" % (path, str(e)),
-                           xyzlog.loglevel.ERROR)
+                xyzlog.error("Unable to chdir to %s: %s" % (path, str(e)))
                 return
 
             try:
                 self._setup(_vfsobj)
             except libxyz.exceptions.XYZRuntimeError, e:
-                xyzlog.log("Unable to chdir to %s: %s" % (path, str(e)),
-                           xyzlog.loglevel.INFO)
+                xyzlog.info("Unable to chdir to %s: %s" % (path, str(e)))
                 return
 
             self.selected = 0
