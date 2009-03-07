@@ -38,6 +38,10 @@ bind :sys:cmd:cursor_word_left to META-b context @
 bind :sys:cmd:cursor_word_right to META-f context @
 bind :sys:cmd:undo to CTRL-d context @
 bind :sys:cmd:show_history to META-h context @
+bind :sys:cmd:put_active_object to META-ENTER context @
+bind :sys:cmd:put_active_object_path to META-q context @
+bind :sys:cmd:put_inactive_object to CTRL-n context @
+bind :sys:cmd:put_inactive_object_path to CTRL-s context @
 
 bind :sys:panel:entry_next to DOWN context @
 bind :sys:panel:entry_prev to UP context @

@@ -28,6 +28,7 @@ from libxyz.ui import NumEntry
 from libxyz.ui import Keys
 from libxyz.ui.utils import refresh
 from libxyz.core.utils import ustring
+from libxyz.core.utils import bstring
 
 class Cmd(lowui.FlowWidget):
     """
@@ -62,6 +63,8 @@ class Cmd(lowui.FlowWidget):
         # Virtual cursor index. Value is in range(0,maxcol)
         self._vindex = 0
         self._hindex = 0
+
+        self._panel = self.xyz.pm.load(":sys:panel")
 
         self._plugin = self._init_plugin()
 
@@ -137,6 +140,10 @@ class Cmd(lowui.FlowWidget):
         _cmd_plugin.export(self.history_next)
         _cmd_plugin.export(self.history_clear)
         _cmd_plugin.export(self.show_history)
+        _cmd_plugin.export(self.put_active_object)
+        _cmd_plugin.export(self.put_active_object_path)
+        _cmd_plugin.export(self.put_inactive_object)
+        _cmd_plugin.export(self.put_inactive_object_path)
 
         self.xyz.pm.register(_cmd_plugin)
 
@@ -170,7 +177,7 @@ class Cmd(lowui.FlowWidget):
         else:
             _canv_prompt = lowui.Text(u"").render((maxcol,))
 
-        _data = self._get_visible(maxcol)
+        _data = [bstring(x) for x in self._get_visible(maxcol)]
         _text_len = abs(maxcol - self.prompt.length())
 
         _canv_text = lowui.TextCanvas(text=["".join(_data)],
@@ -662,3 +669,66 @@ class Cmd(lowui.FlowWidget):
 
         XYZListBox(self.xyz, self.xyz.top, _walker, _(u"History"),
                    _dim).show(exit_keys=_ek)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def put_active_object(self):
+        """
+        Put currently selected VFS object name in panel to cmd line
+        """
+
+        return self._put_engine(self._panel.get_selected().name)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def put_active_object_path(self):
+        """
+        Put currently selected VFS object full path in panel to cmd line
+        """
+
+        return self._put_engine(self._panel.get_selected().path)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def put_inactive_object(self):
+        """
+        Put selected VFS object name in inactive panel to cmd line
+        """
+
+        return self._put_engine(self._panel.get_selected_inactive().name)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def put_inactive_object_path(self):
+        """
+        Put selected VFS object full path in inactive panel to cmd line
+        """
+
+        return self._put_engine(self._panel.get_selected_inactive().path)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _put_engine(self, obj):
+        """
+        Put list content to cmd
+        """
+        toput = escape_objname([bstring(x) for x in obj]) + [" "]
+        tlen = len(toput)
+        self._data.extend(toput)
+        self._index += tlen
+        self._vindex += tlen
+        self._invalidate()
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+def escape_objname(obj):
+    result = []
+    toescape = [" ", "'", '"', ]
+
+    for x in obj:
+        if x in toescape:
+            result.extend(["\\", x])
+        else:
+            result.append(x)
+
+    return result

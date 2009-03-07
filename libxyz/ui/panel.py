@@ -50,6 +50,8 @@ class Panel(lowui.WidgetWrap):
 
         _cwd = os.getcwd()
 
+        self._set_plugins()
+
         self._cmd = libxyz.ui.Cmd(xyz)
         self.block1 = Block(xyz, _blocksize, _cwd, self._enc, active=True)
 
@@ -59,8 +61,6 @@ class Panel(lowui.WidgetWrap):
         columns = lowui.Columns([self.block1.block, self.block2.block], 0)
 
         self._widget = lowui.Pile([columns, self._cmd])
-
-        self._set_plugins()
 
         super(Panel, self).__init__(self._widget)
 
@@ -86,6 +86,16 @@ class Panel(lowui.WidgetWrap):
             return self.block2
 
     active = property(_get_active)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _get_inactive(self):
+        if self.block1.active:
+            return self.block2
+        else:
+            return self.block1
+
+    inactive = property(_get_inactive)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -147,6 +157,7 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.block_prev)
         _panel_plugin.export(self.switch_active)
         _panel_plugin.export(self.get_selected)
+        _panel_plugin.export(self.get_selected_inactive)
         _panel_plugin.export(self.get_tagged)
         _panel_plugin.export(self.toggle_tag)
         _panel_plugin.export(self.tag_all)
@@ -268,6 +279,15 @@ class Panel(lowui.WidgetWrap):
         """
 
         return self.active.get_selected()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_selected_inactive(self):
+        """
+        Get selected VFSFile instance on inactive block
+        """
+
+        return self.inactive.get_selected()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

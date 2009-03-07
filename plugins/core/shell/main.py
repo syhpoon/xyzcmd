@@ -12,6 +12,7 @@ import struct
 import fcntl
 import tty
 
+from libxyz.core.utils import bstring
 from libxyz.core.plugins import BasePlugin
 
 class XYZPlugin(BasePlugin):
@@ -71,8 +72,9 @@ class XYZPlugin(BasePlugin):
         stdout.write("\x1b[H\x1b[2J")
 
         stdout.write("%s%s\n" %
-                     (self.xyz.conf[u"plugins"][":sys:cmd"][u"prompt"],
-                      cmd))
+                     (
+                bstring(self.xyz.conf[u"plugins"][":sys:cmd"][u"prompt"]),
+                cmd))
         stdout.flush()
             
         winsize = fcntl.ioctl(stdout.fileno(), termios.TIOCGWINSZ, '1234')
