@@ -301,10 +301,9 @@ class Cmd(lowui.FlowWidget):
         """
 
         # Prevent duplicating entries
-        if self._history.tail() == self._data:
-            return
+        if not self._history.tail() == self._data:
+            self._history.push(copy.copy(self._data))
 
-        self._history.push(copy.copy(self._data))
         self._hindex = len(self._history)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -656,8 +655,10 @@ class Cmd(lowui.FlowWidget):
         _wdata = []
 
         for i in range(len(self._history)):
-            _wdata.append(NumEntry(u"".join(self._history[i]), _sel_attr, i,
-                          enter_cb=_enter_cb))
+            _wdata.append(NumEntry(u"".join([ustring(x) for x in
+                                             self._history[i]]),
+                                   _sel_attr, i,
+                                   enter_cb=_enter_cb))
 
         _walker = lowui.SimpleListWalker(_wdata)
         _walker.focus = len(_walker) - 1
