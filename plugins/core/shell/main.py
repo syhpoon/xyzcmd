@@ -66,8 +66,7 @@ class XYZPlugin(BasePlugin):
         self.xyz.screen.clear()
         stdin = sys.stdin.fileno()
         stdout = sys.stdout
-        current = termios.tcgetattr(stdin)
-        termios.tcsetattr(stdin, termios.TCSADRAIN, self.xyz.term)
+        self.xyz.screen.stop()
         #TODO: make it more portable!
         stdout.write("\x1b[H\x1b[2J")
 
@@ -127,4 +126,4 @@ class XYZPlugin(BasePlugin):
 
             os.kill(xpid, signal.SIGTERM)
             raw_input(_(u"Press ENTER to continue..."))
-            termios.tcsetattr(stdin, termios.TCSADRAIN, current)
+            self.xyz.screen.start()

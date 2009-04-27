@@ -5,3 +5,4 @@ TODO
 VFS
 syntax: glob
 **/*.pyc
+.emacs.desktop

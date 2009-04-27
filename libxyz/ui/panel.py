@@ -47,17 +47,16 @@ class Panel(lowui.WidgetWrap):
         _size = self.xyz.screen.get_cols_rows()
         _blocksize = libxyz.ui.Size(rows=_size[1] - 1, cols=_size[0] / 2 - 2)
         self._enc = xyzenc
-
-        _cwd = os.getcwd()
+        self._stop = False
 
         self._set_plugins()
 
         self._cmd = libxyz.ui.Cmd(xyz)
-        self.block1 = Block(xyz, _blocksize, _cwd, self._enc, active=True)
+        _cwd = os.getcwd()
 
+        self.block1 = Block(xyz, _blocksize, _cwd, self._enc, active=True)
         self.block2 = Block(xyz, _blocksize, _cwd, self._enc)
 
-        self._stop = False
         columns = lowui.Columns([self.block1.block, self.block2.block], 0)
 
         self._widget = lowui.Pile([columns, self._cmd])
@@ -72,7 +71,6 @@ class Panel(lowui.WidgetWrap):
         """
 
         columns = lowui.Columns([self.block1.block, self.block2.block], 0)
-
         self._widget = lowui.Pile([columns, self._cmd])
 
         return self._widget.render((maxcol,))
@@ -104,13 +102,15 @@ class Panel(lowui.WidgetWrap):
         Start working loop
         """
 
+        #self.xyz.top = self
         _dim = self.xyz.screen.get_cols_rows()
 
         while True:
             if self._stop:
                 break
 
-            self.xyz.screen.draw_screen(_dim, self.xyz.top.render(_dim, True))
+            canv = self.xyz.top.render(_dim, True)
+            self.xyz.screen.draw_screen(_dim, canv)
 
             _input = self.xyz.input.get()
 
@@ -130,6 +130,23 @@ class Panel(lowui.WidgetWrap):
                         xyzlog.debug(ustring(traceback.format_exc(),
                                              self._enc))
 
+                if 'window resize' in _input:
+                    _dim = self.xyz.screen.get_cols_rows()
+                    _bsize = libxyz.ui.Size(rows=_dim[1] - 1,
+                                            cols=_dim[0] / 2 - 2)
+                    self.block1.size = _bsize
+                    self.block2.size = _bsize
+                    self.xyz.screen.clear()
+                    self.block1._invalidate()
+                    self.block2._invalidate()
+                    self._cmd._invalidate()
+                    self._widget._invalidate()
+                    self._invalidate()
+                    #self.xyz.top.body = self
+                    self.xyz.top._invalidate()
+                else:
+                    import pdb; pdb.set_trace()
+                                
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _set_plugins(self):
@@ -439,7 +456,6 @@ class Block(lowui.BoxWidget):
         @param xyz: XYZData instance
         @param size: Block widget size
         @type size: L{libxyz.ui.Size}
-        @param vfsobj:
         @param enc: Local encoding
         @param active: Boolean flag, True if block is active
 
@@ -469,16 +485,22 @@ class Block(lowui.BoxWidget):
         self._keys = libxyz.ui.Keys()
         self._cmd = self.xyz.pm.load(":sys:cmd")
 
+        self._pending = libxyz.core.Queue(20)
+
         self._enc = enc
-        self.chdir(path)
 
         self._winfo = lowui.Text(u"")
         self._sep = libxyz.ui.Separator()
-        self._pending = libxyz.core.Queue(20)
 
         self._re_raw = r".*"
         self._rule_raw = ""
 
+        self.chdir(path)
+        self._setup_ui()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _setup_ui(self):
         _info = lowui.Padding(self._winfo, align.LEFT, self.size.cols)
         _info = lowui.AttrWrap(_info, self.attr(u"info"))
         _info = lowui.Pile([self._sep, _info])
@@ -529,6 +551,7 @@ class Block(lowui.BoxWidget):
         Render block
         """
 
+        self._setup_ui()
         # Search for pending action
         while True:
             try:

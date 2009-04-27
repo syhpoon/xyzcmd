@@ -109,7 +109,7 @@ class Launcher(object):
         """
         Try to preset local_encoding using current locale settings.
         After xyz conf is parsed, this value will be overriden by
-        local_encoding from conf if defined
+        local_encoding from conf, if defined
         """
 
         __builtin__.__dict__["xyzenc"] = locale.getpreferredencoding()
@@ -117,7 +117,6 @@ class Launcher(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _run(self):
-        _dim = self.xyz.screen.get_cols_rows()
         panel = uilib.Panel(self.xyz)
         self.xyz.top = lowui.Filler(panel)
 
@@ -237,7 +236,6 @@ class Launcher(object):
 
         term = termios.tcgetattr(stdin)
         self._saved_term = copy.deepcopy(term[-1])
-        self.xyz.term = term
 
         # Disable special symbols
         _todisable = [getattr(termios, x) for x in ("VQUIT",     # ^\
@@ -356,7 +354,6 @@ class Launcher(object):
             self.error(str(e))
         finally:
             _file.close()
-
 
         # Now try to parse users's conf, if exists
         try:
