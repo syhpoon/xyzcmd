@@ -19,7 +19,7 @@ from libxyz.ui import align
 
 from libxyz.exceptions import UIError
 
-class Border(lowui.FlowWidget):
+class Border(lowui.BoxWidget):
     def __init__(self, widget, title=None, title_attr=None, attr=None):
         """
         Draw a line border around widget and set up a title

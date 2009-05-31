@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-import re
 import os
 import traceback
 
@@ -56,44 +55,28 @@ class Panel(lowui.WidgetWrap):
 
         self.block1 = Block(xyz, _blocksize, _cwd, self._enc, active=True)
         self.block2 = Block(xyz, _blocksize, _cwd, self._enc)
-
-        columns = lowui.Columns([self.block1.block, self.block2.block], 0)
-
+        columns = lowui.Columns([self.block1, self.block2], 0)
         self._widget = lowui.Pile([columns, self._cmd])
 
         super(Panel, self).__init__(self._widget)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def render(self, (maxcol,), focus=False):
-        """
-        Render panel
-        """
-
-        columns = lowui.Columns([self.block1.block, self.block2.block], 0)
-        self._widget = lowui.Pile([columns, self._cmd])
-
-        return self._widget.render((maxcol,))
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _get_active(self):
+    @property
+    def active(self):
         if self.block1.active:
             return self.block1
         else:
             return self.block2
 
-    active = property(_get_active)
-
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _get_inactive(self):
+    @property
+    def inactive(self):
         if self.block1.active:
             return self.block2
         else:
             return self.block1
-
-    inactive = property(_get_inactive)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -102,7 +85,6 @@ class Panel(lowui.WidgetWrap):
         Start working loop
         """
 
-        #self.xyz.top = self
         _dim = self.xyz.screen.get_cols_rows()
 
         while True:
@@ -136,16 +118,8 @@ class Panel(lowui.WidgetWrap):
                                             cols=_dim[0] / 2 - 2)
                     self.block1.size = _bsize
                     self.block2.size = _bsize
-                    self.xyz.screen.clear()
                     self.block1._invalidate()
                     self.block2._invalidate()
-                    self._cmd._invalidate()
-                    self._widget._invalidate()
-                    self._invalidate()
-                    #self.xyz.top.body = self
-                    self.xyz.top._invalidate()
-                else:
-                    import pdb; pdb.set_trace()
                                 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -446,7 +420,7 @@ class Panel(lowui.WidgetWrap):
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-class Block(lowui.BoxWidget):
+class Block(lowui.FlowWidget):
     """
     Single panel block
     """
@@ -479,6 +453,11 @@ class Block(lowui.BoxWidget):
         self._force_reload = False
         self.entries = []
         self._dir = None
+        self._len = 0
+        self._palettes = []
+        self._vfsobj = None
+        self._title = u""
+        self._tagged = []
 
         self._cursor_attr = None
         self._custom_info = None
@@ -486,36 +465,42 @@ class Block(lowui.BoxWidget):
         self._cmd = self.xyz.pm.load(":sys:cmd")
 
         self._pending = libxyz.core.Queue(20)
-
+        self._re_raw = r".*"
+        self._rule_raw = ""
         self._enc = enc
+
+        self.chdir(path)
 
         self._winfo = lowui.Text(u"")
         self._sep = libxyz.ui.Separator()
 
-        self._re_raw = r".*"
-        self._rule_raw = ""
-
-        self.chdir(path)
-        self._setup_ui()
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _setup_ui(self):
         _info = lowui.Padding(self._winfo, align.LEFT, self.size.cols)
         _info = lowui.AttrWrap(_info, self.attr(u"info"))
         _info = lowui.Pile([self._sep, _info])
 
-        self.block = lowui.Frame(self, footer=_info)
-
         _title_attr = self._get_title_attr()
 
-        self.border = libxyz.ui.Border(self.block, self._title,
+        self.frame = lowui.Frame(lowui.Filler(lowui.Text("")), footer=_info)
+        self.border = libxyz.ui.Border(self.frame, self._title,
                                        _title_attr, self.attr(u"border"))
         self.block = lowui.AttrWrap(self.border, self.attr(u"panel"))
-        self.block = lowui.BoxAdapter(self.block, self.size.rows)
+        
+        super(Block, self).__init__()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    def rows(self, (maxcol,), focus=False):
+        # TODO: cache
+        w = self.display_widget((maxcol,), focus)
+        return w.rows((maxcol,), focus)
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    def display_widget(self, (maxcol,), focus):
+        return lowui.BoxAdapter(self.block, self.size.rows)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     def _setup(self, vfsobj):
         _parent, _dir, _dirs, _files = vfsobj.walk()
 
@@ -542,16 +527,22 @@ class Block(lowui.BoxWidget):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def selectable(self):
-        return  True
+        return True
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def render(self, (maxcol, maxrow), focus=False):
+    def render(self, (maxcol,), focus=False):
         """
         Render block
         """
+        
+        w = self.display_widget((maxcol,), focus)
+        maxrow = w.rows((maxcol,), focus)
 
-        self._setup_ui()
+        # Reduce original sizes in order to fit into overlay
+        maxcol_orig, maxcol = maxcol, maxcol - 2
+        maxrow_orig, maxrow = maxrow, maxrow - 4
+
         # Search for pending action
         while True:
             try:
@@ -611,15 +602,18 @@ class Block(lowui.BoxWidget):
                 canvases.append((lowui.Text(_text).render((maxcol,)),
                                  i, False))
 
-        combined = lowui.CanvasCombine(canvases)
-
         if _len < maxrow:
-            combined.pad_trim_top_bottom(0, maxrow - _len)
-        elif _len > maxrow:
+            _pad = lowui.AttrWrap(lowui.Text(" "), self.attr(u"panel"))
+            canvases.append((_pad.render((maxcol,), focus), 0, False))
+            
+        combined = lowui.CanvasCombine(canvases)
+        border = self.block.render((maxcol_orig, maxrow_orig), focus)
+
+        if _len > maxrow:
             combined.trim_end(_len - maxrow)
 
-        return combined
-
+        return lowui.CanvasOverlay(combined, border, 1, 1)
+    
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _make_number_readable(self, num):
@@ -708,7 +702,7 @@ class Block(lowui.BoxWidget):
 
         _part2 = vfsobj.info
         _part1 = truncate(vfsobj.visual, cols - len(_part2) - 2, self._enc)
-
+        
         _text = u"%s%s%s" % (_part1,
                              u" " * (cols - (self.term_width(_part1) +
                                              self.term_width(_part2)) -
