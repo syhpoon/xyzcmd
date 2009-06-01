@@ -116,6 +116,7 @@ class Panel(lowui.WidgetWrap):
                     _dim = self.xyz.screen.get_cols_rows()
                     _bsize = libxyz.ui.Size(rows=_dim[1] - 1,
                                             cols=_dim[0] / 2 - 2)
+
                     self.block1.size = _bsize
                     self.block2.size = _bsize
                     self.block1._invalidate()
@@ -474,10 +475,7 @@ class Block(lowui.FlowWidget):
         self._winfo = lowui.Text(u"")
         self._sep = libxyz.ui.Separator()
 
-        _info = lowui.Padding(self._winfo, align.LEFT, self.size.cols)
-        _info = lowui.AttrWrap(_info, self.attr(u"info"))
-        _info = lowui.Pile([self._sep, _info])
-
+        _info = self._make_info()
         _title_attr = self._get_title_attr()
 
         self.frame = lowui.Frame(lowui.Filler(lowui.Text("")), footer=_info)
@@ -605,7 +603,10 @@ class Block(lowui.FlowWidget):
         if _len < maxrow:
             _pad = lowui.AttrWrap(lowui.Text(" "), self.attr(u"panel"))
             canvases.append((_pad.render((maxcol,), focus), 0, False))
-            
+
+        _info = self._make_info()
+        self.frame.set_footer(_info)
+        
         combined = lowui.CanvasCombine(canvases)
         border = self.block.render((maxcol_orig, maxrow_orig), focus)
 
@@ -616,6 +617,14 @@ class Block(lowui.FlowWidget):
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def _make_info(self):
+        _info = lowui.Padding(self._winfo, align.LEFT, self.size.cols)
+        _info = lowui.AttrWrap(_info, self.attr(u"info"))
+        _info = lowui.Pile([self._sep, _info])
+        return _info
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     def _make_number_readable(self, num):
         _res = []
 
@@ -707,7 +716,7 @@ class Block(lowui.FlowWidget):
                              u" " * (cols - (self.term_width(_part1) +
                                              self.term_width(_part2)) -
                                      1), _part2)
-        
+
         self._winfo.set_text(bstring(_text, self._enc))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
