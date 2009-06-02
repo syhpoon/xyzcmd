@@ -71,9 +71,9 @@ class XYZPlugin(BasePlugin):
         stdout.write("\x1b[H\x1b[2J")
 
         stdout.write("%s%s\n" %
-                     (
-                bstring(self.xyz.conf[u"plugins"][":sys:cmd"][u"prompt"]),
-                cmd))
+                     (bstring(
+                         self.xyz.conf[u"plugins"][":sys:cmd"][u"prompt"]),
+                      cmd))
         stdout.flush()
             
         winsize = fcntl.ioctl(stdout.fileno(), termios.TIOCGWINSZ, '1234')

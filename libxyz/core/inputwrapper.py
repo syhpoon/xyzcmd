@@ -19,10 +19,13 @@ class InputWrapper(object):
     Wrap get_input and seek in user-defined keycodes before return keys
     """
 
+    WIN_RESIZE = 'window resize'
+    
     def __init__(self, xyz):
         self.xyz = xyz
         self.plugin = xyz.pm.load(u":core:keycodes")
         self.keycodes = {}
+        self._resized = False
 
         self.update()
 
@@ -44,7 +47,8 @@ class InputWrapper(object):
 
     def get(self):
         """
-        Get input from screen and search if it matches any user-defined keycodes
+        Get input from screen and search if it matches any user-defined
+        keycodes
         """
 
         _input = None
@@ -55,6 +59,9 @@ class InputWrapper(object):
             if not _in:
                 continue
 
+            if self.WIN_RESIZE in _in:
+                self._resized = True
+
             try:
                 _input = [self.keycodes[tuple(_in)]]
             except KeyError:
@@ -63,3 +70,14 @@ class InputWrapper(object):
                 break
 
         return _input
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @property
+    def resized(self):
+        rval = self._resized
+        
+        if rval:
+            self._resized = False
+
+        return rval

@@ -92,7 +92,11 @@ class InputBox(Box):
                 self.screen.draw_screen(dim, self.render(dim, focus=True))
 
                 _keys = self.xyz.input.get()
-
+                
+                if self.xyz.input.WIN_RESIZE in _keys:
+                    dim = self.screen.get_cols_rows()
+                    continue
+                                    
                 if self.keys.ESCAPE in _keys:
                     return None
 

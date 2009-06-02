@@ -47,6 +47,7 @@ class Panel(lowui.WidgetWrap):
         _blocksize = libxyz.ui.Size(rows=_size[1] - 1, cols=_size[0] / 2 - 2)
         self._enc = xyzenc
         self._stop = False
+        self._resize = False
 
         self._set_plugins()
 
@@ -98,7 +99,7 @@ class Panel(lowui.WidgetWrap):
 
             if _input:
                 (_meth, _args) = self.xyz.km.process(_input, self.context)
-
+                
                 # No binds for PANEL context
                 if _meth is None:
                     self._cmd.keypress(_dim, _input)
@@ -112,13 +113,18 @@ class Panel(lowui.WidgetWrap):
                         xyzlog.debug(ustring(traceback.format_exc(),
                                              self._enc))
 
-                if 'window resize' in _input:
+                if self.xyz.input.resized:
+                    self._resize = True
+
+                if self._resize:
+                    self._resize = False
                     _dim = self.xyz.screen.get_cols_rows()
                     _bsize = libxyz.ui.Size(rows=_dim[1] - 1,
                                             cols=_dim[0] / 2 - 2)
-
+                    
                     self.block1.size = _bsize
                     self.block2.size = _bsize
+                    self._cmd._invalidate()
                     self.block1._invalidate()
                     self.block2._invalidate()
                                 
@@ -194,6 +200,7 @@ class Panel(lowui.WidgetWrap):
         Reparint screen
         """
 
+        self._resize = True
         self.xyz.screen.clear()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1139,6 +1146,10 @@ class Block(lowui.FlowWidget):
 
             try:
                 _raw = self.xyz.input.get()
+
+                if self.xyz.input.WIN_RESIZE in _raw:
+                    _dim = self.xyz.screen.get_cols_rows()
+                    continue
 
                 if self._keys.ESCAPE in _raw or self._keys.ENTER in _raw:
                     break

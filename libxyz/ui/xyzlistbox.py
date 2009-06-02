@@ -75,6 +75,10 @@ class XYZListBox(lowui.WidgetWrap):
 
             _i = self.xyz.input.get()
 
+            if self.xyz.input.WIN_RESIZE in _i:
+                dim = self.xyz.screen.get_cols_rows()
+                continue
+                
             if _i:
                 for _k in _i:
                     if _k == self._keys.ESC:

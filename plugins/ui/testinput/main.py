@@ -39,7 +39,8 @@ class XYZPlugin(BasePlugin):
     def show_box(self, use_wrap=True):
         """
         Show test_box dialog
-        @param use_wrap: Whether to use input wrapper which honours learned keys
+        @param use_wrap: Whether to use input wrapper which honours
+        learned keys
         """
 
         _msg = _(u"Press any key. Escape twice to quit.")

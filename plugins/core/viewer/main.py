@@ -60,7 +60,11 @@ class XYZPlugin(BasePlugin):
 
             try:
                 _raw = self.xyz.input.get()
-                
+
+                if self.xyz.input.WIN_RESIZE in _raw:
+                    _dim = self.xyz.screen.get_cols_rows()
+                    continue
+                    
                 if self._keys.ESCAPE in _raw or self._keys.ENTER in _raw:
                     break
             except Exception:
