@@ -73,11 +73,17 @@ class InputWrapper(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    @property
-    def resized(self):
+    def _resized_get(self):
         rval = self._resized
         
         if rval:
             self._resized = False
 
         return rval
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _resized_set(self, value):
+        self._resized = True if value else False
+
+    resized = property(_resized_get, _resized_set)

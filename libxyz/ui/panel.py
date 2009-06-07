@@ -50,7 +50,6 @@ class Panel(lowui.WidgetWrap):
         self._resize = False
 
         self._set_plugins()
-
         self._cmd = libxyz.ui.Cmd(xyz)
         _cwd = os.getcwd()
 
@@ -910,6 +909,10 @@ class Block(lowui.FlowWidget):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _tag_rule(self, tag=True):
+        """
+        Tag engine
+        """
+        
         if tag:
             _title = _(u"Tag group")
         else:

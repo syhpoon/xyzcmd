@@ -4,13 +4,9 @@
 #
 
 import sys
-import termios
+import errno
 import os
-import pty
 import signal
-import struct
-import fcntl
-import tty
 
 from libxyz.core.utils import bstring
 from libxyz.core.plugins import BasePlugin
@@ -34,7 +30,7 @@ class XYZPlugin(BasePlugin):
                   }
 
     def __init__(self, xyz):
-        
+        self.status = 0
         super(XYZPlugin, self).__init__(xyz)
 
         self.export(self.execute)
@@ -56,6 +52,77 @@ class XYZPlugin(BasePlugin):
 
         self.shell = [shell] + self.shell_args[_shell]
         
+#     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#     def _execute(self, cmd):
+#         """
+#         Execute command in shell
+#         """
+
+#         self.xyz.screen.clear()
+#         stdin = sys.stdin.fileno()
+#         stdout = sys.stdout
+#         self.xyz.screen.stop()
+#         #TODO: make it more portable!
+#         stdout.write("\x1b[H\x1b[2J")
+
+#         stdout.write("%s%s\n" %
+#                      (bstring(
+#                          self.xyz.conf[u"plugins"][":sys:cmd"][u"prompt"]),
+#                       cmd))
+#         stdout.flush()
+
+#         winsize = fcntl.ioctl(stdout.fileno(), termios.TIOCGWINSZ, '1234')
+
+#         pid, fd = pty.fork()
+#         # Child - Exec passed cmd
+#         if pid == 0:
+#             # Restore window size
+#             fcntl.ioctl(stdout.fileno(), termios.TIOCSWINSZ, winsize)
+#             os.execvp(self.shell[0], self.shell + [cmd])
+
+#             # WTF?
+#             sys.exit()
+#         # Parent - Fork. In child redirect stdin > pty child.
+#         # In parent redirect pty child > stdout
+#         else:
+#             child = os.fdopen(fd, "r+")
+
+#             xpid = os.fork()
+
+#             if xpid == 0:
+#                 tty.setcbreak(stdin)
+
+#                 while True:
+#                     try:
+#                         line = os.read(stdin, 1024)
+
+#                         if not line:
+#                             break
+
+#                         child.write(line)
+#                         child.flush()
+#                     except Exception:
+#                         break
+
+#                 sys.exit()
+#             else:
+#                 while True:
+#                     try:
+#                         line = os.read(child.fileno(), 1024)
+
+#                         if not line:
+#                             break
+
+#                         stdout.write(line)
+#                         stdout.flush()
+#                     except Exception:
+#                         break
+
+#             os.kill(xpid, signal.SIGTERM)
+#             raw_input(_(u"Press ENTER to continue..."))
+#             self.xyz.screen.start()
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def execute(self, cmd):
@@ -64,7 +131,6 @@ class XYZPlugin(BasePlugin):
         """
 
         self.xyz.screen.clear()
-        stdin = sys.stdin.fileno()
         stdout = sys.stdout
         self.xyz.screen.stop()
         #TODO: make it more portable!
@@ -75,55 +141,48 @@ class XYZPlugin(BasePlugin):
                          self.xyz.conf[u"plugins"][":sys:cmd"][u"prompt"]),
                       cmd))
         stdout.flush()
-            
-        winsize = fcntl.ioctl(stdout.fileno(), termios.TIOCGWINSZ, '1234')
 
-        pid, fd = pty.fork()
+        def _sigwinch(sig, frame):
+            self.xyz.screen.resized = True
+            
+        signal.signal(signal.SIGWINCH, _sigwinch)
+
+        pid = os.fork()
 
         # Child - Exec passed cmd
         if pid == 0:
-            # Restore window size
-            fcntl.ioctl(stdout.fileno(), termios.TIOCSWINSZ, winsize)
             os.execvp(self.shell[0], self.shell + [cmd])
-
             # WTF?
             sys.exit()
-        # Parent - Fork. In child redirect stdin > pty child.
-        # In parent redirect pty child > stdout
+        # Parent
         else:
-            child = os.fdopen(fd, "r+")
-
-            xpid = os.fork()
-
-            if xpid == 0:
-                tty.setcbreak(stdin)
-
-                while True:
-                    try:
-                        line = os.read(stdin, 1024)
-
-                        if not line:
-                            break
-
-                        child.write(line)
-                        child.flush()
-                    except Exception:
+            while True:
+                try:
+                    self.status = os.waitpid(pid, 0)
+                except OSError, e:
+                    if e.errno != errno.EINTR:
                         break
 
-                sys.exit()
-            else:
-                while True:
-                    try:
-                        line = os.read(child.fileno(), 1024)
+        self._press_key(_(u"Press ENTER to continue..."), "\n")
+        self.xyz.screen.start()
 
-                        if not line:
-                            break
+        return self.status
 
-                        stdout.write(line)
-                        stdout.flush()
-                    except Exception:
-                        break
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-            os.kill(xpid, signal.SIGTERM)
-            raw_input(_(u"Press ENTER to continue..."))
-            self.xyz.screen.start()
+    def _press_key(self, msg, key):
+        """
+        Print prompt and wait for the key to be pressed
+        """
+
+        sys.stdout.write(msg)
+        sys.stdout.flush()
+        
+        while True:
+            try:
+                m = os.read(sys.stdin.fileno(), 1024)
+                if key in m:
+                    break
+            except OSError, e:
+                if e.errno != errno.EINTR:
+                    break
