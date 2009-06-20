@@ -25,7 +25,7 @@ let("plugins", {
 
    ":vfs:fileinfo": "ENABLE",
    ":vfs:vfsutils": "ENABLE",
-}
+}, sect="xyz")
 
 # Skin to use
 let("skin", "seablue", sect="xyz")
@@ -33,4 +33,4 @@ let("skin", "seablue", sect="xyz")
 # Local encoding
 # One of the available in python
 # (http://docs.python.org/lib/standard-encodings.html)
-let("local_encoding", "utf-8", sect="xyz")
+#let("local_encoding", "utf-8", sect="xyz")

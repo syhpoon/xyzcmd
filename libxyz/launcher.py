@@ -21,7 +21,6 @@ Launcher - all neccessary initialization
 import sys
 import gettext
 import getopt
-import re
 import locale
 import os
 import os.path
@@ -32,13 +31,13 @@ import __builtin__
 import libxyz
 import libxyz.ui as uilib
 import libxyz.const as const
-import libxyz.parser as parser
 import libxyz.core as core
 
 from libxyz.ui import lowui
 from libxyz.version import Version
 from libxyz.core.plugins import PluginManager
 from libxyz.core import logger
+from libxyz.core import dsl
 from libxyz.core.utils import ustring
 
 from libxyz.exceptions import *
@@ -58,6 +57,7 @@ class Launcher(object):
         self.cmdopts = "c:vh"
         self.xyz = core.XYZData()
         self.xyz.conf = {}
+        self.dsl = dsl.XYZ(self.xyz)
 
         self._path_sel = libxyz.PathSelector()
         self._conf_dir = None
@@ -137,7 +137,7 @@ class Launcher(object):
             self.quit()
 
         for _o, _a in _opts:
-            if _c == "-c":
+            if _o == "-c":
                 self._conf_dir = _a
             elif _o == "-v":
                 self.version()
@@ -150,7 +150,7 @@ class Launcher(object):
 
     def init_logger(self):
         """
-        Initiate Logger object and put it to builtin namespace
+        Initiate Logger object and put it into builtin namespace
         """
 
         _log = logger.LogLevel()
@@ -261,8 +261,10 @@ class Launcher(object):
         Parse configuration
         """
 
-        self.xyz.conf[u"xyz"] = self._parse_conf_xyz()
-        self.xyz.conf[u"plugins"] = self._parse_conf_plugins()
+        import pdb; pdb.set_trace() 
+
+        self._parse_conf_file(const.XYZ_CONF_FILE)
+        self._parse_conf_file(const.PLUGINS_CONF_FILE)
 
         # local_encoding set, override guessed encoding
         if u"local_encoding" in self.xyz.conf[u"xyz"]:
@@ -271,104 +273,28 @@ class Launcher(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _parse_conf_xyz(self):
+    def _parse_conf_file(self, conf_file):
         """
-        Parse main config
-        """
-
-        def _validate_plugins(block, var, val):
-            if val == u"ENABLE":
-                return True
-            elif val == u"DISABLE":
-                return False
-            else:
-                raise XYZValueError(_(u"Invalid value %s.\n"\
-                                      u"Available values are: "\
-                                      u"ENABLED, DISABLE" % val))
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        def _validate_main(var, val):
-            return val
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        _plugins_opts = {
-                         u"count": 1,
-                         u"varre": re.compile("^[\w:-]+$"),
-                         u"assignchar": "=",
-                         u"value_validator": _validate_plugins,
-                        }
-        _plugins_p = parser.BlockParser(_plugins_opts)
-
-        _flat_vars = (u"skin", u"local_encoding")
-        _flat_opts = {
-                      u"count": 1,
-                      u"assignchar": u"=",
-                      u"validvars": _flat_vars,
-                      u"value_validator": _validate_main,
-                     }
-        _flat_p = parser.FlatParser(_flat_opts)
-
-        _parser = parser.MultiParser({}, {u"tokens": (u">", u"=")})
-        _parser.register(u"plugins", _plugins_p)
-        _parser.register(_flat_vars, _flat_p)
-
-        return self._parse_conf_file(const.XYZ_CONF_FILE, _parser)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _parse_conf_plugins(self):
-        """
-        Parse plugins config
-        """
-
-        _opts = {
-                 u"varre": re.compile("^[\w:-]+$"),
-                 u"assignchar": "=",
-                }
-
-        _parser = parser.BlockParser(_opts)
-
-        return self._parse_conf_file(const.PLUGINS_CONF_FILE, _parser)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _parse_conf_file(self, conf_file, parser):
-        """
-        Parse configuration files
+        Parse configuration files, first system then user one if any
         @param conf_file: File to parse
-        @pararam parser: Parser instance
         """
 
-        _confs = self._path_sel.get_conf(conf_file)
+        _system, _user = self._path_sel.get_conf(conf_file)
 
+        # Exec system config first
         try:
-            _file = open(_confs[0], "r")
-        except IOError, e:
-            self.error(_(u"Unable to open system configuration file: %s" % e))
+            dsl.exec_file(_system)
+        except XYZDSLError as e:
+            self.error(_(u"Error parsing system config %s: %s") %
+                       (_system, ustring(str(e))))
 
-        try:
-            _data = parser.parse(_file)
-        except ParseError, e:
-            self.error(str(e))
-        finally:
-            _file.close()
-
-        # Now try to parse users's conf, if exists
-        try:
-            _file = open(_confs[1], "r")
-        except IOError, e:
-            pass
-        else:
+        # Now try to exec users's conf, if exists
+        if os.path.exists(_user):
             try:
-                _data = parser.parse(_file, _data)
-            except ParseError, e:
-                self.error(str(e))
-            finally:
-                _file.close()
-
-        return _data
+                dsl.exec_file(_user)
+            except XYZDSLError as e:
+                self.error(_(u"Error parsing user config %s: %s") %
+                           (_user, ustring(str(e))))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

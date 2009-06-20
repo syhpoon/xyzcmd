@@ -42,7 +42,7 @@
 <edge COLOR="#000066"/>
 <cloud/>
 <font NAME="Tahoma" SIZE="12"/>
-<node CREATED="1244501362238" FOLDED="true" ID="Freemind_Link_1837826538" MODIFIED="1244501539906" TEXT="Purposes">
+<node CREATED="1244501362238" ID="Freemind_Link_1837826538" MODIFIED="1244501539906" TEXT="Purposes">
 <node CREATED="1244500368153" ID="Freemind_Link_588763910" MODIFIED="1244501325161" STYLE="bubble" TEXT="Set variables">
 <font NAME="Tahoma" SIZE="12"/>
 </node>
@@ -68,19 +68,18 @@
 <node CREATED="1244571892922" ID="Freemind_Link_255526285" MODIFIED="1244571899817" TEXT="Plugins configuration"/>
 </node>
 <node CREATED="1245357853679" ID="Freemind_Link_537964125" MODIFIED="1245357857793" TEXT="DSL">
-<node CREATED="1245357859212" ID="Freemind_Link_1994533456" MODIFIED="1245357865706" TEXT="XYZ singleton">
 <node CREATED="1245361398689" ID="Freemind_Link_855729037" MODIFIED="1245361403285" TEXT="interface">
 <node CREATED="1245359440779" ID="Freemind_Link_1142229797" MODIFIED="1245368124565" TEXT="kbd(*keys)">
 <node CREATED="1245360061472" ID="Freemind_Link_672485290" MODIFIED="1245360075054" TEXT="Create shortcut as a key sequence">
-<node CREATED="1244662573839" ID="Freemind_Link_310059790" MODIFIED="1245361134631" TEXT="XYZ.shortcut(&quot;UP&quot;)&#xa;XYZ.shortcut(&quot;META-s&quot;, &quot;x&quot;)&#xa;XYZ.shortcut(&quot;CTRL-z&quot;)&#xa;XYZ.shortcut(&quot;F5&quot;)">
+<node CREATED="1244662573839" ID="Freemind_Link_310059790" MODIFIED="1245459267050" TEXT="shortcut(&quot;UP&quot;)&#xa;shortcut(&quot;META-s&quot;, &quot;x&quot;)&#xa;shortcut(&quot;CTRL-z&quot;)&#xa;shortcut(&quot;F5&quot;)">
 <icon BUILTIN="xmag"/>
 </node>
 </node>
 </node>
 <node CREATED="1245357873731" ID="Freemind_Link_1403521052" MODIFIED="1245456321892" TEXT="let(varname, value, section=&quot;local&quot;)">
 <icon BUILTIN="button_ok"/>
-<node CREATED="1245357962726" ID="Freemind_Link_275929665" MODIFIED="1245363186339" TEXT="Set variable.&#xa;Variable will be available in xyz.conf[section][varname]&#xa;If section is not provided - local will be used">
-<node COLOR="#000000" CREATED="1244500518886" ID="Freemind_Link_70663728" MODIFIED="1245446122220" TEXT="XYZ.let(&quot;myvar&quot;, &quot;some value&quot;) # xyz.conf[&quot;local&quot;][&quot;myvar&quot;] == &quot;some value&quot;&#xa;***&#xa;XYZ.let(&quot;skin&quot;, &quot;blue&quot;, section=&quot;xyz&quot;)">
+<node CREATED="1245357962726" ID="Freemind_Link_275929665" MODIFIED="1245459340607" TEXT="Set variable.&#xa;Variable will be available in xyz.conf[section][varname]&#xa;If section is not provided - &quot;local&quot; will be used">
+<node COLOR="#000000" CREATED="1244500518886" ID="Freemind_Link_70663728" MODIFIED="1245459281297" TEXT="let(&quot;myvar&quot;, &quot;some value&quot;) # xyz.conf[&quot;local&quot;][&quot;myvar&quot;] == &quot;some value&quot;&#xa;***&#xa;let(&quot;skin&quot;, &quot;blue&quot;, section=&quot;xyz&quot;)">
 <font NAME="Tahoma" SIZE="12"/>
 <icon BUILTIN="xmag"/>
 </node>
@@ -88,7 +87,7 @@
 </node>
 <node CREATED="1245358523711" ID="Freemind_Link_1001198349" MODIFIED="1245358553408" TEXT="action(rule, function)">
 <node CREATED="1245358566594" ID="Freemind_Link_241216621" MODIFIED="1245358580145" TEXT="Set action based on rule to some function">
-<node CREATED="1244663231419" ID="Freemind_Link_1449275902" MODIFIED="1245358730698" TEXT="XYZ.action(r&quot;type{dir} or (link_type{dir} and link_exists{?})&quot;, lambda: XYZ.call(&quot;:sys:panel:chdir&quot;, &quot;%O&quot;))">
+<node CREATED="1244663231419" ID="Freemind_Link_1449275902" MODIFIED="1245459373257" TEXT="action(r&quot;type{dir} or (link_type{dir} and link_exists{?})&quot;, lambda: call(&quot;:sys:panel:chdir&quot;, &quot;%O&quot;))">
 <icon BUILTIN="xmag"/>
 </node>
 </node>
@@ -111,7 +110,7 @@
 </node>
 <node CREATED="1245359395521" ID="Freemind_Link_1708893538" MODIFIED="1245456346243" TEXT="bind(method, shortcut, context=&quot;@&quot;)">
 <node CREATED="1245359455981" ID="Freemind_Link_1257852318" MODIFIED="1245359465408" TEXT="Bind specified method to shortcut">
-<node COLOR="#000000" CREATED="1244500735764" ID="Freemind_Link_1761463976" MODIFIED="1245363601581" TEXT="XYZ.bind(&quot;:sys:panel:entry_next&quot;, XYZ.Shortcut(&quot;DOWN&quot;), context=&quot;@&quot;)">
+<node COLOR="#000000" CREATED="1244500735764" ID="Freemind_Link_1761463976" MODIFIED="1245459397322" TEXT="bind(&quot;:sys:panel:entry_next&quot;, shortcut(&quot;DOWN&quot;), context=&quot;@&quot;)">
 <font NAME="Tahoma" SIZE="12"/>
 <icon BUILTIN="xmag"/>
 </node>
@@ -128,21 +127,14 @@
 </node>
 </node>
 </node>
-<node CREATED="1245359688816" ID="Freemind_Link_1913557541" MODIFIED="1245359711786" TEXT="plugin_config(plugin, data)">
-<node CREATED="1245359926399" ID="Freemind_Link_362530453" MODIFIED="1245359943291" TEXT="Set plugin cofiguration data">
-<node CREATED="1244663508332" ID="Freemind_Link_1275171443" MODIFIED="1245360001363" TEXT="XYZ.plugin_config(&quot;:sys:cmd&quot;, {&#xa;                          prompt: &quot;#&quot;,&#xa;                          undo_depth: 20&#xa;})">
-<icon BUILTIN="xmag"/>
-</node>
-</node>
-</node>
 <node CREATED="1245361152489" ID="Freemind_Link_890209027" MODIFIED="1245361159281" TEXT="hook()">
 <icon BUILTIN="help"/>
 </node>
+<node CREATED="1245535477575" ID="Freemind_Link_1446723596" MODIFIED="1245535480925" TEXT="exec_file"/>
 </node>
-<node CREATED="1245361428409" ID="Freemind_Link_940491710" MODIFIED="1245361436843" TEXT="Implementation">
+<node CREATED="1245361428409" FOLDED="true" ID="Freemind_Link_940491710" MODIFIED="1245361436843" TEXT="Implementation">
 <node CREATED="1245361507096" ID="Freemind_Link_981733442" MODIFIED="1245361539882" TEXT="XYZObject singleton"/>
 <node CREATED="1245361641193" ID="Freemind_Link_1911204732" MODIFIED="1245361645041" TEXT="XYZShortcut"/>
-</node>
 </node>
 </node>
 </node>

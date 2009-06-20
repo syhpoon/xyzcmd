@@ -36,13 +36,13 @@ PLUGINS_DIR = u"plugins"
 SKINS_DIR = u"skins"
 
 # Main configuration file name
-XYZ_CONF_FILE = u"xyz"
+XYZ_CONF_FILE = u"main.xyz"
 
 # Keybindings configuration file name
-KEYS_CONF_FILE = u"keys"
+KEYS_CONF_FILE = u"keys.xyz"
 
 # Plugins configuration file name
-PLUGINS_CONF_FILE = u"plugins"
+PLUGINS_CONF_FILE = u"plugins.xyz"
 
 # Default fallback skin name
 DEFAULT_SKIN = u"default"

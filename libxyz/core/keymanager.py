@@ -212,7 +212,7 @@ class KeyManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _load(self, method):
+    def load(self, method):
         """
         Load method
         """

@@ -16,8 +16,9 @@
 
 import sys
 
-import libxyz.exceptions as ex
+from libxyz.core.utils import ustring
 
+import libxyz.exceptions as ex
 
 def instantiated(func):
     """
@@ -36,15 +37,18 @@ def instantiated(func):
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-class XYZObject(object):
+class XYZ(object):
     """
     XYZ DSL implementation object
     """
 
-    # Public API functions
-    api = ["let", "load"]
-
+    api = ["let",
+           "load",
+           "bind",
+           "exec_file",
+           ]
     _instance = None
+    _env = {}
     
     def __new__(cls, xyz):
         if cls._instance is not None:
@@ -53,6 +57,9 @@ class XYZObject(object):
         # Else init singleton
         cls.xyz = xyz
         cls._instance = cls
+
+        cls._env = {"XYZ": cls}
+        cls._env.update(dict([(f, getattr(cls, f)) for f in cls.api]))
 
         return cls
 
@@ -66,11 +73,17 @@ class XYZObject(object):
         Variable will be available in xyz.conf[section][varname]
         If section is not provided - local will be used
         """
-        
-        if sect not in cls.xyz.conf:
-            cls.xyz.conf[sect] = {}
 
-        cls.xyz.conf[sect][var] = val
+        _conf = cls.xyz.conf
+
+        if sect not in _conf:
+            _conf[sect] = {}
+        elif var in _conf[sect] and isinstance(_conf[sect][var], dict) and \
+        isinstance(val, dict):
+            # Update rather than overwrite
+            _conf[sect][var].update(val)
+        else:
+            cls.xyz.conf[sect][var] = val
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -82,10 +95,10 @@ class XYZObject(object):
         """
 
         try:
-            cls.xyz.pm.load(plugin)
+            cls.xyz.km.load(plugin)
         except Exception as e:
-            raise ex.XYZDSLError(_(u"Unable to load plugin {plugin}: {e!s}")
-                                 .format(*locals()))
+            raise ex.XYZDSLError(_(u"Unable to load plugin %s: %s") %
+                                 (plugin, ustring(str(e))))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -93,14 +106,44 @@ class XYZObject(object):
     @instantiated
     def bind(cls, method, shortcut, context="@"):
         # TODO: if not isinstance(shortcut, XYZShortcut): ...
-        self.xyz.km.bind(method, shortcut, context=context)
+
+        cls.xyz.km.bind(method, shortcut, context=context)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def exec_file(cls, filename):
+        """
+        Execute DSL in file
+        """
+
+        with open(filename) as f:
+            cls.execute(f.read())
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    @classmethod
+    @instantiated
+    def execute(cls, source):
+        """
+        Execute DSL statements
+        @param source: Either string or open file-object
+        """
+
+        try:
+            exec source in cls._env
+        except Exception as e:
+            raise ex.XYZDSLError(_(u"Error in DSL execution: %s") %
+                                 ustring(str(e)))
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-## Auto-generate all module-level counterpart functions
+## Auto-generate corresponding module-level functions
 module = sys.modules[__name__]
 
-for f in XYZObject.api:
-    setattr(module, f, getattr(XYZObject, f))
+__all__ = ["XYZ"]
 
-__all__ = ["XYZObject"] + [f for f in XYZObject.api]
+for f in XYZ.api:
+    setattr(module, f, getattr(XYZ, f))
+    __all__.append(f)
