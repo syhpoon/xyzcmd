@@ -1,0 +1,22 @@
+# Plugins configuration file. Default settings. Do not edit.
+
+plugin_config(":sys:cmd",
+              {
+                  # Command line prompt
+                  "prompt": "$ ",
+                  
+                  # Size of undo buffer
+                  "undo_depth": 10,
+
+                  # Size of typed commands history buffer
+                  "history_depth": 50
+                })
+
+plugin_config(":sys:logger",
+              {
+                  # Log levels to track
+                  "levels": ["PANIC", "ERROR", "WARNING", "INFO"],
+                  
+                  # Maximum number of entries to keep
+                  "lines": 100
+                })

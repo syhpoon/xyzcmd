@@ -1,0 +1,2 @@
+action(r"type{dir} or (link_type{dir} and link_exists{?})",
+       lambda: call(":sys:panel:chdir", "%O"))

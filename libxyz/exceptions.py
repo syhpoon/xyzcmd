@@ -68,3 +68,8 @@ class KeyManagerError(XYZError):
 
 class FSRuleError(XYZError):
     pass
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class XYZDSLError(XYZError):
+    pass

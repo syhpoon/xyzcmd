@@ -106,7 +106,7 @@ class KeyManager(object):
                 _context = Namespace(_method).pfull
 
             try:
-                self._bind(_method, _shortcut, _context, _args)
+                self.bind(_method, _shortcut, _context, _args)
             except KeyManagerError, e:
                 raise XYZValueError(ustring(str(e)))
 
@@ -232,7 +232,13 @@ class KeyManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _bind(self, method, shortcut, context=None, args=None):
+    def bind(self, method, shortcut, context=None, args=None):
+        """
+        Bind a shortcut to a method
+        @return: True on success, False otherwise, also raises exception
+                 if method was not loaded
+        """
+
         _p = Namespace(method)
         _mobj = None
 
@@ -270,13 +276,7 @@ class KeyManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def bind(self, mobj, shortcut, context=None, args=None, force=True):
-        """
-        Bind a shortcut to a method
-        @return: True on success, False otherwise, also raises exception
-                 if method was not loaded
-        """
-
+    def _bind(self, mobj, shortcut, context=None, args=None, force=True):
         _shortcut = self.keys.make_shortcut(shortcut)
 
         if context is None:

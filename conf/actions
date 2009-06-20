@@ -1,3 +1,0 @@
-"type{dir} or (link_type{dir} and link_exists{?})" {
-	action = :sys:panel:chdir(%O)
-}

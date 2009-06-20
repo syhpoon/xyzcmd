@@ -1,0 +1,36 @@
+#
+# Main configuration file. Default settings. Do not edit.
+#
+
+# Enabled plugins
+# Syntax is:
+#   {plugin_ns_path} = {ENABLE | DISABLE}
+
+let("plugins", {
+   ":sys:run": "ENABLE",
+   ":sys:cmd": "ENABLE",
+   ":sys:panel": "ENABLE",
+   ":sys:logger": "ENABLE",
+
+   ":core:keycodes": "ENABLE",
+   ":core:pluginlist": "ENABLE",
+   ":core:bindlist": "ENABLE",
+   ":core:shell": "ENABLE",
+
+   ":misc:hello": "ENABLE",
+   ":misc:about": "ENABLE",
+
+   ":ui:testinput": "ENABLE",
+   ":ui:bookmarks": "ENABLE",
+
+   ":vfs:fileinfo": "ENABLE",
+   ":vfs:vfsutils": "ENABLE",
+}
+
+# Skin to use
+let("skin", "seablue", sect="xyz")
+
+# Local encoding
+# One of the available in python
+# (http://docs.python.org/lib/standard-encodings.html)
+let("local_encoding", "utf-8", sect="xyz")

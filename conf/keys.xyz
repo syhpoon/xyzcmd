@@ -1,0 +1,84 @@
+#
+# Max E. Kuznecov <syhpoon@syhpoon.name> 2008
+#
+# Default keybindings. Do not edit.
+#
+
+load(":sys:run:*")
+load(":sys:logger:*")
+load(":sys:cmd:*")
+load(":sys:panel:*")
+
+load(":core:pluginlist:show_list")
+load(":core:keycodes:*")
+load(":core:bindlist:show_binds")
+load(":core:shell:*")
+
+load(":ui:testinput:show_box")
+load(":ui:bookmarks:*")
+
+load(":misc:about:about")
+
+load(":vfs:fileinfo:fileinfo")
+load(":vfs:vfsutils:*")
+
+bind(":sys:cmd:execute", kbd("ENTER"))
+bind(":sys:cmd:history_prev", kbd("META-p"))
+bind(":sys:cmd:history_next", kbd("META-n"))
+bind(":sys:cmd:del_char_left", kbd("BACKSPACE"))
+bind(":sys:cmd:del_char", kbd("DELETE"))
+bind(":sys:cmd:del_word_left", kbd("META-u"))
+bind(":sys:cmd:del_word_right", kbd("META-k"))
+bind(":sys:cmd:clear", kbd("CTRL-p"))
+bind(":sys:cmd:clear_left", kbd("CTRL-u"))
+bind(":sys:cmd:clear_right", kbd("CTRL-k"))
+bind(":sys:cmd:cursor_begin", kbd("CTRL-a"))
+bind(":sys:cmd:cursor_end", kbd("CTRL-e"))
+bind(":sys:cmd:cursor_left", kbd("CTRL-b"))
+bind(":sys:cmd:cursor_right", kbd("CTRL-f"))
+bind(":sys:cmd:cursor_word_left", kbd("META-b"))
+bind(":sys:cmd:cursor_word_right", kbd("META-f"))
+bind(":sys:cmd:undo", kbd("CTRL-d"))
+bind(":sys:cmd:show_history", kbd("META-h"))
+bind(":sys:cmd:put_active_object", kbd("META-ENTER"))
+bind(":sys:cmd:put_active_object_path", kbd("META-q"))
+bind(":sys:cmd:put_inactive_object", kbd("CTRL-n"))
+bind(":sys:cmd:put_inactive_object_path", kbd("CTRL-s"))
+
+bind(":sys:panel:entry_next", kbd("DOWN"))
+bind(":sys:panel:entry_prev", kbd("UP"))
+bind(":sys:panel:entry_top", kbd("HOME"))
+bind(":sys:panel:entry_bottom", kbd("END"))
+bind(":sys:panel:switch_active", kbd("TAB"))
+bind(":sys:panel:block_next", kbd("PAGE_DOWN"))
+bind(":sys:panel:block_next", kbd("RIGHT"))
+bind(":sys:panel:block_prev", kbd("PAGE_UP"))
+bind(":sys:panel:block_prev", kbd("LEFT"))
+bind(":sys:panel:toggle_tag", kbd("INSERT"))
+bind(":sys:panel:tag_all", kbd("META-a"))
+bind(":sys:panel:untag_all", kbd("META-A"))
+bind(":sys:panel:tag_invert", kbd("META-i"))
+bind(":sys:panel:tag_rule", kbd("META-+"))
+bind(":sys:panel:untag_rule", kbd("META-/"))
+bind(":sys:panel:swap_blocks", kbd("CTRL-w"))
+bind(":sys:panel:reload", kbd("CTRL-r"))
+bind(":sys:panel:action", kbd("ENTER"))
+bind(":sys:panel:search_forward", kbd("META-s"))
+bind(":sys:panel:search_backward", kbd("META-w"))
+bind(":sys:panel:show_tagged", kbd("META-g"))
+
+bind(":sys:logger:show_console", kbd("META-l"), "DEFAULT")
+bind(":sys:run:shutdown", kbd("F10"), "DEFAULT")
+bind(":sys:run:repaint", kbd("CTRL-l"), "DEFAULT")
+
+bind(":core:pluginlist:show_list", kbd("META-t"), "DEFAULT")
+bind(":core:keycodes:learn_keys", kbd("META-y"), "DEFAULT")
+bind(":core:bindlist:show_binds", kbd("META-r"), "DEFAULT")
+
+bind(":ui:testinput:show_box", kbd("META-e"), "DEFAULT")
+bind(":ui:bookmarks:show_bookmarks", kbd("META-\\"), ":sys:panel")
+
+bind(":vfs:fileinfo:fileinfo", kbd("F2"), ":sys:panel")
+bind(":vfs:vfsutils:mkdir", kbd("F7"), ":sys:panel")
+
+bind(":misc:about:about", kbd("META-o"))
