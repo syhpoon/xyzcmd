@@ -71,5 +71,5 @@ class FSRuleError(XYZError):
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-class XYZDSLError(XYZError):
+class DSLError(XYZError):
     pass

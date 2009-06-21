@@ -97,14 +97,14 @@ class Panel(lowui.WidgetWrap):
             _input = self.xyz.input.get()
 
             if _input:
-                (_meth, _args) = self.xyz.km.process(_input, self.context)
+                _meth = self.xyz.km.process(_input, self.context)
                 
                 # No binds for PANEL context
                 if _meth is None:
                     self._cmd.keypress(_dim, _input)
                 else:
                     try:
-                        _meth(*_args)
+                        _meth()
                     except Exception, e:
                         xyzlog.error(_("Error executing bind (%s): %s") %
                                      (self._keys.raw_to_shortcut(_input[0]),

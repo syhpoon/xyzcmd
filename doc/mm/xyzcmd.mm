@@ -71,7 +71,7 @@
 <node CREATED="1245361398689" ID="Freemind_Link_855729037" MODIFIED="1245361403285" TEXT="interface">
 <node CREATED="1245359440779" ID="Freemind_Link_1142229797" MODIFIED="1245368124565" TEXT="kbd(*keys)">
 <node CREATED="1245360061472" ID="Freemind_Link_672485290" MODIFIED="1245360075054" TEXT="Create shortcut as a key sequence">
-<node CREATED="1244662573839" ID="Freemind_Link_310059790" MODIFIED="1245459267050" TEXT="shortcut(&quot;UP&quot;)&#xa;shortcut(&quot;META-s&quot;, &quot;x&quot;)&#xa;shortcut(&quot;CTRL-z&quot;)&#xa;shortcut(&quot;F5&quot;)">
+<node CREATED="1244662573839" ID="Freemind_Link_310059790" MODIFIED="1245585475712" TEXT="kbd(&quot;UP&quot;)&#xa;kbd(&quot;META-s&quot;, &quot;x&quot;)&#xa;kbd(&quot;CTRL-z&quot;)&#xa;kbd(&quot;F5&quot;)">
 <icon BUILTIN="xmag"/>
 </node>
 </node>
@@ -84,6 +84,10 @@
 <icon BUILTIN="xmag"/>
 </node>
 </node>
+</node>
+<node CREATED="1245583541470" ID="Freemind_Link_502370608" MODIFIED="1245586759557" TEXT="unlet(var, sec=&quot;local&quot;)">
+<icon BUILTIN="button_ok"/>
+<node CREATED="1245583554322" ID="Freemind_Link_1904306065" MODIFIED="1245583559521" TEXT="Unset variable"/>
 </node>
 <node CREATED="1245358523711" ID="Freemind_Link_1001198349" MODIFIED="1245358553408" TEXT="action(rule, function)">
 <node CREATED="1245358566594" ID="Freemind_Link_241216621" MODIFIED="1245358580145" TEXT="Set action based on rule to some function">
@@ -108,7 +112,8 @@
 </node>
 </node>
 </node>
-<node CREATED="1245359395521" ID="Freemind_Link_1708893538" MODIFIED="1245456346243" TEXT="bind(method, shortcut, context=&quot;@&quot;)">
+<node CREATED="1245359395521" ID="Freemind_Link_1708893538" MODIFIED="1245586759550" TEXT="bind(method, shortcut, context=&quot;@&quot;)">
+<icon BUILTIN="button_ok"/>
 <node CREATED="1245359455981" ID="Freemind_Link_1257852318" MODIFIED="1245359465408" TEXT="Bind specified method to shortcut">
 <node COLOR="#000000" CREATED="1244500735764" ID="Freemind_Link_1761463976" MODIFIED="1245459397322" TEXT="bind(&quot;:sys:panel:entry_next&quot;, shortcut(&quot;DOWN&quot;), context=&quot;@&quot;)">
 <font NAME="Tahoma" SIZE="12"/>

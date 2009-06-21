@@ -14,16 +14,16 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-import re
-
 import libxyz
+import os.path
 
 from libxyz.core.plugins import Namespace
 from libxyz.core.utils import ustring
+from libxyz.core import dsl
+
 from libxyz.exceptions import PluginError
 from libxyz.exceptions import KeyManagerError
-from libxyz.exceptions import XYZValueError
-from libxyz.exceptions import LexerError
+from libxyz.exceptions import DSLError
 
 class KeyManager(object):
     """
@@ -40,11 +40,8 @@ class KeyManager(object):
 
         self._loaded_methods = {}
         self._bind_data = {}
-        self._args_data = {}
 
         self._path_sel = libxyz.PathSelector()
-
-        self._parse_config()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -60,7 +57,6 @@ class KeyManager(object):
         _p = tuple(pressed)
 
         _method = None
-        _args = []
 
         # Look for binded shortcut
         try:
@@ -68,147 +64,26 @@ class KeyManager(object):
         except KeyError:
             # No bind
             pass
-        else:
-            try:
-                _args = self._args_data[context][_method]
-            except KeyError:
-                pass
 
-        return (_method, _args)
+        return _method
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _parse_config(self):
-        def _comment_cb(mo):
-            return
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        def _load_cb(mo):
-            try:
-                self._load(mo.group("method"))
-            except PluginError, e:
-                raise XYZValueError(ustring(str(e)))
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        def _bind_cb(mo):
-            _method = mo.group("method")
-            _shortcut = mo.group("shortcut")
-            _context = mo.group("context")
-
-            try:
-                _args = _parse_args(mo.group("args"))
-            except LexerError, e:
-               raise XYZValueError(ustring(str(e)))
-
-            if _context == self.CONTEXT_SELF:
-                _context = Namespace(_method).pfull
-
-            try:
-                self.bind(_method, _shortcut, _context, _args)
-            except KeyManagerError, e:
-                raise XYZValueError(ustring(str(e)))
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        def _parse_args(raw):
-            _args = []
-
-            if not raw:
-                return _args
-
-            _tokens = ("\n", ",")
-
-            _lexer = libxyz.parser.Lexer(raw, _tokens,
-                                         comment=None, macro=None)
-
-            while True:
-                _res = _lexer.lexer()
-                
-                if _res is None:
-                    break
-                else:
-                    _args.append(_res[1])
-
-            return filter(lambda x: x != u",", _args)
-            
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        _comment_re = re.compile(r"^\s*#.*$")
-
-        _include_re = re.compile(r"""
-        ^                  # begin
-        \s*                # leading spaces
-        include            # keyword include
-        \s+                # on or more spaces
-        TODO
-        $                  # EOL        
-        """, re.VERBOSE)
-
-        _load_re = re.compile(r"""
-        ^                  # begin
-        \s*                # leading spaces
-        load               # keywoard load
-        \s+                # one ore more spaces
-        (?P<method>[\S:]+) # Full plugin path with method name
-        \s*                # trailing spaces
-        $                  # EOL
-        """, re.VERBOSE)
-
-        _bind_re = re.compile(r"""
-        ^                   # begin
-        \s*                 # leading spaces
-        bind                # keywoard bind
-        \s+                 # one ore more spaces
-        (?P<method>[\w:]+)  # plugin method name
-        \s*                 # spaces
-        (\((?P<args>.*)\))? # arguments                
-        \s+                 # one ore more spaces
-        to                  # keyword to
-        \s+                 # one ore more spaces
-        (?P<shortcut>\S+)   # shortcut
-        (                   # optional context group begin
-        \s+                 # one ore more spaces
-        context             # keyword context
-        \s+                 # one ore more spaces
-        (?P<context>[:\w_%s]+) # context name
-        )?                  # context group end
-        \s*                 # trailing spaces
-        $                   # end
-        """ % self.CONTEXT_SELF, re.VERBOSE)
-
-        _cbpool = {_comment_re: _comment_cb,
-                   _load_re: _load_cb,
-                   _bind_re: _bind_cb,
-                  }
-
-        _parser = libxyz.parser.RegexpParser(_cbpool)
-
+    def parse_configs(self):
         # First mandatory system keys file
-
         try:
-            _file = open(self.confpathes[0], "r")
-        except IOError, e:
-            raise XYZRuntimeError(_(u"Unable to open %s: %s" %
-                                  (self.confpath, ustring(str(e)))))
-
-        try:
-            _parser.parse(_file)
-        finally:
-            _file.close()
+            dsl.exec_file(self.confpathes[0])
+        except DSLError as e:
+            raise KeyManagerError(_(u"Error parsing config %s: %s" %
+                                    (self.confpathes[0], ustring(str(e)))))
 
         # Next optional user's keys file
-
-        try:
-            _file = open(self.confpathes[1], "r")
-        except IOError, e:
-            pass
-        else:
+        if os.path.exists(self.confpathes[1]):
             try:
-                _parser.parse(_file)
-            finally:
-                _file.close()
+                dsl.exec_file(self.confpathes[1])
+            except DSLError as e:
+                raise KeyManagerError(_(u"Error parsing config %s: %s" %
+                                    (self.confpathes[1], ustring(str(e)))))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -232,7 +107,7 @@ class KeyManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def bind(self, method, shortcut, context=None, args=None):
+    def bind(self, method, shortcut, context=None):
         """
         Bind a shortcut to a method
         @return: True on success, False otherwise, also raises exception
@@ -241,6 +116,9 @@ class KeyManager(object):
 
         _p = Namespace(method)
         _mobj = None
+
+        if context == self.CONTEXT_SELF:
+            context = _p.pfull
 
         # First check if methods were loaded by wildcard ALL
         if _p.full not in self._loaded_methods:
@@ -258,25 +136,24 @@ class KeyManager(object):
         if _mobj is None:
             # Wait until plugin method is available and then run callback
             self.xyz.pm.wait_for(_p, self._bind_wait_cb, _p.method, shortcut,
-                                 context, args)
+                                 context)
 
-        self.bind(_mobj, shortcut, context, args)
+        self._bind(_mobj, shortcut, context)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _bind_wait_cb(self, plugin_obj, method, shortcut, context, args):
+    def _bind_wait_cb(self, plugin_obj, method, shortcut, context):
         if method not in plugin_obj.public:
             xyzlog.error(_(u"Unable to bind method %s. "\
                          u"Plugin %s doesn't export it." %
                          (method, plugin_obj.ns.pfull)))
             return
 
-        self.bind(plugin_obj.public[method], shortcut, context, args,
-                  force=False)
+        self._bind(plugin_obj.public[method], shortcut, context, force=False)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _bind(self, mobj, shortcut, context=None, args=None, force=True):
+    def _bind(self, mobj, shortcut, context=None, force=True):
         _shortcut = self.keys.make_shortcut(shortcut)
 
         if context is None:
@@ -285,19 +162,11 @@ class KeyManager(object):
         if context not in self._bind_data:
             self._bind_data[context] = {}
 
-        if context not in self._args_data:
-            self._args_data[context] = {}
-
         if _shortcut in self._bind_data[context] and \
         self._bind_data[context][_shortcut] is not None and not force:
             return
 
         self._bind_data[context][_shortcut] = mobj
-
-        if args is None:
-            args = []
-
-        self._args_data[context][mobj] = args
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

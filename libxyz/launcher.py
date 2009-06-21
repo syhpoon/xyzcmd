@@ -92,9 +92,9 @@ class Launcher(object):
         self.xyz.pm = PluginManager(self.xyz,
                                     self._path_sel.get_plugins_dir())
 
+        self.init_logger()
         self.init_keys()
 
-        self.init_logger()
         self.xyz.input = core.InputWrapper(self.xyz)
         self.xyz.screen = uilib.display.init_display()
         self.xyz.screen.register_palette(self.xyz.skin.get_palette_list())
@@ -194,7 +194,8 @@ class Launcher(object):
         Initialize skin
         """
 
-        _system, _user = self._path_sel.get_skin(self.xyz.conf[u"xyz"][u"skin"])
+        _system, _user = self._path_sel.get_skin(
+            self.xyz.conf[u"xyz"][u"skin"])
 
         _path = self._path_sel.get_first_of((_user, _system))
 
@@ -215,6 +216,7 @@ class Launcher(object):
 
         self.xyz.km = core.KeyManager(self.xyz, self._path_sel.get_conf(
                                                 const.KEYS_CONF_FILE))
+        self.xyz.km.parse_configs()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -261,8 +263,6 @@ class Launcher(object):
         Parse configuration
         """
 
-        import pdb; pdb.set_trace() 
-
         self._parse_conf_file(const.XYZ_CONF_FILE)
         self._parse_conf_file(const.PLUGINS_CONF_FILE)
 
@@ -284,7 +284,7 @@ class Launcher(object):
         # Exec system config first
         try:
             dsl.exec_file(_system)
-        except XYZDSLError as e:
+        except DSLError as e:
             self.error(_(u"Error parsing system config %s: %s") %
                        (_system, ustring(str(e))))
 
@@ -292,7 +292,7 @@ class Launcher(object):
         if os.path.exists(_user):
             try:
                 dsl.exec_file(_user)
-            except XYZDSLError as e:
+            except DSLError as e:
                 self.error(_(u"Error parsing user config %s: %s") %
                            (_user, ustring(str(e))))
 

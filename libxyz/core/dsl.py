@@ -27,7 +27,7 @@ def instantiated(func):
 
     def wrap(cls, *args, **kwargs):
         if cls._instance is None:
-            raise ex.XYZDSLError(_(u"Class must be instantiated first!"))
+            raise ex.DSLError(_(u"Class must be instantiated first!"))
         else:
             return func(cls, *args, **kwargs)
 
@@ -43,9 +43,11 @@ class XYZ(object):
     """
 
     api = ["let",
+           "unlet",
            "load",
            "bind",
            "exec_file",
+           "kbd",
            ]
     _instance = None
     _env = {}
@@ -78,12 +80,25 @@ class XYZ(object):
 
         if sect not in _conf:
             _conf[sect] = {}
-        elif var in _conf[sect] and isinstance(_conf[sect][var], dict) and \
+            
+        if var in _conf[sect] and isinstance(_conf[sect][var], dict) and \
         isinstance(val, dict):
             # Update rather than overwrite
             _conf[sect][var].update(val)
         else:
             cls.xyz.conf[sect][var] = val
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def unlet(cls, var, sect=u"local"):
+        """
+        Unset variable
+        """
+
+        if var in cls.xyz.conf[sect]:
+            del(cls.xyz.conf[sect])
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -97,7 +112,7 @@ class XYZ(object):
         try:
             cls.xyz.km.load(plugin)
         except Exception as e:
-            raise ex.XYZDSLError(_(u"Unable to load plugin %s: %s") %
+            raise ex.DSLError(_(u"Unable to load plugin %s: %s") %
                                  (plugin, ustring(str(e))))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -109,6 +124,13 @@ class XYZ(object):
 
         cls.xyz.km.bind(method, shortcut, context=context)
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def kbd(cls, *args):
+        return " ".join(args)
+    
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @classmethod
@@ -134,7 +156,7 @@ class XYZ(object):
         try:
             exec source in cls._env
         except Exception as e:
-            raise ex.XYZDSLError(_(u"Error in DSL execution: %s") %
+            raise ex.DSLError(_(u"Error in DSL execution: %s") %
                                  ustring(str(e)))
 
 #++++++++++++++++++++++++++++++++++++++++++++++++

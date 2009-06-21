@@ -1,5 +1,5 @@
 #
-# Max E. Kuznecov <syhpoon@syhpoon.name> 2008
+# Max E. Kuznecov <syhpoon@syhpoon.name> 2008-2009
 #
 # Default keybindings. Do not edit.
 #
@@ -81,4 +81,4 @@ bind(":ui:bookmarks:show_bookmarks", kbd("META-\\"), ":sys:panel")
 bind(":vfs:fileinfo:fileinfo", kbd("F2"), ":sys:panel")
 bind(":vfs:vfsutils:mkdir", kbd("F7"), ":sys:panel")
 
-bind(":misc:about:about", kbd("META-o"))
+bind(":misc:about:about", kbd("META-o"), ":sys:panel")
