@@ -1,2 +1,9 @@
+#
+# Max E. Kuznecov <syhpoon@syhpoon.name> 2008-2009
+#
+# Default actions. Do not edit.
+#
+
+# Enter directory
 action(r"type{dir} or (link_type{dir} and link_exists{?})",
-       lambda: call(":sys:panel:chdir", "%O"))
+       lambda obj: call(":sys:panel:chdir", obj.path))

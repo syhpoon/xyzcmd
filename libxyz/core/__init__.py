@@ -23,6 +23,7 @@ __all__ = (
     'InputWrapper',
     'Queue',
     'HookManager',
+    'ActionManager',
     'utils',
     )
 
@@ -34,4 +35,5 @@ from keymanager import KeyManager
 from inputwrapper import InputWrapper
 from queue import Queue
 from hookmanager import HookManager
+from actionmanager import ActionManager
 import utils

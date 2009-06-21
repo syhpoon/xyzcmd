@@ -37,6 +37,11 @@ def instantiated(func):
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+def error(msg):
+    raise DSLError(_(u"DSL Error: %s") % msg)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 class XYZ(object):
     """
     XYZ DSL implementation object
@@ -48,7 +53,12 @@ class XYZ(object):
            "bind",
            "exec_file",
            "kbd",
+           "action",
+           "macro",
            ]
+
+    macros = {}
+    
     _instance = None
     _env = {}
     
@@ -62,6 +72,10 @@ class XYZ(object):
 
         cls._env = {"XYZ": cls}
         cls._env.update(dict([(f, getattr(cls, f)) for f in cls.api]))
+
+        # Init macros
+        cls.macros["ACT_PATH"] = lambda: cls.xyz.pm.from_load(
+            ":sys:panel", "get_selected")().path
 
         return cls
 
@@ -112,17 +126,18 @@ class XYZ(object):
         try:
             cls.xyz.km.load(plugin)
         except Exception as e:
-            raise ex.DSLError(_(u"Unable to load plugin %s: %s") %
-                                 (plugin, ustring(str(e))))
+            error(_(u"Unable to load plugin %s: %s") %
+                  (plugin, ustring(str(e))))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @classmethod
     @instantiated
     def bind(cls, method, shortcut, context="@"):
-        # TODO: if not isinstance(shortcut, XYZShortcut): ...
-
-        cls.xyz.km.bind(method, shortcut, context=context)
+        try:
+            cls.xyz.km.bind(method, shortcut, context=context)
+        except Exception as e:
+            error(_(u"Unable to bind shortcut: %s") % (ustring(str(e))))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -143,6 +158,50 @@ class XYZ(object):
         with open(filename) as f:
             cls.execute(f.read())
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def action(cls, rule, fn):
+        """
+        Set up an action to be taken upon pressing action key on file
+        """
+
+        try:
+            cls.xyz.am.register(rule, fn)
+        except Exception as e:
+            error(_(u"Unable to register action: %s") % ustring(str(e)))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def macro(cls, macroname):
+        """
+        Expand macro name.
+        
+        Availbale macros:
+        * ACT_CWD        -- Working directory in active panel
+        * INACT_CWD      -- Working directory in inactive panel
+        * ACT_PATH       -- Full path to selected object in active panel
+        * INACT_PATH     -- Full path to selected object in inactive panel
+        * ACT_BASE       -- Parent directory in active panel
+        * INACT_BASE     -- Parent directory in inactive panel
+        * ACT_TAGGED     -- List of tagged files in active panel
+        * INACT_TAGGED   -- List of tagged files in inactive panel
+        * ACT_UNTAGGED   -- List of not tagged files in active panel
+        * INACT_UNTAGGED -- List of not tagged files in inactive panel
+        """
+
+        if macroname in cls.macros:
+            try:
+                return cls.macros[macroname]()
+            except Exception as e:
+                xyzlog.warning(_(u"Unable to expand macro %s: %s") %
+                               (ustring(macroname), ustring(str(e))))
+        # Return unchanged
+        return macroname
+        
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     @classmethod

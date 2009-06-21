@@ -91,6 +91,7 @@ class Launcher(object):
         self.xyz.hm = core.HookManager()
         self.xyz.pm = PluginManager(self.xyz,
                                     self._path_sel.get_plugins_dir())
+        self.xyz.am = core.ActionManager(self.xyz)
 
         self.init_logger()
         self.init_keys()
