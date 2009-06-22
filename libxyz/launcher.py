@@ -91,9 +91,9 @@ class Launcher(object):
         self.xyz.hm = core.HookManager()
         self.xyz.pm = PluginManager(self.xyz,
                                     self._path_sel.get_plugins_dir())
-        self.xyz.am = core.ActionManager(self.xyz)
 
         self.init_logger()
+        self.init_actions()
         self.init_keys()
 
         self.xyz.input = core.InputWrapper(self.xyz)
@@ -212,12 +212,25 @@ class Launcher(object):
 
     def init_keys(self):
         """
-        Initialize keys
+        Initialize keys manager
         """
 
         self.xyz.km = core.KeyManager(self.xyz, self._path_sel.get_conf(
                                                 const.KEYS_CONF_FILE))
         self.xyz.km.parse_configs()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def init_actions(self):
+        """
+        Init action manager
+        """
+
+        self.xyz.am = core.ActionManager(self.xyz,
+                                         self._path_sel.get_conf(
+                                             const.ACTIONS_CONF_FILE))
+
+        self.xyz.am.parse_configs()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

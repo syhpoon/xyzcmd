@@ -44,5 +44,8 @@ KEYS_CONF_FILE = u"keys.xyz"
 # Plugins configuration file name
 PLUGINS_CONF_FILE = u"plugins.xyz"
 
+# Actions configuration file name
+ACTIONS_CONF_FILE = u"actions.xyz"
+
 # Default fallback skin name
 DEFAULT_SKIN = u"default"

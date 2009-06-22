@@ -89,7 +89,8 @@
 <icon BUILTIN="button_ok"/>
 <node CREATED="1245583554322" ID="Freemind_Link_1904306065" MODIFIED="1245583559521" TEXT="Unset variable"/>
 </node>
-<node CREATED="1245358523711" ID="Freemind_Link_1001198349" MODIFIED="1245358553408" TEXT="action(rule, function)">
+<node CREATED="1245358523711" ID="Freemind_Link_1001198349" MODIFIED="1245701446418" TEXT="action(rule, function)">
+<icon BUILTIN="button_ok"/>
 <node CREATED="1245358566594" ID="Freemind_Link_241216621" MODIFIED="1245358580145" TEXT="Set action based on rule to some function">
 <node CREATED="1244663231419" ID="Freemind_Link_1449275902" MODIFIED="1245459373257" TEXT="action(r&quot;type{dir} or (link_type{dir} and link_exists{?})&quot;, lambda: call(&quot;:sys:panel:chdir&quot;, &quot;%O&quot;))">
 <icon BUILTIN="xmag"/>
@@ -121,7 +122,8 @@
 </node>
 </node>
 </node>
-<node CREATED="1245359544399" ID="Freemind_Link_118928829" MODIFIED="1245359569078" TEXT="call(method, *args)">
+<node CREATED="1245359544399" ID="Freemind_Link_118928829" MODIFIED="1245703180982" TEXT="call(method, *args)">
+<icon BUILTIN="button_ok"/>
 <node CREATED="1245359576515" ID="Freemind_Link_1569658164" MODIFIED="1245359587464" TEXT="Call plugin method on args">
 <node CREATED="1245359588748" ID="Freemind_Link_1656389879" MODIFIED="1245359606267" TEXT="Substitutions">
 <icon BUILTIN="help"/>
@@ -135,8 +137,11 @@
 <node CREATED="1245361152489" ID="Freemind_Link_890209027" MODIFIED="1245361159281" TEXT="hook()">
 <icon BUILTIN="help"/>
 </node>
-<node CREATED="1245535477575" ID="Freemind_Link_1446723596" MODIFIED="1245535480925" TEXT="exec_file"/>
-<node CREATED="1245615450750" ID="Freemind_Link_1513951905" MODIFIED="1245615479083" TEXT="macro(macro_name)">
+<node CREATED="1245535477575" ID="Freemind_Link_1446723596" MODIFIED="1245703189796" TEXT="exec_file">
+<icon BUILTIN="button_ok"/>
+</node>
+<node CREATED="1245615450750" ID="Freemind_Link_1513951905" MODIFIED="1245703195556" TEXT="macro(macro_name)">
+<icon BUILTIN="button_ok"/>
 <node CREATED="1245615481016" ID="Freemind_Link_816910859" MODIFIED="1245615487833" TEXT="Expand macro">
 <node CREATED="1245615489117" ID="Freemind_Link_425587281" MODIFIED="1245615510487" TEXT="macro(&quot;CWD&quot;)"/>
 </node>

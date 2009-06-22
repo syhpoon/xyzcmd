@@ -17,6 +17,7 @@
 import sys
 
 from libxyz.core.utils import ustring
+from libxyz.core.plugins import Namespace
 
 import libxyz.exceptions as ex
 
@@ -27,7 +28,7 @@ def instantiated(func):
 
     def wrap(cls, *args, **kwargs):
         if cls._instance is None:
-            raise ex.DSLError(_(u"Class must be instantiated first!"))
+            error(_(u"Class must be instantiated first!"))
         else:
             return func(cls, *args, **kwargs)
 
@@ -38,7 +39,7 @@ def instantiated(func):
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def error(msg):
-    raise DSLError(_(u"DSL Error: %s") % msg)
+    raise ex.DSLError(_(u"DSL Error: %s") % msg)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -55,6 +56,7 @@ class XYZ(object):
            "kbd",
            "action",
            "macro",
+           "call"
            ]
 
     macros = {}
@@ -203,6 +205,24 @@ class XYZ(object):
         return macroname
         
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def call(cls, method, *args):
+        """
+        Call plugin method
+        """
+
+        try:
+            p = Namespace(method)
+            m = cls.xyz.pm.from_load(p.pfull, p.method)
+            m(*args)
+        except Exception as e:
+            error(_(u"Unable to execute method %s: %s" %
+                    (method, ustring(str(e)))))
+            
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        
     
     @classmethod
     @instantiated
@@ -215,8 +235,7 @@ class XYZ(object):
         try:
             exec source in cls._env
         except Exception as e:
-            raise ex.DSLError(_(u"Error in DSL execution: %s") %
-                                 ustring(str(e)))
+            error(_(u"Error in DSL execution: %s") % ustring(str(e)))
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 

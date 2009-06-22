@@ -15,8 +15,6 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-import re
-import os
 import os.path
 
 from libxyz.exceptions import PluginError

@@ -1024,11 +1024,13 @@ class Block(lowui.FlowWidget):
 
         _selected = self.entries[self.selected]
 
-        if isinstance(_selected.ftype, VFSTypeDir) or \
-        (isinstance(_selected.ftype, VFSTypeLink) and \
-        _selected.data is not None and \
-        isinstance(_selected.data.ftype, VFSTypeDir)):
-            self.chdir(_selected.path)
+        _action = self.xyz.am.match(_selected)
+
+        if _action is not None:
+            try:
+                _action(_selected)
+            except Exception as e:
+                xyzlog.error(_(u"Action error: %s") % (ustring(str(e))))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

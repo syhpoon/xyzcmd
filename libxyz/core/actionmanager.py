@@ -14,17 +14,22 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+import os.path
+
 from libxyz.core import FSRule
+from libxyz.core import dsl
 from libxyz.core.utils import ustring
 from libxyz.exceptions import XYZRuntimeError
+from libxyz.exceptions import DSLError
 
 class ActionManager(object):
     """
     Action rules handler
     """
 
-    def __init__(self, xyz):
+    def __init__(self, xyz, confs):
         self.xyz = xyz
+        self._confs = confs
         self._actions = []
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -34,7 +39,7 @@ class ActionManager(object):
         Register function to be run upon matching rule
         @param rule: String FS rule
         @param fn: Action function. Function receives matched VFS object as
-                   only argument.
+                   its only argument.
         """
 
         try:
@@ -47,3 +52,33 @@ class ActionManager(object):
         self._actions.insert(0, (_rule, fn))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def parse_configs(self):
+        # First mandatory system keys file
+        try:
+            dsl.exec_file(self._confs[0])
+        except DSLError as e:
+            raise XYZRuntimeError(_(u"Error parsing config %s: %s" %
+                                    (self._confs[0], ustring(str(e)))))
+
+        # Next optional user's keys file
+        if os.path.exists(self._confs[1]):
+            try:
+                dsl.exec_file(self._confs[1])
+            except DSLError as e:
+                raise XYZRuntimeError(_(u"Error parsing config %s: %s" %
+                                        (self._confs[1], ustring(str(e)))))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def match(self, vfsobj):
+        """
+        Loop through registered actions and return action assosiated
+        with the first matched rule. If no rule matched return None
+        """
+
+        for r, f in self._actions:
+            if r.match(vfsobj):
+                return f
+
+        return None
