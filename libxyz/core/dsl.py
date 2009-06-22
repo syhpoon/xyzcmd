@@ -233,7 +233,7 @@ class XYZ(object):
         """
 
         try:
-            exec source in cls._env
+            exec source in cls._env.copy()
         except Exception as e:
             error(_(u"Error in DSL execution: %s") % ustring(str(e)))
 

@@ -5,5 +5,13 @@
 #
 
 # Enter directory
-action(r"type{dir} or (link_type{dir} and link_exists{?})",
+action("type{dir} or (link_type{dir} and link_exists{?})",
        lambda obj: call(":sys:panel:chdir", obj.path))
+
+## Multimedia
+action('regexp{".*\\.(avi|wmv|mov|asf|mpg|flv|mp3)$"}',
+       lambda obj: call(":core:shell:execute", "mplayer " + obj.path))
+
+## Documents
+action('regexp{".*\\.pdf$"}',
+       lambda obj: call(":core:shell:execute", "xpdf " + obj.path))
