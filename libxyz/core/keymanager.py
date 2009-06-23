@@ -87,6 +87,16 @@ class KeyManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def set_prefix(self, shortcut):
+        """
+        Set prefix shortcut
+        """
+
+        pass
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+
     def load(self, method):
         """
         Load method

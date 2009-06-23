@@ -28,6 +28,7 @@ class XYZData(object):
                  "am",
                  "conf",
                  "input",
+                 "term",
                 ]
 
     def __init__(self):
@@ -40,6 +41,7 @@ class XYZData(object):
         object.__setattr__(self, "am", None)
         object.__setattr__(self, "conf", None)
         object.__setattr__(self, "input", None)
+        object.__setattr__(self, "term", None)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

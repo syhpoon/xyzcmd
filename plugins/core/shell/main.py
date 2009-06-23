@@ -8,6 +8,8 @@ import errno
 import os
 import signal
 
+import libxyz.core as core
+
 from libxyz.core.utils import bstring
 from libxyz.core.plugins import BasePlugin
 
@@ -51,7 +53,6 @@ class XYZPlugin(BasePlugin):
             shell, _shell = "/bin/sh", "sh"
 
         self.shell = [shell] + self.shell_args[_shell]
-        
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -63,6 +64,15 @@ class XYZPlugin(BasePlugin):
         self.xyz.screen.clear()
         stdout = sys.stdout
         self.xyz.screen.stop()
+
+        _current_term = None
+        
+        # Restore original terminal settings
+        if self.xyz.term is not None:
+            _current_term = core.utils.term_settings()[-1]
+            core.utils.restore_term(self.xyz.term)
+        
+        # Clear the screen
         #TODO: make it more portable!
         stdout.write("\x1b[H\x1b[2J")
 
@@ -89,11 +99,17 @@ class XYZPlugin(BasePlugin):
             while True:
                 try:
                     self.status = os.waitpid(pid, 0)
+                except KeyboardInterrupt:
+                    pass
                 except OSError, e:
                     if e.errno != errno.EINTR:
                         break
 
+        if _current_term is not None:
+            core.utils.restore_term(_current_term)
+
         self._press_key(_(u"Press ENTER to continue..."), "\n")
+
         self.xyz.screen.start()
 
         return self.status

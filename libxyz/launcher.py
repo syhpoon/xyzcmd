@@ -25,7 +25,6 @@ import locale
 import os
 import os.path
 import termios
-import copy
 import __builtin__
 
 import libxyz
@@ -82,12 +81,12 @@ class Launcher(object):
         """
 
         self._set_enc()
-        self.setup_term()
 
         self.parse_args()
         self.parse_configs()
         self.init_skin()
 
+        self.xyz.term = core.utils.setup_term()
         self.xyz.hm = core.HookManager()
         self.xyz.pm = PluginManager(self.xyz,
                                     self._path_sel.get_plugins_dir())
@@ -234,44 +233,6 @@ class Launcher(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def setup_term(self):
-        """
-        Make additional terminal initialization
-        """
-
-        stdin = sys.stdin.fileno()
-
-        # WTF?
-        if not os.isatty(stdin):
-            return
-
-        try:
-            vdisable = os.fpathconf(stdin, "PC_VDISABLE")
-        except ValueError:
-            return
-
-        term = termios.tcgetattr(stdin)
-        self._saved_term = copy.deepcopy(term[-1])
-
-        # Disable special symbols
-        _todisable = [getattr(termios, x) for x in ("VQUIT",     # ^\
-                                                    "VINTR",     # ^C
-                                                    "VSUSP",     # ^Z
-                                                    "VLNEXT",    # ^V
-                                                    "VSTART",    # ^Q
-                                                    "VSTOP",     # ^S
-                                                    "VDISCARD",  # ^O
-                                                    )]
-
-        for _key in _todisable:
-            term[-1][_key] = vdisable
-
-        termios.tcsetattr(stdin, termios.TCSANOW, term)
-
-        return
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     def parse_configs(self):
         """
         Parse configuration
@@ -366,11 +327,5 @@ Usage: %s [-c dir][-vh]
         Perform shutdown procedures
         """
 
-        if self._saved_term is not None:
-            stdin = sys.stdin.fileno()
-
-            term = termios.tcgetattr(stdin)
-            term[-1] = self._saved_term
-
-            if os.isatty(stdin):
-                termios.tcsetattr(stdin, termios.TCSANOW, term)
+        if self.xyz.term is not None:
+            core.utils.restore_term(self.xyz.term)
