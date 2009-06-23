@@ -23,12 +23,12 @@ FSRules grammar (BNF)
     ftype         : "type"
                   : "perm"
                   : "owner"
-                  : "regexp"
+                  : "name"
                   : "size
                   : "link_type"
                   : "link_perm"
                   : "link_owner"
-                  : "link_regexp"
+                  : "link_name"
                   : "link_exists"
                   : "link_size"
 
@@ -39,16 +39,16 @@ Available expressions are:
 * :ref:`type`
 * :ref:`perm`
 * :ref:`owner`
-* :ref:`regexp`
+* :ref:`name`
 * :ref:`size`
 * :ref:`link_type <type>`
 * :ref:`link_perm <perm>`
 * :ref:`link_owner <owner>`
-* :ref:`link_regexp <regexp>`
+* :ref:`link_name <regexp>`
 * :ref:`link_size <size>`
 * :ref:`link_exists`
 
-``link_type, link_perm, link_owner, link_regexp,  link_size``
+``link_type, link_perm, link_owner, link_name,  link_size``
 are the same expressions as corresponding above,
 but they're applied only for symbolic links targets.
 
@@ -134,20 +134,20 @@ symbolic or numeric::
       # Objects owner by user with uid 1050
       "owner{1050}"
 
-.. _regexp:
+.. _name:
 
-regexp
+name
 ------
-``regexp`` expressions rules use names of object as match criteria.
+``name`` expressions rules use names of object as match criteria.
 
 An argument is an arbitrary regular-expression string. It is better to quote
 the whole argument so it would be interpreted correctly by lexer::
 
       # *.core files
-      '''regexp{".*\\.core$"}'''
+      '''name{".*\\.core$"}'''
 
       # Hidden files
-      '''regexp{"^\\.{1}[^.]"}'''
+      '''name{"^\\.{1}[^.]"}'''
 
 .. _size:
 

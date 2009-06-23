@@ -17,6 +17,8 @@
 from __future__ import with_statement
 
 import sys
+import os
+import traceback
 
 from libxyz.core.utils import ustring
 from libxyz.core.plugins import Namespace
@@ -41,6 +43,7 @@ def instantiated(func):
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def error(msg):
+    xyzlog.debug(ustring(traceback.format_exc()))
     raise ex.DSLError(_(u"DSL Error: %s") % msg)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -58,7 +61,9 @@ class XYZ(object):
            "kbd",
            "action",
            "macro",
-           "call"
+           "call",
+           "env",
+           "shell",
            ]
 
     macros = {}
@@ -138,6 +143,10 @@ class XYZ(object):
     @classmethod
     @instantiated
     def bind(cls, method, shortcut, context="@"):
+        """
+        Bind method to shortcut
+        """
+        
         try:
             cls.xyz.km.bind(method, shortcut, context=context)
         except Exception, e:
@@ -224,7 +233,38 @@ class XYZ(object):
                     (method, ustring(str(e)))))
             
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        
+
+    @classmethod
+    @instantiated
+    def env(cls, var, default=None):
+        """
+        Return environment variable or default if is not set
+        """
+
+        return os.getenv(var, default)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def shell(cls, cmd, *args, **kwargs):
+        """
+        Execute command via :core:shell plugin
+        Optional boolean argument 'current' can be provided to indicate
+        that cmd is to be run from current directory
+        """
+
+        if kwargs.get("current", False):
+            cmd = "./%s" % cmd
+
+        try:
+            exe = cls.xyz.pm.from_load(":core:shell", "execute")
+            escape = cls.xyz.pm.from_load(":sys:cmd", "escape")
+            exe(" ".join([escape(cmd, True)]+[escape(a, True) for a in args]))
+        except Exception, e:
+            error(_(u"Error in DSL shell execution: %s") % ustring(str(e)))
+            
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     @classmethod
     @instantiated

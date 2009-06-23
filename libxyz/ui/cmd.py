@@ -22,7 +22,6 @@ import libxyz.core
 from libxyz.exceptions import XYZValueError
 from libxyz.ui import lowui
 from libxyz.ui import Prompt
-from libxyz.ui import ListEntry
 from libxyz.ui import XYZListBox
 from libxyz.ui import NumEntry
 from libxyz.ui import Keys
@@ -144,6 +143,7 @@ class Cmd(lowui.FlowWidget):
         _cmd_plugin.export(self.put_active_object_path)
         _cmd_plugin.export(self.put_inactive_object)
         _cmd_plugin.export(self.put_inactive_object_path)
+        _cmd_plugin.export(self.escape)
 
         self.xyz.pm.register(_cmd_plugin)
 
@@ -712,27 +712,34 @@ class Cmd(lowui.FlowWidget):
         """
         Put list content to cmd
         """
-        toput = escape_objname([bstring(x) for x in obj]) + [" "]
+        toput = self.escape([bstring(x) for x in obj]) + [" "]
         tlen = len(toput)
         self._data.extend(toput)
         self._index += tlen
         self._vindex += tlen
         self._invalidate()
 
-#++++++++++++++++++++++++++++++++++++++++++++++++
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-def escape_objname(obj):
-    result = []
-    toescape = [" ", "'", '"', "*", "?", "\\",
-                "(", ")",
-                "[", "]",
-                "{", "}",
-                ]
+    def escape(self, obj, join=False):
+        """
+        Escape filename
+        @param obj: String to escape
+        @param join: If False return list otherwise return joined string
+        """
+        
+        result = []
+        toescape = [" ", "'", '"', "*", "?", "\\", "&",
+                    "(", ")",
+                    "[", "]",
+                    "{", "}",
+                    ]
 
-    for x in obj:
-        if x in toescape:
-            result.extend(["\\", x])
-        else:
-            result.append(x)
+        for x in obj:
+            if x in toescape:
+                result.extend(["\\", x])
+            else:
+                result.append(x)
 
-    return result
+        return "".join(result) if join else result
+

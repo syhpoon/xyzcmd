@@ -4,14 +4,28 @@
 # Default actions. Do not edit.
 #
 
+# Execute file
+action(r'(type{file} and perm{+0111}) or '\
+       r'(type{link} and link_type{file} and link_perm{+0111})',
+       lambda obj: shell(obj.path))
+
 # Enter directory
-action("type{dir} or (link_type{dir} and link_exists{?})",
+action(r'type{dir} or (link_type{dir} and link_exists{?})',
        lambda obj: call(":sys:panel:chdir", obj.path))
 
 ## Multimedia
-action('regexp{".*\\.(avi|wmv|mov|asf|mpg|flv|mp3)$"}',
-       lambda obj: call(":core:shell:execute", "mplayer " + obj.path))
+action(r'name{".*\\.(avi|wmv|mov|asf|mpg|flv|mp3)$"}',
+       lambda obj: shell("mplayer", obj.path))
 
 ## Documents
-action('regexp{".*\\.pdf$"}',
-       lambda obj: call(":core:shell:execute", "xpdf " + obj.path))
+# PDF
+action(r'name{".*\\.pdf$"}', lambda obj: shell("xpdf", obj.path))
+
+## Programming sources
+# C
+action(r'type{file} and name{".*\\.(c|h)$"}',
+       lambda obj: shell(env("EDITOR", "vi"), obj.path))
+
+# C++
+action(r'type{file} and name{".*\\.(cpp|cxx|hpp|hxx)$"}',
+       lambda obj: shell(env("EDITOR", "vi"), obj.path))

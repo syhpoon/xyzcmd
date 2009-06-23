@@ -11,9 +11,9 @@ fs.rules {
 	# Executables
 	"type{file} and perm{+0111}" = LIGHT_GREEN, &BG
 	# core files
-	'''type{file} and regexp{".*\\.core$"}''' = DARK_RED, &BG
+	'''type{file} and name{".*\\.core$"}''' = DARK_RED, &BG
 	# Hidden files
-	'''regexp{"^\\.{1}[^.]"}''' = DARK_GRAY, &BG
+	'''name{"^\\.{1}[^.]"}''' = DARK_GRAY, &BG
 
 	"type{file}" = LIGHT_GRAY, &BG
 	"type{dir}" = WHITE, &BG
