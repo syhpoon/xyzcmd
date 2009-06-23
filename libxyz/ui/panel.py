@@ -1029,7 +1029,7 @@ class Block(lowui.FlowWidget):
         if _action is not None:
             try:
                 _action(_selected)
-            except Exception as e:
+            except Exception, e:
                 xyzlog.error(_(u"Action error: %s") % (ustring(str(e))))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

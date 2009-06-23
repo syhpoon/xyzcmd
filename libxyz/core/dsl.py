@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import with_statement
+
 import sys
 
 from libxyz.core.utils import ustring
@@ -127,7 +129,7 @@ class XYZ(object):
 
         try:
             cls.xyz.km.load(plugin)
-        except Exception as e:
+        except Exception, e:
             error(_(u"Unable to load plugin %s: %s") %
                   (plugin, ustring(str(e))))
 
@@ -138,7 +140,7 @@ class XYZ(object):
     def bind(cls, method, shortcut, context="@"):
         try:
             cls.xyz.km.bind(method, shortcut, context=context)
-        except Exception as e:
+        except Exception, e:
             error(_(u"Unable to bind shortcut: %s") % (ustring(str(e))))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -171,7 +173,7 @@ class XYZ(object):
 
         try:
             cls.xyz.am.register(rule, fn)
-        except Exception as e:
+        except Exception, e:
             error(_(u"Unable to register action: %s") % ustring(str(e)))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -198,7 +200,7 @@ class XYZ(object):
         if macroname in cls.macros:
             try:
                 return cls.macros[macroname]()
-            except Exception as e:
+            except Exception, e:
                 xyzlog.warning(_(u"Unable to expand macro %s: %s") %
                                (ustring(macroname), ustring(str(e))))
         # Return unchanged
@@ -217,7 +219,7 @@ class XYZ(object):
             p = Namespace(method)
             m = cls.xyz.pm.from_load(p.pfull, p.method)
             m(*args)
-        except Exception as e:
+        except Exception, e:
             error(_(u"Unable to execute method %s: %s" %
                     (method, ustring(str(e)))))
             
@@ -234,7 +236,7 @@ class XYZ(object):
 
         try:
             exec source in cls._env.copy()
-        except Exception as e:
+        except Exception, e:
             error(_(u"Error in DSL execution: %s") % ustring(str(e)))
 
 #++++++++++++++++++++++++++++++++++++++++++++++++

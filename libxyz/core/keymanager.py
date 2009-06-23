@@ -73,7 +73,7 @@ class KeyManager(object):
         # First mandatory system keys file
         try:
             dsl.exec_file(self.confpathes[0])
-        except DSLError as e:
+        except DSLError, e:
             raise KeyManagerError(_(u"Error parsing config %s: %s" %
                                     (self.confpathes[0], ustring(str(e)))))
 
@@ -81,7 +81,7 @@ class KeyManager(object):
         if os.path.exists(self.confpathes[1]):
             try:
                 dsl.exec_file(self.confpathes[1])
-            except DSLError as e:
+            except DSLError, e:
                 raise KeyManagerError(_(u"Error parsing config %s: %s" %
                                     (self.confpathes[1], ustring(str(e)))))
 

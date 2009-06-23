@@ -44,7 +44,7 @@ class ActionManager(object):
 
         try:
             _rule = FSRule(rule)
-        except Exception as e:
+        except Exception, e:
             raise XYZRuntimeError(
                 _(u"Unable to register action: invalid rule: %s") % 
                 ustring(str(e)))
@@ -57,7 +57,7 @@ class ActionManager(object):
         # First mandatory system keys file
         try:
             dsl.exec_file(self._confs[0])
-        except DSLError as e:
+        except DSLError, e:
             raise XYZRuntimeError(_(u"Error parsing config %s: %s" %
                                     (self._confs[0], ustring(str(e)))))
 
@@ -65,7 +65,7 @@ class ActionManager(object):
         if os.path.exists(self._confs[1]):
             try:
                 dsl.exec_file(self._confs[1])
-            except DSLError as e:
+            except DSLError, e:
                 raise XYZRuntimeError(_(u"Error parsing config %s: %s" %
                                         (self._confs[1], ustring(str(e)))))
 

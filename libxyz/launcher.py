@@ -161,7 +161,7 @@ class Launcher(object):
         except KeyError:
             _levels = (logger.LogLevel().ALL,)
         else:
-            if not isinstance(_levels, tuple):
+            if not isinstance(_levels, tuple) and not isinstance(_levels, list):
                 _levels = (_levels,)
 
         try:
@@ -298,7 +298,7 @@ class Launcher(object):
         # Exec system config first
         try:
             dsl.exec_file(_system)
-        except DSLError as e:
+        except DSLError, e:
             self.error(_(u"Error parsing system config %s: %s") %
                        (_system, ustring(str(e))))
 
@@ -306,7 +306,7 @@ class Launcher(object):
         if os.path.exists(_user):
             try:
                 dsl.exec_file(_user)
-            except DSLError as e:
+            except DSLError, e:
                 self.error(_(u"Error parsing user config %s: %s") %
                            (_user, ustring(str(e))))
 
