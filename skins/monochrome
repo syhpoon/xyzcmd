@@ -46,7 +46,7 @@ ui.panel {
 	search = WHITE, &BG
 	info = WHITE, DEFAULT
 	border = DEFAULT, DEFAULT
-	tagged = WHITE, DEFAULT
+	tagged = WHITE, &BG
 }
 
 # XYZListBox

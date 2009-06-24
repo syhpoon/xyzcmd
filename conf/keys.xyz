@@ -82,3 +82,6 @@ bind(":vfs:fileinfo:fileinfo", kbd("F2"), ":sys:panel")
 bind(":vfs:vfsutils:mkdir", kbd("F7"), ":sys:panel")
 
 bind(":misc:about:about", kbd("META-o"), ":sys:panel")
+
+bind(lambda: shell(env("EDITOR", "vi"), macro("ACT_PATH")), kbd("F4"),
+     ":sys:panel")

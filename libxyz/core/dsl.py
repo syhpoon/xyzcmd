@@ -196,8 +196,8 @@ class XYZ(object):
         Availbale macros:
         * ACT_CWD        -- Working directory in active panel
         * INACT_CWD      -- Working directory in inactive panel
-        * ACT_PATH       -- Full path to selected object in active panel
-        * INACT_PATH     -- Full path to selected object in inactive panel
+        * ACT_PATH       -- Full selected object path in active panel
+        * INACT_PATH     -- Full selected object path in inactive panel
         * ACT_BASE       -- Parent directory in active panel
         * INACT_BASE     -- Parent directory in inactive panel
         * ACT_TAGGED     -- List of tagged files in active panel

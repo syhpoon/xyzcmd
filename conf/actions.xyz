@@ -14,7 +14,7 @@ action(r'type{dir} or (link_type{dir} and link_exists{?})',
        lambda obj: call(":sys:panel:chdir", obj.path))
 
 ## Multimedia
-action(r'name{".*\\.(avi|wmv|mov|asf|mpg|flv|mp3)$"}',
+action(r'name{".*\\.(avi|AVI|wmv|WMV|mov|MOV|asf|ASF|mpg|MPG|flv|FLV|mp3)$"}',
        lambda obj: shell("mplayer", obj.path))
 
 ## Documents

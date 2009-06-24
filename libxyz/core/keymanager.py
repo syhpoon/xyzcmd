@@ -14,8 +14,10 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-import libxyz
 import os.path
+import types
+
+import libxyz
 
 from libxyz.core.plugins import Namespace
 from libxyz.core.utils import ustring
@@ -119,34 +121,46 @@ class KeyManager(object):
 
     def bind(self, method, shortcut, context=None):
         """
-        Bind a shortcut to a method
+        Bind a shortcut to a method.
+        A method can be either a string, in that case it should denote the
+        plugin method or it can be a function.
+        
         @return: True on success, False otherwise, also raises exception
                  if method was not loaded
         """
 
-        _p = Namespace(method)
-        _mobj = None
+        if isinstance(method, basestring):
+            _p = Namespace(method)
+            _mobj = None
 
-        if context == self.CONTEXT_SELF:
-            context = _p.pfull
+            if context == self.CONTEXT_SELF:
+                context = _p.pfull
 
-        # First check if methods were loaded by wildcard ALL
-        if _p.full not in self._loaded_methods:
-            if "%s:%s" % (_p.pfull, _p.ALL) not in self._loaded_methods:
-                raise KeyManagerError(_(u"Method %s not loaded" % _p))
+            # First check if methods were loaded by wildcard ALL
+            if _p.full not in self._loaded_methods:
+                if "%s:%s" % (_p.pfull, _p.ALL) not in self._loaded_methods:
+                    raise KeyManagerError(_(u"Method %s not loaded" % _p))
 
-            # Else try to load specified method
-            try:
-                _mobj = self.xyz.pm.from_load(_p.pfull, _p.method)
-            except PluginError, e:
-                raise KeyManagerError(_(u"Load error: %s" % e))
+                # Else try to load specified method
+                try:
+                    _mobj = self.xyz.pm.from_load(_p.pfull, _p.method)
+                except PluginError, e:
+                    raise KeyManagerError(_(u"Load error: %s" % e))
+            else:
+                _mobj = self._loaded_methods[_p.full]
+
+            if _mobj is None:
+                # Wait until plugin method is available and then run callback
+                self.xyz.pm.wait_for(_p, self._bind_wait_cb, _p.method,
+                                     shortcut, context)
+
+        elif isinstance(method, types.FunctionType) or \
+             isinstance(method, types.MethodType):
+            _mobj = method
         else:
-            _mobj = self._loaded_methods[_p.full]
-
-        if _mobj is None:
-            # Wait until plugin method is available and then run callback
-            self.xyz.pm.wait_for(_p, self._bind_wait_cb, _p.method, shortcut,
-                                 context)
+            raise KeyManagerError(_(u"Invalid method type: %s."\
+                                    u"Must be string or function") %
+                                  type(method))
 
         self._bind(_mobj, shortcut, context)
 
