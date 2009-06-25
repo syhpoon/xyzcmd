@@ -158,7 +158,7 @@ class KeyManager(object):
              isinstance(method, types.MethodType):
             _mobj = method
         else:
-            raise KeyManagerError(_(u"Invalid method type: %s."\
+            raise KeyManagerError(_(u"Invalid method type: %s. "\
                                     u"Must be string or function") %
                                   type(method))
 

@@ -16,10 +16,12 @@
 
 import copy
 import traceback
+import itertools
+import re
+import types
 
 import libxyz.core
 
-from libxyz.exceptions import XYZValueError
 from libxyz.ui import lowui
 from libxyz.ui import Prompt
 from libxyz.ui import XYZListBox
@@ -63,39 +65,15 @@ class Cmd(lowui.FlowWidget):
         self._vindex = 0
         self._hindex = 0
 
+        self.context = None
         self._panel = self.xyz.pm.load(":sys:panel")
 
         self._plugin = self._init_plugin()
-
-        _conf_vars = ((u"undo_depth", 10, int),
-                      (u"history_depth", 50, int),
-                      (u"prompt", u"$ ", unicode),
-                     )
-
+        
         _conf = self._plugin.conf
-
-        for _var, _def, _cast in _conf_vars:
-            try:
-                if _cast is not None:
-                    _val = _cast(_conf[_var])
-                else:
-                    _val = _conf[_var]
-            except KeyError:
-                _val = _def
-            except ValueError, e:
-                _val = _def
-                xyzlog.warning(_(u"%s: Invalid argument type %s: %s. "\
-                                 u"Using default: %s" %
-                                 (self._plugin.ns.pfull,
-                                  _var, ustring(str(e)),
-                                  unicode(_def))))
-            finally:
-                setattr(self, u"_%s" % _var, _val)
-
-        self.prompt = Prompt(self._prompt, self._attr(u"prompt"))
-
-        self._undo = libxyz.core.Queue(self._undo_depth)
-        self._history = libxyz.core.Queue(self._history_depth)
+        self.prompt = Prompt(_conf[u"prompt"], self._attr(u"prompt"))
+        self._undo = libxyz.core.Queue(_conf[u"undo_depth"])
+        self._history = libxyz.core.Queue(_conf[u"history_depth"])
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -144,6 +122,7 @@ class Cmd(lowui.FlowWidget):
         _cmd_plugin.export(self.put_inactive_object)
         _cmd_plugin.export(self.put_inactive_object_path)
         _cmd_plugin.export(self.escape)
+        _cmd_plugin.export(self.replace_aliases)
 
         self.xyz.pm.register(_cmd_plugin)
 
@@ -564,15 +543,53 @@ class Cmd(lowui.FlowWidget):
 
         self._save_history()
 
+        _data = self.replace_aliases("".join(self._data))
+        
         if not hasattr(self, "_execf"):
             self._execf = self.xyz.pm.from_load(":core:shell", "execute")
 
-        self._execf("".join(self._data))
+        self._execf(_data)
         
         self._clear_cmd()
         self._invalidate()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def replace_aliases(self, data):
+        """
+        Check if first word of the command line (which is supposed to be a
+        command to execute) is in our aliases table, if it is, replace it.
+
+        @param data: String
+        """
+
+        cmd = "".join(list(itertools.takewhile(lambda x: not x.isspace(),
+                                               data)))
+
+        try:
+            raw_alias = self.xyz.conf["aliases"][cmd]
+
+            if isinstance(raw_alias, basestring):
+                alias = raw_alias
+            elif isinstance(raw_alias, types.FunctionType) or \
+            isinstance(raw_alias, types.MethodType):
+                alias = raw_alias()
+            else:
+                xyzlog.error(_(u"Invalid alias type: %s") %
+                             ustring(str(type(raw_alias))))
+                return data
+                
+
+            return re.sub(r"^%s" % cmd, alias, data)
+        except KeyError:
+            return data
+        except Exception, e:
+            xyzlog.error(_(u"Unable to replace an alias %s: %s") %
+                         (ustring(cmd), ustring(str(e))))
+            return data
+        
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
 
     def is_empty(self):
         """

@@ -47,5 +47,8 @@ PLUGINS_CONF_FILE = u"plugins.xyz"
 # Actions configuration file name
 ACTIONS_CONF_FILE = u"actions.xyz"
 
+# Aliases configuration file name
+ALIASES_CONF_FILE = u"aliases.xyz"
+
 # Default fallback skin name
 DEFAULT_SKIN = u"default"

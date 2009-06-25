@@ -24,7 +24,6 @@ import getopt
 import locale
 import os
 import os.path
-import termios
 import __builtin__
 
 import libxyz
@@ -240,6 +239,7 @@ class Launcher(object):
 
         self._parse_conf_file(const.XYZ_CONF_FILE)
         self._parse_conf_file(const.PLUGINS_CONF_FILE)
+        self._parse_conf_file(const.ALIASES_CONF_FILE)
 
         # local_encoding set, override guessed encoding
         if u"local_encoding" in self.xyz.conf[u"xyz"]:

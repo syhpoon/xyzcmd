@@ -64,6 +64,7 @@ class XYZ(object):
            "call",
            "env",
            "shell",
+           "alias",
            ]
 
     macros = {}
@@ -263,7 +264,18 @@ class XYZ(object):
             exe(" ".join([escape(cmd, True)]+[escape(a, True) for a in args]))
         except Exception, e:
             error(_(u"Error in DSL shell execution: %s") % ustring(str(e)))
-            
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def alias(cls, alias, repf):
+        """
+        Set an alias which will be expanded in command line before execution
+        """
+
+        return cls.let(alias, repf, sect="aliases")
+        
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     @classmethod
