@@ -169,8 +169,8 @@ class XYZ(object):
         Execute DSL in file
         """
 
-        with open(filename) as f:
-            cls.execute(f.read())
+        with open(filename) as fh:
+            cls.execute(fh.read())
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -269,12 +269,13 @@ class XYZ(object):
 
     @classmethod
     @instantiated
-    def alias(cls, alias, repf):
+    def alias(cls, alias, replace):
         """
         Set an alias which will be expanded in command line before execution
+        @param replace: Either string or function
         """
 
-        return cls.let(alias, repf, sect="aliases")
+        return cls.let(alias, replace, sect="aliases")
         
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     

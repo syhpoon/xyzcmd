@@ -157,6 +157,7 @@ class KeyManager(object):
         elif isinstance(method, types.FunctionType) or \
              isinstance(method, types.MethodType):
             _mobj = method
+            _mobj.ns = _(u"<Internal function object>")
         else:
             raise KeyManagerError(_(u"Invalid method type: %s. "\
                                     u"Must be string or function") %
