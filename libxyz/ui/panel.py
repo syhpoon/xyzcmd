@@ -1129,13 +1129,20 @@ class Block(lowui.FlowWidget):
         
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _search_engine(self, order):
+    def _search_engine(self, order, pattern=None):
         """
         Search for matching filenames while user types
         @param order: A function that returns generator for search order
+        @param pattern: A search type pattern
         """
 
         self._cursor_attr = self.attr(u"search")
+
+        if pattern is None:
+            # Search everywhere in object name
+            pattern = lambda pat, obj: pat in obj
+            # Search from the beginning of object name
+            #pattern = lambda pat, obj: obj.startswith(pat)
 
         _dim = self.xyz.screen.get_cols_rows()
         _collected = []
@@ -1171,7 +1178,7 @@ class Block(lowui.FlowWidget):
 
             # Search
             for i in order(_current_pos):
-                if self.entries[i].name.startswith(_pattern):
+                if pattern(_pattern, self.entries[i].name):
                     self.selected = i
                     _collected = _tmp
                     break
