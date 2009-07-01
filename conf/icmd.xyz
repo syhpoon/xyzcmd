@@ -1,0 +1,17 @@
+#
+# Max E. Kuznecov <syhpoon@syhpoon.name> 2008-2009
+#
+# Default internal commands. Do not edit.
+#
+
+def _chdir(args):
+    # Chdir to home dir
+    if not args:
+        _to = env("HOME", "/")
+    else:
+        _to = args
+
+    call(":sys:panel:chdir", _to)
+
+# Internal chdir
+icmd("cd", _chdir)

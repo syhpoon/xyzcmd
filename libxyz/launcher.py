@@ -159,7 +159,8 @@ class Launcher(object):
         except KeyError:
             _levels = (logger.LogLevel().ALL,)
         else:
-            if not isinstance(_levels, tuple) and not isinstance(_levels, list):
+            if not isinstance(_levels, tuple) and not \
+                   isinstance(_levels, list):
                 _levels = (_levels,)
 
         try:
@@ -240,6 +241,7 @@ class Launcher(object):
         self._parse_conf_file(const.XYZ_CONF_FILE)
         self._parse_conf_file(const.PLUGINS_CONF_FILE)
         self._parse_conf_file(const.ALIASES_CONF_FILE)
+        self._parse_conf_file(const.ICMD_CONF_FILE)
 
         # local_encoding set, override guessed encoding
         if u"local_encoding" in self.xyz.conf[u"xyz"]:

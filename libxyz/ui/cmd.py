@@ -18,7 +18,6 @@ import copy
 import traceback
 import itertools
 import re
-import types
 
 import libxyz.core
 
@@ -28,8 +27,7 @@ from libxyz.ui import XYZListBox
 from libxyz.ui import NumEntry
 from libxyz.ui import Keys
 from libxyz.ui.utils import refresh
-from libxyz.core.utils import ustring
-from libxyz.core.utils import bstring
+from libxyz.core.utils import ustring, bstring, is_func
 
 class Cmd(lowui.FlowWidget):
     """
@@ -544,11 +542,21 @@ class Cmd(lowui.FlowWidget):
         self._save_history()
 
         _data = self.replace_aliases("".join(self._data))
-        
-        if not hasattr(self, "_execf"):
-            self._execf = self.xyz.pm.from_load(":core:shell", "execute")
 
-        self._execf(_data)
+        _cmd, _rest = split_cmd(_data)
+
+        # Do not run shell, execute internal command
+        if _cmd in self.xyz.conf["commands"]:
+            try:
+                self.xyz.conf["commands"][_cmd](bstring(_rest))
+            except Exception, e:
+                xyzlog.error(_("Error executing internal command %s: %s") %
+                             (_cmd, ustring(str(e))))
+        else:
+            if not hasattr(self, "_execf"):
+                self._execf = self.xyz.pm.from_load(":core:shell", "execute")
+
+            self._execf(_data)
         
         self._clear_cmd()
         self._invalidate()
@@ -563,16 +571,14 @@ class Cmd(lowui.FlowWidget):
         @param data: String
         """
 
-        cmd = "".join(list(itertools.takewhile(lambda x: not x.isspace(),
-                                               data)))
+        cmd, _ = split_cmd(data)
 
         try:
             raw_alias = self.xyz.conf["aliases"][cmd]
 
             if isinstance(raw_alias, basestring):
                 alias = raw_alias
-            elif isinstance(raw_alias, types.FunctionType) or \
-            isinstance(raw_alias, types.MethodType):
+            elif is_func(raw_alias):
                 alias = raw_alias()
             else:
                 xyzlog.error(_(u"Invalid alias type: %s") %
@@ -760,3 +766,16 @@ class Cmd(lowui.FlowWidget):
 
         return "".join(result) if join else result
 
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+def split_cmd(cmdline):
+    """
+    Return command name and the rest of the command line
+    """
+
+    _r =  cmdline.split(" ", 1)
+
+    if len(_r) == 1:
+        return _r[0], None
+    else:
+        return _r[0], _r[1]

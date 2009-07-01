@@ -19,8 +19,10 @@ from __future__ import with_statement
 import sys
 import os
 import traceback
+import __builtin__
 
 from libxyz.core.utils import ustring
+from libxyz.core.utils import is_func
 from libxyz.core.plugins import Namespace
 
 import libxyz.exceptions as ex
@@ -42,8 +44,9 @@ def instantiated(func):
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-def error(msg):
-    xyzlog.debug(ustring(traceback.format_exc()))
+def error(msg, trace=True):
+    if trace and hasattr(__builtin__, "xyzlog"):
+        xyzlog.debug(ustring(traceback.format_exc()))
     raise ex.DSLError(_(u"DSL Error: %s") % msg)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -65,6 +68,9 @@ class XYZ(object):
            "env",
            "shell",
            "alias",
+           "plugins_on",
+           "plugins_off",
+           "icmd",
            ]
 
     macros = {}
@@ -276,7 +282,46 @@ class XYZ(object):
         """
 
         return cls.let(alias, replace, sect="aliases")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def icmd(cls, command, obj):
+        """
+        Set an internal command.
+        """
+
+        if not is_func(obj):
+            error(_(u"Invalid object type: %s. Function expected") %
+                  type(obj), trace=False)
         
+        return cls.let(command, obj, sect="commands")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def plugins_on(cls, *plugins):
+        """
+        Enable plugin[s]
+        """
+
+        for plugin in plugins:
+            cls.let("plugins", {plugin: "ENABLE"}, sect="xyz")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    @classmethod
+    @instantiated
+    def plugins_off(cls, *plugins):
+        """
+        Disable plugin[s]
+        """
+
+        for plugin in plugins:
+            cls.let("plugins", {plugin: "DISABLE"}, sect="xyz")
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     @classmethod

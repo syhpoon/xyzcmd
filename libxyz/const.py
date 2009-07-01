@@ -50,5 +50,8 @@ ACTIONS_CONF_FILE = u"actions.xyz"
 # Aliases configuration file name
 ALIASES_CONF_FILE = u"aliases.xyz"
 
+# Internal commands configuration file name
+ICMD_CONF_FILE = u"icmd.xyz"
+
 # Default fallback skin name
 DEFAULT_SKIN = u"default"

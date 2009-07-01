@@ -1055,13 +1055,15 @@ class Block(lowui.FlowWidget):
             try:
                 _vfsobj = LocalVFSObject(path, self._enc)
             except libxyz.exceptions.VFSError, e:
-                xyzlog.error("Unable to chdir to %s: %s" % (path, str(e)))
+                xyzlog.error(_(u"Unable to chdir to %s: %s") %
+                             (ustring(path), ustring(e)))
                 return
 
             try:
                 self._setup(_vfsobj)
             except libxyz.exceptions.XYZRuntimeError, e:
-                xyzlog.info("Unable to chdir to %s: %s" % (path, str(e)))
+                xyzlog.info(_(u"Unable to chdir to %s: %s") %
+                            (ustring(path), ustring(e)))
                 return
 
             self.selected = 0

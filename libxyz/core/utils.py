@@ -18,6 +18,7 @@ import sys
 import os
 import termios
 import copy
+import types
 
 def ustring(string, enc=None):
     """
@@ -126,3 +127,14 @@ def restore_term(term_data):
     if os.isatty(stdin):
         termios.tcsetattr(stdin, termios.TCSADRAIN, term)
 
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def is_func(obj):
+    """
+    Check if object is of function type
+    """
+    
+    return isinstance(obj, types.FunctionType) or \
+           isinstance(obj, types.MethodType)
+        

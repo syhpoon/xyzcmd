@@ -50,7 +50,7 @@ class LocalVFSObject(vfsobj.VFSObject):
         try:
             _dir, _dirs, _files = os.walk(top).next()
         except StopIteration:
-            raise XYZRuntimeError(_(u"Unable to walk on %s") % top)
+            raise XYZRuntimeError(_(u"Unable to walk on %s") % ustring(top))
 
         _abstop = os.path.abspath(top)
 

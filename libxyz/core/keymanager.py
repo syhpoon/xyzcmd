@@ -15,12 +15,12 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 import os.path
-import types
 
 import libxyz
 
 from libxyz.core.plugins import Namespace
 from libxyz.core.utils import ustring
+from libxyz.core.utils import is_func
 from libxyz.core import dsl
 
 from libxyz.exceptions import PluginError
@@ -154,8 +154,7 @@ class KeyManager(object):
                 self.xyz.pm.wait_for(_p, self._bind_wait_cb, _p.method,
                                      shortcut, context)
 
-        elif isinstance(method, types.FunctionType) or \
-             isinstance(method, types.MethodType):
+        elif is_func(method):
             _mobj = method
             _mobj.ns = _(u"<Internal function object>")
         else:
