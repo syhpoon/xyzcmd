@@ -56,11 +56,13 @@ class FSRule(parser.BaseParser):
     TOKEN_PERM = "perm"
     TOKEN_OWNER = "owner"
     TOKEN_NAME = "name"
+    TOKEN_INAME = "iname"
     TOKEN_SIZE = "size"
     TOKEN_LINK_TYPE = "link_type"
     TOKEN_LINK_PERM = "link_perm"
     TOKEN_LINK_OWNER = "link_owner"
     TOKEN_LINK_NAME = "link_name"
+    TOKEN_LINK_INAME = "link_iname"
     TOKEN_LINK_EXISTS = "link_exists"
     TOKEN_LINK_SIZE = "link_size"
     TOKEN_AND = "and"
@@ -77,10 +79,10 @@ class FSRule(parser.BaseParser):
     TOKENS_EXTENDED = []
     TRANSFORM_EXTENDED = {}
 
-    TOKENS = [TOKEN_TYPE, TOKEN_PERM, TOKEN_OWNER, TOKEN_NAME,
+    TOKENS = [TOKEN_TYPE, TOKEN_PERM, TOKEN_OWNER, TOKEN_NAME, TOKEN_INAME,
               TOKEN_LINK_TYPE, TOKEN_LINK_PERM, TOKEN_LINK_OWNER,
-              TOKEN_LINK_NAME, TOKEN_LINK_EXISTS, TOKEN_AND, TOKEN_OR,
-              TOKEN_NOT, TOKEN_OPEN_BR, TOKEN_CLOSE_BR,
+              TOKEN_LINK_NAME, TOKEN_LINK_INAME, TOKEN_LINK_EXISTS,
+              TOKEN_AND, TOKEN_OR, TOKEN_NOT, TOKEN_OPEN_BR, TOKEN_CLOSE_BR,
               TOKEN_OPEN_PAR, TOKEN_CLOSE_PAR, TOKEN_DEFAULT,
               TOKEN_SIZE, TOKEN_LINK_SIZE, EOF]
 
@@ -96,11 +98,13 @@ class FSRule(parser.BaseParser):
              TOKEN_PERM,
              TOKEN_OWNER,
              TOKEN_NAME,
+             TOKEN_INAME,
              TOKEN_SIZE,
              TOKEN_LINK_TYPE,
              TOKEN_LINK_PERM,
              TOKEN_LINK_OWNER,
              TOKEN_LINK_NAME,
+             TOKEN_LINK_INAME,
              TOKEN_LINK_EXISTS,
              TOKEN_LINK_SIZE,
             ]
@@ -196,11 +200,13 @@ class FSRule(parser.BaseParser):
         self._action.add(0, self.TOKEN_PERM, (_s, 3))
         self._action.add(0, self.TOKEN_OWNER, (_s, 4))
         self._action.add(0, self.TOKEN_NAME, (_s, 5))
+        self._action.add(0, self.TOKEN_INAME, (_s, 5))
         self._action.add(0, self.TOKEN_SIZE, (_s, 27))
         self._action.add(0, self.TOKEN_LINK_TYPE, (_s, 27))
         self._action.add(0, self.TOKEN_LINK_PERM, (_s, 27))
         self._action.add(0, self.TOKEN_LINK_OWNER, (_s, 27))
         self._action.add(0, self.TOKEN_LINK_NAME, (_s, 27))
+        self._action.add(0, self.TOKEN_LINK_INAME, (_s, 27))
         self._action.add(0, self.TOKEN_LINK_EXISTS, (_s, 27))
         self._action.add(0, self.TOKEN_LINK_SIZE, (_s, 27))
         self._action.add(0, self.TOKEN_NOT, (_s, 1))
@@ -210,11 +216,13 @@ class FSRule(parser.BaseParser):
         self._action.add(1, self.TOKEN_PERM, (_s, 3))
         self._action.add(1, self.TOKEN_OWNER, (_s, 4))
         self._action.add(1, self.TOKEN_NAME, (_s, 5))
+        self._action.add(1, self.TOKEN_INAME, (_s, 5))
         self._action.add(1, self.TOKEN_SIZE, (_s, 27))
         self._action.add(1, self.TOKEN_LINK_TYPE, (_s, 27))
         self._action.add(1, self.TOKEN_LINK_PERM, (_s, 27))
         self._action.add(1, self.TOKEN_LINK_OWNER, (_s, 27))
         self._action.add(1, self.TOKEN_LINK_NAME, (_s, 27))
+        self._action.add(1, self.TOKEN_LINK_INAME, (_s, 27))
         self._action.add(1, self.TOKEN_LINK_EXISTS, (_s, 27))
         self._action.add(1, self.TOKEN_LINK_SIZE, (_s, 27))
 
@@ -227,11 +235,13 @@ class FSRule(parser.BaseParser):
         self._action.add(6, self.TOKEN_PERM, (_s, 3))
         self._action.add(6, self.TOKEN_OWNER, (_s, 4))
         self._action.add(6, self.TOKEN_NAME, (_s, 5))
+        self._action.add(6, self.TOKEN_INAME, (_s, 5))
         self._action.add(6, self.TOKEN_SIZE, (_s, 27))
         self._action.add(6, self.TOKEN_LINK_TYPE, (_s, 27))
         self._action.add(6, self.TOKEN_LINK_PERM, (_s, 27))
         self._action.add(6, self.TOKEN_LINK_OWNER, (_s, 27))
         self._action.add(6, self.TOKEN_LINK_NAME, (_s, 27))
+        self._action.add(6, self.TOKEN_LINK_INAME, (_s, 27))
         self._action.add(6, self.TOKEN_LINK_EXISTS, (_s, 27))
         self._action.add(6, self.TOKEN_LINK_SIZE, (_s, 27))
         self._action.add(6, self.TOKEN_NOT, (_s, 1))
@@ -256,11 +266,13 @@ class FSRule(parser.BaseParser):
         self._action.add(17, self.TOKEN_PERM, (_s, 3))
         self._action.add(17, self.TOKEN_OWNER, (_s, 4))
         self._action.add(17, self.TOKEN_NAME, (_s, 5))
+        self._action.add(17, self.TOKEN_INAME, (_s, 5))
         self._action.add(17, self.TOKEN_SIZE, (_s, 27))
         self._action.add(17, self.TOKEN_LINK_TYPE, (_s, 27))
         self._action.add(17, self.TOKEN_LINK_PERM, (_s, 27))
         self._action.add(17, self.TOKEN_LINK_OWNER, (_s, 27))
         self._action.add(17, self.TOKEN_LINK_NAME, (_s, 27))
+        self._action.add(17, self.TOKEN_LINK_INAME, (_s, 27))
         self._action.add(17, self.TOKEN_LINK_EXISTS, (_s, 27))
         self._action.add(17, self.TOKEN_LINK_SIZE, (_s, 27))
         self._action.add(17, self.TOKEN_NOT, (_s, 1))
@@ -464,17 +476,19 @@ class FSRule(parser.BaseParser):
         Reduce stack by rule
         """
         _transform = {
-                      u"type": self._type,
-                      u"name": self._name,
-                      u"owner": self._owner,
-                      u"perm": self._perm,
-                      u"size": self._size,
-                      u"link_type": self._type,
-                      u"link_name": self._name,
-                      u"link_owner": self._owner,
-                      u"link_perm": self._perm,
-                      u"link_size": self._size,
-                     }
+            u"type": self._type,
+            u"name": self._name,
+            u"iname": self._iname,
+            u"owner": self._owner,
+            u"perm": self._perm,
+            u"size": self._size,
+            u"link_type": self._type,
+            u"link_name": self._name,
+            u"link_iname": self._iname,
+            u"link_owner": self._owner,
+            u"link_perm": self._perm,
+            u"link_size": self._size,
+            }
 
         try:
             _ntok, _len = self._rules.get(rule)
@@ -551,6 +565,11 @@ class FSRule(parser.BaseParser):
 
     def _name(self, arg):
         return re.compile(arg, re.U)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    def _iname(self, arg):
+        return re.compile(arg, re.U | re.I)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -690,6 +709,14 @@ class Expression(object):
                 return True
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        
+        def _match_iname(obj, arg):
+            if arg.search(obj.name) is None:
+                return False
+            else:
+                return True
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         def _match_owner(obj, arg):
             if arg[0] is not None and arg[1] is not None:
@@ -750,6 +777,7 @@ class Expression(object):
 
         _match_link_type = link(_match_type)
         _match_link_name = link(_match_name)
+        _match_link_iname = link(_match_iname)
         _match_link_owner = link(_match_owner)
         _match_link_perm = link(_match_perm)
         _match_link_size = link(_match_size)
@@ -757,18 +785,20 @@ class Expression(object):
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         _match_f = {
-                    u"type": _match_type,
-                    u"name": _match_name,
-                    u"owner": _match_owner,
-                    u"perm": _match_perm,
-                    u"size": _match_size,
-                    u"link_type": _match_link_type,
-                    u"link_name": _match_link_name,
-                    u"link_owner": _match_link_owner,
-                    u"link_perm": _match_link_perm,
-                    u"link_exists": _match_link_exists,
-                    u"link_size": _match_link_size,
-                   }
+            u"type": _match_type,
+            u"name": _match_name,
+            u"iname": _match_iname,
+            u"owner": _match_owner,
+            u"perm": _match_perm,
+            u"size": _match_size,
+            u"link_type": _match_link_type,
+            u"link_name": _match_link_name,
+            u"link_iname": _match_link_iname,
+            u"link_owner": _match_link_owner,
+            u"link_perm": _match_link_perm,
+            u"link_exists": _match_link_exists,
+            u"link_size": _match_link_size,
+            }
 
         if self.otype in _match_f:
             _res = _match_f[self.otype](vfsobj, self.arg)

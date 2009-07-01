@@ -14,12 +14,12 @@ action(r'type{dir} or (link_type{dir} and link_exists{?})',
        lambda obj: call(":sys:panel:chdir", obj.path))
 
 ## Multimedia
-action(r'name{".*\\.(avi|AVI|wmv|WMV|mov|MOV|asf|ASF|mpg|MPG|flv|FLV|mp3)$"}',
+action(r'iname{".*\\.(avi|wmv|mov|asf|mpg|flv|mp3)$"}',
        lambda obj: shell("mplayer", obj.path))
 
 ## Documents
 # PDF
-action(r'name{".*\\.pdf$"}', lambda obj: shell("xpdf", obj.path))
+action(r'iname{".*\\.pdf$"}', lambda obj: shell("xpdf", obj.path))
 
 ## Programming sources
 # C
@@ -27,5 +27,5 @@ action(r'type{file} and name{".*\\.(c|h)$"}',
        lambda obj: shell(env("EDITOR", "vi"), obj.path))
 
 # C++
-action(r'type{file} and name{".*\\.(cpp|cxx|hpp|hxx)$"}',
+action(r'type{file} and iname{".*\\.(cpp|cxx|hpp|hxx)$"}',
        lambda obj: shell(env("EDITOR", "vi"), obj.path))

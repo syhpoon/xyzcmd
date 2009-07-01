@@ -24,11 +24,13 @@ FSRules grammar (BNF)
                   : "perm"
                   : "owner"
                   : "name"
+                  : "iname"
                   : "size
                   : "link_type"
                   : "link_perm"
                   : "link_owner"
                   : "link_name"
+                  : "link_iname"
                   : "link_exists"
                   : "link_size"
 
@@ -40,15 +42,17 @@ Available expressions are:
 * :ref:`perm`
 * :ref:`owner`
 * :ref:`name`
+* :ref:`iname`
 * :ref:`size`
 * :ref:`link_type <type>`
 * :ref:`link_perm <perm>`
 * :ref:`link_owner <owner>`
 * :ref:`link_name <regexp>`
+* :ref:`link_iname <regexp>`
 * :ref:`link_size <size>`
 * :ref:`link_exists`
 
-``link_type, link_perm, link_owner, link_name,  link_size``
+``link_type, link_perm, link_owner, link_name, link_iname, link_size``
 are the same expressions as corresponding above,
 but they're applied only for symbolic links targets.
 
@@ -137,19 +141,25 @@ symbolic or numeric::
 .. _name:
 
 name
-------
+----
 ``name`` expressions rules use names of object as match criteria.
 
-An argument is an arbitrary regular-expression string. It is better to quote
-the whole argument so it would be interpreted correctly by lexer::
+An argument is an arbitrary regular-expression string::
 
       # *.core files
-      '''name{".*\\.core$"}'''
+      name{".*\\.core$"}
 
       # Hidden files
-      '''name{"^\\.{1}[^.]"}'''
+      name{"^\\.{1}[^.]"}
 
 .. _size:
+
+.. _iname:
+
+iname
+-----
+``iname`` expression is the same as the ``name`` above but it is
+case-insensetive.
 
 size
 ----
