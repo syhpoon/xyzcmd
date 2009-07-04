@@ -57,6 +57,7 @@ class XYZ(object):
     """
 
     api = ["let",
+           "val",
            "unlet",
            "load",
            "bind",
@@ -117,6 +118,20 @@ class XYZ(object):
             _conf[sect][var].update(val)
         else:
             cls.xyz.conf[sect][var] = val
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def val(cls, var, sect=u"local"):
+        """
+        Return variable value or None if undefined
+        """
+
+        try:
+            return cls.xyz.conf[sect][var]
+        except Exception:
+            return None
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -199,7 +214,7 @@ class XYZ(object):
     def macro(cls, macroname):
         """
         Expand macro name.
-        
+
         Availbale macros:
         * ACT_CWD        -- Working directory in active panel
         * INACT_CWD      -- Working directory in inactive panel
@@ -221,7 +236,7 @@ class XYZ(object):
                                (ustring(macroname), ustring(str(e))))
         # Return unchanged
         return macroname
-        
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @classmethod
@@ -238,7 +253,7 @@ class XYZ(object):
         except Exception, e:
             error(_(u"Unable to execute method %s: %s" %
                     (method, ustring(str(e)))))
-            
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @classmethod
@@ -258,16 +273,21 @@ class XYZ(object):
         """
         Execute command via :core:shell plugin
         Optional boolean argument 'current' can be provided to indicate
-        that cmd is to be run from current directory
+        that cmd is to be run from current directory.
+        Optional boolean argument 'bg' can be provided to indicate that cmd
+        must be executed in background
         """
 
         if kwargs.get("current", False):
             cmd = "./%s" % cmd
 
+        bg = ["&"] if kwargs.get("bg", False) else []
+
         try:
             exe = cls.xyz.pm.from_load(":core:shell", "execute")
             escape = cls.xyz.pm.from_load(":sys:cmd", "escape")
-            exe(" ".join([escape(cmd, True)]+[escape(a, True) for a in args]))
+            exe(" ".join([escape(cmd, True)] +
+                         [escape(a, True) for a in args] + bg))
         except Exception, e:
             error(_(u"Error in DSL shell execution: %s") % ustring(str(e)))
 
