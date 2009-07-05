@@ -548,7 +548,8 @@ class Cmd(lowui.FlowWidget):
         # Do not run shell, execute internal command
         if _cmd in self.xyz.conf["commands"]:
             try:
-                self.xyz.conf["commands"][_cmd](bstring(_rest))
+                self.xyz.conf["commands"][_cmd](
+                    _rest if _rest is None else bstring(_rest))
             except Exception, e:
                 xyzlog.error(_("Error executing internal command %s: %s") %
                              (_cmd, ustring(str(e))))

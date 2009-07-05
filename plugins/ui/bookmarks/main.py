@@ -155,7 +155,7 @@ class XYZPlugin(BasePlugin):
             _file = self._ud.openfile(self._bmfile, "r", self._bmsubdir)
         except XYZRuntimeError, e:
             xyzlog.info(_(u"Unable to open bookmarks file: %s") %
-                        ustring(stre(e)))
+                        ustring(str(e)))
             return ParsedData()
 
         _parser = FlatParser()
