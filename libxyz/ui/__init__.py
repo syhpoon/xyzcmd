@@ -41,6 +41,7 @@ __all__ = (
     'NumEntry',
     'Cmd',
     'Panel',
+    'Shortcut',
 )
 
 import urwid as lowui
@@ -67,3 +68,4 @@ from entry import ListEntry
 from entry import NumEntry
 from cmd import Cmd
 from panel import Panel
+from shortcut import Shortcut

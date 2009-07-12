@@ -24,6 +24,7 @@ import __builtin__
 from libxyz.core.utils import ustring
 from libxyz.core.utils import is_func
 from libxyz.core.plugins import Namespace
+from libxyz.ui import Shortcut
 
 import libxyz.exceptions as ex
 
@@ -179,7 +180,7 @@ class XYZ(object):
     @classmethod
     @instantiated
     def kbd(cls, *args):
-        return " ".join(args)
+        return Shortcut(sc=list(args))
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

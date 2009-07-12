@@ -23,6 +23,8 @@ from libxyz.core.utils import ustring
 from libxyz.core.utils import is_func
 from libxyz.core import dsl
 
+from libxyz.ui import Shortcut
+
 from libxyz.exceptions import PluginError
 from libxyz.exceptions import KeyManagerError
 from libxyz.exceptions import DSLError
@@ -56,7 +58,7 @@ class KeyManager(object):
 
         context = context or self.CONTEXT_DEFAULT
 
-        _p = tuple(pressed)
+        _p = Shortcut(pressed)
 
         _method = None
 
@@ -178,19 +180,17 @@ class KeyManager(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _bind(self, mobj, shortcut, context=None, force=True):
-        _shortcut = self.keys.make_shortcut(shortcut)
-
         if context is None:
             context = self.CONTEXT_DEFAULT
 
         if context not in self._bind_data:
             self._bind_data[context] = {}
 
-        if _shortcut in self._bind_data[context] and \
-        self._bind_data[context][_shortcut] is not None and not force:
+        if shortcut in self._bind_data[context] and \
+        self._bind_data[context][shortcut] is not None and not force:
             return
 
-        self._bind_data[context][_shortcut] = mobj
+        self._bind_data[context][shortcut] = mobj
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -66,25 +66,7 @@ class Keys(object):
             setattr(self, _k, _v)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def make_shortcut(self, raw_shortcut):
-        """
-        Make shortcut tuple
-        @param raw_shortcut: Raw shortcut as read from config file
-        """
-
-        _shortcut = []
-
-        for _key in raw_shortcut.split("-"):
-            try:
-                _shortcut.append(getattr(self, _key))
-            except AttributeError, e:
-                _shortcut.append(_key)
-
-        return (" ".join(_shortcut),)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+    
     def get_key(self, low):
         """
         Get attribute name by lowlevel representation
@@ -95,17 +77,3 @@ class Keys(object):
                 return _k
 
         return None
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def raw_to_shortcut(self, raw):
-        """
-        Make shortcut from raw keys received
-        """
-
-        if raw in (u"page up", u"page down"):
-            return self.get_key(raw)
-        elif len(raw) > 1: # Shortcut
-            return u"-".join([self.get_key(x) or x for x in raw.split(u" ")])
-        else:
-            return raw
