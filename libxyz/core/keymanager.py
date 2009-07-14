@@ -44,6 +44,7 @@ class KeyManager(object):
 
         self._loaded_methods = {}
         self._bind_data = {}
+        self._prefixes = []
 
         self._path_sel = libxyz.PathSelector()
 
@@ -57,8 +58,12 @@ class KeyManager(object):
         """
 
         context = context or self.CONTEXT_DEFAULT
+        _p = Shortcut(raw=pressed)
 
-        _p = Shortcut(pressed)
+        # Got prefix key. Now wait for another keystroke and proceed
+        if _p in self._prefixes:
+            _aux = self.xyz.input.get()
+            _p = Shortcut(raw=pressed + _aux)
 
         _method = None
 
@@ -93,10 +98,15 @@ class KeyManager(object):
 
     def set_prefix(self, shortcut):
         """
-        Set prefix shortcut
+        Set prefix key
         """
 
-        pass
+        if not isinstance(shortcut, Shortcut):
+            raise KeyManagerError(_(u"Invalid shortcut type: %s.") %
+                                  ustring(type(shortcut)))
+
+        if shortcut not in self._prefixes:
+            self._prefixes.append(shortcut)
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     

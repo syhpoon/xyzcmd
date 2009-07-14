@@ -162,7 +162,7 @@ class XYZPlugin(BasePlugin):
                 for context in _bind_data:
                     for bind in _bind_data[context]:
                         if _bind_data[context][bind] is v:
-                            _cur_bind = keys.raw_to_shortcut(bind[0])
+                            _cur_bind = bind
 
                 _data.append(lowui.Text(u"%s(%s) [%s]: %s" %
                              (k, make_args(v), _cur_bind, _doc)))

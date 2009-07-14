@@ -50,11 +50,6 @@ class Shortcut(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def __cmp__(self, other):
-        cmp(self._hash(self), self._hash(other))
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     def __str__(self):
         return "<Shortcut: %s>" % str(self.sc)
 

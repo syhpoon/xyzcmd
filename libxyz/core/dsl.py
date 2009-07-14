@@ -73,6 +73,7 @@ class XYZ(object):
            "plugins_on",
            "plugins_off",
            "icmd",
+           "prefix",
            ]
 
     macros = {}
@@ -165,7 +166,7 @@ class XYZ(object):
 
     @classmethod
     @instantiated
-    def bind(cls, method, shortcut, context="@"):
+    def bind(cls, method, shortcut, context="DEFAULT"):
         """
         Bind method to shortcut
         """
@@ -180,6 +181,10 @@ class XYZ(object):
     @classmethod
     @instantiated
     def kbd(cls, *args):
+        """
+        Create keyboard shortcut
+        """
+        
         return Shortcut(sc=list(args))
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -250,7 +255,7 @@ class XYZ(object):
         try:
             p = Namespace(method)
             m = cls.xyz.pm.from_load(p.pfull, p.method)
-            m(*args)
+            return m(*args)
         except Exception, e:
             error(_(u"Unable to execute method %s: %s" %
                     (method, ustring(str(e)))))
@@ -342,6 +347,17 @@ class XYZ(object):
 
         for plugin in plugins:
             cls.let("plugins", {plugin: "DISABLE"}, sect="xyz")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def prefix(cls, shortcut):
+        """
+        Set new prefix key
+        """
+        
+        cls.xyz.km.set_prefix(shortcut)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     

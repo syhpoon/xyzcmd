@@ -4,7 +4,6 @@
 #
 
 from libxyz.core.plugins import BasePlugin
-from libxyz.ui import lowui
 from libxyz.core.utils import ustring, bstring
 
 import libxyz.ui as uilib
@@ -58,14 +57,12 @@ class XYZPlugin(BasePlugin):
             else:
                 _escape = 0
 
-            _keys = []
-
-            for _i in _input:
-                _keys.append(self._keys.raw_to_shortcut(ustring(_i)))
+            shortcut = uilib.Shortcut(raw=_input)
 
             _low = [ustring(x) for x in _input]
-            _msg = u"Shortcut: '%s'. Raw: '%s'" % \
-                   (u"".join(_keys), u"".join(_low))
+            _msg = u"Shortcut: '%s'. Raw: '%s'" % (
+                   (u" ".join([ustring(x) for x in shortcut.sc]),
+                    u" ".join([ustring(x) for x in shortcut.raw])))
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 

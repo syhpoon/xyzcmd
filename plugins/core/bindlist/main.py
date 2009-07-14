@@ -4,6 +4,7 @@
 #
 
 from libxyz.core.plugins import BasePlugin
+from libxyz.core.utils import bstring
 from libxyz.ui import lowui
 
 import libxyz.ui as uilib
@@ -40,19 +41,18 @@ class XYZPlugin(BasePlugin):
 
         _divattr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"border")
 
-        _entries.append(lowui.Text(u"%-15s %-15s %s" %
+        _entries.append(lowui.Text(u"%-10s %-20s %s" %
                         (_(u"Context"), _(u"Bind"), _(u"Method"))))
         _entries.append(uilib.Separator(div_attr=_divattr))
 
         for _context in sorted(_data.keys()):
-            for _bind in sorted(_data[_context].keys()):
+            for _bind in sorted(_data[_context].keys(),
+                                cmp=lambda x, y: cmp(bstring(x), bstring(y))):
                 if _data[_context][_bind] is None:
                     continue
 
-                _entries.append(lowui.Text(u"%-15s %-15s %s" %
-                                (_context,
-                                 self._keys.raw_to_shortcut(_bind[0]),
-                                 _data[_context][_bind].ns)))
+                _entries.append(lowui.Text(u"%-10s %-20s %s" %
+                                (_context, _bind, _data[_context][_bind].ns)))
 
         _walker = lowui.SimpleListWalker(_entries)
 

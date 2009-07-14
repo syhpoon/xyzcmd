@@ -25,6 +25,7 @@ import libxyz.exceptions
 from libxyz.core.utils import ustring, bstring
 from libxyz.ui import lowui
 from libxyz.ui import align
+from libxyz.ui import Shortcut
 from libxyz.ui.utils import refresh
 from libxyz.ui.utils import truncate
 from libxyz.vfs.local import LocalVFSObject
@@ -97,20 +98,13 @@ class Panel(lowui.WidgetWrap):
             _input = self.xyz.input.get()
 
             if _input:
-                _meth = self.xyz.km.process(_input, self.context)
-                
-                # No binds for PANEL context
-                if _meth is None:
+                try:
                     self._cmd.keypress(_dim, _input)
-                else:
-                    try:
-                        _meth()
-                    except Exception, e:
-                        xyzlog.error(_("Error executing bind (%s): %s") %
-                                     (self._keys.raw_to_shortcut(_input[0]),
-                                      str(e)))
-                        xyzlog.debug(ustring(traceback.format_exc(),
-                                             self._enc))
+                except Exception, e:
+                    xyzlog.error(_(u"Error executing bind (%s): %s") %
+                                 (Shortcut(_input), ustring(str(e))))
+                    xyzlog.debug(ustring(traceback.format_exc(),
+                                         self._enc))
 
                 if self.xyz.input.resized:
                     self._resize = True

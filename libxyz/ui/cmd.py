@@ -16,7 +16,6 @@
 
 import copy
 import traceback
-import itertools
 import re
 
 import libxyz.core
@@ -226,15 +225,7 @@ class Cmd(lowui.FlowWidget):
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         
-        # First lookup for bind in own context
-        _meth = self.xyz.km.process(key, self.context)
-
-        if _meth is not None:
-            _meth()
-            return
-
-        # Next in default one
-        (_meth) = self.xyz.km.process(key)
+        _meth = self.xyz.km.process(key)
 
         if _meth is not None:
             return _meth()

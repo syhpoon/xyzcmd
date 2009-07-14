@@ -4,6 +4,7 @@
 # Default keybindings. Do not edit.
 #
 
+# Necessary imports
 load(":sys:run:*")
 load(":sys:logger:*")
 load(":sys:cmd:*")
@@ -22,7 +23,15 @@ load(":misc:about:about")
 load(":vfs:fileinfo:fileinfo")
 load(":vfs:vfsutils:*")
 
-bind(":sys:cmd:execute", kbd("ENTER"))
+# Prefix keys
+prefix(kbd("CTRL-x"))
+prefix(kbd("CTRL-c"))
+
+# Bindings
+bind(lambda:
+     call(":sys:panel:action") if call(":sys:cmd:is_empty") else
+     call(":sys:cmd:execute"), kbd("ENTER"))
+
 bind(":sys:cmd:history_prev", kbd("META-p"))
 bind(":sys:cmd:history_next", kbd("META-n"))
 bind(":sys:cmd:del_char_left", kbd("BACKSPACE"))
@@ -40,7 +49,7 @@ bind(":sys:cmd:cursor_word_left", kbd("META-b"))
 bind(":sys:cmd:cursor_word_right", kbd("META-f"))
 bind(":sys:cmd:undo", kbd("CTRL-d"))
 bind(":sys:cmd:show_history", kbd("META-h"))
-bind(":sys:cmd:put_active_object", kbd("META-ENTER"))
+bind(":sys:cmd:put_active_object", kbd("CTRL-x", "ENTER"))
 bind(":sys:cmd:put_active_object_path", kbd("META-q"))
 bind(":sys:cmd:put_inactive_object", kbd("CTRL-n"))
 bind(":sys:cmd:put_inactive_object_path", kbd("CTRL-s"))
@@ -62,28 +71,25 @@ bind(":sys:panel:tag_rule", kbd("META-+"))
 bind(":sys:panel:untag_rule", kbd("META-/"))
 bind(":sys:panel:swap_blocks", kbd("CTRL-w"))
 bind(":sys:panel:reload", kbd("CTRL-r"))
-bind(":sys:panel:action", kbd("ENTER"))
 bind(":sys:panel:search_forward", kbd("META-s"))
 bind(":sys:panel:search_backward", kbd("META-w"))
 bind(":sys:panel:show_tagged", kbd("META-g"))
 
-bind(":sys:logger:show_console", kbd("META-l"), "DEFAULT")
-bind(":sys:run:shutdown", kbd("F10"), "DEFAULT")
-bind(":sys:run:repaint", kbd("CTRL-l"), "DEFAULT")
+bind(":sys:logger:show_console", kbd("META-l"))
+bind(":sys:run:shutdown", kbd("F10"))
+bind(":sys:run:repaint", kbd("CTRL-l"))
 
-bind(":core:pluginlist:show_list", kbd("META-t"), "DEFAULT")
-bind(":core:keycodes:learn_keys", kbd("META-y"), "DEFAULT")
-bind(":core:bindlist:show_binds", kbd("META-r"), "DEFAULT")
+bind(":core:pluginlist:show_list", kbd("META-t"))
+bind(":core:keycodes:learn_keys", kbd("META-y"))
+bind(":core:bindlist:show_binds", kbd("META-r"))
 
-bind(":ui:testinput:show_box", kbd("META-e"), "DEFAULT")
-bind(":ui:bookmarks:show_bookmarks", kbd("META-\\"), ":sys:panel")
+bind(":ui:testinput:show_box", kbd("META-e"))
+bind(":ui:bookmarks:show_bookmarks", kbd("META-\\"))
 
-bind(":vfs:fileinfo:fileinfo", kbd("F2"), ":sys:panel")
-bind(":vfs:vfsutils:mkdir", kbd("F7"), ":sys:panel")
+bind(":vfs:fileinfo:fileinfo", kbd("F2"))
+bind(":vfs:vfsutils:mkdir", kbd("F7"))
 
-bind(":misc:about:about", kbd("META-o"), ":sys:panel")
+bind(":misc:about:about", kbd("META-o"))
 
-bind(lambda: shell(env("PAGER", "less"), macro("ACT_PATH")), kbd("F3"),
-     ":sys:panel")
-bind(lambda: shell(env("EDITOR", "vi"), macro("ACT_PATH")), kbd("F4"),
-     ":sys:panel")
+bind(lambda: shell(env("PAGER", "less"), macro("ACT_PATH")), kbd("F3"))
+bind(lambda: shell(env("EDITOR", "vi"), macro("ACT_PATH")), kbd("F4"))

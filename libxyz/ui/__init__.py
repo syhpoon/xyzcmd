@@ -40,8 +40,8 @@ __all__ = (
     'ListEntry',
     'NumEntry',
     'Cmd',
-    'Panel',
     'Shortcut',
+    'Panel',
 )
 
 import urwid as lowui
@@ -67,5 +67,5 @@ from xyzlistbox import XYZListBox
 from entry import ListEntry
 from entry import NumEntry
 from cmd import Cmd
-from panel import Panel
 from shortcut import Shortcut
+from panel import Panel
