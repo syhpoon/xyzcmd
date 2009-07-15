@@ -548,7 +548,11 @@ class Cmd(lowui.FlowWidget):
             if not hasattr(self, "_execf"):
                 self._execf = self.xyz.pm.from_load(":core:shell", "execute")
 
+            if not hasattr(self, "_reloadf"):
+                self._reloadf = self.xyz.pm.from_load(":sys:panel", "reload")
+                
             self._execf(_data)
+            self._reloadf()
         
         self._clear_cmd()
         self._invalidate()

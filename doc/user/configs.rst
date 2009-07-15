@@ -43,6 +43,7 @@ functions are available:
 * :ref:`plugins_on <pluginson>`
 * :ref:`plugins_off <pluginsoff>`
 * :ref:`icmd <icmd>`
+* :ref:`prefix <prefix>`
 
 .. _let:
 
@@ -93,7 +94,7 @@ Example - load `show_binds` method from ``:core:bindlist`` plugin::
 
 .. _bind:
 
-bind(method, shortcut, context="@")
+bind(method, shortcut, context="DEFAULT")
 +++++++++++++++++++++++++++++++++++
 Bind `method` to be executed upon pressing `shortcut`.
 Method can be either full plugin method pass or python
@@ -106,8 +107,7 @@ Example - run ``:sys:cmd:execute`` when `ENTER` is pressed::
 
 Example - use system pager to view files::
 
-  bind(lambda: shell(env("PAGER", "less"), macro("ACT_PATH")), kbd("F3"),
-       ":sys:panel")
+  bind(lambda: shell(env("PAGER", "less"), macro("ACT_PATH")), kbd("F3"))
 
 .. _kbd:
 
@@ -267,6 +267,14 @@ Disable plugin[s].
 Example::
 
   plugins_off(":misc:about")
+
+prefix(shortcut)
+++++++++++++++++
+Set new prefix key.
+
+Example::
+
+  prefix(kbd("CTRL-x"))
 
 Files
 -----

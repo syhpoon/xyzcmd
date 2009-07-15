@@ -1012,10 +1012,6 @@ class Block(lowui.FlowWidget):
         Perform action on selected file
         """
 
-        # If cmd line is not empty - run execute
-        if not self._cmd.is_empty():
-            return self._cmd.execute()
-
         _selected = self.entries[self.selected]
 
         _action = self.xyz.am.match(_selected)
