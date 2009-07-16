@@ -44,9 +44,8 @@ class VFSFile(object):
     """
 
     def __init__(self, path, enc=None):
+        self.enc = enc or xyzenc
         self.path = os.path.abspath(path)
-        self.enc = enc or "utf8"
-
         # File name
         self.name = os.path.basename(utils.ustring(self.path, self.enc))
 

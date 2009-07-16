@@ -95,6 +95,7 @@ class Shortcut(object):
         _raw = []
 
         for el in raw:
+            el = ustring(el)
             _data = el
             
             if el in (u"page up", u"page down"):
