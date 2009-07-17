@@ -23,8 +23,10 @@ import os
 
 import libxyz.core as core
 
+
 from nose.tools import raises
 from libxyz.exceptions import *
+from libxyz.vfs.vfsobj import VFSFile
 
 # Global data
 xyz = None
@@ -59,48 +61,61 @@ def teardown():
 
 #### Tests
 
-@raises(XYZValueError)
-def test_queue_input_arg():
-    core.Queue("wrong")
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-def test_func():
-    size = 5
+class TestQueue(object):
+    """
+    libxyz.core.Queue tests
+    """
     
-    q = core.Queue(size)
+    def setUp(self):
+        self.q = core.Queue(1)
 
-    for i in range(size):
-        q.push(i)
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    _res = []
+    @raises(XYZValueError)
+    def test_queue_input_arg(self):
+        core.Queue("wrong")
 
-    for i in range(size):
-        _res.append(q.pop())
-
-    assert _res == list(range(size))
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-@raises(IndexError)
-def test_queue_pop():
-    core.Queue(1).pop()
+    @raises(IndexError)
+    def test_queue_pop(self):
+        self.q.pop()
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    def test_queue_tail1(self):
+        assert self.q.tail() is None
 
-def test_queue_tail1():
-    assert core.Queue(1).tail() is None
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    def test_queue_tail2(self):
+        self.q.push("abc")
+        assert self.q.tail() == "abc"
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-def test_queue_tail2():
-    q = core.Queue(1)
-    q.push("abc")
-    assert q.tail() == "abc"
+    def test_func(self):
+        size = 5
+    
+        q = core.Queue(size)
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        for i in range(size):
+            q.push(i)
+
+        _res = []
+
+        for i in range(size):
+            _res.append(q.pop())
+
+        assert _res == list(range(size))
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
 
 class TestActionManager(object):
+    """
+    libxyz.core.ActionManager tests
+    """
+    
     def setUp(self):
         self.xyz = core.XYZData()
         self.am = core.ActionManager(xyz, [])
@@ -141,3 +156,21 @@ class TestActionManager(object):
         xyz.am = am
 
         assert am.parse_configs() is None
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testMatch(self):
+        vfs_size = VFSFile("/tmp/test_size")
+        vfs_size.size = 100
+        vfs_name = VFSFile("/tmp/test_name")
+        vfs_owner = VFSFile("/tmp/test_owner")
+        vfs_owner.uid = 500
+        vfs_owner.gid = 501
+                
+        self.am.register("size{100}", lambda: "size")
+        self.am.register("name{test_name}", lambda: "name")
+        self.am.register("owner{500:501}", lambda: "owner")
+
+        assert self.am.match(vfs_size)() == "size"
+        assert self.am.match(vfs_name)() == "name"
+        assert self.am.match(vfs_owner)() == "owner"
