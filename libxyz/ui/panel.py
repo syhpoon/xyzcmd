@@ -164,6 +164,8 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.search_backward)
         _panel_plugin.export(self.show_tagged)
         _panel_plugin.export(self.select)
+        _panel_plugin.export(self.cwd)
+        _panel_plugin.export(self.cwd_inactive)
 
         _panel_plugin.VERSION = u"0.1"
         _panel_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
@@ -419,6 +421,24 @@ class Panel(lowui.WidgetWrap):
 
         self.active.select(name)
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def cwd(self):
+        """
+        Get current working directory
+        """
+
+        return self.active.cwd
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def cwd_inactive(self):
+        """
+        Get current working directory of inactive panel
+        """
+
+        return self.inactive.cwd
+
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 class Block(lowui.FlowWidget):
@@ -446,6 +466,7 @@ class Block(lowui.FlowWidget):
 
         self.active = active
         self.selected = 0
+        self.cwd = path
 
         self._display = []
         self._vindex = 0
@@ -1069,6 +1090,7 @@ class Block(lowui.FlowWidget):
             if _old_vfs:
                 del(_old_vfs)
 
+        self.cwd = path
         os.chdir(path)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1118,7 +1140,7 @@ class Block(lowui.FlowWidget):
                 self.border.set_title(self._title)
 
         self._force_reload = True
-        
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _search_engine(self, order, pattern=None):

@@ -53,6 +53,8 @@ bind(":sys:cmd:put_active_object", kbd("CTRL-x", "ENTER"))
 bind(":sys:cmd:put_active_object_path", kbd("META-q"))
 bind(":sys:cmd:put_inactive_object", kbd("CTRL-n"))
 bind(":sys:cmd:put_inactive_object_path", kbd("CTRL-s"))
+bind(":sys:cmd:put_inactive_cwd", kbd("CTRL-x", "p"))
+bind(":sys:cmd:put_active_cwd", kbd("CTRL-x", "a"))
 
 bind(":sys:panel:entry_next", kbd("DOWN"))
 bind(":sys:panel:entry_prev", kbd("UP"))

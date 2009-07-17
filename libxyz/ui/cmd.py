@@ -118,6 +118,8 @@ class Cmd(lowui.FlowWidget):
         _cmd_plugin.export(self.put_active_object_path)
         _cmd_plugin.export(self.put_inactive_object)
         _cmd_plugin.export(self.put_inactive_object_path)
+        _cmd_plugin.export(self.put_active_cwd)
+        _cmd_plugin.export(self.put_inactive_cwd)
         _cmd_plugin.export(self.escape)
         _cmd_plugin.export(self.replace_aliases)
 
@@ -725,6 +727,24 @@ class Cmd(lowui.FlowWidget):
 
         return self._put_engine(self._panel.get_selected_inactive().path)
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def put_active_cwd(self):
+        """
+        Put current working directory of active panel to cmd line
+        """
+
+        return self._put_engine(self._panel.cwd())
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    def put_inactive_cwd(self):
+        """
+        Put current working directory of inactive panel to cmd line
+        """
+
+        return self._put_engine(self._panel.cwd_inactive())
+    
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _put_engine(self, obj):

@@ -95,6 +95,10 @@ class XYZ(object):
         # Init macros
         cls.macros["ACT_PATH"] = lambda: cls.xyz.pm.from_load(
             ":sys:panel", "get_selected")().path
+        cls.macros["ACT_CWD"] = lambda: cls.xyz.pm.from_load(
+            ":sys:panel", "cwd")()
+        cls.macros["INACT_CWD"] = lambda: cls.xyz.pm.from_load(
+            ":sys:panel", "cwd_inactive")()
 
         return cls
 
