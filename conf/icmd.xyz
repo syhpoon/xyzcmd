@@ -4,14 +4,6 @@
 # Default internal commands. Do not edit.
 #
 
-def _chdir(args):
-    # Chdir to home dir
-    if not args:
-        _to = env("HOME", "/")
-    else:
-        _to = args
-
-    call(":sys:panel:chdir", _to)
-
 # Internal chdir
-icmd("cd", _chdir)
+icmd("cd", lambda args: call(":sys:panel:chdir", args) if args else
+	                     call(":sys:panel:chdir", env("HOME", "/")))

@@ -85,10 +85,12 @@ ui.cmd {
 	text = LIGHT_GRAY, &BG
 }
 
-# Skin settings for :core:viewer plugin
-plugin.viewer {
+# Settings for :core:console
+plugin.console
+{
         &BG = DARK_BLUE
 
-        statusbar = WHITE, DARK_CYAN
-        window = WHITE, &BG
+        input = BLACK, LIGHT_GRAY
+        header = BLACK, LIGHT_GRAY
+        output = WHITE, &BG
 }

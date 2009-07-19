@@ -364,13 +364,13 @@ class XYZ(object):
         cls.xyz.km.set_prefix(shortcut)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     @classmethod
     @instantiated
     def execute(cls, source):
         """
         Execute DSL statements
-        @param source: Either string or open file-object
+        @param source: Either string or open file-object or code object
         """
 
         try:
@@ -378,6 +378,16 @@ class XYZ(object):
         except Exception, e:
             error(_(u"Error in DSL execution: %s") % ustring(str(e)))
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def get_env(cls):
+        """
+        Return copy of global dsl environment
+        """
+        
+        return cls._env.copy()
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 ## Auto-generate corresponding module-level functions

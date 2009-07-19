@@ -159,7 +159,7 @@ An argument is an arbitrary regular-expression string::
 iname
 -----
 ``iname`` expression is the same as the ``name`` above but it is
-case-insensetive.
+case-insensitive.
 
 size
 ----

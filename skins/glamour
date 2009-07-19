@@ -83,3 +83,13 @@ ui.cmd {
 	prompt = WHITE, &BG
 	text = LIGHT_GRAY, &BG
 }
+
+# Settings for :core:console
+plugin.console
+{
+        &BG = DARK_MAGENTA
+
+        input = BLACK, LIGHT_GRAY
+        header = BLACK, LIGHT_GRAY
+        output = WHITE, &BG
+}
