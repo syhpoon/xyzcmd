@@ -61,6 +61,7 @@ class XYZPlugin(BasePlugin):
         Execute command in shell
         """
 
+        cmd = bstring(cmd)
         self.xyz.screen.clear()
         stdout = sys.stdout
         self.xyz.screen.stop()
