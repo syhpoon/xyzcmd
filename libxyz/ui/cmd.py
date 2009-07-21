@@ -158,10 +158,9 @@ class Cmd(lowui.FlowWidget):
         _data = [bstring(x) for x in self._get_visible(maxcol)]
         _text_len = abs(maxcol - self.prompt.length())
 
-        _canv_text = lowui.TextCanvas(text=["".join(_data)],
-                                      attr=[[(self._text_attr, _text_len)]],
-                                      maxcol=maxcol)
-
+        _canv_text = lowui.AttrWrap(lowui.Text("".join(_data)),
+                                    self._text_attr).render((maxcol,))
+            
         _canvases = []
         
         if self.prompt.length() > 0:

@@ -613,9 +613,8 @@ class Block(lowui.FlowWidget):
                 _own_attr = self._palettes[_abs_i]
 
             if _own_attr is not None:
-                x = lowui.TextCanvas(text=[bstring(_text, self._enc)],
-                                     attr=[[(_own_attr, maxcol)]],
-                                     maxcol=maxcol)
+                x = lowui.AttrWrap(lowui.Text(bstring(_text, self._enc)),
+                                   _own_attr).render((maxcol,))
                 canvases.append((x, i, False))
             else:
                 canvases.append((lowui.Text(_text).render((maxcol,)),
