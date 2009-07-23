@@ -1,4 +1,4 @@
-#!/usr/bin/env/python
+#!/usr/bin/env python
 #-*- coding: utf8 -*
 #
 # Max E. Kuznecov ~syhpoon <mek@mek.uz.ua> 2009
@@ -19,15 +19,21 @@ from distutils.core import setup
 
 setup(
     name = "xyzcmd",
-    version = "0.0.1",
-    scripts = [],
-
-    install_requires = ["urwid>=0.9.8.4"],
+    version = "0.0.1 beta",
+    scripts = ["xyzcmd"],
+    packages = ["libxyz"],
+    data_files = [
+        ("share/xyzcmd/conf", ["conf/*"]),
+        #TODO: ("share/doc/xyzcmd", ["doc/*"]),
+        ("share/xyzcmd/plugins", ["plugins/*"]),
+        ("share/xyzcmd/skins", ["skins/*"]),
+        ],
+    
+    requires = ["urwid"],
 
     author = "Max E. Kuznecov",
     author_email = "syhpoon@syhpoon.name",
     description = "XYZCommander - Console file manager",
+    url = "http://xyzcmd.syhpoon.name/",
     license = "LGPL",
-    keywords = "console filemanager commander",
-    url = "http://xyzcmd.syhpoon.name",
     )

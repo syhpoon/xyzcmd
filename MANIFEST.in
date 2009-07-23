@@ -1,0 +1,9 @@
+include README
+include setup.py
+include xyzcmd
+
+graft libxyz
+graft conf
+graft doc
+graft plugins
+graft skins
