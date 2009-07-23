@@ -74,6 +74,7 @@ class XYZ(object):
            "plugins_off",
            "icmd",
            "prefix",
+           "help",
            ]
 
     macros = {}
@@ -367,6 +368,24 @@ class XYZ(object):
 
     @classmethod
     @instantiated
+    def help(cls, obj=None):
+        """
+        Help
+        """
+
+        fmt = lambda o: "%s\t%s" % (o, getattr(cls, o).__doc__)
+        
+        if obj is not None and obj not in cls.api:
+            error(_(u"Invalid function %s") % obj)
+
+        objs = [obj] if obj else cls.api
+
+        return "\n".join([fmt(x) for x in objs]).replace("\t", " ")
+            
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    @classmethod
+    @instantiated
     def execute(cls, source):
         """
         Execute DSL statements
@@ -388,6 +407,7 @@ class XYZ(object):
         """
         
         return cls._env.copy()
+
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 ## Auto-generate corresponding module-level functions

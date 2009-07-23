@@ -17,6 +17,7 @@
 from libxyz.core.plugins import BasePlugin
 from libxyz.core import dsl
 from libxyz.core.utils import bstring
+from libxyz.core import Queue
 from libxyz.ui import lowui
 
 import libxyz.ui as ui
@@ -37,11 +38,13 @@ class XYZPlugin(BasePlugin):
         self.attr = lambda x: self.xyz.skin.get_palette(u"plugin.console", x)
 
         self._keys= ui.Keys()
+        self._index = 1
         self.output = []
         self.edit = lowui.Edit("> ", wrap="clip")
         self._input = lowui.AttrWrap(self.edit, self.attr("input"))
         self._header = lowui.AttrWrap(lowui.Text(_(u"Management console")),
                                       self.attr("header"))
+        self._history = Queue(self.conf["history_depth"])
 
         self.export(self.show)
 
@@ -52,6 +55,34 @@ class XYZPlugin(BasePlugin):
         Show console window
         """
 
+        def _get_cmd(k):
+            """
+            Fetch previous command from history
+            """
+            
+            _i = -1 if k == self._keys.UP else 1
+            
+            _pos = len(self._history) - 1 + (self._index + _i)
+            
+            if _pos < 0:
+                return None
+            elif _pos > len(self._history):
+                return None
+            else:
+                self._index += _i
+                
+            if _pos == len(self._history):
+                return ""
+
+            try:
+                cmd = self._history[_pos]
+            except Exception:
+                return None
+            else:
+                return cmd
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        
         _stop = False
 
         while True:
@@ -68,13 +99,25 @@ class XYZPlugin(BasePlugin):
             data = self.xyz.input.get()
 
             for k in data:
-                if k == self._keys.ENTER:
+                if k in (self._keys.UP, self._keys.DOWN):
+                    cmd = _get_cmd(k)
+
+                    if cmd is not None:
+                        self.edit.set_edit_text("")
+                        self.edit.insert_text(cmd)
+                elif k == self._keys.ENTER:
+                    self._index = 1
                     chunk = self.edit.get_edit_text()
                     self.edit.set_edit_text("")
                     compiled = None
 
-                    self._write("> %s" % chunk)
+                    if not chunk:
+                        continue
+
+                    self._history.push(chunk)
                     
+                    self._write("> %s" % chunk)
+
                     try:
                         compiled = compile(chunk, "<input>", "eval")
                     except Exception, e:
@@ -91,7 +134,6 @@ class XYZPlugin(BasePlugin):
                                     eval(compiled, dsl.XYZ.get_env()))
                             except Exception, e:
                                 self._write(str(e))
-
                 elif k == self._keys.ESCAPE:
                     _stop = True
                     break

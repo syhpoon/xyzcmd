@@ -10,7 +10,7 @@ let(":sys:cmd",
         
         # Size of typed commands history buffer
         "history_depth": 50
-        },
+    },
     sect="plugins"
     )
 
@@ -21,6 +21,14 @@ let(":sys:logger",
         
         # Maximum number of entries to keep
         "lines": 100
-        },
+    },
+    sect="plugins"
+    )
+
+let(":core:console",
+    {
+        # Size of typed commands history buffer
+        "history_depth": 50
+    },
     sect="plugins"
     )

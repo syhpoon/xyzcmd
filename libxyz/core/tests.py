@@ -136,9 +136,7 @@ class TestActionManager(object):
     @raises(XYZRuntimeError)
     def testParseConfigIncorrect(self):
         global files
-
         xyz = core.XYZData()
-        dsl = core.dsl.XYZ(xyz)
 
         am = core.ActionManager(xyz, [files["actions_bad"], "none"])
         xyz.am = am
@@ -149,9 +147,8 @@ class TestActionManager(object):
     
     def testParseConfigCorrect(self):
         global files
-
         xyz = core.XYZData()
-        dsl = core.dsl.XYZ(xyz)
+        
         am = core.ActionManager(xyz, [files["actions_good"], "none"])
         xyz.am = am
 
@@ -174,3 +171,6 @@ class TestActionManager(object):
         assert self.am.match(vfs_size)() == "size"
         assert self.am.match(vfs_name)() == "name"
         assert self.am.match(vfs_owner)() == "owner"
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+

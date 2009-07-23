@@ -17,26 +17,17 @@
 
 from distutils.core import setup
 
-setup(name = "xyzcmd",
-      version = "0.0.1alpha2",
-      description = "XYZCommander - Console file manager",
-      author = "Max E. Kuznecov",
-      author_email = "syhpoon@syhpoon.name",
-      url = "http://xyzcmd.syhpoon.name",
-      packages = ["libxyz"],
-      scripts = ["pyrrdp-run.py", "pyrrdp-httpd-run.py"],
-      data_files = [('etc', ['pyrrdp.conf']),
-                    ('/var/db/pyrrdp', []),
-                    ('www/pyrrdp', []),
-                    ('share/pyrrdp/templates',
-                     ['templates/about.template',
-                      'templates/head.template',
-                      'templates/detail.template',
-                      'templates/index.template',
-                      'templates/group.template',
-                      'templates/logo.png.template',
-                      'templates/pyrrdp.css.template',
-                      ]),
-                    ]
-      )
+setup(
+    name = "xyzcmd",
+    version = "0.0.1",
+    scripts = [],
 
+    install_requires = ["urwid>=0.9.8.4"],
+
+    author = "Max E. Kuznecov",
+    author_email = "syhpoon@syhpoon.name",
+    description = "XYZCommander - Console file manager",
+    license = "LGPL",
+    keywords = "console filemanager commander",
+    url = "http://xyzcmd.syhpoon.name",
+    )
