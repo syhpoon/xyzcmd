@@ -16,18 +16,37 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 from distutils.core import setup
+import glob
+import os
+
+def include_rec(path):
+    data = []
+    
+    for dirname, _, files in os.walk(path):
+        data.append(("share/xyzcmd/%s" % (dirname,),
+                     [os.path.join(dirname, x) for x in files]))
+
+    return data
 
 setup(
     name = "xyzcmd",
-    version = "0.0.1 beta",
+    version = "0.0.1-beta",
     scripts = ["xyzcmd"],
-    packages = ["libxyz"],
+    packages = ["libxyz",
+                "libxyz.core",
+                "libxyz.core.logger",
+                "libxyz.core.plugins",
+                "libxyz.core.logger",
+                "libxyz.parser",
+                "libxyz.ui",
+                "libxyz.vfs",
+                ],
     data_files = [
-        ("share/xyzcmd/conf", ["conf/*"]),
+        ("share/xyzcmd/conf", glob.glob("conf/*")),
         #TODO: ("share/doc/xyzcmd", ["doc/*"]),
-        ("share/xyzcmd/plugins", ["plugins/*"]),
-        ("share/xyzcmd/skins", ["skins/*"]),
-        ],
+        ("share/xyzcmd/skins", glob.glob("skins/*")),
+        ] +
+    include_rec("plugins"),
     
     requires = ["urwid"],
 
