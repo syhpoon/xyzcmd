@@ -287,18 +287,25 @@ class XYZ(object):
         that cmd is to be run from current directory.
         Optional boolean argument 'bg' can be provided to indicate that cmd
         must be executed in background
+        Optional boolean argument 'reload' can be provided to indicate
+        that panel content should/should not be reloaded after execution
+
         """
 
         if kwargs.get("current", False):
             cmd = "./%s" % cmd
 
         bg = ["&"] if kwargs.get("bg", False) else []
+        reloadp = kwargs.get("reload", True)
 
         try:
-            exe = cls.xyz.pm.from_load(":core:shell", "execute")
-            escape = cls.xyz.pm.from_load(":sys:cmd", "escape")
-            exe(" ".join([escape(cmd, True)] +
-                         [escape(a, True) for a in args] + bg))
+            exef = cls.xyz.pm.from_load(":core:shell", "execute")
+            escapef = cls.xyz.pm.from_load(":sys:cmd", "escape")
+            reloadf = cls.xyz.pm.from_load(":sys:panel", "reload")
+            exef(" ".join([escapef(cmd, True)] +
+                          [escapef(a, True) for a in args] + bg))
+            if reloadp:
+                reloadf()
         except Exception, e:
             error(_(u"Error in DSL shell execution: %s") % ustring(str(e)))
 
