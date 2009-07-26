@@ -52,25 +52,14 @@ class Launcher(object):
 
         gettext.install(u"xyzcmd")
 
-        self.cmdopts = "c:vh"
+        self.cmdopts = "d:vh"
         self.xyz = core.XYZData()
         self.xyz.conf = {}
         self.dsl = dsl.XYZ(self.xyz)
 
         self._path_sel = libxyz.PathSelector()
-        self._conf_dir = None
+        self._conf = {}
         self._saved_term = None
-
-        self._init_default()
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _init_default(self):
-        """
-        Define some default values
-        """
-
-        self._conf_dir = const.CONF_DIR
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -95,7 +84,9 @@ class Launcher(object):
         self.init_keys()
 
         self.xyz.input = core.InputWrapper(self.xyz)
-        self.xyz.screen = uilib.display.init_display()
+        self.xyz.screen = uilib.display.init_display(
+            self._conf.get("driver", self.xyz.conf["xyz"]["term_lib"]))
+
         self.xyz.screen.register_palette(self.xyz.skin.get_palette_list())
         self.xyz.skin.set_screen(self.xyz.screen)
         self.xyz.screen.run_wrapper(self._run)
@@ -136,8 +127,8 @@ class Launcher(object):
             self.quit()
 
         for _o, _a in _opts:
-            if _o == "-c":
-                self._conf_dir = _a
+            if _o == "-d":
+                self._conf["driver"] = _a
             elif _o == "-v":
                 self.version()
                 self.quit()
@@ -282,8 +273,8 @@ class Launcher(object):
 
         print _(u"""\
 %s version %s
-Usage: %s [-c dir][-vh]
-    -c  -- Directory with configuration files
+Usage: %s [-d driver][-vh]
+    -d  -- Display driver (raw (default) or curses)
     -v  -- Show version
     -h  -- Show this help message\
 """ % (const.PROG, Version.version, os.path.basename(sys.argv[0])))

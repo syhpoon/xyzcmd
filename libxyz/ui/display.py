@@ -14,12 +14,16 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-import urwid.raw_display as display
-#import urwid.curses_display as display
-
-def init_display():
+def init_display(lib):
     """
-    Create main ui object
+    Initiate terminal driver
+
+    @param lib: Driver lib: raw or curses
     """
 
+    if lib == "curses":
+        import urwid.curses_display as display
+    else:
+        import urwid.raw_display as display
+        
     return display.Screen()

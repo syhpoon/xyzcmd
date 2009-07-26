@@ -28,6 +28,9 @@ plugins_on(":sys:run",
 # Skin to use
 let("skin", "seablue", sect="xyz")
 
+# Terminal library
+let("term_lib", "raw", sect="xyz") 
+
 # Local encoding
 # One of the available in python
 # (http://docs.python.org/lib/standard-encodings.html)

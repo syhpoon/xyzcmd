@@ -104,7 +104,7 @@ def setup_term():
     for _key in _todisable:
         term[-1][_key] = vdisable
 
-    termios.tcsetattr(stdin, termios.TCSADRAIN, term)
+    termios.tcsetattr(stdin, termios.TCSANOW, term)
 
     return _saved_term
 
@@ -125,8 +125,7 @@ def restore_term(term_data):
     term[-1] = term_data
 
     if os.isatty(stdin):
-        termios.tcsetattr(stdin, termios.TCSADRAIN, term)
-
+        termios.tcsetattr(stdin, termios.TCSANOW, term)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -137,4 +136,3 @@ def is_func(obj):
     
     return isinstance(obj, types.FunctionType) or \
            isinstance(obj, types.MethodType)
-        
