@@ -255,9 +255,9 @@ Enable plugin[s].
 Example::
 
   plugins_on(":sys:run",
-           ":sys:cmd",
-           ":sys:panel",
-           ":sys:logger")
+             ":sys:cmd",
+             ":sys:panel",
+             ":sys:logger")
 
 .. _pluginsoff:
 

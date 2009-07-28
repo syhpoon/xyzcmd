@@ -56,10 +56,19 @@ class Panel(lowui.WidgetWrap):
 
         self.block1 = Block(xyz, _blocksize, _cwd, self._enc, active=True)
         self.block2 = Block(xyz, _blocksize, _cwd, self._enc)
-        columns = lowui.Columns([self.block1, self.block2], 0)
-        self._widget = lowui.Pile([columns, self._cmd])
+        self._compose()
 
         super(Panel, self).__init__(self._widget)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _compose(self):
+        """
+        Compose widgets
+        """
+        
+        columns = lowui.Columns([self.block1, self.block2], 0)
+        self._widget = lowui.Pile([columns, self._cmd])
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -355,8 +364,8 @@ class Panel(lowui.WidgetWrap):
         """
 
         self.block1, self.block2 = self.block2, self.block1
-
-        self._invalidate()
+        self._compose()
+        self.set_w(self._widget)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
