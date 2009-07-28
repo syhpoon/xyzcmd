@@ -61,6 +61,8 @@ class Launcher(object):
         self._conf = {}
         self._saved_term = None
 
+        self._create_home()
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def run(self):
@@ -112,6 +114,27 @@ class Launcher(object):
 
         panel.loop()
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _create_home(self):
+        """
+        Create .xyzcmd in homedir
+        """
+
+        if os.path.isdir(self._path_sel.user_dir):
+            return
+
+        try:
+            os.makedirs(self._path_sel.user_dir)
+
+            for d in (const.CONF_DIR,
+                      const.PLUGINS_DIR,
+                      const.SKINS_DIR,
+                      ):
+                os.mkdir(os.path.join(self._path_sel.user_dir, d))
+        except Exception:
+            return
+        
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def parse_args(self):
