@@ -42,6 +42,7 @@ functions are available:
 * :ref:`alias <alias>`
 * :ref:`plugins_on <pluginson>`
 * :ref:`plugins_off <pluginsoff>`
+* :ref:`plugin_conf <pluginconf>`
 * :ref:`icmd <icmd>`
 * :ref:`prefix <prefix>`
 
@@ -249,7 +250,7 @@ Example::
 
 plugins_on(*plugins)
 ++++++++++++++++++++
-Enable plugin[s].
+Enable plugin[s]. 
 
 Example::
 
@@ -267,6 +268,32 @@ Disable plugin[s].
 Example::
 
   plugins_off(":misc:about")
+
+.. _pluginconf:
+
+plugin_conf(plugin, opts)
++++++++++++
+Configure plugin. 
+
+Where
+* plugin: Plugin name
+* opts: Either tuple (var, val) or dict {var1: val1, var2: var2,..}
+
+In fact, ``plugin_conf`` is only a shortened form of ``let(plugin,
+opts, sect="plugins")``.
+
+Example::
+
+  plugin_conf(":sys:cmd", ("prompt", "|| "))
+  plugin_conf(":sys:cmd", {
+              # Command line prompt
+              "prompt": "$ ",
+    
+              # Size of undo buffer
+              "undo_depth": 10,
+    
+              # Size of typed commands history buffer
+              "history_depth": 50})
 
 prefix(shortcut)
 ++++++++++++++++

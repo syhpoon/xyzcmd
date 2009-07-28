@@ -1,34 +1,28 @@
 # Plugins configuration file. Default settings. Do not edit.
 
-let(":sys:cmd",
-    {
-        # Command line prompt
-        "prompt": "$ ",
-        
-        # Size of undo buffer
-        "undo_depth": 10,
-        
-        # Size of typed commands history buffer
-        "history_depth": 50
-    },
-    sect="plugins"
-    )
+plugin_conf(":sys:cmd", {
+    # Command line prompt
+    "prompt": "$ ",
+    
+    # Size of undo buffer
+    "undo_depth": 10,
+    
+    # Size of typed commands history buffer
+    "history_depth": 50
+    })
 
-let(":sys:logger",
-    {
-        # Log levels to track
-        "levels": ["PANIC", "ERROR", "WARNING", "INFO"],
+plugin_conf(":sys:logger", {
+    # Log levels to track
+    "levels": ["PANIC", "ERROR", "WARNING", "INFO"],
         
-        # Maximum number of entries to keep
-        "lines": 100
-    },
-    sect="plugins"
-    )
+    # Maximum number of entries to keep
+    "lines": 100
+    })
 
-let(":core:console",
-    {
-        # Size of typed commands history buffer
-        "history_depth": 50
-    },
-    sect="plugins"
-    )
+plugin_conf(":core:console", {
+    # Size of typed commands history buffer
+    "history_depth": 50,
+
+    # Console prompt
+    "prompt": "> "
+    })

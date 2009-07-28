@@ -40,7 +40,7 @@ class XYZPlugin(BasePlugin):
         self._keys= ui.Keys()
         self._index = 1
         self.output = []
-        self.edit = lowui.Edit("> ", wrap="clip")
+        self.edit = lowui.Edit(self.conf["prompt"], wrap="clip")
         self._input = lowui.AttrWrap(self.edit, self.attr("input"))
         self._header = lowui.AttrWrap(lowui.Text(_(u"Management console")),
                                       self.attr("header"))

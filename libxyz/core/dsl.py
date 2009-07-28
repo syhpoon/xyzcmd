@@ -72,6 +72,7 @@ class XYZ(object):
            "alias",
            "plugins_on",
            "plugins_off",
+           "plugin_conf",
            "icmd",
            "prefix",
            "help",
@@ -360,6 +361,28 @@ class XYZ(object):
         for plugin in plugins:
             cls.let("plugins", {plugin: "DISABLE"}, sect="xyz")
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def plugin_conf(cls, plugin, opts):
+        """
+        Configure plugin.
+
+        @param plugin: Plugin name
+        @param opts: Either tuple (var, val) or
+                     dict {var1: val1, var2: var2,..}
+        """
+
+        if isinstance(opts, tuple):
+            opts = dict([opts])
+
+        if not isinstance(opts, dict):
+            cls.error(_(u"Invalid opts type: %s. Dict instance expected")
+                      % type(opts))
+            
+        return cls.let(plugin, opts, sect="plugins")
+    
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @classmethod
