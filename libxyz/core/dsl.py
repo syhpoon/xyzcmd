@@ -302,7 +302,7 @@ class XYZ(object):
         try:
             exef = cls.xyz.pm.from_load(":core:shell", "execute")
             escapef = cls.xyz.pm.from_load(":sys:cmd", "escape")
-            reloadf = cls.xyz.pm.from_load(":sys:panel", "reload")
+            reloadf = cls.xyz.pm.from_load(":sys:panel", "reload_all")
             exef(" ".join([escapef(cmd, True)] +
                           [escapef(a, True) for a in args] + bg))
             if reloadp:

@@ -167,6 +167,8 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.untag_rule)
         _panel_plugin.export(self.swap_blocks)
         _panel_plugin.export(self.reload)
+        _panel_plugin.export(self.reload_inactive)
+        _panel_plugin.export(self.reload_all)
         _panel_plugin.export(self.action)
         _panel_plugin.export(self.chdir)
         _panel_plugin.export(self.search_forward)
@@ -375,6 +377,25 @@ class Panel(lowui.WidgetWrap):
         """
 
         return self.active.reload()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    def reload_inactive(self):
+        """
+        Reload inactive panel contents
+        """
+
+        return self.inactive.reload()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def reload_all(self):
+        """
+        Reload both panels
+        """
+
+        self.active.reload()
+        self.inactive.reload()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
