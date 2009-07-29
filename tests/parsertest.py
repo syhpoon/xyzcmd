@@ -575,9 +575,10 @@ class RegexpParsing(unittest.TestCase):
 
         self.assertRaises(ParseError, _p.parse, _src)
 
-#++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++
 
 if __name__ == "__main__":
     import gettext
     gettext.install("xyzcmd")
     unittest.main()
+
