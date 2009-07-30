@@ -214,17 +214,17 @@ class Cmd(lowui.FlowWidget):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def _put_object(self, char):
+        self._data.insert(self._index, char)
+        self._index += 1
+        self._vindex += 1
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     def keypress(self, size, key):
         """
         Process pressed key
         """
-
-        def _add(char):
-            self._data.insert(self._index, char)
-            self._index += 1
-            self._vindex += 1
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         
         _meth = self.xyz.km.process(key)
 
@@ -235,7 +235,7 @@ class Cmd(lowui.FlowWidget):
 
             if _good:
                 try:
-                    map(lambda x: _add(x), _good)
+                    map(lambda x: self._put_object(x), _good)
                 except Exception, e:
                     xyzlog.error(_(ustring(str(e))))
                     xyzlog.debug(ustring(traceback.format_exc()))
@@ -751,11 +751,9 @@ class Cmd(lowui.FlowWidget):
         """
         Put list content to cmd
         """
-        toput = self.escape([bstring(x) for x in obj]) + [" "]
-        tlen = len(toput)
-        self._data.extend(toput)
-        self._index += tlen
-        self._vindex += tlen
+        
+        map(lambda x: self._put_object(x), 
+            self.escape([bstring(x) for x in obj]) + [" "])
         self._invalidate()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
