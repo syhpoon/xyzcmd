@@ -1,3 +1,5 @@
+.. include:: includes.inc
+
 =======
 Plugins
 =======
@@ -95,7 +97,7 @@ it from cache. If reloading needed ``reload`` method is used.
 Lifecycle
 ---------
 Only enabled plugins can be loaded and used. List of enabled plugins must
-be defined in `xyz configuration file`_. Plugins are usually loaded by
+be defined in :doc:`configs`. Plugins are usually loaded by
 first request. 
 
 After plugin gets loaded for first time following actions take place:
@@ -144,7 +146,7 @@ Following is an example of typical plugin usage in python code
    # Load only the data object itself using from_load_data
    some_object = self.xyz.pm.from_load_data(":misc:hello", "some_object")
 
-Also see the `keys configuration file`_ for how to bind plugin methods to
+Also see the :doc:`configs` for how to bind plugin methods to
 keyboard shortcuts.
 
 Configuration

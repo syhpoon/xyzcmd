@@ -1,4 +1,4 @@
-.. |XYZ| replace:: XYZCommander
+.. include:: includes.inc
 
 -----------------
 |XYZ| User Manual

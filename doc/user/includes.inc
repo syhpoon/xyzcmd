@@ -1,0 +1,2 @@
+.. |XYZ| replace:: XYZCommander
+

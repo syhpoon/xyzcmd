@@ -6,3 +6,4 @@ VFS
 syntax: glob
 **/*.pyc
 .emacs.desktop
+doc/local/*
