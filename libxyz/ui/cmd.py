@@ -753,7 +753,7 @@ class Cmd(lowui.FlowWidget):
         """
         
         map(lambda x: self._put_object(x), 
-            self.escape([bstring(x) for x in obj]) + [" "])
+            self.escape([bstring(x) for x in ustring(obj)]) + [" "])
         self._invalidate()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
