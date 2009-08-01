@@ -18,6 +18,9 @@
 Constants
 """
 
+import sys
+import os
+
 # Project name
 PROG = u"XYZCommander"
 
@@ -28,7 +31,7 @@ HOMEPAGE = u"xyzcmd.syhpoon.name"
 USER_DIR = ".xyzcmd"
 
 # System directory
-SYSTEM_DIR = u"/usr/local/share/xyzcmd"
+SYSTEM_DIR = os.path.join(sys.prefix, "share/xyzcmd")
 
 # Subdirectory with configuration files
 CONF_DIR = u"conf"
