@@ -19,11 +19,11 @@ from distutils.core import setup
 import glob
 import os
 
-def include_rec(path):
+def include_rec(path, base, stripf=None):
     data = []
     
     for dirname, _, files in os.walk(path):
-        data.append(("share/xyzcmd/%s" % (dirname,),
+        data.append((stripf(base % dirname) if stripf else base % dirname,
                      [os.path.join(dirname, x) for x in files]))
 
     return data
@@ -43,10 +43,12 @@ setup(
                 ],
     data_files = [
         ("share/xyzcmd/conf", glob.glob("conf/*")),
-        #TODO: ("share/doc/xyzcmd", ["doc/*"]),
+        ("share/doc/xyzcmd/api", glob.glob("doc/api/*")),
         ("share/xyzcmd/skins", glob.glob("skins/*")),
         ] +
-    include_rec("plugins"),
+    include_rec("plugins", "share/xyzcmd/%s") +
+    include_rec("doc/user-manual", "share/doc/xyzcmd/%s",
+                lambda x: x.replace("doc/user-manual", "user-manual")),
     
     requires = ["urwid"],
 

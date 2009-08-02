@@ -4,6 +4,7 @@ include xyzcmd
 
 graft libxyz
 graft conf
-graft doc
+graft doc/api
+graft doc/user-manual
 graft plugins
 graft skins

@@ -23,7 +23,6 @@ import gettext
 import getopt
 import locale
 import os
-import os.path
 import __builtin__
 
 import libxyz

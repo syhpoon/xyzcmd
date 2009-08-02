@@ -365,9 +365,9 @@ Context named **DEFAULT** used unless other provided.
 For example, consider the part of keys configuration file::
 
    # 1.
-   bind :sys:cmd:undo to META-P
+   bind(":sys:cmd:undo", kbd("META-P"))
    # 2.
-   bind :sys:cmd:undo to META-P context CMD
+   bind(":sys:cmd:undo", kbd("META-P"), "CMD")
 
 In 1. we've bound Meta+Shift+p shortcut to undo method of :sys:cmd plugin.
 As we haven't provided context name, **DEFAULT** will be used.
@@ -379,6 +379,6 @@ receiving input.
 One can provide a special context name: ``@`` to make context name equal to
 plugin full namespace path::
 
-   bind :sys:cmd:execute to ENTER context @
+   bind(":sys:cmd:execute", kbd("ENTER"), "@")
 
 In this case, the bind will be saved to context ``:sys:cmd``.

@@ -1,2 +1,5 @@
 #!/bin/sh
-./setup.py sdist --formats=bztar
+./gendoc.sh && \
+mkdir doc/user-manual && \
+mv doc/user/.build/html/* doc/user-manual && \
+ ./setup.py sdist --formats=bztar
