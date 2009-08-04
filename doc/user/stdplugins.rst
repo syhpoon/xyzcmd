@@ -18,6 +18,7 @@ Here is the list of standard *:core:* plugins:
 * :core:console
 * :core:keycodes
 * :core:pluginlist
+* :core:shell
 
 ``:core:bindlist``
 ++++++++++++++++++
@@ -33,7 +34,12 @@ Public methods:
 
 ``:core:console``
 +++++++++++++++++
-**TODO**
+Management console is used to manage |XYZ| in runtime.
+
+Public methods:
+
+**show()**
+  Show console.
 
 ``:core:keycodes``
 ++++++++++++++++++

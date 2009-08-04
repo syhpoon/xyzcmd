@@ -222,6 +222,9 @@ Execute command using ``:core:shell`` plugin.
 * Optional boolean argument `bg` can be provided to indicate that `cmd`
   must be executed in background.
 
+* Optional boolean argument `reload` can be provided to indicate         
+  that panel content should/should not be reloaded after execution.
+
 Example - run `xpdf` in background on .pdf files::
 
   action(r'iname{".*\\.pdf$"}', lambda obj: shell("xpdf", obj.path, bg=True))
@@ -277,8 +280,10 @@ plugin_conf(plugin, opts)
 +++++++++++
 Configure plugin. 
 
-Where
+Where:
+
 * plugin: Plugin name
+
 * opts: Either tuple (var, val) or dict {var1: val1, var2: var2,..}
 
 In fact, ``plugin_conf`` is only a shortened form of ``let(plugin,
@@ -296,6 +301,8 @@ Example::
     
               # Size of typed commands history buffer
               "history_depth": 50})
+
+.. _prefix:
 
 prefix(shortcut)
 ++++++++++++++++

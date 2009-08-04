@@ -151,28 +151,23 @@ keyboard shortcuts.
 
 Configuration
 -------------
-All the neccessary plugin configuration provided via ``plugins``
-configuration file. Its syntax is simple::
+Plugins configuration is performed using :func:`plugin_conf` function.
 
- <:plugin:ns:path> {
-   var = val
-   ...
- }
-
-So single block contains configuration for one plugin.
-Value can be of any common types recognized by lexer. See developer's manual,
-chapter *Parsers*.
+:func:`plugin_conf` is just a shorthand for 
+`let(plugin, opts, sect="plugins")`, so both methods can be used.
 
 For example, if we'd have following block in plugins config::
 
-   :misc:hello {
-      show_version = true
-   }
+   plugin_conf(":misc:hello", {
+      "show_version": true
+   })
 
 Plugin :misc:hello can access ``show_version`` variable as::
+
    show_version = self.conf[u"show_version"]
 
 or::
+
    show_version = xyz.conf[u"plugins"][u":misc:hello"][u"show_version"]
 
 Virtual plugins
