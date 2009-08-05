@@ -74,7 +74,7 @@ bind(":sys:panel:tag_rule", kbd("META-+"))
 bind(":sys:panel:untag_rule", kbd("META-/"))
 bind(":sys:panel:swap_blocks", kbd("CTRL-w"))
 bind(":sys:panel:reload", kbd("CTRL-r"))
-bind(":sys:panel:search_forward", kbd("META-s"))
+bind(":sys:panel:search_cycle", kbd("META-s"))
 bind(":sys:panel:search_backward", kbd("META-w"))
 bind(":sys:panel:show_tagged", kbd("META-g"))
 

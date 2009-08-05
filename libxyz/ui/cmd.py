@@ -27,6 +27,7 @@ from libxyz.ui import NumEntry
 from libxyz.ui import Keys
 from libxyz.ui.utils import refresh
 from libxyz.core.utils import ustring, bstring, is_func
+from libxyz.core import dsl
 
 class Cmd(lowui.FlowWidget):
     """
@@ -790,6 +791,7 @@ class Cmd(lowui.FlowWidget):
         """
         
         self.prompt = Prompt(new, self._attr(u"prompt"))
+        dsl.plugin_conf(":sys:cmd", {"prompt": new})
         self._invalidate()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++

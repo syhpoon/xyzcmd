@@ -39,8 +39,8 @@ __all__ = (
     'XYZListBox',
     'ListEntry',
     'NumEntry',
-    'Cmd',
     'Shortcut',
+    'Cmd',
     'Panel',
 )
 
@@ -66,6 +66,6 @@ from prompt import Prompt
 from xyzlistbox import XYZListBox
 from entry import ListEntry
 from entry import NumEntry
-from cmd import Cmd
 from shortcut import Shortcut
+from cmd import Cmd
 from panel import Panel

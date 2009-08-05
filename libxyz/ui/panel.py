@@ -173,6 +173,7 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.chdir)
         _panel_plugin.export(self.search_forward)
         _panel_plugin.export(self.search_backward)
+        _panel_plugin.export(self.search_cycle)
         _panel_plugin.export(self.show_tagged)
         _panel_plugin.export(self.select)
         _panel_plugin.export(self.cwd)
@@ -432,6 +433,16 @@ class Panel(lowui.WidgetWrap):
         """
 
         self.active.search_backward()
+
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def search_cycle(self):
+        """
+        Enable cyclic search-when-you-type mode
+        """
+
+        self.active.search_cycle()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1144,6 +1155,17 @@ class Block(lowui.FlowWidget):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def search_cycle(self):
+        """
+        Search from current position downwards and then from top to
+        currently selected
+        """
+
+        return self._search_engine(lambda x: range(x, self._len) +
+                                             range(0, x))
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     @refresh
     def show_tagged(self):
         """
@@ -1191,6 +1213,8 @@ class Block(lowui.FlowWidget):
         _collected = []
 
         _current_pos = self.selected
+        _current_pos_orig = self.selected
+        _skip = False
 
         # Starting internal read loop
         while True:
@@ -1207,10 +1231,15 @@ class Block(lowui.FlowWidget):
                     continue
 
                 if self._keys.ESCAPE in _raw or self._keys.ENTER in _raw:
+                    self._invalidate()
                     break
                 elif self._keys.BACKSPACE in _raw:
+                    _current_pos = _current_pos_orig
                     if _collected:
                         _collected.pop()
+                # Continue search
+                elif self._keys.DOWN in _raw:
+                    _skip = True
 
                 _tmp = _collected[:]
                 _tmp.extend([ustring(x, self._enc) for x in _raw
@@ -1222,6 +1251,11 @@ class Block(lowui.FlowWidget):
             # Search
             for i in order(_current_pos):
                 if pattern(_pattern, self.entries[i].name):
+                    if _skip:
+                        _skip = False
+                        _current_pos  = i + 1
+                        continue
+                    
                     self.selected = i
                     _collected = _tmp
                     break
