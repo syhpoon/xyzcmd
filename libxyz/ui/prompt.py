@@ -15,6 +15,7 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 from libxyz.ui import lowui
+from libxyz.core.utils import ustring
 
 class Prompt(lowui.Text):
     """
@@ -40,4 +41,4 @@ class Prompt(lowui.Text):
         Return prompt text length
         """
 
-        return len(self.get_text()[0])
+        return len(ustring(self.get_text()[0]))

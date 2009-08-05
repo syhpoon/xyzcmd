@@ -122,6 +122,7 @@ class Cmd(lowui.FlowWidget):
         _cmd_plugin.export(self.put_inactive_cwd)
         _cmd_plugin.export(self.escape)
         _cmd_plugin.export(self.replace_aliases)
+        _cmd_plugin.export(self.set_prompt)
 
         self.xyz.pm.register(_cmd_plugin)
 
@@ -164,7 +165,8 @@ class Cmd(lowui.FlowWidget):
         _canvases = []
         
         if self.prompt.length() > 0:
-            _canvases.append((_canv_prompt, None, False, self.prompt.length()))
+            _canvases.append((_canv_prompt, None, False,
+                              self.prompt.length()))
 
         _canvases.append((_canv_text, 0, True, _text_len))
 
@@ -779,6 +781,16 @@ class Cmd(lowui.FlowWidget):
                 result.append(x)
 
         return "".join(result) if join else result
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def set_prompt(self, new):
+        """
+        Set command line prompt
+        """
+        
+        self.prompt = Prompt(new, self._attr(u"prompt"))
+        self._invalidate()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
