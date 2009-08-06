@@ -36,7 +36,7 @@ class Prompt(lowui.Text):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def length(self):
+    def __len__(self):
         """
         Return prompt text length
         """

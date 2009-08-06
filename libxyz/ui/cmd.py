@@ -154,20 +154,21 @@ class Cmd(lowui.FlowWidget):
 
         if self.prompt is not None:
             _canv_prompt = self.prompt.render((maxcol,))
+            _prompt_len = len(self.prompt)
         else:
             _canv_prompt = lowui.Text(u"").render((maxcol,))
+            _prompt_len = 0
 
         _data = [bstring(x) for x in self._get_visible(maxcol)]
-        _text_len = abs(maxcol - self.prompt.length())
+        _text_len = abs(maxcol - _prompt_len)
 
         _canv_text = lowui.AttrWrap(lowui.Text("".join(_data)),
                                     self._text_attr).render((maxcol,))
             
         _canvases = []
         
-        if self.prompt.length() > 0:
-            _canvases.append((_canv_prompt, None, False,
-                              self.prompt.length()))
+        if _prompt_len > 0:
+            _canvases.append((_canv_prompt, None, False, _prompt_len))
 
         _canvases.append((_canv_text, 0, True, _text_len))
 
@@ -185,7 +186,7 @@ class Cmd(lowui.FlowWidget):
 
         maxcol -= 1
 
-        _plen = self.prompt.length()
+        _plen = len(self.prompt)
         _dlen = len(self._data)
         _xindex = _plen + self._index
 
@@ -213,7 +214,7 @@ class Cmd(lowui.FlowWidget):
         Return the (x,y) coordinates of cursor within widget.
         """
 
-        return self.prompt.length() + self._vindex, 0
+        return len(self.prompt) + self._vindex, 0
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
