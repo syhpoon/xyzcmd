@@ -3,9 +3,12 @@ XYZCommander change log
 
 [Version 0.0.1]
 ===============
-* New method - :sys:cmd:set_prompt(). Method allows to set command line prompt
-                "on the fly".
-* New method - :sys:panel:search_cycle(). Method allows to search
-               objects in current working directory in direction
-               downwards-from up to selected file. Set this method as
-               default binding for META-S.
+
+* [UI] New method - :sys:cmd:put(). Method allows to put arbitrary
+                    string to command line. 
+* [UI] New method - :sys:cmd:set_prompt(). Method allows to set command line prompt
+                    "on the fly".
+* [UI] New method - :sys:panel:search_cycle(). Method allows to search
+                    objects in current working directory in direction
+                    downwards-from up to selected file. Set this method as
+                    default binding for META-S.

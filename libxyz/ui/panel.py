@@ -159,6 +159,7 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.get_selected)
         _panel_plugin.export(self.get_selected_inactive)
         _panel_plugin.export(self.get_tagged)
+        _panel_plugin.export(self.get_tagged_inactive)
         _panel_plugin.export(self.toggle_tag)
         _panel_plugin.export(self.tag_all)
         _panel_plugin.export(self.untag_all)
@@ -304,6 +305,15 @@ class Panel(lowui.WidgetWrap):
         """
 
         return self.active.get_tagged()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_tagged_inactive(self):
+        """
+        Return list of tagged VFSFile instances on inactive block
+        """
+
+        return self.inactive.get_tagged()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

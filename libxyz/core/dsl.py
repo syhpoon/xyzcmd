@@ -101,6 +101,14 @@ class XYZ(object):
             ":sys:panel", "cwd")()
         cls.macros["INACT_CWD"] = lambda: cls.xyz.pm.from_load(
             ":sys:panel", "cwd_inactive")()
+        cls.macros["ACT_TAGGED"] = lambda: [x.name for x in
+                                            cls.xyz.pm.from_load(
+                                                ":sys:panel", "get_tagged")()]
+        cls.macros["INACT_TAGGED"] = lambda: [x.name for x in
+                                              cls.xyz.pm.from_load(
+                                                  ":sys:panel",
+                                                  "get_tagged_inactive")()]
+
 
         return cls
 
