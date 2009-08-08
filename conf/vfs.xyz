@@ -1,0 +1,10 @@
+#
+# Max E. Kuznecov <syhpoon@syhpoon.name> 2008-2009
+#
+# Default VFS settings. Do not edit.
+#
+
+from libxyz.vfs.local import LocalVFSObject
+
+# Empty prefix for local filesystem
+vfs(None, LocalVFSObject)

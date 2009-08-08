@@ -5,8 +5,20 @@
 <node CREATED="1244495489656" ID="_" MODIFIED="1244501325177" POSITION="right" TEXT="UI">
 <font NAME="Tahoma" SIZE="12"/>
 </node>
-<node CREATED="1244495492427" ID="Freemind_Link_513771550" MODIFIED="1244501325176" POSITION="left" TEXT="VFS">
+<node CREATED="1244495492427" ID="Freemind_Link_513771550" MODIFIED="1249759982633" POSITION="left" TEXT="VFS">
+<edge COLOR="#cc0033"/>
 <font NAME="Tahoma" SIZE="12"/>
+<node CREATED="1249759904224" ID="Freemind_Link_71273883" MODIFIED="1249760613279" TEXT="Path-based dispatcher - VFSDispatcher">
+<node CREATED="1249759934924" ID="Freemind_Link_1542378353" MODIFIED="1249759947713" TEXT="TarVFS">
+<node CREATED="1249760006326" ID="Freemind_Link_1058723409" MODIFIED="1249768114520" TEXT="tar:/path/to/tar/file.tar#vfs#/path/inside/archive"/>
+</node>
+<node CREATED="1249759956848" ID="Freemind_Link_943679513" MODIFIED="1249759968268" TEXT="ZipVFS">
+<node CREATED="1249760126331" ID="Freemind_Link_1188513307" MODIFIED="1249760782607" TEXT="zip:/path/to/zip/file.zip#/file"/>
+</node>
+<node CREATED="1249761202625" ID="Freemind_Link_828272914" MODIFIED="1249761210178" TEXT="Nested VFS objects">
+<node CREATED="1249761211444" ID="Freemind_Link_1672617694" MODIFIED="1249768132579" TEXT="tar:/zip:/tar:/tmp/file1.tar#vfs#/file2.zip#vfs#/file-inside-zip.tar#vfs#file-inside-tar-inside-zip"/>
+</node>
+</node>
 </node>
 <node CREATED="1244495503893" ID="Freemind_Link_1083954312" MODIFIED="1244501325175" POSITION="right" TEXT="Keys">
 <font NAME="Tahoma" SIZE="12"/>
@@ -151,8 +163,13 @@
 </node>
 <node CREATED="1245874382917" ID="Freemind_Link_840364283" MODIFIED="1245874386689" TEXT="env()"/>
 <node CREATED="1245874433772" ID="Freemind_Link_463494108" MODIFIED="1245874435483" TEXT="shell"/>
+<node CREATED="1249762593698" ID="Freemind_Link_899153670" MODIFIED="1249762609900" TEXT="vfs(&quot;prefix&quot;, VFSObjectClass))">
+<node CREATED="1249762613211" ID="Freemind_Link_1369881740" MODIFIED="1249762869374" TEXT="Set VFS dispatcher handler for prefix">
+<node CREATED="1249762870789" ID="Freemind_Link_1944900231" MODIFIED="1249762903324" TEXT="vfs(&quot;tar&quot;, TarVFSObject)"/>
 </node>
-<node CREATED="1245361428409" FOLDED="true" ID="Freemind_Link_940491710" MODIFIED="1245361436843" TEXT="Implementation">
+</node>
+</node>
+<node CREATED="1245361428409" ID="Freemind_Link_940491710" MODIFIED="1245361436843" TEXT="Implementation">
 <node CREATED="1245361507096" ID="Freemind_Link_981733442" MODIFIED="1245361539882" TEXT="XYZObject singleton"/>
 <node CREATED="1245361641193" ID="Freemind_Link_1911204732" MODIFIED="1245361645041" TEXT="XYZShortcut"/>
 </node>

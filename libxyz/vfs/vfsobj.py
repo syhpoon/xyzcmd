@@ -23,9 +23,10 @@ class VFSObject(object):
     Abstract interface for VFS objects
     """
 
-    def __init__(self, path, enc=None):
+    def __init__(self, ext_path, int_path, enc=None):
         self.enc = enc
-        self.path = utils.bstring(path, enc)
+        self.path = utils.bstring(ext_path, enc)
+        self.int_path = int_path
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

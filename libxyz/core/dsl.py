@@ -76,6 +76,7 @@ class XYZ(object):
            "icmd",
            "prefix",
            "help",
+           "vfs",
            ]
 
     macros = {}
@@ -420,6 +421,20 @@ class XYZ(object):
 
         return "\n".join([fmt(x) for x in objs]).replace("\t", " ")
             
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def vfs(cls, prefix, vfsclass):
+        """
+        Set prefix and VFSObject class for VFS dispatching
+        """
+
+        try:
+            cls.xyz.vfs.register(prefix, vfsclass)
+        except Exception, e:
+            error(_(u"Error setting VFS prefix: %s") % ustring(str(e)))
+        
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     @classmethod

@@ -29,19 +29,12 @@ class XYZData(object):
                  "conf",
                  "input",
                  "term",
+                 "vfs",
                 ]
 
     def __init__(self):
-        object.__setattr__(self, "screen", None)
-        object.__setattr__(self, "top", None)
-        object.__setattr__(self, "skin", None)
-        object.__setattr__(self, "pm", None)
-        object.__setattr__(self, "km", None)
-        object.__setattr__(self, "hm", None)
-        object.__setattr__(self, "am", None)
-        object.__setattr__(self, "conf", None)
-        object.__setattr__(self, "input", None)
-        object.__setattr__(self, "term", None)
+        for obj in self.__slots__:
+            object.__setattr__(self, obj, None)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

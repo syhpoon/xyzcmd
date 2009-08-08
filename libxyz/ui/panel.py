@@ -1114,7 +1114,7 @@ class Block(lowui.FlowWidget):
                 _old_vfs = self._vfsobj
 
             try:
-                _vfsobj = LocalVFSObject(path, self._enc)
+                _vfsobj = self.xyz.vfs.dispatch(path, self._enc)
             except libxyz.exceptions.VFSError, e:
                 xyzlog.error(_(u"Unable to chdir to %s: %s") %
                              (ustring(path), ustring(e)))

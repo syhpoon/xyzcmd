@@ -60,5 +60,8 @@ ALIASES_CONF_FILE = u"aliases.xyz"
 # Internal commands configuration file name
 ICMD_CONF_FILE = u"icmd.xyz"
 
+# VFS configuration file name
+VFS_CONF_FILE = u"vfs.xyz"
+
 # Default fallback skin name
 DEFAULT_SKIN = u"default"

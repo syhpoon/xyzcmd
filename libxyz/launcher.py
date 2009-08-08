@@ -36,6 +36,7 @@ from libxyz.core.plugins import PluginManager
 from libxyz.core import logger
 from libxyz.core import dsl
 from libxyz.core.utils import ustring
+from libxyz.vfs import VFSDispatcher
 
 from libxyz.exceptions import *
 
@@ -55,6 +56,8 @@ class Launcher(object):
         self.xyz = core.XYZData()
         self.xyz.conf = {}
         self.dsl = dsl.XYZ(self.xyz)
+        self.xyz.hm = core.HookManager()
+        self.xyz.vfs = VFSDispatcher()
 
         self._path_sel = libxyz.PathSelector()
         self._conf = {}
@@ -76,7 +79,6 @@ class Launcher(object):
         self.init_skin()
 
         self.xyz.term = core.utils.setup_term()
-        self.xyz.hm = core.HookManager()
         self.xyz.pm = PluginManager(self.xyz,
                                     self._path_sel.get_plugins_dir())
 
@@ -255,11 +257,12 @@ class Launcher(object):
         self._parse_conf_file(const.PLUGINS_CONF_FILE)
         self._parse_conf_file(const.ALIASES_CONF_FILE)
         self._parse_conf_file(const.ICMD_CONF_FILE)
+        self._parse_conf_file(const.VFS_CONF_FILE)
 
         # local_encoding set, override guessed encoding
-        if u"local_encoding" in self.xyz.conf[u"xyz"]:
+        if "local_encoding" in self.xyz.conf["xyz"]:
             __builtin__.__dict__["xyzenc"] = \
-                                      self.xyz.conf[u"xyz"][u"local_encoding"]
+                                      self.xyz.conf["xyz"]["local_encoding"]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
