@@ -23,6 +23,8 @@ plugins_on(":sys:run",
 
            ":vfs:fileinfo",
            ":vfs:vfsutils",
+
+           ":fsrules:magic",
            )
 
 # Skin to use

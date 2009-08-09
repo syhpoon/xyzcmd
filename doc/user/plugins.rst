@@ -64,11 +64,12 @@ Typical plugin namespace path is::
 
 Here ``<namespace>`` is one of the available namespaces::
 
-   - sys   - Virtual system plugins
-   - core  - Core plugins
-   - ui    - User-interface related
-   - vfs   - Virtual file-system related
-   - misc  - Other miscellaneous
+   - sys     - Virtual system plugins
+   - core    - Core plugins
+   - ui      - User-interface related
+   - vfs     - Virtual file-system related
+   - fsrules - FSRules extensions
+   - misc    - Other miscellaneous
 
 Managment
 ---------

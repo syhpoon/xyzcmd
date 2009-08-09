@@ -125,6 +125,9 @@ class KeyManager(object):
         # Wildcard
         if _p.method == _p.ALL:
             self._loaded_methods[_p.full] = _p.ALL
+        # Just load and instantiate plugin
+        elif _p.method is None:
+            self.xyz.pm.load(_p)
         else:
             self._loaded_methods[_p.full] = self.xyz.pm.from_load(_p.pfull,
                                                                   _p.method)

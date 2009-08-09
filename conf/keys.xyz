@@ -24,6 +24,9 @@ load(":misc:about:about")
 load(":vfs:fileinfo:fileinfo")
 load(":vfs:vfsutils:*")
 
+# FSRules plugins. Load to activate
+load(":fsrules:magic")
+
 # Prefix keys
 prefix(kbd("CTRL-x"))
 prefix(kbd("CTRL-c"))
