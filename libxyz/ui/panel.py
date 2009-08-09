@@ -28,8 +28,8 @@ from libxyz.ui import align
 from libxyz.ui import Shortcut
 from libxyz.ui.utils import refresh
 from libxyz.ui.utils import truncate
+from libxyz.vfs.types import VFSTypeFile
 from libxyz.vfs.local import LocalVFSObject
-from libxyz.vfs.types import *
 
 class Panel(lowui.WidgetWrap):
     """
@@ -580,7 +580,8 @@ class Block(lowui.FlowWidget):
         _entries.extend(_dirs)
         _entries.extend(_files)
 
-        self._title = truncate(_dir.path, self.size.cols - 4, self._enc, True)
+        self._title = truncate(_dir.full_path, self.size.cols - 4,
+                               self._enc, True)
 
         if hasattr(self, "border"):
             self.border.set_title(self._title)
@@ -1141,7 +1142,10 @@ class Block(lowui.FlowWidget):
                 del(_old_vfs)
 
         self.cwd = path
-        os.chdir(path)
+
+        # Call chdir only for local objects
+        if isinstance(_vfsobj, LocalVFSObject):
+            os.chdir(path)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -11,7 +11,7 @@ from libxyz.core import FSRule
 from libxyz.core.plugins import BasePlugin
 
 class XYZPlugin(BasePlugin):
-    "Plugin file"
+    "Magic database FSRule"
 
     NAME = u"magic"
     AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"

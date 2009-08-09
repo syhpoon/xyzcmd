@@ -5,6 +5,9 @@
 #
 
 from libxyz.vfs.local import LocalVFSObject
+from libxyz.vfs.tar import TarVFSObject
 
 # Empty prefix for local filesystem
 vfs(None, LocalVFSObject)
+
+vfs("tar", TarVFSObject)

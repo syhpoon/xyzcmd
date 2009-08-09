@@ -28,7 +28,7 @@ from libxyz.exceptions import VFSError
 class VFSDispatcher(object):
     def __init__(self):
         self._handlers = {}
-        self.matchre = re.compile(r"^(?:(\w+):)?(.+?)(?:#vfs#(.+))?$")
+        self.matchre = re.compile(r"^(?:(\w+):)?(.+?)(?:#vfs#(.+))?\s*$")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -65,5 +65,5 @@ class VFSDispatcher(object):
             raise VFSError(_(u"Unable to find VFS handler for prefix %s.") %
                            prefix)
         else:
-            return self._handlers[prefix](ext_path, int_path, enc)
+            return self._handlers[prefix](path, ext_path, int_path, enc)
 

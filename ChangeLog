@@ -5,7 +5,7 @@ XYZCommander change log
 ===============
 
 * [PLUGIN] New plugin :fsrules:magic.
-  Plugin add an ability to match files based on magic database.
+  Plugin adds an ability to match files based on magic database.
 
 * [UI] New method :sys:cmd:put().
   Method allows to put arbitrary string to command line. 

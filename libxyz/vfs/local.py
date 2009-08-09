@@ -40,7 +40,7 @@ class LocalVFSObject(vfsobj.VFSObject):
         @param top: Top directory or self.path unless provided
         @return: tuple (parent, dir, dirs, files) where:
                  parent - parent dir LocalVFSFile instance
-                 dir - current dir LocalVFSFile instance
+                 dir - current LocalVFSObject instance
                  dirs - list of LocalVFSFile objects of directories
                  files - list of LocalVFSFile objects of files
         """
@@ -57,19 +57,20 @@ class LocalVFSObject(vfsobj.VFSObject):
         _dirs.sort()
         _files.sort()
 
-        _parent = LocalVFSFile(os.path.dirname(_dir), self.enc)
+        _parent = LocalVFSFile(os.path.abspath(os.path.dirname(_dir)),
+                               self.enc)
         _parent.name = u".."
 
         if not isinstance(_parent.ftype, types.VFSTypeLink):
             _parent.visual = u"/.."
 
+        get_path = lambda x: os.path.abspath(os.path.join(_abstop, x))
+        
         return [
                 _parent,
-                LocalVFSFile(_dir, self.enc),
-                [LocalVFSFile(os.path.join(_abstop, x), self.enc)
-                 for x in _dirs],
-                [LocalVFSFile(os.path.join(_abstop, x), self.enc)
-                 for x in _files],
+                self,
+                [LocalVFSFile(get_path(x), self.enc) for x in _dirs],
+                [LocalVFSFile(get_path(x), self.enc) for x in _files],
                ]
 
 #++++++++++++++++++++++++++++++++++++++++++++++++

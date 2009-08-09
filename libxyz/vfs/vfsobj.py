@@ -23,8 +23,10 @@ class VFSObject(object):
     Abstract interface for VFS objects
     """
 
-    def __init__(self, ext_path, int_path, enc=None):
+    def __init__(self, full_path, ext_path, int_path, enc=None):
+        self.name = os.path.basename(utils.ustring(ext_path))
         self.enc = enc
+        self.full_path = full_path
         self.path = utils.bstring(ext_path, enc)
         self.int_path = int_path
 
@@ -35,7 +37,7 @@ class VFSObject(object):
         Directory tree generator
         """
 
-        return None
+        raise NotImplementedError()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -44,9 +46,10 @@ class VFSFile(object):
     A VFS file information interface
     """
 
-    def __init__(self, path, enc=None):
+    def __init__(self, path, enc=None, obj=None):
         self.enc = enc or xyzenc
-        self.path = os.path.abspath(path)
+        self.obj = obj
+        self.path = path
         # File name
         self.name = os.path.basename(utils.ustring(self.path, self.enc))
 

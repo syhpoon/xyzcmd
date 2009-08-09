@@ -8,3 +8,4 @@ graft doc/api
 graft doc/user-manual
 graft plugins
 graft skins
+graft scripts
