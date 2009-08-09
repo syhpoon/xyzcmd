@@ -17,7 +17,7 @@
 """
 VFSDispatcher - Dispatching to appropriate VFS module based on path.
 Path format is following:
-[<prefix>]:<path_to_archive>#<path_inside_archive>
+[<prefix>]:<path_to_archive>#vfs#<path_inside_archive>
 """
 
 import re

@@ -47,6 +47,7 @@ functions are available:
 * :ref:`plugin_conf <pluginconf>`
 * :ref:`icmd <icmd>`
 * :ref:`prefix <prefix>`
+* :ref:`vfs <vfs>`
 
 .. _let:
 
@@ -277,7 +278,7 @@ Example::
 .. _pluginconf:
 
 plugin_conf(plugin, opts)
-+++++++++++
++++++++++++++++++++++++++
 Configure plugin. 
 
 Where:
@@ -312,6 +313,17 @@ Example::
 
   prefix(kbd("CTRL-x"))
 
+.. _vfs:
+
+vfs(prefix, vfs_class)
+++++++++++++++++++++++
+Set prefix and VFSObject class for VFS dispatching.
+
+Example::
+
+  # Set tar VFS handler
+  vfs("tar", TarVFSObject)
+
 Files
 -----
 Although any |XYZ| configuration file can contain any (or all) of the
@@ -338,6 +350,9 @@ Here's the list of |XYZ| system configuration files:
 
 *plugins.xyz*
   Plugins configuration.
+
+*vfs.xyz*
+  VFS configuration.
  
 Shortcuts
 ---------
