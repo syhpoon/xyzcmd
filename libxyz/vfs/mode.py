@@ -23,12 +23,14 @@ class Mode(object):
     A stat st_mode field representaion
     """
 
-    def __init__(self, st_mode):
+    def __init__(self, st_mode, vfstype):
         """
         @param st_mode: Raw st_mode obtained from os.stat()
+        @param vfstype: VFS file type
         """
 
         self.raw = st_mode
+        self.vfstype = vfstype
         self.string = self._make_string_mode()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -48,7 +50,7 @@ class Mode(object):
         Make string mode representaion
         """
 
-        _str_mode = [util.get_file_type(self.raw).str_type]
+        _str_mode = [self.vfstype.str_type]
 
         # usr bits
         _str_mode.extend(self._usr_bits())

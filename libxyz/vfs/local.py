@@ -204,7 +204,7 @@ class LocalVFSFile(vfsobj.VFSFile):
         self.uid = self._stat.st_uid
         self.gid = self._stat.st_gid
         self.inode = self._stat.st_ino
-        self.mode = mode.Mode(self._stat.st_mode)
+        self.mode = mode.Mode(self._stat.st_mode, self.ftype)
         self.visual = u"%s%s" % (self.vtype, self.name)
         self.info = u"%s %s" % (util.format_size(self.size), self.mode)
 

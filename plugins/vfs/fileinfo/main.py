@@ -42,7 +42,7 @@ class XYZPlugin(BasePlugin):
         _na = lambda x: lowui.Text(u"%-30s: N/A" % x)
 
         for _name, _value in _selected.attributes:
-            if _value is None:
+            if _value in (None, ""):
                 _data.append(_na(_name))
             else:
                 if not isinstance(_value, basestring):

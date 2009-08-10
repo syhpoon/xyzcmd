@@ -18,8 +18,6 @@ import os
 import os.path
 import stat
 import time
-import pwd
-import grp
 import tarfile
 
 from libxyz.vfs import types as vfstypes
@@ -95,7 +93,6 @@ class TarVFSFile(vfsobj.VFSFile):
 
         self._set_attributes()
 
-                
         self.attributes = (
             (_(u"Name"), self.name),
             (_(u"Type"), self.ftype),
@@ -128,7 +125,7 @@ class TarVFSFile(vfsobj.VFSFile):
             if k():
                 return v
 
-        return vfstypes.VFSTypeUnknown
+        return vfstypes.VFSTypeUnknown()
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -151,8 +148,9 @@ class TarVFSFile(vfsobj.VFSFile):
         self.size = self.obj.size
         self.uid = self.obj.uid
         self.gid = self.obj.gid
-        self.mode = mode.Mode(self.obj.mode)
+        self.mode = mode.Mode(self.obj.mode, self.ftype)
         self.visual = u"%s%s" % (self.vtype, self.name)
+                
         self.info = u"%s %s" % (util.format_size(self.size), self.mode)
 
         if isinstance(self.ftype, vfstypes.VFSTypeLink):

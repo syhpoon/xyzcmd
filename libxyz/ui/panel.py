@@ -1144,7 +1144,7 @@ class Block(lowui.FlowWidget):
         self.cwd = path
 
         # Call chdir only for local objects
-        if isinstance(_vfsobj, LocalVFSObject):
+        if isinstance(self._vfsobj, LocalVFSObject):
             os.chdir(path)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
