@@ -23,7 +23,6 @@ import os
 
 import libxyz.core as core
 
-
 from nose.tools import raises
 from libxyz.exceptions import *
 from libxyz.vfs.vfsobj import VFSFile
@@ -163,7 +162,7 @@ class TestActionManager(object):
         vfs_owner = VFSFile("/tmp/test_owner")
         vfs_owner.uid = 500
         vfs_owner.gid = 501
-                
+
         self.am.register("size{100}", lambda: "size")
         self.am.register("name{test_name}", lambda: "name")
         self.am.register("owner{500:501}", lambda: "owner")
