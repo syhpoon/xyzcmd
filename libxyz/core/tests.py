@@ -117,8 +117,14 @@ class TestActionManager(object):
     
     def setUp(self):
         self.xyz = core.XYZData()
+        self.dsl = core.dsl.XYZ(self.xyz)
         self.am = core.ActionManager(xyz, [])
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def tearDown(self):
+        core.dsl.XYZ._instance = None
+        
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @raises(XYZRuntimeError)
@@ -134,22 +140,16 @@ class TestActionManager(object):
 
     @raises(XYZRuntimeError)
     def testParseConfigIncorrect(self):
-        global files
-        xyz = core.XYZData()
-
-        am = core.ActionManager(xyz, [files["actions_bad"], "none"])
-        xyz.am = am
+        am = core.ActionManager(self.xyz, [files["actions_bad"], "none"])
+        self.xyz.am = am
 
         am.parse_configs()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     def testParseConfigCorrect(self):
-        global files
-        xyz = core.XYZData()
-        
-        am = core.ActionManager(xyz, [files["actions_good"], "none"])
-        xyz.am = am
+        am = core.ActionManager(self.xyz, [files["actions_good"], "none"])
+        self.xyz.am = am
 
         assert am.parse_configs() is None
 

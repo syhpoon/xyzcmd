@@ -94,7 +94,7 @@ class TestBlock(object):
         """
 
         assert len(self.p.parse(
-            "# \tComment 1\n#Comment 2 ''' = }{\n block {}"))
+            "# \tComment 1\n#Comment 2 ''' = }{\n block {}")) == 0
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -197,7 +197,7 @@ class TestBlock(object):
     @raises(ParseError)
     def testValueValidator1(self):
         """
-        Check if value_validator raises exception
+        Check if value_validator raises exception1
         """
 
         def _f(block, var, val):
@@ -499,7 +499,7 @@ class TestFlat(object):
     @raises(ParseError)
     def testValueValidator1(self):
         """
-        Check if value_validator raises exception
+        Check if value_validator raises exception 2
         """
 
         def _f(var, val):
@@ -513,7 +513,7 @@ class TestFlat(object):
         _opt = {"value_validator": _f}
         _p = FlatParser(_opt)
 
-        self.p.parse("A: INCORRECT_VALUE")
+        _p.parse("A: INCORRECT_VALUE")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
