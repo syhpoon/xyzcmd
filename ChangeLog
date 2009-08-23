@@ -4,7 +4,11 @@ XYZCommander change log
 [Version 0.0.2]
 ===============
 
+* [PLUGIN] New plugin :misc:where.
+  Plugin provides an ability to load/restore path locations on both panels
+
 * [CORE] New events and hooks mechanism.
+  It is now possible to set own hooks on all events.
 
 * [PLUGIN] New plugin :fsrules:magic.
   Plugin adds an ability to match files based on magic database.

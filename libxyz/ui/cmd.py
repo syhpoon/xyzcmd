@@ -721,7 +721,7 @@ class Cmd(lowui.FlowWidget):
         Put selected VFS object name in inactive panel to cmd line
         """
 
-        return self._put_engine(self._panel.get_selected_inactive().name)
+        return self._put_engine(self._panel.get_selected(False).name)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -730,7 +730,7 @@ class Cmd(lowui.FlowWidget):
         Put selected VFS object full path in inactive panel to cmd line
         """
 
-        return self._put_engine(self._panel.get_selected_inactive().path)
+        return self._put_engine(self._panel.get_selected(False).path)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -748,7 +748,7 @@ class Cmd(lowui.FlowWidget):
         Put current working directory of inactive panel to cmd line
         """
 
-        return self._put_engine(self._panel.cwd_inactive())
+        return self._put_engine(self._panel.cwd(False))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     

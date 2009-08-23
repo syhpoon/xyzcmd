@@ -159,9 +159,7 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.block_prev)
         _panel_plugin.export(self.switch_active)
         _panel_plugin.export(self.get_selected)
-        _panel_plugin.export(self.get_selected_inactive)
         _panel_plugin.export(self.get_tagged)
-        _panel_plugin.export(self.get_tagged_inactive)
         _panel_plugin.export(self.toggle_tag)
         _panel_plugin.export(self.tag_all)
         _panel_plugin.export(self.untag_all)
@@ -170,7 +168,6 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.untag_rule)
         _panel_plugin.export(self.swap_blocks)
         _panel_plugin.export(self.reload)
-        _panel_plugin.export(self.reload_inactive)
         _panel_plugin.export(self.reload_all)
         _panel_plugin.export(self.action)
         _panel_plugin.export(self.chdir)
@@ -180,7 +177,6 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.show_tagged)
         _panel_plugin.export(self.select)
         _panel_plugin.export(self.cwd)
-        _panel_plugin.export(self.cwd_inactive)
 
         _panel_plugin.VERSION = u"0.1"
         _panel_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
@@ -284,93 +280,75 @@ class Panel(lowui.WidgetWrap):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def get_selected(self):
+    def get_selected(self, active=True):
         """
         Get selected VFSFile instance
         """
 
-        return self.active.get_selected()
+        return (self.active if active else self.inactive).get_selected()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def get_selected_inactive(self):
-        """
-        Get selected VFSFile instance on inactive block
-        """
-
-        return self.inactive.get_selected()
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def get_tagged(self):
+    def get_tagged(self, active=True):
         """
         Return list of tagged VFSFile instances
         """
 
-        return self.active.get_tagged()
+        return (self.active if active else self.inactive).get_tagged()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def get_tagged_inactive(self):
-        """
-        Return list of tagged VFSFile instances on inactive block
-        """
-
-        return self.inactive.get_tagged()
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def toggle_tag(self):
+    def toggle_tag(self, active=True):
         """
         Tag selected file
         """
 
-        return self.active.toggle_tag()
+        return (self.active if active else self.inactive).toggle_tag()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def tag_all(self):
+    def tag_all(self, active=True):
         """
         Tag every single object in current dir
         """
 
-        return self.active.tag_all()
+        return (self.active if active else self.inactive).tag_all()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def untag_all(self):
+    def untag_all(self, active=True):
         """
         Untag every single object in current dir
         """
 
-        return self.active.untag_all()
+        return (self.active if active else self.inactive).untag_all()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def tag_invert(self):
+    def tag_invert(self, active=True):
         """
         Invert currently tagged files
         """
 
-        return self.active.tag_invert()
+        return (self.active if active else self.inactive).tag_invert()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def tag_rule(self):
+    def tag_rule(self, active=True):
         """
         Tag files by combined rule
         """
 
-        return self.active.tag_rule()
+        return (self.active if active else self.inactive).tag_rule()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def untag_rule(self):
+    def untag_rule(self, active=True):
         """
         Untag files by combined rules
         """
 
-        return self.active.untag_rule()
+        return (self.active if active else self.inactive).untag_rule()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -385,21 +363,12 @@ class Panel(lowui.WidgetWrap):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def reload(self):
+    def reload(self, active=True):
         """
         Reload contents
         """
 
-        return self.active.reload()
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-    def reload_inactive(self):
-        """
-        Reload inactive panel contents
-        """
-
-        return self.inactive.reload()
+        return (self.active if active else self.inactive).reload()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -413,21 +382,21 @@ class Panel(lowui.WidgetWrap):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def action(self):
+    def action(self, active=True):
         """
         Perfrom action on selected object
         """
 
-        return self.active.action()
+        return (self.active if active else self.inactive).action()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def chdir(self, path):
+    def chdir(self, path, active=True):
         """
         Change directory
         """
 
-        return self.active.chdir(path)
+        return (self.active if active else self.inactive).chdir(path)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -459,39 +428,30 @@ class Panel(lowui.WidgetWrap):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def show_tagged(self):
+    def show_tagged(self, active=True):
         """
         Show only tagged entries
         """
 
-        self.active.show_tagged()
+        return (self.active if active else self.inactive).show_tagged()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def select(self, name):
+    def select(self, name, active=True):
         """
         Select VFS object by given name in current directory
         """
 
-        self.active.select(name)
+        return (self.active if active else self.inactive).select(name)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def cwd(self):
+    def cwd(self, active=True):
         """
         Get current working directory
         """
 
-        return self.active.cwd
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def cwd_inactive(self):
-        """
-        Get current working directory of inactive panel
-        """
-
-        return self.inactive.cwd
+        return (self.active if active else self.inactive).cwd
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 

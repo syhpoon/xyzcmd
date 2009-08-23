@@ -17,6 +17,7 @@ plugins_on(":sys:run",
 
            ":misc:hello",
            ":misc:about",
+           ":misc:where",
 
            ":ui:testinput",
            ":ui:bookmarks",
@@ -24,7 +25,7 @@ plugins_on(":sys:run",
            ":vfs:fileinfo",
            ":vfs:vfsutils",
 
-         ":fsrules:magic",
+           ":fsrules:magic",
            )
 
 # Skin to use

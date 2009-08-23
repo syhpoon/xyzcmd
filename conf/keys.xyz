@@ -24,6 +24,8 @@ load(":misc:about:about")
 load(":vfs:fileinfo:fileinfo")
 load(":vfs:vfsutils:*")
 
+load(":misc:where")
+
 # FSRules plugins. Load to activate
 load(":fsrules:magic")
 
