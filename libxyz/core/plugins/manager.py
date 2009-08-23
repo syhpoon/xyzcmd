@@ -15,7 +15,6 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-import os.path
 
 from libxyz.exceptions import PluginError
 from libxyz.exceptions import XYZValueError
@@ -49,6 +48,11 @@ class PluginManager(object):
     PLUGIN_CLASS = u"XYZPlugin"
     PLUGIN_FILE = u"main"
     VIRTUAL_NAMESPACE = u"sys"
+    EVENT_INIT = u"plugin_init"
+    EVENT_FROM_LOAD = u"plugin_from_load"
+    EVENT_FROM_LOAD_DATA = u"plugin_from_load_data"
+    EVENT_PREPARE = u"plugin_prepare"
+    EVENT_FIN = u"plugin_fin"
 
     def __init__(self, xyz, dirs):
         """
@@ -98,6 +102,8 @@ class PluginManager(object):
 
         plugin.set_method(self.PLUGIN_FILE)
 
+        self.xyz.hm.dispatch(self.EVENT_INIT, plugin)
+        
         # Import plugin
         # Plugin entry-point is XYZPlugin class in a main.py file
         try:
@@ -116,6 +122,7 @@ class PluginManager(object):
         _obj = _loaded(self.xyz, *initargs, **initkwargs)
 
         # Run prepare (constructor)
+        self.xyz.hm.dispatch(self.EVENT_PREPARE, _obj)
         _obj.prepare()
 
         self.set_loaded(plugin, _obj)
@@ -151,6 +158,8 @@ class PluginManager(object):
         @param method: Public method name
         """
 
+        self.xyz.hm.dispatch(self.EVENT_FROM_LOAD, plugin, method)
+        
         if not self.is_loaded(plugin):
             _obj = self.load(plugin)
         else:
@@ -175,9 +184,11 @@ class PluginManager(object):
         If plugin was not loaded before, load and initiate it first.
 
         @param plugin: Plugin namespace path
-        @param method: Public data object name
+        @param obj: Public data object name
         """
 
+        self.xyz.hm.dispatch(self.EVENT_FROM_LOAD_DATA, plugin, obj)
+        
         if not self.is_loaded(plugin):
             _obj = self.load(plugin)
         else:
@@ -296,11 +307,11 @@ class PluginManager(object):
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        if plugin is not None:
-            _fin(plugin)
-        else:
-            for plugin_name in self._loaded:
-                _fin(plugin_name)
+        _plugins = self._loaded if self._loaded else [plugin]
+        
+        for plugin_name in self._loaded:
+            self.xyz.hm.dispatch(self.EVENT_FIN, self._loaded[plugin_name])
+            _fin(plugin_name)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

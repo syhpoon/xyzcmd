@@ -1,14 +1,16 @@
 XYZCommander change log
 -----------------------
 
-[Version 0.0.1]
+[Version 0.0.2]
 ===============
+
+* [CORE] New events and hooks mechanism.
 
 * [PLUGIN] New plugin :fsrules:magic.
   Plugin adds an ability to match files based on magic database.
 
 * [UI] New method :sys:cmd:put().
-  Method allows to put arbitrary string to command line. 
+  Method allows to put arbitrary string to command line.
 
 * [UI] New method :sys:cmd:set_prompt().
   Method allows to set command line prompt "on the fly".

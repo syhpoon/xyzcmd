@@ -45,6 +45,8 @@ class Launcher(object):
     Startup class
     """
 
+    EVENT_STARTUP = u"startup"
+    
     def __init__(self):
         """
         Initialization
@@ -113,6 +115,7 @@ class Launcher(object):
         panel = uilib.Panel(self.xyz)
         self.xyz.top = lowui.Filler(panel)
 
+        self.xyz.hm.dispatch(self.EVENT_STARTUP)
         panel.loop()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

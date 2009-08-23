@@ -39,6 +39,8 @@ class Panel(lowui.WidgetWrap):
     resolution = (u"panel", u"widget")
     context = u":sys:panel"
 
+    EVENT_SHUTDOWN = u"shutdown"
+
     def __init__(self, xyz):
         self.xyz = xyz
 
@@ -200,6 +202,7 @@ class Panel(lowui.WidgetWrap):
 
         if libxyz.ui.YesNoBox(self.xyz, self.xyz.top, _q, _title).show():
             self._stop = True
+            self.xyz.hm.dispatch(self.EVENT_SHUTDOWN)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

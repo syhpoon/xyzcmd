@@ -98,20 +98,20 @@ class XYZ(object):
         cls._env.update(dict([(f, getattr(cls, f)) for f in cls.api]))
 
         # Init macros
-        cls.macros["ACT_PATH"] = lambda: cls.xyz.pm.from_load(
-            ":sys:panel", "get_selected")().path
-        cls.macros["ACT_CWD"] = lambda: cls.xyz.pm.from_load(
-            ":sys:panel", "cwd")()
-        cls.macros["INACT_CWD"] = lambda: cls.xyz.pm.from_load(
-            ":sys:panel", "cwd_inactive")()
+        cls.macros["ACT_PATH"] = lambda: cls.xyz.pm.from_load(":sys:panel",
+                                               "get_selected")().path
+        cls.macros["ACT_CWD"] = lambda: cls.xyz.pm.from_load(":sys:panel",
+                                                             "cwd")()
+        cls.macros["INACT_CWD"] = lambda: cls.xyz.pm.from_load(":sys:panel",
+                                                "cwd_inactive")()
         cls.macros["ACT_TAGGED"] = lambda: [x.name for x in
                                             cls.xyz.pm.from_load(
-                                                ":sys:panel", "get_tagged")()]
+                                                ":sys:panel",
+                                                "get_tagged")()]
         cls.macros["INACT_TAGGED"] = lambda: [x.name for x in
                                               cls.xyz.pm.from_load(
                                                   ":sys:panel",
                                                   "get_tagged_inactive")()]
-
 
         return cls
 
