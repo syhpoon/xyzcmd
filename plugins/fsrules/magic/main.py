@@ -2,12 +2,22 @@
 #
 # Max E. Kuznecov <syhpoon@syhpoon.name> 2009
 #
+# This file is part of XYZCommander.
+# XYZCommander is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# XYZCommander is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Lesser Public License for more details.
+# You should have received a copy of the GNU Lesser Public License
+# along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 import re
 import subprocess
 
 from libxyz.core import FSRule
-
 from libxyz.core.plugins import BasePlugin
 
 class XYZPlugin(BasePlugin):
@@ -17,8 +27,8 @@ class XYZPlugin(BasePlugin):
     AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
     VERSION = u"0.1"
     BRIEF_DESCRIPTION = u"Magic database FSRule"
-
-    FULL_DESCRIPTION = u""
+    FULL_DESCRIPTION = _(u"Plugin extends FSRule functionality to match "\
+                         u"objects based on magic database description")
     NAMESPACE = u"fsrules"
     MIN_XYZ_VERSION = None
     DOC = None

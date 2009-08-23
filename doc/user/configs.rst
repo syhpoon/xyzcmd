@@ -48,6 +48,8 @@ functions are available:
 * :ref:`icmd <icmd>`
 * :ref:`prefix <prefix>`
 * :ref:`vfs <vfs>`
+* :ref:`hook <hook>`
+* :ref:`unhook <unhook>`
 
 .. _let:
 
@@ -324,6 +326,24 @@ Example::
   # Set tar VFS handler
   vfs("tar", TarVFSObject)
 
+.. _hook:
+
+hook(event, proc)
++++++++++++++++++
+Register a new hook.
+Event is an event string and proc is a procedure to be called.
+
+Example::
+
+  hook("event:sys:cmd:execute",
+       lambda cmd: xyzlog.info("About to execute %s" % cmd))
+
+.. _unhook:
+
+uhook(event)
+++++++++++++
+Remove all hooks for the event.
+
 Files
 -----
 Although any |XYZ| configuration file can contain any (or all) of the
@@ -353,6 +373,9 @@ Here's the list of |XYZ| system configuration files:
 
 *vfs.xyz*
   VFS configuration.
+
+*hooks.xyz*
+  Hooks configuration.
  
 Shortcuts
 ---------

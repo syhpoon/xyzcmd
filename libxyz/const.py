@@ -63,5 +63,8 @@ ICMD_CONF_FILE = u"icmd.xyz"
 # VFS configuration file name
 VFS_CONF_FILE = u"vfs.xyz"
 
+# Hooks configuration file name
+HOOKS_CONF_FILE = u"hooks.xyz"
+
 # Default fallback skin name
 DEFAULT_SKIN = u"default"

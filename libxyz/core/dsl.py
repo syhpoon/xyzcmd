@@ -77,6 +77,8 @@ class XYZ(object):
            "prefix",
            "help",
            "vfs",
+           "hook",
+           "unhook",
            ]
 
     macros = {}
@@ -431,9 +433,35 @@ class XYZ(object):
         """
 
         try:
-            cls.xyz.vfs.register(prefix, vfsclass)
+            return cls.xyz.vfs.register(prefix, vfsclass)
         except Exception, e:
             error(_(u"Error setting VFS prefix: %s") % ustring(str(e)))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def hook(cls, event, proc):
+        """
+        Register a new hook.
+        Event is an event string and proc is a procedure to be called
+        """
+        
+        try:
+            return cls.xyz.hm.register(event, proc)
+        except Exception, e:
+            error(_(u"Error registering new hook: %s") % ustring(str(e)))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def unhook(cls, event):
+        """
+        Remove all hooks for the event
+        """
+
+        return cls.xyz.hm.clear(event)
         
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     

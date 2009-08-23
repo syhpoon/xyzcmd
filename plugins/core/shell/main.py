@@ -14,18 +14,22 @@ from libxyz.core.utils import bstring
 from libxyz.core.plugins import BasePlugin
 
 class XYZPlugin(BasePlugin):
-    "Plugin shell"
+    "Shell plugin"
 
     NAME = u"shell"
     AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
     VERSION = u"0.1"
-    BRIEF_DESCRIPTION = u"Shell wrapper"
-    FULL_DESCRIPTION = u"Execute commands in external shell"
+    BRIEF_DESCRIPTION = _(u"Shell wrapper")
+    FULL_DESCRIPTION = _(u"Execute commands in external shell")
     NAMESPACE = u"core"
     MIN_XYZ_VERSION = None
     DOC = None
     HOMEPAGE = "http://xyzcmd.syhpoon.name"
-
+    EVENTS = [("execute",
+               _(u"Fires before command execution. "\
+                 u"Arguments: a command to be executed")),
+              ]
+    
     shell_args = {"sh": ["-c"],
                   "bash": ["-c"],
                   "zsh": ["-c"]
@@ -62,6 +66,8 @@ class XYZPlugin(BasePlugin):
         """
 
         cmd = bstring(cmd)
+        self.fire_event("execute", cmd)
+        
         self.xyz.screen.clear()
         stdout = sys.stdout
         self.xyz.screen.stop()

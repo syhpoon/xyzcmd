@@ -15,6 +15,7 @@ Contents:
    plugins
    stdplugins
    vfs
+   events_hooks
 
 ------------------
 

@@ -68,6 +68,10 @@ class XYZPlugin(BasePlugin):
     # Plugin home-page
     HOMEPAGE = None
 
+    # Events provided by plugin
+    # List of (event_name, event_desc) tuples
+    EVENTS = None
+
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 

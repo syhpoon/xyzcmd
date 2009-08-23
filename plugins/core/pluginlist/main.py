@@ -20,7 +20,7 @@ import libxyz.ui as uilib
 
 from libxyz.ui import lowui
 from libxyz.core.plugins import BasePlugin
-from libxyz.core.utils import ustring
+from libxyz.core.utils import ustring, bstring
 
 from entry import PluginEntry
 
@@ -31,12 +31,18 @@ class XYZPlugin(BasePlugin):
 
     NAME = u"pluginlist"
     AUTHOR = u"Max E. Kuznecov ~syhpoon <syhpoon@syhpoon.name>"
-    VERSION = u"0.1"
+    VERSION = u"0.2"
     BRIEF_DESCRIPTION = u"Show plugin list"
     FULL_DESCRIPTION = u"Show all currently loaded plugins and associated "\
                        u"information"
     NAMESPACE = u"core"
     HOMEPAGE = u"xyzcmd.syhpoon.name"
+    EVENTS = [("show",
+               _(u"Fires upon showing dialog. Arguments: No")),
+              ("info",
+               _(u"Fires when showing detaild plugin info."\
+                 u"Arguments: Plugin object")),
+        ]
 
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
@@ -50,10 +56,13 @@ class XYZPlugin(BasePlugin):
         Show plugins list
         """
 
+        self.fire_event("show")
+        
         _plugins = sorted(self.xyz.pm.get_all_loaded().values(),
                           lambda x, y: cmp(x.ns, y.ns))
 
-        _sel_attr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"selected")
+        _sel_attr = self.xyz.skin.attr(uilib.XYZListBox.resolution,
+                                       u"selected")
         self._walker = lowui.SimpleListWalker([PluginEntry(_obj, _sel_attr,
                                               self._info)
                                               for _obj in _plugins])
@@ -142,7 +151,6 @@ class XYZPlugin(BasePlugin):
                                          title_attr=_titleattr,
                                          div_attr=_divattr))
 
-            keys = uilib.Keys()
             _bind_data = self.xyz.km.get_binds()
 
             _len = len(_plugin.public)
@@ -177,6 +185,7 @@ class XYZPlugin(BasePlugin):
         _w = self._walker.get_focus()[0]
         _plugin = _w.plugin
 
+        self.fire_event("info", _plugin)
         _divattr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"border")
         _titleattr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"title")
         _div = lowui.Text("")
@@ -191,6 +200,16 @@ class XYZPlugin(BasePlugin):
                                          div_attr=_divattr))
 
             _data.append(lowui.Text(_plugin.DOC))
+
+        if isinstance(_plugin.EVENTS, list):
+            _data.append(uilib.Separator(_(u"Plugin events"),
+                                         title_attr=_titleattr,
+                                         div_attr=_divattr))
+
+            for event, desc in _plugin.EVENTS:
+                _data.append(lowui.Text("%s -- %s" %
+                                        (bstring(_plugin.event_name(event)),
+                                         bstring(desc))))
 
         _add_public_data()
         _add_public_methods()

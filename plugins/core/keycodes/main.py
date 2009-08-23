@@ -44,6 +44,9 @@ class XYZPlugin(BasePlugin):
                        u"TERM environment variable."
 
     HOMEPAGE = u"xyzcmd.syhpoon.name"
+    EVENTS = [("show",
+               "Fires upon showing dialog"),
+              ]
 
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
@@ -105,6 +108,7 @@ class XYZPlugin(BasePlugin):
         Show LearnKeys dialog
         """
 
+        self.fire_event("show")
         _title = _(u"%s - %s" % (self.NAME, self.VERSION))
 
         _pressed = self._load_data()

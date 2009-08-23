@@ -27,48 +27,48 @@ class HookManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    def register(self, hook, proc):
+    def register(self, event, proc):
         """
-        Register proc to be run upon hook event
+        Register proc to be run upon event occured
         """
 
-        if hook not in self._data:
-            self._data[hook] = []
+        if event not in self._data:
+            self._data[event] = []
 
         if not callable(proc):
             xyzlog.error(_(u"HookManager: Callable argument expected"))
             return False
 
-        self._data[hook].append(proc)
+        self._data[event].append(proc)
 
         return True
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def clear(self, hook):
+    def clear(self, event):
         """
-        Clear all data assosiated with hook
+        Clear all data assosiated with an event
         """
 
-        self._data[hook] = []
+        self._data[event] = []
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def dispatch(self, hook, *args, **kwargs):
+    def dispatch(self, event, *args):
         """
-        Sequentially run procedures registered with provided hook
+        Sequentially run procedures registered with provided event
         """
 
         # No callbacks registered
-        if hook not in self._data or not self._data[hook]:
+        if event not in self._data or not self._data[event]:
             return False
 
-        for proc in self._data[hook]:
+        for proc in self._data[event]:
             try:
-                proc(*args, **kwargs)
+                proc(*args)
             except Exception, e:
                 xyzlog.error(
-                    _(u"Error running callback procedure for hook %s") %
+                    _(u"Error running callback procedure for event %s") %
                     ustring(str(e)))
                 return False
 

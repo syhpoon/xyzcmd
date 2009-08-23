@@ -31,6 +31,15 @@ class XYZPlugin(BasePlugin):
     BRIEF_DESCRIPTION = u"Interactive management console"
     FULL_DESCRIPTION = u"Provides interactive management console"
     NAMESPACE = u"core"
+    EVENTS = [("show",
+               "Fires upon showing console. Arguments: No."),
+              ("cmd_prev",
+               "Fires when scrolling through history. "\
+               "Arguments: Current command from history buffer"),
+              ("execute",
+               "Fires when typed command is to be executed. "\
+               "Arguments: typed command"),
+        ]
 
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
@@ -82,7 +91,8 @@ class XYZPlugin(BasePlugin):
                 return cmd
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        
+
+        self.fire_event("show")
         _stop = False
 
         while True:
@@ -103,6 +113,7 @@ class XYZPlugin(BasePlugin):
                     cmd = _get_cmd(k)
 
                     if cmd is not None:
+                        self.fire_event("cmd_prev", cmd)
                         self.edit.set_edit_text("")
                         self.edit.insert_text(cmd)
                 elif k == self._keys.ENTER:
@@ -128,6 +139,8 @@ class XYZPlugin(BasePlugin):
                         if compiled is None:
                             break
                         else:
+                            self.fire_event("execute", chunk)
+                            
                             chunk = ""
                             try:
                                 self._write(

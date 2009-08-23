@@ -14,12 +14,15 @@ class XYZPlugin(BasePlugin):
 
     NAME = u"bindlist"
     AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
-    VERSION = u"0.1"
+    VERSION = u"0.2"
     BRIEF_DESCRIPTION = u"Show keybindings"
     FULL_DESCRIPTION = u"Plugin is used to display all current keybindings "\
                        u"along with corresponding contextes and methods"
     NAMESPACE = u"core"
     HOMEPAGE = u"xyzcmd.syhpoon.name"
+    EVENTS = [("show_binds",
+               "Event is fired before showing dialog. Receives no arguments."),
+              ]
 
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
@@ -35,6 +38,8 @@ class XYZPlugin(BasePlugin):
         Show keybindings
         """
 
+        self.fire_event("show_binds")
+        
         _data = self.xyz.km.get_binds()
 
         _entries = []

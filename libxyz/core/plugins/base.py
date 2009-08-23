@@ -51,6 +51,10 @@ class BasePlugin(object):
     # Plugin home-page
     HOMEPAGE = None
 
+    # Events provided by plugin
+    # List of (event_name, event_desc) tuples
+    EVENTS = None
+
     def __init__(self, xyz, *args, **kwargs):
         self.xyz = xyz
 
@@ -138,10 +142,18 @@ class BasePlugin(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def run_hook(self, hook, *args, **kwargs):
+    def fire_event(self, event, *args):
         """
-        Run hook
+        Fire event
         """
 
-        self.xyz.hm.dispatch("hook%s:%s" % (self.ns.pfull, hook),
-                             *args, **kwargs)
+        self.xyz.hm.dispatch(self.event_name(event), *args)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def event_name(self, short):
+        """
+        Return full event name
+        """
+
+        return "event%s:%s" % (self.ns.pfull, short)

@@ -258,6 +258,7 @@ class Launcher(object):
         self._parse_conf_file(const.ALIASES_CONF_FILE)
         self._parse_conf_file(const.ICMD_CONF_FILE)
         self._parse_conf_file(const.VFS_CONF_FILE)
+        self._parse_conf_file(const.HOOKS_CONF_FILE)
 
         # local_encoding set, override guessed encoding
         if "local_encoding" in self.xyz.conf["xyz"]:

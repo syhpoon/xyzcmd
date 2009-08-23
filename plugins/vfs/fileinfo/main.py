@@ -21,6 +21,10 @@ class XYZPlugin(BasePlugin):
     MIN_XYZ_VERSION = None
     DOC = None
     HOMEPAGE = u"xyzcmd.syhpoon.name"
+    EVENTS = [("fileinfo",
+               "Event is fired upon showing file-info dialog.\n"\
+               "Arguments: Currently selected VFSObject instance"),
+              ]
 
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
@@ -35,8 +39,7 @@ class XYZPlugin(BasePlugin):
         """
 
         _selected = self.xyz.pm.from_load(":sys:panel", "get_selected")()
-
-        self.run_hook("fileinfo", _selected)
+        self.fire_event("fileinfo", _selected)
 
         _data = []
         _na = lambda x: lowui.Text(u"%-30s: N/A" % x)
