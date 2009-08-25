@@ -22,7 +22,6 @@ import tarfile
 
 from libxyz.vfs import types as vfstypes
 
-from libxyz.exceptions import VFSError
 from libxyz.vfs import vfsobj
 from libxyz.vfs import util
 from libxyz.vfs import mode
@@ -34,40 +33,55 @@ class TarVFSObject(vfsobj.VFSObject):
     Access GNU Tar archives
     """
 
-    def walk(self, top=None):
+    def walk(self):
         """
         Directory tree walker
-        @param top: Top directory or self.path unless provided
         @return: tuple (parent, dir, dirs, files) where:
-                 parent - parent dir *VFSFile instance
-                 dir - current dir TarVFSFile instance
-                 dirs - list of TarVFSFile objects of directories
-                 files - list of TarVFSFile objects of files
+        parent - parent dir *VFSFile instance
+        dir - current dir TarVFSFile instance
+        dirs - list of TarVFSFile objects of directories
+        files - list of TarVFSFile objects of files
         """
+        
+        def in_dir(d, e):
+            """
+            Filter only those archive entries which exist in the same
+            directory level
+            """
 
-        path = top or self.path
-        tarobj = tarfile.open(path)
+            return True if e.startswith(d.lstrip(os.sep)) and \
+                   len(util.split_path(e)) == (len(util.split_path(d)) + 1) \
+                   else False
+
+        name = lambda x: os.path.basename(x.name)
+        get_path = lambda x: os.sep.join([self.full_path, x])
+        
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        tarobj = tarfile.open(self.path)
         entries = tarobj.getmembers()
 
-        _dirs = [x for x in entries if x.isdir()]
-        _files = [x for x in entries if not x.isdir()]
+        _dirs = [x for x in entries if x.isdir() and
+                 in_dir(self.int_path, x.name)]
+        _files = [x for x in entries if not x.isdir() and
+                  in_dir(self.int_path, x.name)]
+
+        _dirs.sort(cmp=lambda x, y: cmp(name(x), name(y)))
+        _files.sort(cmp=lambda x, y: cmp(name(x), name(y)))
+
+        self.xyz.vfs.get_file_by_path(self.full_path)
         
-        _dirs.sort(cmp=lambda x, y: cmp(x.name, y.name))
-        _files.sort(cmp=lambda x, y: cmp(x.name, y.name))
-       
-        _parent = local.LocalVFSFile(os.path.dirname(path), self.enc)
+        _parent = local.LocalVFSFile(os.path.dirname(self.path), self.enc)
         _parent.name = u".."
 
         if not isinstance(_parent.ftype, vfstypes.VFSTypeLink):
             _parent.visual = u"/.."
 
-        get_path = lambda x: os.path.abspath(os.path.join(path, x))
-
         return [
             _parent,
             self,
-            [TarVFSFile(get_path(x.name), self.enc, x) for x in _dirs],
-            [TarVFSFile(get_path(x.name), self.enc, x) for x in _files],
+            [TarVFSFile(get_path(name(x)), self.enc, x) for x in _dirs],
+            [TarVFSFile(get_path(name(x)), self.enc, x) for x in _files],
             ]
 
 #++++++++++++++++++++++++++++++++++++++++++++++++

@@ -59,7 +59,7 @@ class Launcher(object):
         self.xyz.conf = {}
         self.dsl = dsl.XYZ(self.xyz)
         self.xyz.hm = core.HookManager()
-        self.xyz.vfs = VFSDispatcher()
+        self.xyz.vfs = VFSDispatcher(self.xyz)
 
         self._path_sel = libxyz.PathSelector()
         self._conf = {}

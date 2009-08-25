@@ -15,6 +15,7 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 import stat
+import os
 
 from libxyz.vfs import types as vfstypes
 
@@ -62,3 +63,17 @@ def format_size(size):
             return u"%s%s" % (_func(_s, _size), _suffix)
 
     return size
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def split_path(path):
+    def _split(p, d):
+        h, t = os.path.split(p)
+
+        if not t:
+            return d
+        else:
+            d.append(t)
+            return _split(h, d)
+        
+    return tuple(reversed(_split(path, [])))
