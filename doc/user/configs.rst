@@ -287,14 +287,13 @@ Where:
 
 * plugin: Plugin name
 
-* opts: Either tuple (var, val) or dict {var1: val1, var2: var2,..}
+* opts: dict {var1: val1, var2: var2,..}
 
 In fact, ``plugin_conf`` is only a shortened form of ``let(plugin,
 opts, sect="plugins")``.
 
 Example::
 
-  plugin_conf(":sys:cmd", ("prompt", "|| "))
   plugin_conf(":sys:cmd", {
               # Command line prompt
               "prompt": "$ ",

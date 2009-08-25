@@ -24,11 +24,25 @@ class Queue(list):
     def __init__(self, maxsize):
         super(Queue, self).__init__()
 
-        try:
-            self.maxsize = int(maxsize)
-        except ValueError:
-            raise XYZValueError(_(u"Max-size must be of integer type"))
+        self.set_size(maxsize)
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def set_size(self, size):
+        """
+        Set queue size
+        """
+
+        try:
+            maxsize = int(size)
+
+            assert maxsize >= 0
+        except (ValueError, AssertionError):
+            raise XYZValueError(
+                _(u"Max-size must be a positive integer number"))
+        else:
+            self.maxsize = maxsize
+        
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def push(self, item):
@@ -37,9 +51,14 @@ class Queue(list):
         replace the oldest one.
         """
 
+        _len = len(self)
+        
         if self.maxsize <= 0:
             return
-        elif len(self) == self.maxsize:
+        elif _len > self.maxsize:
+            m = _len - self.maxsize + 1
+            self[0:] = self[m:_len]
+        elif _len == self.maxsize:
             del(self[0])
 
         self.append(item)

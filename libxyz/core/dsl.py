@@ -81,6 +81,8 @@ class XYZ(object):
            "unhook",
            ]
 
+    EVENT_CONF_UPDATE = u"event:conf_update"
+    
     macros = {}
     
     _instance = None
@@ -136,7 +138,9 @@ class XYZ(object):
 
         if sect not in _conf:
             _conf[sect] = {}
-            
+
+        cls.xyz.hm.dispatch(cls.EVENT_CONF_UPDATE, var, val, sect)
+        
         if var in _conf[sect] and isinstance(_conf[sect][var], dict) and \
         isinstance(val, dict):
             # Update rather than overwrite
@@ -387,16 +391,12 @@ class XYZ(object):
         Configure plugin.
 
         @param plugin: Plugin name
-        @param opts: Either tuple (var, val) or
-                     dict {var1: val1, var2: var2,..}
+        @param opts: dict {var1: val1, var2: var2,..}
         """
 
-        if isinstance(opts, tuple):
-            opts = dict([opts])
-
         if not isinstance(opts, dict):
-            cls.error(_(u"Invalid opts type: %s. Dict instance expected")
-                      % type(opts))
+            error(_(u"Invalid opts type: %s. Dict instance expected")
+                  % type(opts))
             
         return cls.let(plugin, opts, sect="plugins")
     

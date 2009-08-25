@@ -70,3 +70,8 @@ List of events fired by core system:
   Event is fired when plugin is shutting down.
 
   Arguments: Plugin instance
+
+**event:conf_update**
+  Event is fired when configuration parameter is changed via let() function.
+
+  Arguments: Variable, Value, Section

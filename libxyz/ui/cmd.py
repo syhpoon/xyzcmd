@@ -27,7 +27,6 @@ from libxyz.ui import NumEntry
 from libxyz.ui import Keys
 from libxyz.ui.utils import refresh
 from libxyz.core.utils import ustring, bstring, is_func
-from libxyz.core import dsl
 
 class Cmd(lowui.FlowWidget):
     """
@@ -73,8 +72,31 @@ class Cmd(lowui.FlowWidget):
         self._undo = libxyz.core.Queue(_conf[u"undo_depth"])
         self._history = libxyz.core.Queue(_conf[u"history_depth"])
 
+        self.xyz.hm.register("event:conf_update", self._update_conf_hook)
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def _update_conf_hook(self, var, val, sect):
+        """
+        Hook for update conf event
+        """
+
+        # Not ours
+        if sect != "plugins" or var != self._plugin.ns.pfull:
+            return
+
+        mapping = {
+            "prompt": lambda x: self._set_prompt(x),
+            "undo_depth": lambda x: self._undo.set_size(x),
+            "history_depth": lambda x: self._history.set_size(x),
+            }
+        
+        for k, v in val.iteritems():
+            if k in mapping:
+                mapping[k](v)
+        
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     def _init_plugin(self):
         """
         Init virtual plugin
@@ -124,7 +146,6 @@ class Cmd(lowui.FlowWidget):
         _cmd_plugin.export(self.put)
         _cmd_plugin.export(self.escape)
         _cmd_plugin.export(self.replace_aliases)
-        _cmd_plugin.export(self.set_prompt)
 
         self.xyz.pm.register(_cmd_plugin)
 
@@ -796,13 +817,12 @@ class Cmd(lowui.FlowWidget):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def set_prompt(self, new):
+    def _set_prompt(self, new):
         """
         Set command line prompt
         """
         
         self.prompt = Prompt(new, self._attr(u"prompt"))
-        dsl.plugin_conf(":sys:cmd", {"prompt": new})
         self._invalidate()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
