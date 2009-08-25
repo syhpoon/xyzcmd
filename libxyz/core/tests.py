@@ -123,7 +123,7 @@ class TestActionManager(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def tearDown(self):
-        core.dsl.XYZ._instance = None
+        core.dsl.XYZ._clear()
         
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -173,3 +173,61 @@ class TestActionManager(object):
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
+class TestDSL(object):
+    def setUp(self):
+        self.xyz = core.XYZData()
+        self.xyz.conf = {"xyz": {}}
+        self.xyz.conf["xyz"]["plugins"] = {":core:shell": "ENABLE"}
+        self.xyz.km = core.KeyManager(self.xyz, [])
+        self.xyz.pm = core.plugins.PluginManager(self.xyz, [])
+        self.dsl = core.dsl.XYZ(self.xyz)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def tearDown(self):
+        self.dsl._clear()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def setupValues(self):
+        # Local section
+        self.dsl.let("var1", "val1")
+        # Test section
+        self.dsl.let("var2", "val2", sect="test")
+        # Dict value
+        self.dsl.let("dictvar", {1: 2, 3: 4})
+        self.dsl.let("dictvar", {3: 33, 5: 6})
+        
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    @raises(DSLError)
+    def testNotInstantiated(self):
+        self.dsl._clear()
+        self.dsl.let("a", "b")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testLetVal(self):
+        self.setupValues()
+        
+        assert self.xyz.conf["local"]["var1"] == "val1"
+        assert self.xyz.conf["test"]["var2"] == "val2"
+        assert self.xyz.conf["local"]["dictvar"] == {1: 2, 3: 33, 5: 6}
+
+        assert self.dsl.val("var1") == "val1"
+        assert self.dsl.val("var2", "test") == "val2"
+        assert self.dsl.val("dictvar") == {1: 2, 3: 33, 5: 6}
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testUnlet(self):
+        self.setupValues()
+
+        assert self.dsl.val("var1") == "val1"
+        self.dsl.unlet("var1")
+        assert self.dsl.val("var1") is None
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testLoad(self):
+        self.dsl.load(":core:shell:execute")
