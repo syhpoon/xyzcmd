@@ -39,7 +39,7 @@ class Panel(lowui.WidgetWrap):
     resolution = (u"panel", u"widget")
     context = u":sys:panel"
 
-    EVENT_SHUTDOWN = u"shutdown"
+    EVENT_SHUTDOWN = u"event:shutdown"
 
     def __init__(self, xyz):
         self.xyz = xyz

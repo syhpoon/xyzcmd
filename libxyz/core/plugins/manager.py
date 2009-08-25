@@ -48,11 +48,11 @@ class PluginManager(object):
     PLUGIN_CLASS = u"XYZPlugin"
     PLUGIN_FILE = u"main"
     VIRTUAL_NAMESPACE = u"sys"
-    EVENT_INIT = u"plugin_init"
-    EVENT_FROM_LOAD = u"plugin_from_load"
-    EVENT_FROM_LOAD_DATA = u"plugin_from_load_data"
-    EVENT_PREPARE = u"plugin_prepare"
-    EVENT_FIN = u"plugin_fin"
+    EVENT_INIT = u"event:plugin_init"
+    EVENT_FROM_LOAD = u"event:plugin_from_load"
+    EVENT_FROM_LOAD_DATA = u"event:plugin_from_load_data"
+    EVENT_PREPARE = u"event:plugin_prepare"
+    EVENT_FIN = u"event:plugin_fin"
 
     def __init__(self, xyz, dirs):
         """

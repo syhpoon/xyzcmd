@@ -36,37 +36,37 @@ System events
 -------------
 List of events fired by core system:
 
-**startup**
+**event:startup**
   Event is fired after |XYZ| initialization is done.
 
   Arguments: no
 
-**shutdown**
+**event:shutdown**
   Event is fired before |XYZ| shuts down.
 
   Arguments: no
 
-**plugin_init**
+**event:plugin_init**
   Event is fired when plugin is about to be loaded.
 
   Arguments: Namespace instance
 
-**plugin_prepare**
+**event:plugin_prepare**
   Event is fired before calling plugin prepare() method.
 
   Arguments: Plugin instance
 
-**plugin_from_load**
+**event:plugin_from_load**
   Event is fired when a plugin method is about to be loaded.
 
   Arguments: Pluing Namespace instance, and method name.
 
-**plugin_from_load_data**
+**event:plugin_from_load_data**
   Event is fired when a data object is about to be loaded.
 
   Arguments: Plugin Namespace instance, an object name.
 
-**plugin_fin**
+**event:plugin_fin**
   Event is fired when plugin is shutting down.
 
   Arguments: Plugin instance

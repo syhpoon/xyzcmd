@@ -25,8 +25,8 @@ class XYZPlugin(BasePlugin):
         self._ud = UserData()
         self._wfile = "where"
 
-        self.xyz.hm.register("startup", self.load)
-        self.xyz.hm.register("shutdown", self.save)
+        self.xyz.hm.register("event:startup", self.load)
+        self.xyz.hm.register("event:shutdown", self.save)
 
         self.export(self.save)
         self.export(self.load)

@@ -45,7 +45,7 @@ class Launcher(object):
     Startup class
     """
 
-    EVENT_STARTUP = u"startup"
+    EVENT_STARTUP = u"event:startup"
     
     def __init__(self):
         """
