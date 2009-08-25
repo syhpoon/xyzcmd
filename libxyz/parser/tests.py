@@ -31,9 +31,6 @@ __builtin__.__dict__["xyzenc"] = locale.getpreferredencoding()
 def setup():
     gettext.install("xyzcmd")
 
-def teardown():
-    pass
-
 class TestBlock(object):
     def setUp(self):
         self.p = BlockParser()

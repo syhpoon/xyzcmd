@@ -21,14 +21,19 @@ Path format is following:
 """
 
 import re
+import os
 
 from libxyz.vfs import VFSObject
 from libxyz.exceptions import VFSError
 
 class VFSDispatcher(object):
-    def __init__(self):
+    TAG = "#vfs#"
+    
+    def __init__(self, xyz):
+        self.xyz = xyz
         self._handlers = {}
-        self.matchre = re.compile(r"^(?:(\w+):)?(.+?)(?:#vfs#(.+))?\s*$")
+        self.matchre = re.compile(r"^(?:(\w+):)?(.+?)(?:(%s){1}(.*))?\s*$" %
+                                  self.TAG)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -49,21 +54,36 @@ class VFSDispatcher(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def dispatch(self, path, enc):
+    def dispatch(self, path, enc=None):
         """
         Dispatch provided path to corresponding VFS object handler
         """
 
+        enc = enc or xyzenc
+        
         result = self.matchre.search(path)
 
         if result is None:
             raise VFSError(_(u"Invalid path: %s.") % path )
         
-        prefix, ext_path, int_path = result.groups()
+        prefix, ext_path, tag, int_path = result.groups()
+
+        if prefix and not tag and int_path is None:
+            int_path = ""
+            path += self.TAG
 
         if prefix not in self._handlers:
             raise VFSError(_(u"Unable to find VFS handler for prefix %s.") %
                            prefix)
         else:
-            return self._handlers[prefix](path, ext_path, int_path, enc)
+            return self._handlers[prefix](self.xyz, path, ext_path,
+                                          int_path, enc)
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_file_by_path(self, path):
+        f = os.path.split(path)
+        obj = self.dispatch(path)
+        xyzlog.info(f)
+        xyzlog.error(obj.full_path)
+        

@@ -118,6 +118,12 @@ class XYZ(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @classmethod
+    def _clear(cls):
+        cls._instance = None
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
     @instantiated
     def let(cls, var, val, sect=u"local"):
         """
