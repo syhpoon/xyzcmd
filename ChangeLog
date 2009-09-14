@@ -1,5 +1,5 @@
-XYZCommander change log
------------------------
+XYZCommander changelog
+----------------------
 
 [Version 0.0.2]
 ===============
@@ -15,9 +15,6 @@ XYZCommander change log
 
 * [UI] New method :sys:cmd:put().
   Method allows to put arbitrary string to command line.
-
-* [UI] New method :sys:cmd:set_prompt().
-  Method allows to set command line prompt "on the fly".
 
 * [UI] New method :sys:panel:search_cycle().
   Method allows to search objects in current

@@ -56,13 +56,7 @@ class LocalVFSObject(vfsobj.VFSObject):
 
         _dirs.sort()
         _files.sort()
-
-        _parent = LocalVFSFile(os.path.abspath(os.path.dirname(_dir)),
-                               self.enc)
-        _parent.name = u".."
-
-        if not isinstance(_parent.ftype, types.VFSTypeLink):
-            _parent.visual = u"/.."
+        _parent = self.parent()
 
         get_path = lambda x: os.path.abspath(os.path.join(_abstop, x))
         
@@ -72,6 +66,11 @@ class LocalVFSObject(vfsobj.VFSObject):
                 [LocalVFSFile(get_path(x), self.enc) for x in _dirs],
                 [LocalVFSFile(get_path(x), self.enc) for x in _files],
                ]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def to_file(self):
+        return LocalVFSFile(self.path, self.enc)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 

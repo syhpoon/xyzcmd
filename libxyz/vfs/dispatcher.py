@@ -20,8 +20,8 @@ Path format is following:
 [<prefix>]:<path_to_archive>#vfs#<path_inside_archive>
 """
 
-import re
 import os
+import re
 
 from libxyz.vfs import VFSObject
 from libxyz.exceptions import VFSError
@@ -76,14 +76,6 @@ class VFSDispatcher(object):
             raise VFSError(_(u"Unable to find VFS handler for prefix %s.") %
                            prefix)
         else:
-            return self._handlers[prefix](self.xyz, path, ext_path,
+            return self._handlers[prefix](self.xyz, path,
+                                          os.path.normpath(ext_path),
                                           int_path, enc)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def get_file_by_path(self, path):
-        f = os.path.split(path)
-        obj = self.dispatch(path)
-        xyzlog.info(f)
-        xyzlog.error(obj.full_path)
-        

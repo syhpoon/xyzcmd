@@ -15,7 +15,7 @@ action(r'type{dir} or (link_type{dir} and link_exists{?})',
 
 ## Multimedia
 action(r'iname{".*\\\.(avi|wmv|mov|asf|mpg|flv|mp3)$"}',
-       lambda obj: shell("mplayer", obj.path))
+       lambda obj: shell("cvlc", "-f", obj.path))
 
 ## Documents
 # PDF

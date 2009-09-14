@@ -15,6 +15,7 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 from libxyz.core import utils
+from libxyz.vfs import types
 
 import os.path
 
@@ -32,10 +33,45 @@ class VFSObject(object):
         self.int_path = int_path
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    def parent(self):
+        """
+        Return *VFSFile instance for parent directory
+        """
+
+        _path = None
+
+        # Parent is inside archive
+        if self.int_path:
+            if self.int_path == "/":
+                _path = self.path
+            else:
+                _path = os.path.dirname(self.int_path)
+        else:
+            _path = os.path.dirname(self.path)
+
+        p = self.xyz.vfs.dispatch(_path, self.enc).to_file()
+        p.name = u".."
+        
+        if not isinstance(p.ftype, types.VFSTypeLink):
+            p.visual = u"/.."
+
+        return p
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def walk(self):
         """
         Directory tree generator
+        """
+
+        raise NotImplementedError()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def to_file(self):
+        """
+        Convert VFSObject to appropriate *VFSFile entry
         """
 
         raise NotImplementedError()
