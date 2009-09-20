@@ -43,10 +43,18 @@ class TarVFSObject(vfsobj.VFSObject):
         lambda obj: obj.isfifo(): vfstypes.VFSTypeFifo(),
         }
 
+    def __init__(self, *args, **kwargs):
+        self.tarobj = None
+        super(TarVFSObject, self).__init__(*args, **kwargs)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     def _prepare(self):
         self.root = True if self.path == os.sep else False
+        self.tarobj = self.kwargs["tarobj"] if "tarobj" in self.kwargs else \
+                      None
         self.obj = None if self.root else self._init_obj()
-        
+
         self.ftype = self._find_type()
         self.vtype = self.ftype.vtype
 
@@ -67,6 +75,16 @@ class TarVFSObject(vfsobj.VFSObject):
 
     def __str__(self):
         return "<TarVFSFile object: %s>" % self.path
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __del__(self):
+        if self.tarobj is not None:
+            try:
+                self.tarobj.close()
+                self.tarobj = None
+            except Exception:
+                pass
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -140,10 +158,10 @@ class TarVFSObject(vfsobj.VFSObject):
         """
         Directory tree walker
         @return: tuple (parent, dir, dirs, files) where:
-        parent - parent dir *VFSFile instance
-        dir - current dir TarVFSFile instance
-        dirs - list of TarVFSFile objects of directories
-        files - list of TarVFSFile objects of files
+        parent - parent dir *VFSObject instance
+        dir - current dir TarVFSObject instance
+        dirs - list of TarVFSObject objects of directories
+        files - list of TarVFSObject objects of files
         """
 
         tarobj = self._open_archive()
@@ -159,22 +177,23 @@ class TarVFSObject(vfsobj.VFSObject):
         _files.sort(cmp=lambda x, y: cmp(self.get_name(x),
                                          self.get_name(y)))
 
-        tarobj.close()
-
         if self.path == os.sep:
             _parent = self.xyz.vfs.get_parent(self.parent.path, self.enc)
         else:
             _parent = self.xyz.vfs.dispatch(
-                self.get_path(os.path.dirname(self.path)), self.enc)
+                self.get_path(os.path.dirname(self.path)), self.enc,
+                tarobj=self.tarobj)
             _parent.name = u".."
 
         return [
             _parent,
             self,
             [self.xyz.vfs.dispatch(self.get_path(x.name),
-                                   self.enc) for x in _dirs],
+                                   self.enc, tarobj=self.tarobj)
+             for x in _dirs],
             [self.xyz.vfs.dispatch(self.get_path(x.name),
-                                   self.enc) for x in _files],
+                                   self.enc, tarobj=self.tarobj)
+             for x in _files],
             ]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -187,14 +206,15 @@ class TarVFSObject(vfsobj.VFSObject):
             obj = tarobj.getmember(path)
         except KeyError:
             obj = tarobj.getmember(path + os.sep)
-        finally:
-            tarobj.close()
         
         return obj
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _open_archive(self):
+        if self.tarobj is not None:
+            return self.tarobj
+        
         _mode = "r"
 
         if self.driver == "gztar":
@@ -202,5 +222,6 @@ class TarVFSObject(vfsobj.VFSObject):
         elif self.driver == "bz2tar":
             _mode = "r:bz2"
 
-        return tarfile.open(self.parent.path, mode=_mode)
+        self.tarobj = tarfile.open(self.parent.path, mode=_mode)
+        return self.tarobj
                             

@@ -52,7 +52,7 @@ class VFSDispatcher(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def dispatch(self, path, enc=None):
+    def dispatch(self, path, enc=None, **kwargs):
         """
         Dispatch provided path to corresponding VFS object handler
         """
@@ -81,7 +81,8 @@ class VFSDispatcher(object):
                     ext_path,
                     vfs,
                     handler,
-                    enc)
+                    enc,
+                    **kwargs)
 
         return handler
 

@@ -24,7 +24,7 @@ class VFSObject(object):
     """
 
     def __init__(self, xyz, path, full_path, ext_path, driver, parent,
-                 enc=None):
+                 enc=None, **kwargs):
         self.xyz = xyz
         self.enc = enc or xyzenc
         self.path = path
@@ -32,6 +32,7 @@ class VFSObject(object):
         self.ext_path = ext_path
         self.parent = parent
         self.driver = driver
+        self.kwargs = kwargs
 
         # File name
         self.name = os.path.basename(utils.ustring(self.path, self.enc))
