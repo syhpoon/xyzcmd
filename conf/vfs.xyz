@@ -11,3 +11,5 @@ from libxyz.vfs.tar import TarVFSObject
 vfs(None, LocalVFSObject)
 
 vfs("tar", TarVFSObject)
+vfs("gztar", TarVFSObject)
+vfs("bz2tar", TarVFSObject)

@@ -77,6 +77,7 @@ class XYZ(object):
            "prefix",
            "help",
            "vfs",
+           "vfs_path",
            "hook",
            "unhook",
            ]
@@ -443,6 +444,17 @@ class XYZ(object):
         except Exception, e:
             error(_(u"Error setting VFS prefix: %s") % ustring(str(e)))
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def vfs_path(cls, path, driver):
+        """
+        Construct path using provided VFS driver
+        """
+
+        return path + "#vfs-%s#" % driver
+    
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @classmethod

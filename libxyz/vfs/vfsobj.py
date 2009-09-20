@@ -14,79 +14,25 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-from libxyz.core import utils
-from libxyz.vfs import types
-
 import os.path
+
+from libxyz.core import utils
 
 class VFSObject(object):
     """
     Abstract interface for VFS objects
     """
 
-    def __init__(self, xyz, full_path, ext_path, int_path, enc=None):
+    def __init__(self, xyz, path, full_path, ext_path, driver, parent,
+                 enc=None):
         self.xyz = xyz
-        self.name = os.path.basename(utils.ustring(ext_path))
-        self.enc = enc
-        self.full_path = full_path
-        self.path = utils.bstring(ext_path, enc)
-        self.int_path = int_path
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-    def parent(self):
-        """
-        Return *VFSFile instance for parent directory
-        """
-
-        _path = None
-
-        # Parent is inside archive
-        if self.int_path:
-            if self.int_path == "/":
-                _path = self.path
-            else:
-                _path = os.path.dirname(self.int_path)
-        else:
-            _path = os.path.dirname(self.path)
-
-        p = self.xyz.vfs.dispatch(_path, self.enc).to_file()
-        p.name = u".."
-        
-        if not isinstance(p.ftype, types.VFSTypeLink):
-            p.visual = u"/.."
-
-        return p
-    
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def walk(self):
-        """
-        Directory tree generator
-        """
-
-        raise NotImplementedError()
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def to_file(self):
-        """
-        Convert VFSObject to appropriate *VFSFile entry
-        """
-
-        raise NotImplementedError()
-
-#++++++++++++++++++++++++++++++++++++++++++++++++
-
-class VFSFile(object):
-    """
-    A VFS file information interface
-    """
-
-    def __init__(self, path, enc=None, obj=None):
         self.enc = enc or xyzenc
-        self.obj = obj
         self.path = path
+        self.full_path = full_path
+        self.ext_path = ext_path
+        self.parent = parent
+        self.driver = driver
+
         # File name
         self.name = os.path.basename(utils.ustring(self.path, self.enc))
 
@@ -132,6 +78,14 @@ class VFSFile(object):
         # List of significant attributes
         self.attributes = ()
 
+        # Run local constructor
+        self._prepare()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _prepare(self):
+        return None
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def open(self):
@@ -156,3 +110,17 @@ class VFSFile(object):
 
     def flush(self):
         return None
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def walk(self):
+        """
+        Directory tree generator
+        """
+        
+        return None
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __repr__(self):
+        return self.__str__()

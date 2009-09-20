@@ -16,12 +16,10 @@
 
 all = (
     'VFSObject',
-    'VFSFile',
     'Mode',
     'VFSDispatcher',
     )
 
 from libxyz.vfs.vfsobj import VFSObject
-from libxyz.vfs.vfsobj import VFSFile
 from libxyz.vfs.mode import Mode
 from dispatcher import VFSDispatcher

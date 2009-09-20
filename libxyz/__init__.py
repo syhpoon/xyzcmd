@@ -26,8 +26,8 @@ __all__ = (
     'Version',
     )
 
-import parser
 import core
+import parser
 import ui
 
 from launcher import Launcher

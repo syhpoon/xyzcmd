@@ -24,7 +24,7 @@ import libxyz.parser as parser
 from libxyz.exceptions import XYZValueError
 from libxyz.exceptions import LexerError
 from libxyz.exceptions import FSRuleError
-from libxyz.vfs.vfsobj import  VFSFile
+from libxyz.vfs.vfsobj import  VFSObject
 from libxyz.vfs.types import *
 from libxyz.core.utils import ustring
 
@@ -345,13 +345,13 @@ class FSRule(parser.BaseParser):
         """
         Match given object against rule
 
-        @param obj: VFSFile instance
+        @param obj: VFSObject instance
         @return: True if matches and False otherwise
         """
 
-        if not isinstance(obj, VFSFile):
+        if not isinstance(obj, VFSObject):
             raise XYZValueError(_(u"Invalid argument type: %s, "\
-                                  u"VFSFile expected") % type(obj))
+                                  u"VFSObject expected") % type(obj))
 
         return self._match(obj, self._expressions)
 

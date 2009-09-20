@@ -16,9 +16,9 @@
 
 from UserDict import DictMixin
 
-class ParsedData(DictMixin):
+class ODict(DictMixin):
     """
-    Parsed data
+    Ordered dictionary
     Provides dictionary-like access to parsed values
     Input order is kept
     """
@@ -51,7 +51,7 @@ class ParsedData(DictMixin):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __str__(self):
-        return u"<ParsedData object: %s>" % unicode([(k, v)
+        return u"<ODict object: %s>" % unicode([(k, v)
                                                 for k, v in self.iteritems()])
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

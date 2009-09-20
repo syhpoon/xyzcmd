@@ -282,7 +282,7 @@ class Panel(lowui.WidgetWrap):
 
     def get_selected(self, active=True):
         """
-        Get selected VFSFile instance
+        Get selected VFSObject instance
         """
 
         return (self.active if active else self.inactive).get_selected()
@@ -291,7 +291,7 @@ class Panel(lowui.WidgetWrap):
 
     def get_tagged(self, active=True):
         """
-        Return list of tagged VFSFile instances
+        Return list of tagged VFSObject instances
         """
 
         return (self.active if active else self.inactive).get_tagged()
@@ -887,7 +887,7 @@ class Block(lowui.FlowWidget):
 
     def get_selected(self):
         """
-        Get selected VFSFile instance
+        Get selected VFSObject instance
         """
 
         return self.entries[self.selected]
@@ -896,7 +896,7 @@ class Block(lowui.FlowWidget):
 
     def get_tagged(self):
         """
-        Return list of tagged VFSFile instances
+        Return list of tagged VFSObject instances
         """
 
         return [self.entries[x] for x in self._tagged]

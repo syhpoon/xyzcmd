@@ -67,13 +67,4 @@ def format_size(size):
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def split_path(path):
-    def _split(p, d):
-        h, t = os.path.split(p)
-
-        if not t:
-            return d
-        else:
-            d.append(t)
-            return _split(h, d)
-        
-    return tuple(reversed(_split(path, [])))
+    return [x for x in path.split(os.sep) if x]

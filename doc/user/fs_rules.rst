@@ -237,7 +237,7 @@ Next we need a match function wich will be called when match()
 method is invoked on :class:`FSRule` instance.
 
 Match function takes two variables:
-:class:`VFSFile` instance and a transformed value returned
+:class:`VFSObject` instance and a transformed value returned
 by our transformation function above::
 
    match = lambda obj, arg: obj.inode is not None and obj.inode == arg

@@ -10,8 +10,8 @@ action(r'(type{file} and perm{+0111}) or '\
        lambda obj: shell(obj.path))
 
 # Enter directory
-action(r'type{dir} or (link_type{dir} and link_exists{?})',
-       lambda obj: call(":sys:panel:chdir", obj.path))
+action(r'type{dir} or name{"\.\."} or (link_type{dir} and link_exists{?})',
+       lambda obj: call(":sys:panel:chdir", obj.full_path))
 
 ## Multimedia
 action(r'iname{".*\\\.(avi|wmv|mov|asf|mpg|flv|mp3)$"}',
@@ -29,3 +29,11 @@ action(r'type{file} and name{".*\\\.(c|h)$"}',
 # C++
 action(r'type{file} and iname{".*\\\.(cpp|cxx|hpp|hxx)$"}',
        lambda obj: shell(env("EDITOR", "vi"), obj.path))
+
+## VFS
+action('name{"\\\.tar$"}', lambda obj: call(":sys:panel:chdir",
+                                            vfs_path(obj.path, "tar")))
+action('name{"\\\.tar.gz$"}', lambda obj: call(":sys:panel:chdir",
+                                               vfs_path(obj.path, "gztar")))
+action('name{"\\\.tar.bz2$"}', lambda obj: call(":sys:panel:chdir",
+                                                vfs_path(obj.path, "bz2tar")))

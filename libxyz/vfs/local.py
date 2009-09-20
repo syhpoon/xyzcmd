@@ -34,81 +34,8 @@ class LocalVFSObject(vfsobj.VFSObject):
     Local VFS object is used to access local filesystem
     """
 
-    def walk(self, top=None):
-        """
-        Directory tree walker
-        @param top: Top directory or self.path unless provided
-        @return: tuple (parent, dir, dirs, files) where:
-                 parent - parent dir LocalVFSFile instance
-                 dir - current LocalVFSObject instance
-                 dirs - list of LocalVFSFile objects of directories
-                 files - list of LocalVFSFile objects of files
-        """
-
-        top = top or self.path
-
-        try:
-            _dir, _dirs, _files = os.walk(top).next()
-        except StopIteration:
-            raise XYZRuntimeError(_(u"Unable to walk on %s") % ustring(top))
-
-        _abstop = os.path.abspath(top)
-
-        _dirs.sort()
-        _files.sort()
-        _parent = self.parent()
-
-        get_path = lambda x: os.path.abspath(os.path.join(_abstop, x))
-        
-        return [
-                _parent,
-                self,
-                [LocalVFSFile(get_path(x), self.enc) for x in _dirs],
-                [LocalVFSFile(get_path(x), self.enc) for x in _files],
-               ]
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def to_file(self):
-        return LocalVFSFile(self.path, self.enc)
-
-#++++++++++++++++++++++++++++++++++++++++++++++++
-
-class LocalVFSFile(vfsobj.VFSFile):
-    """
-    Local file object
-    """
-
-    def __init__(self, path, enc):
-        def _uid(uid):
-            try:
-                _name = pwd.getpwuid(uid).pw_name
-            except (KeyError, TypeError):
-                _name = None
-                
-            if _name is not None:
-                return u"%s (%s)" % (ustring(uid), _name)
-            else:
-                return ustring(uid)
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        def _gid(gid):
-            try:
-                _name = grp.getgrgid(gid).gr_name
-            except (KeyError, TypeError):
-                _name = None
-
-            if _name is not None:
-                return u"%s (%s)" % (ustring(gid), _name)
-            else:
-                return ustring(gid)
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        super(LocalVFSFile, self).__init__(path, enc)
-
-        self.ftype = self._find_type(path)
+    def _prepare(self):
+        self.ftype = self._find_type(self.path)
         self.vtype = self.ftype.vtype
 
         self._set_attributes()
@@ -122,8 +49,8 @@ class LocalVFSFile(vfsobj.VFSFile):
             (_(u"Modification time"), _time(self.mtime)),
             (_(u"Change time"), _time(self.ctime)),
             (_(u"Size in bytes"), ustring(self.size)),
-            (_(u"Owner"), _uid(self.uid)),
-            (_(u"Group"), _gid(self.gid)),
+            (_(u"Owner"), self._uid(self.uid)),
+            (_(u"Group"), self._gid(self.gid)),
             (_(u"Access mode"), ustring(self.mode)),
             (_(u"Inode"), ustring(self.inode)),
             (_(u"Type-specific data"), self.data),
@@ -132,13 +59,34 @@ class LocalVFSFile(vfsobj.VFSFile):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __str__(self):
-        return "<LocalVFSFile object: %s>" % self.path
+        return "<LocalVFSObject object: %s>" % self.path
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def __repr__(self):
-        return self.__str__()
+    def _uid(self, uid):
+        try:
+            _name = pwd.getpwuid(uid).pw_name
+        except (KeyError, TypeError):
+            _name = None
 
+        if _name is not None:
+            return u"%s (%s)" % (ustring(uid), _name)
+        else:
+            return ustring(uid)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _gid(self, gid):
+        try:
+            _name = grp.getgrgid(gid).gr_name
+        except (KeyError, TypeError):
+            _name = None
+
+        if _name is not None:
+            return u"%s (%s)" % (ustring(gid), _name)
+        else:
+            return ustring(gid)
+        
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _find_type(self, path):
@@ -172,14 +120,13 @@ class LocalVFSFile(vfsobj.VFSFile):
                 self.vtype = u"!"
             else:
                 try:
-                    self.data = LocalVFSFile(_fullpath, self.enc)
+                    self.data = self.xyz.vfs.dispatch(_fullpath, self.enc)
                 except VFSError, e:
                     xyzlog.error(_(u"Error creating VFS object: %s") %
                                  ustring(str(e)))
                 else:
                     if isinstance(self.data.ftype, types.VFSTypeDir):
                         self.vtype = u"~"
-
             self.info = u""
             self.visual = u"-> %s" % ustring(_realpath, self.enc)
 
@@ -218,3 +165,34 @@ class LocalVFSFile(vfsobj.VFSFile):
             if _mode & 0111:
                 self.vtype = u"*"
                 self.visual = u"*%s" % self.name
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def walk(self):
+        """
+        Directory tree walker
+        @return: tuple (parent, dir, dirs, files) where:
+                 parent - parent dir LocalVFSObject instance
+                 dir - current LocalVFSObject instance
+                 dirs - list of LocalVFSObject objects of directories
+                 files - list of LocalVFSObject objects of files
+        """
+
+        try:
+            _dir, _dirs, _files = os.walk(self.path).next()
+        except StopIteration:
+            raise XYZRuntimeError(_(u"Unable to walk on %s") %
+                                  ustring(self.path))
+
+        _dirs.sort()
+        _files.sort()
+        _parent = self.xyz.vfs.get_parent(_dir, self.enc)
+
+        get_path = lambda x: os.path.abspath(os.path.join(self.path, x))
+        
+        return [
+            _parent,
+            self,
+            [self.xyz.vfs.dispatch(get_path(x), self.enc) for x in _dirs],
+            [self.xyz.vfs.dispatch(get_path(x), self.enc) for x in _files],
+            ]

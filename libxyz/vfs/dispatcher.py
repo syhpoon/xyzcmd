@@ -27,13 +27,11 @@ from libxyz.vfs import VFSObject
 from libxyz.exceptions import VFSError
 
 class VFSDispatcher(object):
-    TAG = "#vfs#"
-    
     def __init__(self, xyz):
         self.xyz = xyz
         self._handlers = {}
-        self.matchre = re.compile(r"^(?:(\w+):)?(.+?)(?:(%s){1}(.*))?\s*$" %
-                                  self.TAG)
+        self.vfsre = re.compile(r'(#vfs-\w+#)')
+        self.vfsre2 = re.compile(r'^#vfs-(\w+)#$')
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -60,22 +58,80 @@ class VFSDispatcher(object):
         """
 
         enc = enc or xyzenc
+
+        data = self._parse_path(path)
+
+        if not data:
+            raise VFSError(_(u"Invalid path: %s.") % path)
+
+        handler = None
+
+        for p, vfs in data:
+            if vfs not in self._handlers:
+                raise VFSError(
+                    _(u"Unable to find VFS handler for %s.") % vfs)
+            else:
+                full_path = self.get_full_path(p, vfs, handler)
+                ext_path = self.get_ext_path(handler, vfs)
+
+                handler = self._handlers[vfs](
+                    self.xyz,
+                    os.path.abspath(os.path.normpath(p)),
+                    full_path,
+                    ext_path,
+                    vfs,
+                    handler,
+                    enc)
+
+        return handler
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _parse_path(self, path):
+        files = []
+
+        driver = None
+
+        for entry in re.split(self.vfsre, path):
+            entry = os.sep if not entry else entry
+            
+            vfs = self.vfsre2.search(entry)
+
+            if driver is not None:
+                files.append((entry, driver))
+                driver = None
+            elif vfs:
+                driver = vfs.group(1)
+            else:
+                files.append((entry, None))
+
+        return files
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_parent(self, path, enc):
+        _parent = self.xyz.vfs.dispatch(
+            os.path.abspath(os.path.dirname(path)), enc)
+        _parent.name = u".."
+
+        return _parent
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_full_path(self, path, vfs, parent):
+        """
+        Return full path
+        """
         
-        result = self.matchre.search(path)
+        return (parent.full_path if parent else "") + \
+               ("#vfs-%s#" % vfs if vfs else "") + path
 
-        if result is None:
-            raise VFSError(_(u"Invalid path: %s.") % path )
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_ext_path(self, parent, vfs):
+        """
+        Return external path
+        """
         
-        prefix, ext_path, tag, int_path = result.groups()
-
-        if prefix and not tag and int_path is None:
-            int_path = ""
-            path += self.TAG
-
-        if prefix not in self._handlers:
-            raise VFSError(_(u"Unable to find VFS handler for prefix %s.") %
-                           prefix)
-        else:
-            return self._handlers[prefix](self.xyz, path,
-                                          os.path.normpath(ext_path),
-                                          int_path, enc)
+        return (parent.full_path if parent else "") + \
+               ("#vfs-%s#" % vfs if vfs else "")

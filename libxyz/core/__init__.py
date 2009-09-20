@@ -15,6 +15,7 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 __all__ = (
+    'ODict',
     'FSRule',
     'Skin',
     'XYZData',
@@ -27,6 +28,7 @@ __all__ = (
     'utils',
     )
 
+from odict import ODict
 from fsrule import FSRule
 from skin import Skin
 from xyzdata import XYZData
