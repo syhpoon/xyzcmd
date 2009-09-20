@@ -25,7 +25,7 @@ import libxyz.core as core
 
 from nose.tools import raises
 from libxyz.exceptions import *
-from libxyz.vfs.vfsobj import VFSFile
+from libxyz.vfs import VFSDispatcher
 
 # Global data
 xyz = None
@@ -119,6 +119,7 @@ class TestActionManager(object):
         self.xyz = core.XYZData()
         self.dsl = core.dsl.XYZ(self.xyz)
         self.am = core.ActionManager(xyz, [])
+        self.xyz.vfs = VFSDispatcher(self.xyz)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -156,10 +157,10 @@ class TestActionManager(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def testMatch(self):
-        vfs_size = VFSFile("/tmp/test_size")
+        vfs_size = self.xyz.vfs.dispatch("/tmp/test_size")
         vfs_size.size = 100
-        vfs_name = VFSFile("/tmp/test_name")
-        vfs_owner = VFSFile("/tmp/test_owner")
+        vfs_name = self.xyz.vfs.dispatch("/tmp/test_name")
+        vfs_owner = self.xyz.vfs.dispatch("/tmp/test_owner")
         vfs_owner.uid = 500
         vfs_owner.gid = 501
 

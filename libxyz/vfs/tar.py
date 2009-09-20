@@ -74,7 +74,7 @@ class TarVFSObject(vfsobj.VFSObject):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __str__(self):
-        return "<TarVFSFile object: %s>" % self.path
+        return "<TarVFSObject object: %s>" % self.path
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
