@@ -10,8 +10,9 @@ action(r'(type{file} and perm{+0111}) or '\
        lambda obj: shell(obj.path))
 
 # Enter directory
-action(r'type{dir} or name{"\.\."} or (link_type{dir} and link_exists{?})',
-       lambda obj: call(":sys:panel:chdir", obj.full_path))
+action(
+    r'type{dir} or name{"\.\."} or (link_type{dir} and link_exists{?})',
+    lambda obj: call(":sys:panel:chdir", obj.full_path))
 
 ## Multimedia
 action(r'iname{".*\\\.(avi|wmv|mov|asf|mpg|flv|mp3)$"}',
