@@ -1075,7 +1075,7 @@ class Block(lowui.FlowWidget):
             _old_vfs = None
 
             if self.entries:
-                _parent = os.path.normpath(self.entries[0].path)
+                _parent = os.path.normpath(self.entries[0].full_path)
                 _old = self._dir.name
                 _old_vfs = self._vfsobj
 
