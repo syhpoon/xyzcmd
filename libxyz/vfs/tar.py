@@ -131,7 +131,6 @@ class TarVFSObject(vfsobj.VFSObject):
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
         self.mtime = self.either(self.parent.mtime, lambda: self.obj.mtime)
         self.size = self.either(self.parent.size, lambda: self.obj.size)
         self.uid = self.either(self.parent.uid, lambda: self.obj.uid)

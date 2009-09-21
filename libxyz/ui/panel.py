@@ -396,7 +396,8 @@ class Panel(lowui.WidgetWrap):
         Change directory
         """
 
-        return (self.active if active else self.inactive).chdir(path)
+        return (self.active if active else self.inactive).chdir(path,
+                                                                active=active)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1060,11 +1061,12 @@ class Block(lowui.FlowWidget):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @refresh
-    def chdir(self, path, reload=True):
+    def chdir(self, path, reload=True, active=True):
         """
         Change directory
         If reload is not True only execute os.chdir, without reloading
         directory contents
+        If active is False do not call os.chdir
         """
 
         if reload:
@@ -1107,7 +1109,7 @@ class Block(lowui.FlowWidget):
         self.cwd = path
 
         # Call chdir only for local objects
-        if isinstance(self._vfsobj, LocalVFSObject):
+        if isinstance(self._vfsobj, LocalVFSObject) and active:
             os.chdir(path)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
