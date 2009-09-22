@@ -27,6 +27,7 @@ from libxyz.ui import NumEntry
 from libxyz.ui import Keys
 from libxyz.ui.utils import refresh
 from libxyz.core.utils import ustring, bstring, is_func
+from libxyz.core.dsl import XYZ
 
 class Cmd(lowui.FlowWidget):
     """
@@ -554,13 +555,18 @@ class Cmd(lowui.FlowWidget):
         Execute cmd contents
         """
 
+        # We're inside non-local VFS, execution is not allowed
+        
+        if XYZ.call(":sys:panel:vfs_driver"):
+            xyzlog.error(
+                _(u"Unable to execute commands on non-local filesystems"))
+            return
+        
         if not self._data:
             return
 
         self._save_history()
-
         _data = self.replace_aliases("".join(self._data))
-
         _cmd, _rest = split_cmd(_data)
 
         # Do not run shell, execute internal command

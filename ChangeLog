@@ -4,6 +4,12 @@ XYZCommander changelog
 [Version 0.0.2]
 ===============
 
+* [VFS] Implemented Tar VFS module. Default actions set to use it on
+  *.tar, *.tar.gz and *.tar.bz2 named files.
+
+* [UI] New method :sys:panel:vfs_driver().
+  Method returns vfs driver used by current object
+
 * [PLUGIN] New plugin :misc:where.
   Plugin provides an ability to load/restore path locations on both panels
 

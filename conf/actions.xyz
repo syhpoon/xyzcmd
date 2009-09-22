@@ -11,7 +11,7 @@ action(r'(type{file} and perm{+0111}) or '\
 
 # Enter directory
 action(
-    r'type{dir} or name{"\.\."} or (link_type{dir} and link_exists{?})',
+    r'type{dir} or name{"\\.\\."} or (link_type{dir} and link_exists{?})',
     lambda obj: call(":sys:panel:chdir", obj.full_path))
 
 ## Multimedia

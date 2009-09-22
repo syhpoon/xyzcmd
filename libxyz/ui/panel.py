@@ -177,6 +177,7 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.show_tagged)
         _panel_plugin.export(self.select)
         _panel_plugin.export(self.cwd)
+        _panel_plugin.export(self.vfs_driver)
 
         _panel_plugin.VERSION = u"0.1"
         _panel_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
@@ -454,6 +455,15 @@ class Panel(lowui.WidgetWrap):
 
         return (self.active if active else self.inactive).cwd
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    def vfs_driver(self, active=True):
+        """
+        Return vfs driver used by object. None stands for LocalVFS
+        """
+
+        return (self.active if active else self.inactive).vfs_driver
+
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 class Block(lowui.FlowWidget):
@@ -505,6 +515,7 @@ class Block(lowui.FlowWidget):
         self._re_raw = r".*"
         self._rule_raw = ""
         self._enc = enc
+        self.vfs_driver = None
 
         self.chdir(path)
 
@@ -556,6 +567,7 @@ class Block(lowui.FlowWidget):
         self._len = len(self.entries)
         self._palettes = self._process_skin_rulesets()
         self._vfsobj = vfsobj
+        self.vfs_driver = vfsobj.driver
 
         self._force_reload = True
 

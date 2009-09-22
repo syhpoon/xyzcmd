@@ -78,16 +78,6 @@ class TarVFSObject(vfsobj.VFSObject):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def __del__(self):
-        if self.tarobj is not None:
-            try:
-                self.tarobj.close()
-                self.tarobj = None
-            except Exception:
-                pass
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     def in_dir(self, d, e):
         """
         Filter only those archive entries which exist in the same
@@ -131,6 +121,7 @@ class TarVFSObject(vfsobj.VFSObject):
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+        self.name = self.either(self.parent.name, lambda: self.name)
         self.mtime = self.either(self.parent.mtime, lambda: self.obj.mtime)
         self.size = self.either(self.parent.size, lambda: self.obj.size)
         self.uid = self.either(self.parent.uid, lambda: self.obj.uid)
