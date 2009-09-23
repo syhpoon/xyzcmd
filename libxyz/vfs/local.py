@@ -23,6 +23,7 @@ import grp
 
 from libxyz.exceptions import VFSError
 from libxyz.exceptions import XYZRuntimeError
+from libxyz.exceptions import XYZValueError
 from libxyz.vfs import vfsobj
 from libxyz.vfs import types
 from libxyz.vfs import util
@@ -196,3 +197,31 @@ class LocalVFSObject(vfsobj.VFSObject):
             [self.xyz.vfs.dispatch(get_path(x), self.enc) for x in _dirs],
             [self.xyz.vfs.dispatch(get_path(x), self.enc) for x in _files],
             ]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def remove(self):
+        """
+        Tell object to remove itself
+        """
+
+        pass
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def mkdir(self, newdir):
+        """
+        Create new dir inside object (only valid for directory object types)
+        """
+
+        if not isinstance(self.ftype, types.VFSTypeDir):
+            raise XYZValueError(
+                _(u"Unable to create directory inside %s object type") %
+                self.ftype)
+        else:
+            try:
+                os.mkdir(os.path.join(self.path, newdir))
+            except Exception, e:
+                raise XYZRuntimeError(_(u"Unable to create directory: %s") %
+                                      ustring(str(e)))
+                        

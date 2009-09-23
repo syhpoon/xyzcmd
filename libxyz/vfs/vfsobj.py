@@ -85,7 +85,7 @@ class VFSObject(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _prepare(self):
-        return None
+        raise NotImplementedError()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -94,7 +94,25 @@ class VFSObject(object):
         Copy file to specified location
         """
 
-        return None
+        raise NotImplementedError()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def remove(self):
+        """
+        Tell object to remove itself
+        """
+
+        raise NotImplementedError()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def mkdir(self, newdir):
+        """
+        Create new dir inside object (only valid for directory object types)
+        """
+
+        raise NotImplementedError()
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -102,8 +120,8 @@ class VFSObject(object):
         """
         Directory tree generator
         """
-        
-        return None
+
+        raise NotImplementedError()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

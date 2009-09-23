@@ -4,6 +4,9 @@ XYZCommander changelog
 [Version 0.0.2]
 ===============
 
+* [UI] New method :sys:panel:get_current().
+  Method returns VFSObject instance of current directory.
+
 * [VFS] Implemented Tar VFS module. Default actions set to use it on
   *.tar, *.tar.gz and *.tar.bz2 named files.
 

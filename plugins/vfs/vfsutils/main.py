@@ -59,7 +59,7 @@ class XYZPlugin(BasePlugin):
             return
 
         try:
-            os.mkdir(_dir)
+            self._panel.get_current().mkdir(_dir)
         except Exception, e:
             xyzlog.error(_(u"Unable to create directory: %s") %
                          ustring(str(e)))
