@@ -59,7 +59,7 @@ List of events fired by core system:
 **event:plugin_from_load**
   Event is fired when a plugin method is about to be loaded.
 
-  Arguments: Pluing Namespace instance, and method name.
+  Arguments: Plugin Namespace instance, and method name.
 
 **event:plugin_from_load_data**
   Event is fired when a data object is about to be loaded.
