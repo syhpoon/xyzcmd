@@ -17,6 +17,7 @@
 import os.path
 
 from libxyz.core import utils
+from libxyz.vfs import types
 
 class VFSObject(object):
     """
@@ -82,10 +83,70 @@ class VFSObject(object):
         # Run local constructor
         self._prepare()
 
+        __ni_msg = _(u"Feature not implemented")
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _prepare(self):
-        raise NotImplementedError()
+    def is_file(self):
+        """
+        Return True if instance is representing regular file
+        """
+        
+        return isinstance(self.ftype, types.VFSTypeFile)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    def is_dir(self):
+        """
+        Return True if instance is representing directory
+        """
+
+        return isinstance(self.ftype, types.VFSTypeDir)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def is_link(self):
+        """
+        Return True if instance is representing soft link
+        """
+
+        return isinstance(self.ftype, types.VFSTypeLink)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def is_char(self):
+        """
+        Return True if instance is representing soft char device
+        """
+
+        return isinstance(self.ftype, types.VFSTypeChar)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def is_block(self):
+        """
+        Return True if instance is representing block device
+        """
+
+        return isinstance(self.ftype, types.VFSTypeBlock)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    def is_fifo(self):
+        """
+        Return True if instance is representing FIFO
+        """
+
+        return isinstance(self.ftype, types.VFSTypeFifo)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def is_socket(self):
+        """
+        Return True if instance is representing socket
+        """
+
+        return isinstance(self.ftype, types.VFSTypeSocket)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -94,16 +155,7 @@ class VFSObject(object):
         Copy file to specified location
         """
 
-        raise NotImplementedError()
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def remove(self):
-        """
-        Tell object to remove itself
-        """
-
-        raise NotImplementedError()
+        raise NotImplementedError(self.__ni_msg)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -112,7 +164,16 @@ class VFSObject(object):
         Create new dir inside object (only valid for directory object types)
         """
 
-        raise NotImplementedError()
+        raise NotImplementedError(self.__ni_msg)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def remove(self, recursive=True):
+        """
+        [Recursively] remove object
+        """
+
+        raise NotImplementedError(self.__ni_msg)
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -121,9 +182,15 @@ class VFSObject(object):
         Directory tree generator
         """
 
-        raise NotImplementedError()
+        raise NotImplementedError(self.__ni_msg)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __repr__(self):
         return self.__str__()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    def _prepare(self):
+        raise NotImplementedError(self.__ni_msg)
+

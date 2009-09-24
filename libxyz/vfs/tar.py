@@ -49,6 +49,50 @@ class TarVFSObject(vfsobj.VFSObject):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
+    def walk(self):
+        """
+        Directory tree walker
+        @return: tuple (parent, dir, dirs, files) where:
+        parent - parent dir *VFSObject instance
+        dir - current dir TarVFSObject instance
+        dirs - list of TarVFSObject objects of directories
+        files - list of TarVFSObject objects of files
+        """
+
+        tarobj = self._open_archive()
+        entries = tarobj.getmembers()
+
+        _dirs = [x for x in entries if x.isdir() and
+                 self.in_dir(self.path, x.name)]
+        _files = [x for x in entries if not x.isdir() and
+                  self.in_dir(self.path, x.name)]
+
+        _dirs.sort(cmp=lambda x, y: cmp(self.get_name(x),
+                                        self.get_name(y)))
+        _files.sort(cmp=lambda x, y: cmp(self.get_name(x),
+                                         self.get_name(y)))
+
+        if self.path == os.sep:
+            _parent = self.xyz.vfs.get_parent(self.parent.path, self.enc)
+        else:
+            _parent = self.xyz.vfs.dispatch(
+                self.get_path(os.path.dirname(self.path)), self.enc,
+                tarobj=self.tarobj)
+            _parent.name = u".."
+
+        return [
+            _parent,
+            self,
+            [self.xyz.vfs.dispatch(self.get_path(x.name),
+                                   self.enc, tarobj=self.tarobj)
+             for x in _dirs],
+            [self.xyz.vfs.dispatch(self.get_path(x.name),
+                                   self.enc, tarobj=self.tarobj)
+             for x in _files],
+            ]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     def _prepare(self):
         self.root = True if self.path == os.sep else False
         self.tarobj = self.kwargs["tarobj"] if "tarobj" in self.kwargs else \
@@ -132,59 +176,15 @@ class TarVFSObject(vfsobj.VFSObject):
                 
         self.info = u"%s %s" % (util.format_size(self.size), self.mode)
 
-        if isinstance(self.ftype, vfstypes.VFSTypeLink):
+        if self.is_link():
             set_link_attributes()
-        elif isinstance(self.ftype, vfstypes.VFSTypeFile):
+        elif self.is_file():
             _mode = stat.S_IMODE(self.mode.raw)
 
             # Executable
             if _mode & 0111:
                 self.vtype = u"*"
                 self.visual = u"*%s" % self.name
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def walk(self):
-        """
-        Directory tree walker
-        @return: tuple (parent, dir, dirs, files) where:
-        parent - parent dir *VFSObject instance
-        dir - current dir TarVFSObject instance
-        dirs - list of TarVFSObject objects of directories
-        files - list of TarVFSObject objects of files
-        """
-
-        tarobj = self._open_archive()
-        entries = tarobj.getmembers()
-
-        _dirs = [x for x in entries if x.isdir() and
-                 self.in_dir(self.path, x.name)]
-        _files = [x for x in entries if not x.isdir() and
-                  self.in_dir(self.path, x.name)]
-
-        _dirs.sort(cmp=lambda x, y: cmp(self.get_name(x),
-                                        self.get_name(y)))
-        _files.sort(cmp=lambda x, y: cmp(self.get_name(x),
-                                         self.get_name(y)))
-
-        if self.path == os.sep:
-            _parent = self.xyz.vfs.get_parent(self.parent.path, self.enc)
-        else:
-            _parent = self.xyz.vfs.dispatch(
-                self.get_path(os.path.dirname(self.path)), self.enc,
-                tarobj=self.tarobj)
-            _parent.name = u".."
-
-        return [
-            _parent,
-            self,
-            [self.xyz.vfs.dispatch(self.get_path(x.name),
-                                   self.enc, tarobj=self.tarobj)
-             for x in _dirs],
-            [self.xyz.vfs.dispatch(self.get_path(x.name),
-                                   self.enc, tarobj=self.tarobj)
-             for x in _files],
-            ]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

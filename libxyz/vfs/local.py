@@ -15,11 +15,11 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import os.path
 import stat
 import time
 import pwd
 import grp
+import shutil
 
 from libxyz.exceptions import VFSError
 from libxyz.exceptions import XYZRuntimeError
@@ -35,6 +35,69 @@ class LocalVFSObject(vfsobj.VFSObject):
     Local VFS object is used to access local filesystem
     """
 
+    ### Public API
+    
+    def walk(self):
+        """
+        Directory tree walker
+        @return: tuple (parent, dir, dirs, files) where:
+                 parent - parent dir LocalVFSObject instance
+                 dir - current LocalVFSObject instance
+                 dirs - list of LocalVFSObject objects of directories
+                 files - list of LocalVFSObject objects of files
+        """
+
+        try:
+            _dir, _dirs, _files = os.walk(self.path).next()
+        except StopIteration:
+            raise XYZRuntimeError(_(u"Unable to walk on %s") %
+                                  ustring(self.path))
+
+        _dirs.sort()
+        _files.sort()
+        _parent = self.xyz.vfs.get_parent(_dir, self.enc)
+
+        get_path = lambda x: os.path.abspath(os.path.join(self.path, x))
+        
+        return [
+            _parent,
+            self,
+            [self.xyz.vfs.dispatch(get_path(x), self.enc) for x in _dirs],
+            [self.xyz.vfs.dispatch(get_path(x), self.enc) for x in _files],
+            ]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def remove(self, recursive=True):
+        """
+        [Recursively] remove object
+        """
+
+        if self.is_dir():
+            if recursive:
+                shutil.rmtree(self.path)
+            else:
+                os.rmdir(self.path)
+        else:
+            os.unlink(self.path)
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def mkdir(self, newdir):
+        """
+        Create new dir inside object (only valid for directory object types)
+        """
+
+        if not self.is_dir():
+            raise XYZValueError(
+                _(u"Unable to create directory inside %s object type") %
+                self.ftype)
+        else:
+            os.mkdir(os.path.join(self.path, newdir))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ## Internal stuff
+    
     def _prepare(self):
         self.ftype = self._find_type(self.path)
         self.vtype = self.ftype.vtype
@@ -155,11 +218,11 @@ class LocalVFSObject(vfsobj.VFSObject):
         self.visual = u"%s%s" % (self.vtype, self.name)
         self.info = u"%s %s" % (util.format_size(self.size), self.mode)
 
-        if isinstance(self.ftype, types.VFSTypeLink):
+        if self.is_link():
             set_link_attributes()
-        elif isinstance(self.ftype, types.VFSTypeChar):
+        elif self.is_char():
             set_char_attributes()
-        elif isinstance(self.ftype, types.VFSTypeFile):
+        elif self.is_file():
             _mode = stat.S_IMODE(self.mode.raw)
 
             # Executable
@@ -167,61 +230,3 @@ class LocalVFSObject(vfsobj.VFSObject):
                 self.vtype = u"*"
                 self.visual = u"*%s" % self.name
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def walk(self):
-        """
-        Directory tree walker
-        @return: tuple (parent, dir, dirs, files) where:
-                 parent - parent dir LocalVFSObject instance
-                 dir - current LocalVFSObject instance
-                 dirs - list of LocalVFSObject objects of directories
-                 files - list of LocalVFSObject objects of files
-        """
-
-        try:
-            _dir, _dirs, _files = os.walk(self.path).next()
-        except StopIteration:
-            raise XYZRuntimeError(_(u"Unable to walk on %s") %
-                                  ustring(self.path))
-
-        _dirs.sort()
-        _files.sort()
-        _parent = self.xyz.vfs.get_parent(_dir, self.enc)
-
-        get_path = lambda x: os.path.abspath(os.path.join(self.path, x))
-        
-        return [
-            _parent,
-            self,
-            [self.xyz.vfs.dispatch(get_path(x), self.enc) for x in _dirs],
-            [self.xyz.vfs.dispatch(get_path(x), self.enc) for x in _files],
-            ]
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def remove(self):
-        """
-        Tell object to remove itself
-        """
-
-        pass
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def mkdir(self, newdir):
-        """
-        Create new dir inside object (only valid for directory object types)
-        """
-
-        if not isinstance(self.ftype, types.VFSTypeDir):
-            raise XYZValueError(
-                _(u"Unable to create directory inside %s object type") %
-                self.ftype)
-        else:
-            try:
-                os.mkdir(os.path.join(self.path, newdir))
-            except Exception, e:
-                raise XYZRuntimeError(_(u"Unable to create directory: %s") %
-                                      ustring(str(e)))
-                        
