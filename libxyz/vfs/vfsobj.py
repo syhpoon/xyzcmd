@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-import os.path
+import os
 
 from libxyz.core import utils
 from libxyz.vfs import types
@@ -83,7 +83,7 @@ class VFSObject(object):
         # Run local constructor
         self._prepare()
 
-        __ni_msg = _(u"Feature not implemented")
+        self.__ni_msg = _(u"Feature not implemented")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -102,6 +102,20 @@ class VFSObject(object):
         """
 
         return isinstance(self.ftype, types.VFSTypeDir)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def is_dir_empty(self):
+        """
+        Return True if instance is representing directory and it is empty
+        """
+
+        if not self.is_dir():
+            return False
+
+        _, _, dirs, files = self.walk()
+
+        return len(dirs) == 0 and len(files) == 0
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

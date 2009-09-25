@@ -4,6 +4,10 @@ XYZCommander changelog
 [Version 0.0.2]
 ===============
 
+* [PLUGIN] New method :vfs:vfsutils:remove()
+  Method show a dialog for [recursively] deleting VFSObjects.
+  Bound to F8.
+
 * [UI] New method :sys:panel:get_current().
   Method returns VFSObject instance of current directory.
 

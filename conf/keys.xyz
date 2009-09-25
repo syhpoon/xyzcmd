@@ -99,6 +99,7 @@ bind(lambda: call(":ui:bookmarks:add_bookmark", macro("ACT_CWD")),
 
 bind(":vfs:fileinfo:fileinfo", kbd("F2"))
 bind(":vfs:vfsutils:mkdir", kbd("F7"))
+bind(":vfs:vfsutils:remove", kbd("F8"))
 
 bind(":misc:about:about", kbd("META-o"))
 

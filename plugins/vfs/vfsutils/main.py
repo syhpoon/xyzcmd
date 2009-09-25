@@ -29,6 +29,7 @@ class XYZPlugin(BasePlugin):
         self._panel = None
 
         self.export(self.mkdir)
+        self.export(self.remove)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -71,7 +72,42 @@ class XYZPlugin(BasePlugin):
 
     def remove(self):
         """
-        Remove VFS object (if possible)
+        Remove VFS object
         """
+        
+        self._load_panel()
 
-        pass
+        selected = self._panel.get_selected()
+
+        # TODO: force setting
+        _deletep = uilib.YesNoBox(self.xyz, self.xyz.top,
+                                  _(u"Really remove %s (%s)?") % (
+                                      ustring(selected.name),
+                                      ustring(str(selected.ftype))),
+                                  title=_(u"Remove object"))
+
+        if not _deletep.show():
+            return
+
+        if selected.is_dir() and not selected.is_dir_empty():
+            _rec = uilib.YesNoBox(
+                self.xyz, self.xyz.top,
+                _(u"Directory is not empty\nRemove it recursively?"),
+                title=_(u"Remove %s") % ustring(selected.full_path))
+
+            if not _rec.show():
+                return
+
+        uilib.MessageBox(self.xyz, self.xyz.top, _(u"Removing objects"),
+                         _(u"Removing")).show(wait=False)
+
+        try:
+            selected.remove()
+        except Exception, e:
+            uilib.ErrorBox(self.xyz, self.xyz.top,
+                           _(u"Unable to remove %s\n%s") %
+                           (ustring(selected.full_path), ustring(str(e))),
+                           _(u"Error")).show()
+            xyzlog.error(_(u"Error removing object: %s") % ustring(str(e)))
+        finally:
+            self._panel.reload()

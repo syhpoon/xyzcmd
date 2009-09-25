@@ -70,10 +70,11 @@ class Box(lowui.WidgetWrap):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def show(self, dim=None):
+    def show(self, dim=None, wait=True):
         """
-        Show box until key pressed
+        Show box
         @param dim: Dimension
+        @param wait: If True wait for key pressed
         """
 
         if dim is None:
@@ -83,11 +84,12 @@ class Box(lowui.WidgetWrap):
 
         _input = None
 
-        while True:
-            _input = self.xyz.input.get()
+        if wait:
+            while True:
+                _input = self.xyz.input.get()
 
-            if _input:
-                break
+                if _input:
+                    break
 
         return _input
 

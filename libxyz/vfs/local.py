@@ -77,8 +77,10 @@ class LocalVFSObject(vfsobj.VFSObject):
             if recursive:
                 shutil.rmtree(self.path)
             else:
+                self.xyz.hm.dispatch(self.EVENT_REMOVE, self.path)
                 os.rmdir(self.path)
         else:
+            self.xyz.hm.dispatch(self.EVENT_REMOVE, self.path)
             os.unlink(self.path)
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -230,3 +232,30 @@ class LocalVFSObject(vfsobj.VFSObject):
                 self.vtype = u"*"
                 self.visual = u"*%s" % self.name
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    ## def _rmrec(self, path):
+    ##     """
+    ##     Recursively remove directory, firing remove event on each one
+    ##     Code derived from shutil.rmtree
+    ##     """
+
+    ##     names = []
+    ##     names = os.listdir(path)
+                
+    ##     for name in names:
+    ##         fullname = os.path.join(path, name)
+            
+    ##         try:
+    ##             _mode = os.lstat(fullname).st_mode
+    ##         except os.error:
+    ##             _mode = 0
+
+    ##         if stat.S_ISDIR(_mode):
+    ##             self._rmrec(fullname)
+    ##         else:
+    ##             self.xyz.hm.dispatch(self.EVENT_REMOVE, fullname)
+    ##             os.remove(fullname)
+
+    ##     self.xyz.hm.dispatch(self.EVENT_REMOVE, path)
+    ##     os.rmdir(path)
