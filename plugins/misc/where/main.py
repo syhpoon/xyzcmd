@@ -49,7 +49,6 @@ class XYZPlugin(BasePlugin):
             chdir(act)
             chdir(inact, active=False)
         except Exception, e:
-            import pdb; pdb.set_trace() 
             pass
         finally:
             if f:
