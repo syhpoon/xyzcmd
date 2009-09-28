@@ -28,7 +28,7 @@ from libxyz.vfs import vfsobj
 from libxyz.vfs import types
 from libxyz.vfs import util
 from libxyz.vfs import mode
-from libxyz.core.utils import ustring
+from libxyz.core.utils import ustring, bstring
 
 class LocalVFSObject(vfsobj.VFSObject):
     """
@@ -107,14 +107,14 @@ class LocalVFSObject(vfsobj.VFSObject):
         _time = lambda x: ustring(time.ctime(x))
                 
         self.attributes = (
-            (_(u"Name"), self.name),
-            (_(u"Type"), self.ftype),
+            (_(u"Name"), ustring(self.name)),
+            (_(u"Type"), ustring(self.ftype)),
             (_(u"Access time"), _time(self.atime)),
             (_(u"Modification time"), _time(self.mtime)),
             (_(u"Change time"), _time(self.ctime)),
             (_(u"Size in bytes"), ustring(self.size)),
-            (_(u"Owner"), self._uid(self.uid)),
-            (_(u"Group"), self._gid(self.gid)),
+            (_(u"Owner"), ustring(self._uid(self.uid))),
+            (_(u"Group"), ustring(self._gid(self.gid))),
             (_(u"Access mode"), ustring(self.mode)),
             (_(u"Inode"), ustring(self.inode)),
             (_(u"Type-specific data"), self.data),
@@ -134,9 +134,9 @@ class LocalVFSObject(vfsobj.VFSObject):
             _name = None
 
         if _name is not None:
-            return u"%s (%s)" % (ustring(uid), _name)
+            return "%s (%s)" % (bstring(uid), _name)
         else:
-            return ustring(uid)
+            return bstring(uid)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -147,9 +147,9 @@ class LocalVFSObject(vfsobj.VFSObject):
             _name = None
 
         if _name is not None:
-            return u"%s (%s)" % (ustring(gid), _name)
+            return "%s (%s)" % (bstring(gid), _name)
         else:
-            return ustring(gid)
+            return bstring(gid)
         
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -181,7 +181,7 @@ class LocalVFSObject(vfsobj.VFSObject):
             _fullpath = os.path.realpath(self.path)
 
             if not os.path.exists(_fullpath):
-                self.vtype = u"!"
+                self.vtype = "!"
             else:
                 try:
                     self.data = self.xyz.vfs.dispatch(_fullpath, self.enc)
@@ -190,9 +190,9 @@ class LocalVFSObject(vfsobj.VFSObject):
                                  ustring(str(e)))
                 else:
                     if isinstance(self.data.ftype, types.VFSTypeDir):
-                        self.vtype = u"~"
-            self.info = u""
-            self.visual = u"-> %s" % ustring(_realpath, self.enc)
+                        self.vtype = "~"
+            self.info = ""
+            self.visual = "-> %s" % _realpath
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -202,8 +202,8 @@ class LocalVFSObject(vfsobj.VFSObject):
             """
 
             _dev = self._stat.st_rdev
-            self.info = u"%s, %s %s" % (os.major(_dev), os.minor(_dev),
-                                        self.mode)
+            self.info = "%s, %s %s" % (os.major(_dev), os.minor(_dev),
+                                       self.mode)
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -215,8 +215,8 @@ class LocalVFSObject(vfsobj.VFSObject):
         self.gid = self._stat.st_gid
         self.inode = self._stat.st_ino
         self.mode = mode.Mode(self._stat.st_mode, self.ftype)
-        self.visual = u"%s%s" % (self.vtype, self.name)
-        self.info = u"%s %s" % (util.format_size(self.size), self.mode)
+        self.visual = "%s%s" % (self.vtype, self.name)
+        self.info = "%s %s" % (util.format_size(self.size), self.mode)
 
         if self.is_link():
             set_link_attributes()
@@ -227,5 +227,5 @@ class LocalVFSObject(vfsobj.VFSObject):
 
             # Executable
             if _mode & 0111:
-                self.vtype = u"*"
-                self.visual = u"*%s" % self.name
+                self.vtype = "*"
+                self.visual = "*%s" % self.name

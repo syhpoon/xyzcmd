@@ -61,7 +61,7 @@ class Mode(object):
         # other bits
         _str_mode.extend(self._oth_bits())
 
-        return u"".join(_str_mode)
+        return "".join(_str_mode)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -70,27 +70,27 @@ class Mode(object):
         _str_mode = []
 
         if _raw & stat.S_IRUSR:
-            _bit = u"r"
+            _bit = "r"
         else:
-            _bit = u"-"
+            _bit = "-"
         _str_mode.append(_bit)
 
         if _raw & stat.S_IWUSR:
-            _bit = u"w"
+            _bit = "w"
         else:
-            _bit = u"-"
+            _bit = "-"
         _str_mode.append(_bit)
 
         _o_mode = _raw & (stat.S_IXUSR | stat.S_ISUID)
 
         if _o_mode == 0:
-            _bit = u"-"
+            _bit = "-"
         elif _o_mode == stat.S_IXUSR:
-            _bit = u"x"
+            _bit = "x"
         elif _o_mode == stat.S_ISUID:
-            _bit = u"S"
+            _bit = "S"
         elif _o_mode == stat.S_IXUSR | stat.S_ISUID:
-            _bit = u"s"
+            _bit = "s"
         _str_mode.append(_bit)
 
         return _str_mode
@@ -102,27 +102,27 @@ class Mode(object):
         _str_mode = []
 
         if _raw & stat.S_IRGRP:
-            _bit = u"r"
+            _bit = "r"
         else:
-            _bit = u"-"
+            _bit = "-"
         _str_mode.append(_bit)
 
         if _raw & stat.S_IWGRP:
-            _bit = u"w"
+            _bit = "w"
         else:
-            _bit = u"-"
+            _bit = "-"
         _str_mode.append(_bit)
 
         _o_mode = _raw & (stat.S_IXGRP | stat.S_ISGID)
 
         if _o_mode == 0:
-            _bit = u"-"
+            _bit = "-"
         elif _o_mode == stat.S_IXGRP:
-            _bit = u"x"
+            _bit = "x"
         elif _o_mode == stat.S_ISGID:
-            _bit = u"S"
+            _bit = "S"
         elif _o_mode == stat.S_IXGRP | stat.S_ISGID:
-            _bit = u"s"
+            _bit = "s"
         _str_mode.append(_bit)
 
         return _str_mode
@@ -134,27 +134,27 @@ class Mode(object):
         _str_mode = []
 
         if _raw & stat.S_IROTH:
-            _bit = u"r"
+            _bit = "r"
         else:
-            _bit = u"-"
+            _bit = "-"
         _str_mode.append(_bit)
 
         if _raw & stat.S_IWOTH:
-            _bit = u"w"
+            _bit = "w"
         else:
-            _bit = u"-"
+            _bit = "-"
         _str_mode.append(_bit)
 
         _o_mode = _raw & (stat.S_IXOTH | stat.S_ISVTX)
 
         if _o_mode == 0:
-            _bit = u"-"
+            _bit = "-"
         elif _o_mode == stat.S_IXOTH:
-            _bit = u"x"
+            _bit = "x"
         elif _o_mode == stat.S_ISVTX:
-            _bit = u"T"
+            _bit = "T"
         elif _o_mode == stat.S_IXOTH | stat.S_ISVTX:
-            _bit = u"t"
+            _bit = "t"
         _str_mode.append(_bit)
 
         return _str_mode

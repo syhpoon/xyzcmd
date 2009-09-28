@@ -720,7 +720,7 @@ class Block(lowui.FlowWidget):
             self._display = []
 
             for _obj in self.entries[self._from:self._to]:
-                _text = u"%s%s "% (_obj.vtype, _obj.name)
+                _text = "%s%s "% (_obj.vtype, _obj.name)
                 _text = truncate(_text, cols, self._enc)
                 self._display.append(_text)
 

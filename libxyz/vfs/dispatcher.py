@@ -113,7 +113,7 @@ class VFSDispatcher(object):
     def get_parent(self, path, enc):
         _parent = self.xyz.vfs.dispatch(
             os.path.abspath(os.path.dirname(path)), enc)
-        _parent.name = u".."
+        _parent.name = ".."
 
         return _parent
 

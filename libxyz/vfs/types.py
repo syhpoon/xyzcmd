@@ -14,157 +14,134 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-class VFSTypeFile(object):
+from libxyz.core.utils import ustring
+
+class VFSTypeBase(object):
     """
-    Regular file type
+    VFS type parent class
     """
-
-    str_type = u"-"
-    vtype = u" "
-
-    def __str__(self):
-        return "<Regular file type>"
-
+    
+    def __unicode__(self):
+        return ustring(str(self))
+    
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+    
     def __repr__(self):
         return self.__str__()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-class VFSTypeBlock(object):
+class VFSTypeFile(VFSTypeBase):
+    """
+    Regular file type
+    """
+
+    str_type = "-"
+    vtype = " "
+
+    def __str__(self):
+        return "<Regular file type>"
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class VFSTypeBlock(VFSTypeBase):
     """
     Block device type
     """
 
-    str_type = u"b"
-    vtype = u"+"
+    str_type = "b"
+    vtype = "+"
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __str__(self):
         return "<Block device type>"
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def __repr__(self):
-        return self.__str__()
-
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-class VFSTypeChar(object):
+class VFSTypeChar(VFSTypeBase):
     """
     Character device type
     """
 
-    str_type = u"c"
-    vtype = u"-"
+    str_type = "c"
+    vtype = "-"
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __str__(self):
         return "<Char device type>"
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def __repr__(self):
-        return self.__str__()
-
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-class VFSTypeDir(object):
+class VFSTypeDir(VFSTypeBase):
     """
     Directory type
     """
 
-    str_type = u"d"
-    vtype = u"/"
+    str_type = "d"
+    vtype = "/"
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __str__(self):
         return "<Directory type>"
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def __repr__(self):
-        return self.__str__()
-
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-class VFSTypeLink(object):
+class VFSTypeLink(VFSTypeBase):
     """
     Symbolic link type
     """
 
-    str_type = u"l"
-    vtype = u"@"
+    str_type = "l"
+    vtype = "@"
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __str__(self):
         return "<Soft link type>"
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def __repr__(self):
-        return self.__str__()
-
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-class VFSTypeFifo(object):
+class VFSTypeFifo(VFSTypeBase):
     """
     FIFO type
     """
 
-    str_type = u"p"
-    vtype = u"|"
+    str_type = "p"
+    vtype = "|"
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     def __str__(self):
         return "<FIFO type>"
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def __repr__(self):
-        return self.__str__()
-
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-class VFSTypeSocket(object):
+class VFSTypeSocket(VFSTypeBase):
     """
     Socket type
     """
 
-    str_type = u"s"
-    vtype = u"="
+    str_type = "s"
+    vtype = "="
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __str__(self):
         return "<Socket type>"
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def __repr__(self):
-        return self.__str__()
-
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-class VFSTypeUnknown(object):
+class VFSTypeUnknown(VFSTypeBase):
     """
     Unknown type
     """
 
-    str_type = u"?"
+    str_type = "?"
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __str__(self):
         return "<Unknown file type>"
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def __repr__(self):
-        return self.__str__()

@@ -19,7 +19,7 @@ import stat
 import tarfile
 import time
 
-from libxyz.core.utils import ustring
+from libxyz.core.utils import ustring, bstring
 from libxyz.vfs import types as vfstypes
 from libxyz.vfs import vfsobj
 from libxyz.vfs import util
@@ -78,7 +78,7 @@ class TarVFSObject(vfsobj.VFSObject):
             _parent = self.xyz.vfs.dispatch(
                 self.get_path(os.path.dirname(self.path)), self.enc,
                 tarobj=self.tarobj)
-            _parent.name = u".."
+            _parent.name = ".."
 
         return [
             _parent,
@@ -105,12 +105,12 @@ class TarVFSObject(vfsobj.VFSObject):
         self._set_attributes()
 
         self.attributes = (
-            (_(u"Name"), self.name),
-            (_(u"Type"), self.ftype),
+            (_(u"Name"), ustring(self.name)),
+            (_(u"Type"), ustring(self.ftype)),
             (_(u"Modification time"), ustring(time.ctime(self.mtime))),
             (_(u"Size in bytes"), ustring(self.size)),
-            (_(u"Owner"), self.uid),
-            (_(u"Group"), self.gid),
+            (_(u"Owner"), ustring(self.uid)),
+            (_(u"Group"), ustring(self.gid)),
             (_(u"Access mode"), ustring(self.mode)),
             (_(u"Type-specific data"), self.data),
             )
@@ -160,7 +160,7 @@ class TarVFSObject(vfsobj.VFSObject):
             Set appropriate soft link attibutes
             """
 
-            self.info = u""
+            self.info = ""
             self.visual = "-> %s" % self.obj.linkname or ""
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -172,9 +172,9 @@ class TarVFSObject(vfsobj.VFSObject):
         self.gid = self.either(self.parent.gid, lambda: self.obj.gid)
         self.mode = mode.Mode(self.either(self.parent.mode.raw,
                                           lambda: self.obj.mode), self.ftype)
-        self.visual = u"%s%s" % (self.vtype, self.name)
+        self.visual = "%s%s" % (self.vtype, self.name)
                 
-        self.info = u"%s %s" % (util.format_size(self.size), self.mode)
+        self.info = "%s %s" % (util.format_size(self.size), self.mode)
 
         if self.is_link():
             set_link_attributes()
@@ -183,8 +183,8 @@ class TarVFSObject(vfsobj.VFSObject):
 
             # Executable
             if _mode & 0111:
-                self.vtype = u"*"
-                self.visual = u"*%s" % self.name
+                self.vtype = "*"
+                self.visual = "*%s" % self.name
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -16,7 +16,7 @@
 
 import os
 
-from libxyz.core import utils
+from libxyz.core.utils import bstring
 from libxyz.vfs import types
 
 class VFSObject(object):
@@ -28,15 +28,15 @@ class VFSObject(object):
                  enc=None, **kwargs):
         self.xyz = xyz
         self.enc = enc or xyzenc
-        self.path = path
-        self.full_path = full_path
-        self.ext_path = ext_path
+        self.path = bstring(path, self.enc)
+        self.full_path = bstring(full_path, self.enc)
+        self.ext_path = bstring(ext_path, self.enc)
         self.parent = parent
         self.driver = driver
         self.kwargs = kwargs
 
         # File name
-        self.name = os.path.basename(utils.ustring(self.path, self.enc))
+        self.name = os.path.basename(self.path)
 
         # File type
         self.ftype = None
