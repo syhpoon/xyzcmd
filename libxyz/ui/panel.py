@@ -161,6 +161,7 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.get_selected)
         _panel_plugin.export(self.get_tagged)
         _panel_plugin.export(self.get_current)
+        _panel_plugin.export(self.get_active)
         _panel_plugin.export(self.toggle_tag)
         _panel_plugin.export(self.tag_all)
         _panel_plugin.export(self.untag_all)
@@ -306,6 +307,16 @@ class Panel(lowui.WidgetWrap):
         """
 
         return (self.active if active else self.inactive).get_current()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_active(self):
+        """
+        Return list of tagged VFSObject instances or list of single selected
+        object if none tagged
+        """
+
+        return self.get_tagged() or [self.get_selected()]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
