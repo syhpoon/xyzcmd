@@ -4,27 +4,18 @@ XYZCommander changelog
 [Version 0.0.2]
 ===============
 
-* [PLUGIN] New method :vfs:vfsutils:remove()
-  Method shows a dialog for [recursively] deleting VFSObjects.
-  Bound to F8.
+* [UI] New box widget: ButtonBox.
+  Widget shows a dialog box with custom buttons.
+
+* [UI] New method :sys:panel:get_active()
+  Method returns list of tagged VFSObject instances or list of single selected
+  object if none tagged.
 
 * [UI] New method :sys:panel:get_current().
   Method returns VFSObject instance of current directory.
 
-* [VFS] Implemented Tar VFS module. Default actions set to use it on
-  *.tar, *.tar.gz and *.tar.bz2 named files.
-
 * [UI] New method :sys:panel:vfs_driver().
   Method returns vfs driver used by current object
-
-* [PLUGIN] New plugin :misc:where.
-  Plugin provides an ability to load/restore path locations on both panels
-
-* [CORE] New events and hooks mechanism.
-  It is now possible to set own hooks on all events.
-
-* [PLUGIN] New plugin :fsrules:magic.
-  Plugin adds an ability to match files based on magic database.
 
 * [UI] New method :sys:cmd:put().
   Method allows to put arbitrary string to command line.
@@ -33,3 +24,19 @@ XYZCommander changelog
   Method allows to search objects in current
   working directory in direction downwards-from up to selected file.
   Set this method as default binding for META-S.
+
+* [PLUGIN] New method :vfs:vfsutils:remove()
+  Method shows a dialog for [recursively] deleting VFSObjects.
+  Bound to F8.
+
+* [PLUGIN] New plugin :misc:where.
+  Plugin provides an ability to load/restore path locations on both panels
+
+* [PLUGIN] New plugin :fsrules:magic.
+  Plugin adds an ability to match files based on magic database.
+
+* [VFS] Implemented Tar VFS module. Default actions set to use it on
+  *.tar, *.tar.gz and *.tar.bz2 named files.
+
+* [CORE] New events and hooks mechanism.
+  It is now possible to set own hooks on all events.

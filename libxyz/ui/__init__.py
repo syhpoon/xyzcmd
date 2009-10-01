@@ -31,6 +31,7 @@ __all__ = (
     'Border',
     'XYZButton',
     'Box',
+    'ButtonBox',
     'MessageBox',
     'YesNoBox',
     'InputBox',
@@ -58,6 +59,7 @@ from keys import Keys
 from border import Border
 from xyzbutton import XYZButton
 from box import Box
+from box_button import ButtonBox
 from box_message import MessageBox
 from box_yesno import YesNoBox
 from box_input import InputBox
