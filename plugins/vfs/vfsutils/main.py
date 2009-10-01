@@ -65,16 +65,19 @@ class XYZPlugin(BasePlugin):
         
         self._load_panel()
 
-        tagged = self._panel.get_tagged()
+        objs = self._panel.get_active()
 
-        if tagged:
-            objs, msg = tagged, _(u"Really remove %d objects?") % len(tagged)
+        if not objs:
+            return
+
+        _len = len(objs)
+        
+        if _len > 1:
+            msg = _(u"Really remove %d objects?") % _len
         else:
-            selected = self._panel.get_selected()
-            objs, msg = [selected], \
-                       _(u"Really remove %s (%s)?") % \
-                       (ustring(selected.name),
-                        ustring(selected.ftype))
+            selected = objs[0]
+            msg = _(u"Really remove %s (%s)?") % \
+                  (ustring(selected.name), ustring(selected.ftype))
 
         _deletep = uilib.YesNoBox(self.xyz, self.xyz.top, msg,
                                   title=_(u"Remove object"))
@@ -84,19 +87,34 @@ class XYZPlugin(BasePlugin):
 
         # TODO: All, None, Skip, Stop buttons
         force = False
+
+        CODE_ALL = 10
+        CODE_YES = 20
+        CODE_NO = 30
+        CODE_ABORT = 40
+        
+        buttons = [
+            (_(u"All"), CODE_ALL),
+            (_(u"Yes"), CODE_YES),
+            (_(u"No"), CODE_NO),
+            (_(u"Abort"), CODE_ABORT),
+            ]
         
         for obj in objs:
             if not force and obj.is_dir() and not obj.is_dir_empty():
-                _rec = uilib.YesNoBox(
+                _rec = uilib.ButtonBox(
                     self.xyz, self.xyz.top,
                     _(u"Directory is not empty\nRemove it recursively?"),
-                    title=_(u"Remove %s") % ustring(obj.full_path))
+                    buttons,
+                    title=_(u"Remove %s") % ustring(obj.full_path)).show()
 
-                if not _rec.show():
-                    continue
-                else:
+                if _rec == CODE_ABORT:
+                    break
+                elif _rec == CODE_ALL:
                     force = True
-                    
+                elif _rec == CODE_NO:
+                    continue
+
             uilib.MessageBox(self.xyz, self.xyz.top,
                              _(u"Removing object: %s") %
                              ustring(obj.full_path),

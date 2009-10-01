@@ -25,7 +25,7 @@ class Box(lowui.WidgetWrap):
     # Skin rulesets resolution order
     resolution = (u"box", u"widget")
 
-    def __init__(self, xyz, body, message, title="", width=60):
+    def __init__(self, xyz, body, message, title="", width=70):
         """
         @param xyz: XYZ data
         @param body: Top-level widget
