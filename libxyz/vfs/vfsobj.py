@@ -16,7 +16,7 @@
 
 import os
 
-from libxyz.core.utils import bstring
+from libxyz.core.utils import bstring, ustring
 from libxyz.vfs import types
 
 class VFSObject(object):
@@ -164,9 +164,31 @@ class VFSObject(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def copy(self, path):
+    def copy(self, path, existcb=None, errorcb=None,
+             save_attrs=True, follow_links=False):
         """
         Copy file to specified location
+
+        @param path: Local path to copy file to
+        @param existcb: Callback function to be called if there exists
+                        an object in target directory with the same name.
+                        Callback function receives VFSObject instance as an
+                        argument and must return one of:
+                        'override' - to override this very object
+                        'override all' - to override any future collisions
+                        'skip' - to skip the object
+                        'skip all' - to skip all future collisions
+                        'abort' - to abort the process.
+                        If no existscb provided 'abort' is used as default
+        @param errorcb: Callback function to be called in case an error occured
+                        during copying. Function receives VFSObject instance
+                        and error string as arguments and must return one of:
+                        'skip' - to continue the process
+                        'skip all' - to skip all future errors
+                        'abort' - to abort the process.
+                        If no errorcb provided 'abort' is used as default
+        @param save_attrs: Whether to save object attributes
+        @follow_links: Whether to follow symlinks
         """
 
         raise NotImplementedError(self.__ni_msg)
@@ -203,6 +225,11 @@ class VFSObject(object):
     def __repr__(self):
         return self.__str__()
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __unicode__(self):
+        return ustring(self.__str__)
+    
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     def _prepare(self):

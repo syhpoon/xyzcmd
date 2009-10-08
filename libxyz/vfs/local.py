@@ -96,6 +96,67 @@ class LocalVFSObject(vfsobj.VFSObject):
             os.mkdir(os.path.join(self.path, newdir))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def copy(self, path, existcb=None, errorcb=None, save_attrs=True,
+             follow_links=False):
+        def _copy(src, dst, override, error):
+            objs = os.listdir(src)
+            os.makedirs(path)
+
+            for obj in objs:
+                srcobj = os.path.join(src, obj)
+                dstobj = os.path.join(dst, obj)
+
+                if os.path.exists(dstobj):
+                    if override not in ('override all', 'skip all'):
+                        # Assume abort
+                        if existcb is None:
+                            override = 'abort'
+                        else:
+                            try:
+                                override = existcb(
+                                    self.xyz.vfs.dispatch(dstobj))
+                            except Exception:
+                                override = 'abort'
+                        
+                    if override == 'abort':
+                        return
+                    elif override in ('skip', 'skip all'):
+                        continue
+                    # Else overriding
+
+                try:
+                    if not follow_links and os.path.islink(srcobj):
+                        linkto = os.readlink(srcobj)
+                        os.symlink(linkto, dstobj)
+                    elif os.path.isdir(srcobj):
+                        _copy(srcobj, dstobj)
+                    else:
+                        shutil.copy2(srcobj, dstobj, override, error)
+                except Exception, e:
+                    if error != 'skip all':
+                        if errorcb is None:
+                            error = 'abort'
+                        else:
+                            try:
+                                error = errorcb(self.xyz.vfs.dispatch(dstobj),
+                                                str(e))
+                            except Exception:
+                                error = 'abort'
+
+                        if error == 'abort':
+                            return
+                        else:
+                            continue
+
+            if save_attrs:
+                shutil.copystat(src, dst)
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        
+        _copy(self.path, path, None, None)
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ## Internal stuff
     
     def _prepare(self):

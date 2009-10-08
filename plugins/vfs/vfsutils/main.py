@@ -5,8 +5,10 @@
 
 import libxyz.ui as uilib
 
-from libxyz.core.utils import ustring
+from libxyz.core.utils import ustring, bstring
 from libxyz.core.plugins import BasePlugin
+
+from box_copy import CopyBox
 
 class XYZPlugin(BasePlugin):
     "Plugin vfsutils"
@@ -28,6 +30,7 @@ class XYZPlugin(BasePlugin):
 
         self.export(self.mkdir)
         self.export(self.remove)
+        self.export(self.copy)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -64,7 +67,6 @@ class XYZPlugin(BasePlugin):
         """
         
         self._load_panel()
-
         objs = self._panel.get_active()
 
         if not objs:
@@ -85,7 +87,6 @@ class XYZPlugin(BasePlugin):
         if not _deletep.show():
             return
 
-        # TODO: All, None, Skip, Stop buttons
         force = False
 
         CODE_ALL = 10
@@ -132,7 +133,26 @@ class XYZPlugin(BasePlugin):
                 break
 
         self._panel.reload()
-                
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def copy(self):
+        """
+        Copy objects dialog
+        """
+
+        self._load_panel()
+        objs = self._panel.get_active()
+
+        if not objs:
+            return
+
+        srctxt = bstring(ustring(objs[0].full_path) if
+                         len(objs) == 1 else _(u"%d objects") % len(objs))
+
+        data = CopyBox(self.xyz, srctxt, self._panel.cwd(active=False)).show()
+
+        
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     def _load_panel(self):

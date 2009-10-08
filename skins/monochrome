@@ -19,6 +19,7 @@ ui.box {
 	box = BLACK, &BG
 	border = BLACK, &BG
 	mount = DEFAULT, &BG
+        input = &BG, DEFAULT
 }
 
 # Error message box

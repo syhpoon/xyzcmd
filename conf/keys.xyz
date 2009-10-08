@@ -98,6 +98,7 @@ bind(lambda: call(":ui:bookmarks:add_bookmark", macro("ACT_CWD")),
      kbd("CTRL-x", "b"))
 
 bind(":vfs:fileinfo:fileinfo", kbd("F2"))
+bind(":vfs:vfsutils:copy", kbd("F5"))
 bind(":vfs:vfsutils:mkdir", kbd("F7"))
 bind(":vfs:vfsutils:remove", kbd("F8"))
 

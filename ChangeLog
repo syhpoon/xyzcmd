@@ -40,3 +40,6 @@ XYZCommander changelog
 
 * [CORE] New events and hooks mechanism.
   It is now possible to set own hooks on all events.
+
+* [SKINS] New box rule attibute - input.
+  It is used for any text input widgets

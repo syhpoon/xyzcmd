@@ -16,7 +16,7 @@ action(
 
 ## Multimedia
 action(r'iname{".*\\\.(avi|wmv|mov|asf|mpg|flv|mp3)$"}',
-       lambda obj: shell("cvlc", "--play-and-exit", "-f", obj.path))
+       lambda obj: shell("mplayer", "-fs", "-vo", "sdl", obj.path))
 
 ## Documents
 # PDF
