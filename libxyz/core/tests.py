@@ -21,11 +21,13 @@ import locale
 import tempfile
 import os
 
+import libxyz
 import libxyz.core as core
 
 from nose.tools import raises
 from libxyz.exceptions import *
 from libxyz.vfs import VFSDispatcher
+from libxyz.vfs.local import LocalVFSObject
 
 # Global data
 xyz = None
@@ -39,17 +41,26 @@ def setup():
     __builtin__.xyzenc = locale.getpreferredencoding()
 
     # Setup files
-    files["actions_good"], files["actions_bad"] = setup_actions()
+    setup_actions(files)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def setup_actions():
+
+def setup_actions(files):
     fd_good, path_good = tempfile.mkstemp(text=True)
     fd_bad, path_bad = tempfile.mkstemp(text=True)
+    _, test_name = tempfile.mkstemp(text=True)
+    _, test_size = tempfile.mkstemp(text=True)
+    _, test_owner = tempfile.mkstemp(text=True)
+    
     os.write(fd_good, """action(r'iname{".*\.pdf$"}', lambda obj: obj)""")
     os.write(fd_bad, ":(")
 
-    return path_good, path_bad
-
+    files["actions_good"] = path_good
+    files["actions_bad"] = path_bad
+    files["test_name"] = test_name
+    files["test_size"] = test_size
+    files["test_owner"] = test_owner
+    
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
 def teardown():
@@ -116,10 +127,16 @@ class TestActionManager(object):
     """
     
     def setUp(self):
+        global files
+        
         self.xyz = core.XYZData()
         self.dsl = core.dsl.XYZ(self.xyz)
         self.am = core.ActionManager(xyz, [])
         self.xyz.vfs = VFSDispatcher(self.xyz)
+        self.files = files
+
+        # Empty prefix for local filesystem
+        self.xyz.vfs.register(None, LocalVFSObject)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -157,15 +174,15 @@ class TestActionManager(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def testMatch(self):
-        vfs_size = self.xyz.vfs.dispatch("/tmp/test_size")
+        vfs_size = self.xyz.vfs.dispatch(self.files["test_size"])
         vfs_size.size = 100
-        vfs_name = self.xyz.vfs.dispatch("/tmp/test_name")
-        vfs_owner = self.xyz.vfs.dispatch("/tmp/test_owner")
+        vfs_name = self.xyz.vfs.dispatch(self.files["test_name"])
+        vfs_owner = self.xyz.vfs.dispatch(self.files["test_owner"])
         vfs_owner.uid = 500
         vfs_owner.gid = 501
 
         self.am.register("size{100}", lambda: "size")
-        self.am.register("name{test_name}", lambda: "name")
+        self.am.register("name{'''%s'''}" % vfs_name.name, lambda: "name")
         self.am.register("owner{500:501}", lambda: "owner")
 
         assert self.am.match(vfs_size)() == "size"
@@ -180,7 +197,9 @@ class TestDSL(object):
         self.xyz.conf = {"xyz": {}}
         self.xyz.conf["xyz"]["plugins"] = {":core:shell": "ENABLE"}
         self.xyz.km = core.KeyManager(self.xyz, [])
-        self.xyz.pm = core.plugins.PluginManager(self.xyz, [])
+        self.xyz.pm = core.plugins.PluginManager(
+            self.xyz, libxyz.PathSelector().get_plugins_dir())
+        self.xyz.hm = core.HookManager()
         self.dsl = core.dsl.XYZ(self.xyz)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
