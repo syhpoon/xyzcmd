@@ -99,13 +99,24 @@ class LocalVFSObject(vfsobj.VFSObject):
 
     def copy(self, path, existcb=None, errorcb=None, save_attrs=True,
              follow_links=False):
+        
         def _copy(src, dst, override, error):
-            objs = os.listdir(src)
-            os.makedirs(path)
+            if os.path.isdir(src):
+                objs = os.listdir(src)
+                srcbase = src
+                dstbase = os.path.join(dst, os.path.basename(src))
+                dstbase = dst
+            else:
+                objs = [os.path.basename(src)]
+                srcbase = os.path.dirname(src)
+                dstbase = dst
+
+            if not os.path.exists(dstbase):
+                os.makedirs(dstbase)
 
             for obj in objs:
-                srcobj = os.path.join(src, obj)
-                dstobj = os.path.join(dst, obj)
+                srcobj = os.path.join(srcbase, obj)
+                dstobj = os.path.join(dstbase, obj)
 
                 if os.path.exists(dstobj):
                     if override not in ('override all', 'skip all'):
@@ -130,16 +141,17 @@ class LocalVFSObject(vfsobj.VFSObject):
                         linkto = os.readlink(srcobj)
                         os.symlink(linkto, dstobj)
                     elif os.path.isdir(srcobj):
-                        _copy(srcobj, dstobj)
+                        _copy(srcobj, dstobj, override, error)
                     else:
-                        shutil.copy2(srcobj, dstobj, override, error)
+                        (shutil.copy2 if save_attrs else shutil.copyfile)\
+                                      (srcobj, dstobj)
                 except Exception, e:
                     if error != 'skip all':
                         if errorcb is None:
                             error = 'abort'
                         else:
                             try:
-                                error = errorcb(self.xyz.vfs.dispatch(dstobj),
+                                error = errorcb(self.xyz.vfs.dispatch(srcobj),
                                                 str(e))
                             except Exception:
                                 error = 'abort'
@@ -149,11 +161,14 @@ class LocalVFSObject(vfsobj.VFSObject):
                         else:
                             continue
 
-            if save_attrs:
+            if save_attrs and self.ftype == self._find_type(path):
                 shutil.copystat(src, dst)
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        
+
+        if self.is_dir():
+            path = os.path.join(path, os.path.basename(self.path))
+
         _copy(self.path, path, None, None)
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -225,7 +240,7 @@ class LocalVFSObject(vfsobj.VFSObject):
             raise VFSError(_(u"Unable to stat file %s: %s" % (path, str(e))))
 
         return util.get_file_type(self._stat.st_mode)
-
+    
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _set_attributes(self):

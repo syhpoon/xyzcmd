@@ -152,6 +152,63 @@ class XYZPlugin(BasePlugin):
 
         data = CopyBox(self.xyz, srctxt, self._panel.cwd(active=False)).show()
 
+        if data is None:
+            return
+
+        def existcb(vfsobj):
+            buttons = [
+                (_(u"Yes"), "yes"),
+                (_(u"All"), "all"),
+                (_(u"Skip"), "skip"),
+                (_(u"Skip all"), "skip all"),
+                (_(u"Abort"), "abort"),
+                ]
+
+            name = ustring(vfsobj.name)
+            
+            _rec = uilib.ButtonBox(
+                self.xyz, self.xyz.top,
+                _(u"Object %s already exists. Really override?") % name,
+                buttons,
+                title=_(u"Override %s") % name).show()
+
+            return _rec or 'abort'
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        def errorcb(vfsobj, errstr):
+            buttons = [
+                (_(u"Skip"), "skip"),
+                (_(u"Skip all"), "skip all"),
+                (_(u"Abort"), "abort"),
+                ]
+
+            _rec = uilib.ButtonBox(
+                self.xyz, self.xyz.top,
+                _(u"An error occured during copying %s: %s") % (
+                    ustring(vfsobj.full_path), ustring(errstr)),
+                buttons,
+                title=_(u"Copy error")).show()
+
+            return _rec or 'abort'
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            
+        for obj in objs:
+            try:
+                obj.copy(data["dst"], existcb=existcb, errorcb=errorcb,
+                         save_attrs=data["save_attributes"],
+                         follow_links=data["follow_links"])
+            except Exception, e:
+                uilib.ErrorBox(self.xyz, self.xyz.top,
+                               _(u"Unable to copy object: %s") %
+                               (ustring(str(e))),
+                               _(u"Copy error")).show()
+                xyzlog.error(_(u"Error copying object: %s") % ustring(str(e)))
+                break
+
+        self._panel.reload()
+        self._panel.reload(active=False)
         
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     

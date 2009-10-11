@@ -103,7 +103,7 @@ class PluginManager(object):
         plugin.set_method(self.PLUGIN_FILE)
 
         self.xyz.hm.dispatch(self.EVENT_INIT, plugin)
-        
+
         # Import plugin
         # Plugin entry-point is XYZPlugin class in a main.py file
         try:
