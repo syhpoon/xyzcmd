@@ -11,7 +11,9 @@ from libxyz.core.plugins import BasePlugin
 from box_copy import CopyBox
 
 class XYZPlugin(BasePlugin):
-    "Plugin vfsutils"
+    """
+    Plugin vfsutils
+    """
 
     NAME = u"vfsutils"
     AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
@@ -195,6 +197,10 @@ class XYZPlugin(BasePlugin):
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             
         for obj in objs:
+            uilib.MessageBox(self.xyz, self.xyz.top,
+                             _(u"Copying object: %s") % ustring(obj.full_path),
+                             _(u"Copying")).show(wait=False)
+
             try:
                 obj.copy(data["dst"], existcb=existcb, errorcb=errorcb,
                          save_attrs=data["save_attributes"],
