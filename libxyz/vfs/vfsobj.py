@@ -195,6 +195,15 @@ class VFSObject(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def move(self, dst, existcb=None, errorcb=None):
+        """
+        Move object
+        """
+        
+        raise NotImplementedError(self.__ni_msg)
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def mkdir(self, newdir):
         """
         Create new dir inside object (only valid for directory object types)

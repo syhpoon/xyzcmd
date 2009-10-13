@@ -145,6 +145,7 @@ class LocalVFSObject(vfsobj.VFSObject):
                     else:
                         (shutil.copy2 if save_attrs else shutil.copyfile)\
                                       (srcobj, dstobj)
+                        
                 except Exception, e:
                     if error != 'skip all':
                         if errorcb is None:
@@ -170,7 +171,42 @@ class LocalVFSObject(vfsobj.VFSObject):
             path = os.path.join(path, os.path.basename(self.path))
 
         _copy(self.path, path, None, None)
-    
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def move(self, dst, existcb=None, errorcb=None):
+        """
+        Move object
+        """
+
+        destinsrc = lambda s, d: os.path.abspath(d).startswith(
+            os.path.abspath(s))
+
+        if not os.path.isdir(dst) and os.path.exists(dst):
+            # Assume abort
+            if existcb is None:
+                override = 'abort'
+            else:
+                try:
+                    override = existcb(self.xyz.vfs.dispatch(dst))
+                except Exception:
+                    override = 'abort'
+
+            if override == 'abort':
+                return
+
+        try:
+            os.rename(self.full_path, dst)
+        except OSError:
+            if self.is_dir():
+                if destinsrc(self.full_path, dst):
+                    raise XYZRuntimeError(
+                        _(u"%s and %s are the same ojbects!") %
+                        (ustring(self.full_path), ustring(dst)))
+
+            self.copy(dst, existcb, errorcb)
+            self.remove()
+            
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ## Internal stuff
     

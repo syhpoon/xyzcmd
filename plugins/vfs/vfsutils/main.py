@@ -33,6 +33,7 @@ class XYZPlugin(BasePlugin):
         self.export(self.mkdir)
         self.export(self.remove)
         self.export(self.copy)
+        self.export(self.move)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -138,7 +139,7 @@ class XYZPlugin(BasePlugin):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def copy(self):
+    def copy(self, move=False):
         """
         Copy objects dialog
         """
@@ -152,7 +153,8 @@ class XYZPlugin(BasePlugin):
         srctxt = bstring(ustring(objs[0].full_path) if
                          len(objs) == 1 else _(u"%d objects") % len(objs))
 
-        data = CopyBox(self.xyz, srctxt, self._panel.cwd(active=False)).show()
+        data = CopyBox(self.xyz, srctxt, self._panel.cwd(active=False),
+                       bstring(_(u"Move") if move else _(u"Copy"))).show()
 
         if data is None:
             return
@@ -187,7 +189,7 @@ class XYZPlugin(BasePlugin):
 
             _rec = uilib.ButtonBox(
                 self.xyz, self.xyz.top,
-                _(u"An error occured during copying %s: %s") % (
+                _(u"An error occured %s: %s") % (
                     ustring(vfsobj.full_path), ustring(errstr)),
                 buttons,
                 title=_(u"Copy error")).show()
@@ -195,27 +197,51 @@ class XYZPlugin(BasePlugin):
             return _rec or 'abort'
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            
+
+        msg = _(u"Moving object: %s") if move else \
+              _(u"Copying object: %s")
+        caption = _(u"Moving") if move else _(u"Copying")
+        unable_msg = _(u"Unable to move object: %s") if move else \
+                     _(u"Unable to copy object: %s")
+        unable_caption = _(u"Move error") if move else _(u"Copy error")
+        
         for obj in objs:
             uilib.MessageBox(self.xyz, self.xyz.top,
-                             _(u"Copying object: %s") % ustring(obj.full_path),
-                             _(u"Copying")).show(wait=False)
+                             msg % ustring(obj.full_path),
+                             caption).show(wait=False)
 
             try:
-                obj.copy(data["dst"], existcb=existcb, errorcb=errorcb,
-                         save_attrs=data["save_attributes"],
-                         follow_links=data["follow_links"])
+                args = {
+                    "existcb": existcb,
+                    "errorcb": errorcb
+                    }
+
+                if not move:
+                    args.update({
+                        "save_attrs": data["save_attributes"],
+                        "follow_links": data["follow_links"],
+                        })
+                    
+                getattr(obj, "move" if move else "copy")(data["dst"], **args)
             except Exception, e:
                 uilib.ErrorBox(self.xyz, self.xyz.top,
-                               _(u"Unable to copy object: %s") %
-                               (ustring(str(e))),
-                               _(u"Copy error")).show()
-                xyzlog.error(_(u"Error copying object: %s") % ustring(str(e)))
+                               unable_msg % (ustring(str(e))),
+                               unable_caption).show()
+                xyzlog.error(unable_msg % ustring(str(e)))
                 break
 
         self._panel.reload()
         self._panel.reload(active=False)
         
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def move(self):
+        """
+        Move objects dialog
+        """
+
+        return self.copy(move=True)
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     def _load_panel(self):

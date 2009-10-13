@@ -26,7 +26,7 @@ class CopyBox(lowui.WidgetWrap):
 
     resolution = (u"box", u"widget")
     
-    def __init__(self, xyz, srctxt, dst):
+    def __init__(self, xyz, srctxt, dst, caption):
         self.xyz = xyz
         self._attr = lambda name: self.xyz.skin.attr(self.resolution, name)
         self._keys = uilib.Keys()
@@ -63,8 +63,8 @@ class CopyBox(lowui.WidgetWrap):
         self.widgets = lowui.Pile(w)
         box = lowui.AttrWrap(lowui.Filler(self.widgets), self._attr("box"))
 
-        self.w = uilib.Border(box, bstring(_(u"Copy")),
-                              self._attr("title"), self._attr("border"))
+        self.w = uilib.Border(box, caption, self._attr("title"),
+                              self._attr("border"))
                               
         super(CopyBox, self).__init__(self.w)
 
