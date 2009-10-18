@@ -100,77 +100,86 @@ class LocalVFSObject(vfsobj.VFSObject):
     def copy(self, path, existcb=None, errorcb=None, save_attrs=True,
              follow_links=False):
         
-        def _copy(src, dst, override, error):
-            if os.path.isdir(src):
-                objs = os.listdir(src)
-                srcbase = src
-                dstbase = os.path.join(dst, os.path.basename(src))
-                dstbase = dst
+        env = {
+            'override': 'abort',
+            'error': 'abort'
+            }
+
+        def _copy_file(src, dst):
+            """
+            File-to-file copy
+            """
+
+            if os.path.exists(dst) and os.path.isdir(dst):
+                dstto = os.path.join(dst, os.path.basename(src))
             else:
-                objs = [os.path.basename(src)]
-                srcbase = os.path.dirname(src)
-                dstbase = dst
+                dstto = dst
 
-            if not os.path.exists(dstbase):
-                os.makedirs(dstbase)
+            if os.path.exists(dstto):
+                if env['override'] not in ('override all', 'skip all'):
+                    if existcb:
+                        try:
+                            env['override'] = existcb(
+                                self.xyz.vfs.dispatch(dstto))
+                        except Exception:
+                            env['override'] = 'abort'
 
-            for obj in objs:
-                srcobj = os.path.join(srcbase, obj)
-                dstobj = os.path.join(dstbase, obj)
+                if env['override'] == 'abort':
+                    raise XYZRuntimeError()
+                elif env['override'] in ('skip', 'skip all'):
+                    return
 
-                if os.path.exists(dstobj):
-                    if override not in ('override all', 'skip all'):
-                        # Assume abort
-                        if existcb is None:
-                            override = 'abort'
-                        else:
-                            try:
-                                override = existcb(
-                                    self.xyz.vfs.dispatch(dstobj))
-                            except Exception:
-                                override = 'abort'
-                        
-                    if override == 'abort':
-                        return
-                    elif override in ('skip', 'skip all'):
-                        continue
-                    # Else overriding
+            try:
+                if not follow_links and os.path.islink(src):
+                    linkto = os.readlink(src)
+                    os.symlink(linkto, dst)
+                else:
+                    (shutil.copy2 if save_attrs else shutil.copyfile)(src, dst)
+            except Exception, e:
+                if env['error'] != 'skip all':
+                    if errorcb:
+                        try:
+                            env['error'] = errorcb(
+                                self.xyz.vfs.dispatch(src), str(e))
+                        except Exception:
+                            env['error'] = 'abort'
 
-                try:
-                    if not follow_links and os.path.islink(srcobj):
-                        linkto = os.readlink(srcobj)
-                        os.symlink(linkto, dstobj)
-                    elif os.path.isdir(srcobj):
-                        _copy(srcobj, dstobj, override, error)
-                    else:
-                        (shutil.copy2 if save_attrs else shutil.copyfile)\
-                                      (srcobj, dstobj)
-                        
-                except Exception, e:
-                    if error != 'skip all':
-                        if errorcb is None:
-                            error = 'abort'
-                        else:
-                            try:
-                                error = errorcb(self.xyz.vfs.dispatch(srcobj),
-                                                str(e))
-                            except Exception:
-                                error = 'abort'
-
-                        if error == 'abort':
-                            return
-                        else:
-                            continue
-
-            if save_attrs and self.ftype == self._find_type(path):
-                shutil.copystat(src, dst)
+                    if env['error'] == 'abort':
+                        raise XYZRuntimeError()
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        if self.is_dir():
-            path = os.path.join(path, os.path.basename(self.path))
+        def _copy_dir(src, dst):
+            """
+            Dir-to-dir copy
+            """
 
-        _copy(self.path, path, None, None)
+            if os.path.exists(dst) and os.path.isdir(dst) and \
+                   os.path.basename(src) != os.path.basename(dst):
+                dst = os.path.join(dst, os.path.basename(src))
+
+            if os.path.isdir(src) and not os.path.exists(dst):
+                os.makedirs(dst)
+                
+                if save_attrs and self.ftype == self._find_type(dst):
+                    shutil.copystat(src, dst)
+
+            files = os.listdir(src)
+
+            for f in files:
+                srcobj = os.path.join(src, f)
+                dstobj = os.path.join(dst, f)
+
+                (_copy_dir if os.path.isdir(srcobj) else _copy_file)\
+                           (srcobj, dstobj)
+                
+            #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        try:
+            (_copy_dir if self.is_dir() else _copy_file)(self.full_path, path)
+        except XYZRuntimeError:
+            # Aborted
+            pass
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

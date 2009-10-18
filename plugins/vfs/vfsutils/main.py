@@ -159,6 +159,13 @@ class XYZPlugin(BasePlugin):
         if data is None:
             return
 
+        msg = _(u"Moving object: %s") if move else \
+              _(u"Copying object: %s")
+        caption = _(u"Moving") if move else _(u"Copying")
+        unable_msg = _(u"Unable to move object: %s") if move else \
+                     _(u"Unable to copy object: %s")
+        unable_caption = _(u"Move error") if move else _(u"Copy error")
+
         def existcb(vfsobj):
             buttons = [
                 (_(u"Yes"), "yes"),
@@ -175,6 +182,9 @@ class XYZPlugin(BasePlugin):
                 _(u"Object %s already exists. Really override?") % name,
                 buttons,
                 title=_(u"Override %s") % name).show()
+
+            uilib.MessageBox(self.xyz, self.xyz.top,
+                             caption, caption).show(wait=False)
 
             return _rec or 'abort'
 
@@ -194,16 +204,12 @@ class XYZPlugin(BasePlugin):
                 buttons,
                 title=_(u"Copy error")).show()
 
+            uilib.MessageBox(self.xyz, self.xyz.top,
+                             caption, caption).show(wait=False)
+
             return _rec or 'abort'
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        msg = _(u"Moving object: %s") if move else \
-              _(u"Copying object: %s")
-        caption = _(u"Moving") if move else _(u"Copying")
-        unable_msg = _(u"Unable to move object: %s") if move else \
-                     _(u"Unable to copy object: %s")
-        unable_caption = _(u"Move error") if move else _(u"Copy error")
         
         for obj in objs:
             uilib.MessageBox(self.xyz, self.xyz.top,
