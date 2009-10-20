@@ -165,7 +165,7 @@ class VFSObject(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def copy(self, path, existcb=None, errorcb=None,
-             save_attrs=True, follow_links=False):
+             save_attrs=True, follow_links=False, cancel=None):
         """
         Copy file to specified location
 
@@ -188,16 +188,19 @@ class VFSObject(object):
                         'abort' - to abort the process.
                         If no errorcb provided 'abort' is used as default
         @param save_attrs: Whether to save object attributes
-        @follow_links: Whether to follow symlinks
+        @param follow_links: Whether to follow symlinks
+        @param cancel: a threading.Event instance, if it is found set - abort
         """
 
         raise NotImplementedError(self.__ni_msg)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def move(self, dst, existcb=None, errorcb=None):
+    def move(self, path, existcb=None, errorcb=None, save_attrs=True,
+             follow_links=False, cancel=None):
         """
         Move object
+        Arguments are the same as for copy()
         """
         
         raise NotImplementedError(self.__ni_msg)

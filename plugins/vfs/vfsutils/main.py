@@ -3,6 +3,8 @@
 # Max E. Kuznecov <syhpoon@syhpoon.name> 2009
 #
 
+import threading
+
 import libxyz.ui as uilib
 
 from libxyz.core.utils import ustring, bstring
@@ -28,6 +30,7 @@ class XYZPlugin(BasePlugin):
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 
+        self.keys = uilib.Keys()
         self._panel = None
 
         self.export(self.mkdir)
@@ -162,6 +165,7 @@ class XYZPlugin(BasePlugin):
         msg = _(u"Moving object: %s") if move else \
               _(u"Copying object: %s")
         caption = _(u"Moving") if move else _(u"Copying")
+        caption += _(u"\nESCAPE to abort")
         unable_msg = _(u"Unable to move object: %s") if move else \
                      _(u"Unable to copy object: %s")
         unable_caption = _(u"Move error") if move else _(u"Copy error")
@@ -210,6 +214,29 @@ class XYZPlugin(BasePlugin):
             return _rec or 'abort'
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        stopped = threading.Event()
+        cancel = threading.Event()
+
+        args = {
+            "existcb": existcb,
+            "errorcb": errorcb,
+            "save_attrs": data["save_attributes"],
+            "follow_links": data["follow_links"],
+            "cancel": cancel
+            }
+        
+        def frun(o):
+            stopped.clear()
+
+            try:
+                getattr(o, "move" if move else "copy")(data["dst"], **args)
+            except StopIteration:
+                pass
+
+            stopped.set()
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         
         for obj in objs:
             uilib.MessageBox(self.xyz, self.xyz.top,
@@ -217,18 +244,30 @@ class XYZPlugin(BasePlugin):
                              caption).show(wait=False)
 
             try:
-                args = {
-                    "existcb": existcb,
-                    "errorcb": errorcb
-                    }
+                f = lambda: frun(obj)
+                runner = threading.Thread(target=f)
+                runner.start()
 
-                if not move:
-                    args.update({
-                        "save_attrs": data["save_attributes"],
-                        "follow_links": data["follow_links"],
-                        })
+                # While runner is running, poll for the user input
+                # abort if ESCAPE pressed
+                while True:
+                    # Runner thread terminated, continue
+                    if stopped.isSet():
+                        runner.join()
+                        break
+
+                    # Show message
+                    uilib.MessageBox(self.xyz, self.xyz.top,
+                                     caption, caption).show(wait=False)
+
+                    _in = self.xyz.input.get(True)
+
+                    # User abort
+                    if self.keys.ESCAPE in _in:
+                        cancel.set()
+                        runner.join()
+                        break
                     
-                getattr(obj, "move" if move else "copy")(data["dst"], **args)
             except Exception, e:
                 uilib.ErrorBox(self.xyz, self.xyz.top,
                                unable_msg % (ustring(str(e))),
