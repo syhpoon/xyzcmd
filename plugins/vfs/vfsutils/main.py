@@ -20,8 +20,8 @@ class XYZPlugin(BasePlugin):
     NAME = u"vfsutils"
     AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
     VERSION = u"0.1"
-    BRIEF_DESCRIPTION = u"Useful VFS routines"
-    FULL_DESCRIPTION = u""
+    BRIEF_DESCRIPTION = _(u"Useful VFS routines")
+    FULL_DESCRIPTION = _(u"Dialogs for common VFS operations")
     NAMESPACE = u"vfs"
     MIN_XYZ_VERSION = None
     DOC = None
@@ -164,13 +164,21 @@ class XYZPlugin(BasePlugin):
 
         msg = _(u"Moving object: %s") if move else \
               _(u"Copying object: %s")
+        msg += _(u"\nESCAPE to abort")
         caption = _(u"Moving") if move else _(u"Copying")
         caption += _(u"\nESCAPE to abort")
         unable_msg = _(u"Unable to move object: %s") if move else \
                      _(u"Unable to copy object: %s")
         unable_caption = _(u"Move error") if move else _(u"Copy error")
 
+        stopped = threading.Event()
+        cancel = threading.Event()
+        free = threading.Event()
+        free.set()
+
         def existcb(vfsobj):
+            free.clear()
+            
             buttons = [
                 (_(u"Yes"), "yes"),
                 (_(u"All"), "all"),
@@ -179,44 +187,47 @@ class XYZPlugin(BasePlugin):
                 (_(u"Abort"), "abort"),
                 ]
 
-            name = ustring(vfsobj.name)
+            try:
+                name = ustring(vfsobj.name)
             
-            _rec = uilib.ButtonBox(
-                self.xyz, self.xyz.top,
-                _(u"Object %s already exists. Really override?") % name,
-                buttons,
-                title=_(u"Override %s") % name).show()
+                _rec = uilib.ButtonBox(
+                    self.xyz, self.xyz.top,
+                    _(u"Object %s already exists. Really override?") % name,
+                    buttons, title=_(u"Override %s") % name).show()
 
-            uilib.MessageBox(self.xyz, self.xyz.top,
-                             caption, caption).show(wait=False)
+                uilib.MessageBox(self.xyz, self.xyz.top,
+                                 caption, caption).show(wait=False)
 
-            return _rec or 'abort'
+                return _rec or 'abort'
+            finally:
+                free.set()
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         def errorcb(vfsobj, errstr):
+            free.clear()
+
             buttons = [
                 (_(u"Skip"), "skip"),
                 (_(u"Skip all"), "skip all"),
                 (_(u"Abort"), "abort"),
                 ]
 
-            _rec = uilib.ButtonBox(
-                self.xyz, self.xyz.top,
-                _(u"An error occured %s: %s") % (
-                    ustring(vfsobj.full_path), ustring(errstr)),
-                buttons,
-                title=_(u"Copy error")).show()
+            try:
+                _rec = uilib.ButtonBox(
+                    self.xyz, self.xyz.top,
+                    _(u"An error occured %s: %s") % (
+                        ustring(vfsobj.full_path), ustring(errstr)),
+                    buttons, title=_(u"Copy error")).show()
 
-            uilib.MessageBox(self.xyz, self.xyz.top,
-                             caption, caption).show(wait=False)
+                uilib.MessageBox(self.xyz, self.xyz.top,
+                                 caption, caption).show(wait=False)
 
-            return _rec or 'abort'
+                return _rec or 'abort'
+            finally:
+                free.set()
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        stopped = threading.Event()
-        cancel = threading.Event()
 
         args = {
             "existcb": existcb,
@@ -231,10 +242,15 @@ class XYZPlugin(BasePlugin):
 
             try:
                 getattr(o, "move" if move else "copy")(data["dst"], **args)
-            except StopIteration:
+            except StopIteration, e:
                 pass
-
-            stopped.set()
+            except Exception, e:
+                uilib.ErrorBox(self.xyz, self.xyz.top,
+                               unable_msg % (ustring(str(e))),
+                               unable_caption).show()
+                xyzlog.error(unable_msg % ustring(str(e)))
+            finally:
+                stopped.set()
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         
@@ -244,21 +260,20 @@ class XYZPlugin(BasePlugin):
                              caption).show(wait=False)
 
             try:
-                f = lambda: frun(obj)
-                runner = threading.Thread(target=f)
+                runner = threading.Thread(target=lambda: frun(obj))
                 runner.start()
 
                 # While runner is running, poll for the user input
                 # abort if ESCAPE pressed
                 while True:
+                    # Callback handler is active
+                    if not free.isSet():
+                        free.wait()
+
                     # Runner thread terminated, continue
                     if stopped.isSet():
                         runner.join()
                         break
-
-                    # Show message
-                    uilib.MessageBox(self.xyz, self.xyz.top,
-                                     caption, caption).show(wait=False)
 
                     _in = self.xyz.input.get(True)
 
@@ -267,12 +282,7 @@ class XYZPlugin(BasePlugin):
                         cancel.set()
                         runner.join()
                         break
-                    
-            except Exception, e:
-                uilib.ErrorBox(self.xyz, self.xyz.top,
-                               unable_msg % (ustring(str(e))),
-                               unable_caption).show()
-                xyzlog.error(unable_msg % ustring(str(e)))
+            except Exception:
                 break
 
         self._panel.reload()
