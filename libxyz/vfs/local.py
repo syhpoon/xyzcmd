@@ -124,6 +124,19 @@ class LocalVFSObject(vfsobj.VFSObject):
         Move object
         """
 
+        def _handle_error(e, obj):
+            if env['error'] != 'skip all':
+                if errorcb:
+                    try:
+                        env['error'] = errorcb(obj, str(e))
+                    except Exception:
+                        env['error'] = 'abort'
+
+            if env['error'] == 'abort':
+                raise XYZRuntimeError()
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         def _move_file(src, dst, *args, **kwargs):
             try:
                 os.rename(src, dst)
@@ -134,9 +147,16 @@ class LocalVFSObject(vfsobj.VFSObject):
                 if e.errno == errno.EXDEV:
                     if self._copy_file(src, dst, *args, **kwargs):
                         # Remove after successfully copied
-                        os.unlink(src)
+                        try:
+                            os.unlink(src)
+                        except Exception, e2:
+                            _handle_error(e2, self.xyz.vfs.dispatch(src))
                 else:
-                    raise
+                    _handle_error(e, self.xyz.vfs.dispatch(src))
+            except XYZRuntimeError:
+                raise
+            except Exception, e3:
+                _handle_error(e3, self.xyz.vfs.dispatch(src))
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -162,7 +182,10 @@ class LocalVFSObject(vfsobj.VFSObject):
                 (_move_dir if os.path.isdir(srcobj) else _move_file)\
                            (srcobj, dstobj, *args, **kwargs)
 
-            os.rmdir(src)
+            try:
+                os.rmdir(src)
+            except Exception, e:
+                _handle_error(e, self.xyz.vfs.dispatch(src))
 
             return True
 

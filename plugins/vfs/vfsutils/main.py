@@ -180,8 +180,8 @@ class XYZPlugin(BasePlugin):
             free.clear()
             
             buttons = [
-                (_(u"Yes"), "yes"),
-                (_(u"All"), "all"),
+                (_(u"Yes"), "override"),
+                (_(u"All"), "override all"),
                 (_(u"Skip"), "skip"),
                 (_(u"Skip all"), "skip all"),
                 (_(u"Abort"), "abort"),
@@ -236,8 +236,10 @@ class XYZPlugin(BasePlugin):
             "follow_links": data["follow_links"],
             "cancel": cancel
             }
+
+        runner_error = []
         
-        def frun(o):
+        def frun(o, err):
             stopped.clear()
 
             try:
@@ -245,10 +247,7 @@ class XYZPlugin(BasePlugin):
             except StopIteration, e:
                 pass
             except Exception, e:
-                uilib.ErrorBox(self.xyz, self.xyz.top,
-                               unable_msg % (ustring(str(e))),
-                               unable_caption).show()
-                xyzlog.error(unable_msg % ustring(str(e)))
+                err.append(ustring(str(e)))
             finally:
                 stopped.set()
 
@@ -260,7 +259,8 @@ class XYZPlugin(BasePlugin):
                              caption).show(wait=False)
 
             try:
-                runner = threading.Thread(target=lambda: frun(obj))
+                runner = threading.Thread(target=lambda:
+                                          frun(obj, runner_error))
                 runner.start()
 
                 # While runner is running, poll for the user input
@@ -273,6 +273,12 @@ class XYZPlugin(BasePlugin):
                     # Runner thread terminated, continue
                     if stopped.isSet():
                         runner.join()
+                        if runner_error:
+                            uilib.ErrorBox(self.xyz, self.xyz.top,
+                                           unable_msg % runner_error[0],
+                                           unable_caption).show()
+                            xyzlog.error(unable_msg % runner_error[0])
+
                         break
 
                     _in = self.xyz.input.get(True)
