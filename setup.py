@@ -45,6 +45,7 @@ setup(
         ("share/xyzcmd/conf", glob.glob("conf/*")),
         ("share/doc/xyzcmd/api", glob.glob("doc/api/*")),
         ("share/xyzcmd/skins", glob.glob("skins/*")),
+        ("share/doc/xyzcmd", ["ChangeLog"]),
         ] +
     include_rec("plugins", "share/xyzcmd/%s") +
     include_rec("doc/user-manual", "share/doc/xyzcmd/%s",
