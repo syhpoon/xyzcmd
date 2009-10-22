@@ -30,7 +30,7 @@ def include_rec(path, base, stripf=None):
 
 setup(
     name = "xyzcmd",
-    version = "0.0.1-beta",
+    version = "0.0.2",
     scripts = ["xyzcmd"],
     packages = ["libxyz",
                 "libxyz.core",

@@ -29,6 +29,14 @@ XYZCommander changelog
   Method shows a dialog for [recursively] deleting VFSObjects.
   Bound to F8.
 
+* [PLUGIN] New method :vfs:vfsutils:copy()
+  Method shows a dialog for [recursively] copying VFSObjects.
+  Bound to F5.
+
+* [PLUGIN] New method :vfs:vfsutils:move()
+  Method shows a dialog for [recursively] moving VFSObjects.
+  Bound to F6.
+
 * [PLUGIN] New plugin :misc:where.
   Plugin provides an ability to load/restore path locations on both panels
 
