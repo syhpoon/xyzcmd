@@ -138,12 +138,17 @@ class LocalVFSObject(vfsobj.VFSObject):
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         def _move_file(src, dst, *args, **kwargs):
-            if os.path.exists(dst):
+            if os.path.exists(dst) and os.path.isdir(dst):
+                dstto = os.path.join(dst, os.path.basename(src))
+            else:
+                dstto = dst
+
+            if os.path.exists(dstto):
                 if env['override'] not in ('override all', 'skip all'):
                     if existcb:
                         try:
                             env['override'] = existcb(
-                                self.xyz.vfs.dispatch(dst))
+                                self.xyz.vfs.dispatch(dstto))
                         except Exception:
                             env['override'] = 'abort'
 
@@ -153,7 +158,7 @@ class LocalVFSObject(vfsobj.VFSObject):
                     return False
 
             try:
-                os.rename(src, dst)
+                os.rename(src, dstto)
 
                 return True
             except OSError, e:
