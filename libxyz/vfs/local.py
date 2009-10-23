@@ -388,10 +388,10 @@ class LocalVFSObject(vfsobj.VFSObject):
         try:
             if not follow_links and os.path.islink(src):
                 linkto = os.readlink(src)
-                os.symlink(linkto, dst)
+                os.symlink(linkto, dstto)
             else:
                 (shutil.copy2 if save_attrs else shutil.copyfile)\
-                              (src, dst)
+                              (src, dstto)
 
             return True
         except Exception, e:
@@ -419,6 +419,12 @@ class LocalVFSObject(vfsobj.VFSObject):
         if os.path.exists(dst) and os.path.isdir(dst) and \
                os.path.basename(src) != os.path.basename(dst):
             dst = os.path.join(dst, os.path.basename(src))
+
+        if not follow_links and os.path.islink(src):
+            linkto = os.readlink(src)
+            os.symlink(linkto, dst)
+            
+            return True
 
         if os.path.isdir(src) and not os.path.exists(dst):
             os.makedirs(dst)
