@@ -1226,7 +1226,7 @@ class Block(lowui.FlowWidget):
 
         if pattern is None:
             # Search everywhere in object name
-            pattern = lambda pat, obj: pat in obj
+            pattern = lambda pat, obj: ustring(pat) in ustring(obj)
             # Search from the beginning of object name
             #pattern = lambda pat, obj: obj.startswith(pat)
 
