@@ -1,6 +1,12 @@
 XYZCommander changelog
 ----------------------
 
+[Version 0.0.3]
+===============
+
+* [PLUGIN] Added two hooks to :sys:cmd plugin to save command history on
+  exit and to restore its contents upon startup.
+
 [Version 0.0.2]
 ===============
 

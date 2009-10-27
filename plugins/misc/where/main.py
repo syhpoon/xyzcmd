@@ -48,7 +48,7 @@ class XYZPlugin(BasePlugin):
             chdir = self.xyz.pm.from_load(":sys:panel", "chdir")
             chdir(act)
             chdir(inact, active=False)
-        except Exception, e:
+        except Exception:
             pass
         finally:
             if f:

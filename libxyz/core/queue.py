@@ -24,6 +24,7 @@ class Queue(list):
     def __init__(self, maxsize):
         super(Queue, self).__init__()
 
+        self.maxsize = 0
         self.set_size(maxsize)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

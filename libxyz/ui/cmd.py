@@ -67,6 +67,8 @@ class Cmd(lowui.FlowWidget):
         self._panel = self.xyz.pm.load(":sys:panel")
 
         self._plugin = self._init_plugin()
+        self._ud = libxyz.core.UserData()
+        self._history_file = "history"
         
         _conf = self._plugin.conf
         self.prompt = Prompt(_conf[u"prompt"], self._attr(u"prompt"))
@@ -74,6 +76,8 @@ class Cmd(lowui.FlowWidget):
         self._history = libxyz.core.Queue(_conf[u"history_depth"])
 
         self.xyz.hm.register("event:conf_update", self._update_conf_hook)
+        self.xyz.hm.register("event:startup", self._load_history_hook)
+        self.xyz.hm.register("event:shutdown", self._save_history_hook)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -95,7 +99,51 @@ class Cmd(lowui.FlowWidget):
         for k, v in val.iteritems():
             if k in mapping:
                 mapping[k](v)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _save_history_hook(self):
+        """
+        Save history at shutdown
+        """
+
+        f = None
+        try:
+            f = self._ud.openfile(self._history_file, "w", "data")
+            f.write("\n".join([bstring(u"".join(x)) for x in self._history]))
+        except XYZRuntimeError, e:
+            xyzlog.info(_(u"Unable to open history data file: %s")
+                        % ustring(str(e)))
+        finally:
+            if f:
+                f.close()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _load_history_hook(self):
+        """
+        Load history at startup
+        """
+
+        f = None
         
+        try:
+            f = self._ud.openfile(self._history_file, "r", "data")
+            data = f.readlines()
+
+            if len(data) > self._history.maxsize:
+                data = data[-self._history.maxsize]
+
+            self._history.clear()
+
+            for line in data:
+                self._history.push([x for x in ustring(line.rstrip())])
+        except Exception:
+            pass
+        finally:
+            if f:
+                f.close()
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     def _init_plugin(self):
