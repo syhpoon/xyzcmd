@@ -19,6 +19,12 @@ from distutils.core import setup
 import glob
 import os
 
+try:
+    import bdist_debian
+    cmdclass={'bdist_debian': bdist_debian.bdist_debian}
+except ImportError:
+    cmdclass={}
+
 def include_rec(path, base, stripf=None):
     data = []
     
@@ -58,4 +64,5 @@ setup(
     description = "XYZCommander - Console file manager",
     url = "http://xyzcmd.syhpoon.name/",
     license = "LGPL",
+    cmdclass=cmdclass
     )
