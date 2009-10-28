@@ -105,5 +105,6 @@ bind(":vfs:vfsutils:remove", kbd("F8"))
 
 bind(":misc:about:about", kbd("META-o"))
 
-bind(lambda: shell(env("PAGER", "less"), macro("ACT_PATH")), kbd("F3"))
+bind(lambda: shell(env("PAGER", "less"), macro("ACT_PATH"), wait=False),
+     kbd("F3"))
 bind(lambda: shell(env("EDITOR", "vi"), macro("ACT_PATH")), kbd("F4"))

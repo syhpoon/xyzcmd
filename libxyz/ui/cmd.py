@@ -161,7 +161,7 @@ class Cmd(lowui.FlowWidget):
         _cmd_plugin.DOC = u"Configuration variables:\n"\
                           u"undo_depth - Specifies how many undo levels to "\
                           u"keep. Default - 10\n"\
-                          u"history_depth - Specifies how man entered "\
+                          u"history_depth - Specifies how many entered "\
                           u"commands to keep. Default - 50\n"\
                           u"prompt - Command line prompt. Default - '$ '"
 

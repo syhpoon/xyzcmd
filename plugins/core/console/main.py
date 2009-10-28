@@ -31,6 +31,11 @@ class XYZPlugin(BasePlugin):
     BRIEF_DESCRIPTION = u"Interactive management console"
     FULL_DESCRIPTION = u"Provides interactive management console"
     NAMESPACE = u"core"
+    DOC = u"Configuration variables:\n"\
+          u"history_depth - Specifies how many entered "\
+          u"commands to keep. Default - 50\n"\
+          u"prompt - Command line prompt. Default - '> '"
+
     EVENTS = [("show",
                "Fires upon showing console. Arguments: No."),
               ("cmd_prev",

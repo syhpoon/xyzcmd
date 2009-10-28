@@ -228,6 +228,11 @@ Execute command using ``:core:shell`` plugin.
 * Optional boolean argument `reload` can be provided to indicate         
   that panel content should/should not be reloaded after execution.
 
+* Optional boolean argument `wait` can be provided to indicate
+  that shell should/should not wait for user input after command executed
+  The wait flag has higher priority than :core:shell's `wait`
+  configuration flag.
+
 Example - run `xpdf` in background on .pdf files::
 
   action(r'iname{".*\\.pdf$"}', lambda obj: shell("xpdf", obj.path, bg=True))

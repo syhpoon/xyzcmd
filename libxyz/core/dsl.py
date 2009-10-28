@@ -312,7 +312,10 @@ class XYZ(object):
         must be executed in background
         Optional boolean argument 'reload' can be provided to indicate
         that panel content should/should not be reloaded after execution
-
+        Optional boolean argument 'wait' can be provided to indicate
+        that shell should/should not wait for user input after command executed
+        The wait flag has higher priority than :core:shell's `wait`
+        configuration flag.
         """
 
         if kwargs.get("current", False):
@@ -320,13 +323,14 @@ class XYZ(object):
 
         bg = ["&"] if kwargs.get("bg", False) else []
         reloadp = kwargs.get("reload", True)
+        wait = kwargs.get("wait", None)
 
         try:
             exef = cls.xyz.pm.from_load(":core:shell", "execute")
             escapef = cls.xyz.pm.from_load(":sys:cmd", "escape")
             reloadf = cls.xyz.pm.from_load(":sys:panel", "reload_all")
             exef(" ".join([escapef(cmd, True)] +
-                          [escapef(a, True) for a in args] + bg))
+                          [escapef(a, True) for a in args] + bg), wait=wait)
             if reloadp:
                 reloadf()
         except Exception, e:

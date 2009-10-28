@@ -18,12 +18,15 @@ class XYZPlugin(BasePlugin):
 
     NAME = u"shell"
     AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
-    VERSION = u"0.1"
+    VERSION = u"0.2"
     BRIEF_DESCRIPTION = _(u"Shell wrapper")
     FULL_DESCRIPTION = _(u"Execute commands in external shell")
     NAMESPACE = u"core"
     MIN_XYZ_VERSION = None
-    DOC = None
+    DOC = u"Configuration variables:\n"\
+          u"wait - Boolean value whether to wait for user pressing "\
+          u"key after command executed. Default True"
+
     HOMEPAGE = "http://xyzcmd.syhpoon.name"
     EVENTS = [("execute",
                _(u"Fires before command execution. "\
@@ -60,7 +63,7 @@ class XYZPlugin(BasePlugin):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def execute(self, cmd):
+    def execute(self, cmd, wait=None):
         """
         Execute command in shell
         """
@@ -115,7 +118,8 @@ class XYZPlugin(BasePlugin):
         if _current_term is not None:
             core.utils.restore_term(_current_term)
 
-        self._press_key(_(u"Press ENTER to continue..."), "\n")
+        if wait == True or (wait != False and self.conf["wait"]):
+            self._press_key(_(u"Press ENTER to continue..."), "\n")
 
         self.xyz.screen.start()
 

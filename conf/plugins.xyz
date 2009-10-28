@@ -8,7 +8,7 @@ plugin_conf(":sys:cmd", {
     "undo_depth": 10,
     
     # Size of typed commands history buffer
-    "history_depth": 50
+    "history_depth": 200
     })
 
 plugin_conf(":sys:logger", {
@@ -25,4 +25,9 @@ plugin_conf(":core:console", {
 
     # Console prompt
     "prompt": "> "
+    })
+
+plugin_conf(":core:shell", {
+    # Wait after command completed for user pressed key
+    "wait": True
     })

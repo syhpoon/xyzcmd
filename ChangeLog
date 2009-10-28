@@ -7,6 +7,9 @@ XYZCommander changelog
 * [PLUGIN] Added two hooks to :sys:cmd plugin to save command history on
   exit and to restore its contents upon startup.
 
+* [PLUGIN] :core:shell plugin receives a wait configuration flag, indicating
+  whether to wait for user input after command executed.
+
 [Version 0.0.2]
 ===============
 
