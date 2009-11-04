@@ -13,6 +13,8 @@ import libxyz.core as core
 from libxyz.core.utils import bstring
 from libxyz.core.plugins import BasePlugin
 
+from .bash import bash_setup
+
 class XYZPlugin(BasePlugin):
     "Shell plugin"
 
@@ -24,8 +26,10 @@ class XYZPlugin(BasePlugin):
     NAMESPACE = u"core"
     MIN_XYZ_VERSION = None
     DOC = u"Configuration variables:\n"\
-          u"wait - Boolean value whether to wait for user pressing "\
-          u"key after command executed. Default True"
+          u"wait - Boolean flag indicating whether to wait for user pressing "\
+          u"key after command executed. Default True\n"\
+          u"setup_shell - Boolean flag indicating whether to run "\
+          u"system shell-specific initialization. Default True"
 
     HOMEPAGE = "http://xyzcmd.syhpoon.name"
     EVENTS = [("execute",
@@ -33,13 +37,20 @@ class XYZPlugin(BasePlugin):
                  u"Arguments: a command to be executed")),
               ]
     
-    shell_args = {"sh": ["-c"],
-                  "bash": ["-c"],
-                  "zsh": ["-c"]
-                  }
+    shell_args = {
+        "sh": ["-c"],
+        "bash": ["-c"],
+        "zsh": ["-c"]
+        }
+
+    shell_setup = {
+        "bash": bash_setup
+        }
 
     def __init__(self, xyz):
         self.status = 0
+        self.shell = None
+
         super(XYZPlugin, self).__init__(xyz)
 
         self.export(self.execute)
@@ -48,18 +59,17 @@ class XYZPlugin(BasePlugin):
 
     def prepare(self):
         # Determine shell
+        shell = self.xyz.conf["xyz"]["shell"]
+        _base = os.path.basename(shell)
 
-        shell = os.getenv("SHELL")
+        if _base not in self.shell_args:
+            shell, _base = "/bin/sh", "sh"
 
-        if not shell:
-            shell = "/bin/sh"
+        self.shell = [shell] + self.shell_args[_base]
 
-        _shell = os.path.basename(shell)
-
-        if _shell not in self.shell_args:
-            shell, _shell = "/bin/sh", "sh"
-
-        self.shell = [shell] + self.shell_args[_shell]
+        # Setup shell
+        if self.conf["setup_shell"] and _base in self.shell_setup:
+            self.shell_setup[_base](shell)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -29,5 +29,8 @@ plugin_conf(":core:console", {
 
 plugin_conf(":core:shell", {
     # Wait after command completed for user pressed key
-    "wait": True
+    "wait": True,
+
+    # Whether to run system shell-specific initialization
+    "setup_shell": True
     })
