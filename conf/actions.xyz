@@ -31,6 +31,10 @@ action(r'type{file} and name{".*\\\.(c|h)$"}',
 action(r'type{file} and iname{".*\\\.(cpp|cxx|hpp|hxx)$"}',
        lambda obj: shell(env("EDITOR", "vi"), obj.path))
 
+# Win exe files
+action(r'type{file} and iname{".*\\\.exe$"}',
+       lambda obj: shell("wine", obj.path))
+
 ## VFS
 action('name{"\\\.tar$"}', lambda obj: call(":sys:panel:chdir",
                                             vfs_path(obj.path, "tar")))
