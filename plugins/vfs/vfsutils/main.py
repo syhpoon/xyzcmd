@@ -166,7 +166,6 @@ class XYZPlugin(BasePlugin):
               _(u"Copying object: %s")
         msg += _(u"\nESCAPE to abort")
         caption = _(u"Moving") if move else _(u"Copying")
-        caption += _(u"\nESCAPE to abort")
         unable_msg = _(u"Unable to move object: %s") if move else \
                      _(u"Unable to copy object: %s")
         unable_caption = _(u"Move error") if move else _(u"Copy error")
@@ -254,6 +253,9 @@ class XYZPlugin(BasePlugin):
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         
         for obj in objs:
+            if cancel.isSet():
+                break
+            
             uilib.MessageBox(self.xyz, self.xyz.top,
                              msg % ustring(obj.full_path),
                              caption).show(wait=False)
