@@ -107,4 +107,7 @@ bind(":misc:about:about", kbd("META-o"))
 
 bind(lambda: shell(env("PAGER", "less"), macro("ACT_PATH"), wait=False),
      kbd("F3"))
+
 bind(lambda: shell(env("EDITOR", "vi"), macro("ACT_PATH")), kbd("F4"))
+
+bind(lambda: call(":sys:panel:chdir", macro("INACT_CWD")), kbd("META-="))

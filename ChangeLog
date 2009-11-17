@@ -13,6 +13,8 @@ XYZCommander changelog
 * [PLUGIN] :core:shell plugin receives a 'setup_shell' configuration flag,
   indicating whether to run system shell-specific initialization.
 
+* [UI] New shortcut - (META-=) to quickly change directory in active panel
+  to the same as in the inactive one.
 
 [Version 0.0.2]
 ===============
