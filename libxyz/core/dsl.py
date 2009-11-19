@@ -59,6 +59,7 @@ class XYZ(object):
 
     api = ["let",
            "val",
+           "section",
            "unlet",
            "load",
            "bind",
@@ -163,6 +164,21 @@ class XYZ(object):
         except Exception:
             return None
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    @classmethod
+    @instantiated
+    def section(cls, sect=u"local"):
+        """
+        Return whole configuration section contents as a dictionary or None
+        if undefined
+        """
+
+        try:
+            return cls.xyz.conf[sect]
+        except Exception:
+            return None
+        
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @classmethod

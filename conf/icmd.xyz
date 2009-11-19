@@ -8,3 +8,9 @@
 icmd("cd",
      lambda arg: call(":sys:panel:chdir", arg.rstrip()) if arg else
      call(":sys:panel:chdir", env("HOME", "/")))
+
+icmd("alias",
+     lambda _: call(":core:shell:echo",
+                    "\n".join(["alias %s='%s'" % (k, v)
+                               for k, v in section("aliases").iteritems()
+                               ])))

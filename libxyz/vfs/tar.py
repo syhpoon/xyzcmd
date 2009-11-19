@@ -92,6 +92,20 @@ class TarVFSObject(vfsobj.VFSObject):
             ]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    # def copy(self, path, existcb=None, errorcb=None, save_attrs=True,
+    #          follow_links=False, cancel=None):
+        
+    #     env = {
+    #         'override': 'abort',
+    #         'error': 'abort'
+    #         }
+
+    #     tarobj = self._open_archive()
+
+    #     return tarobj.extractall(path, [self._init_obj()])
+        
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     def _prepare(self):
         self.root = True if self.path == os.sep else False
@@ -202,16 +216,14 @@ class TarVFSObject(vfsobj.VFSObject):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _open_archive(self):
-        if self.tarobj is not None:
-            return self.tarobj
-        
-        _mode = "r"
+        if self.tarobj is None:
+            _mode = "r"
 
-        if self.driver == "gztar":
-            _mode = "r:gz"
-        elif self.driver == "bz2tar":
-            _mode = "r:bz2"
+            if self.driver == "gztar":
+                _mode = "r:gz"
+            elif self.driver == "bz2tar":
+                _mode = "r:bz2"
 
-        self.tarobj = tarfile.open(self.parent.path, mode=_mode)
+            self.tarobj = tarfile.open(self.parent.path, mode=_mode)
+    
         return self.tarobj
-                            

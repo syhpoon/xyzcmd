@@ -54,6 +54,7 @@ class XYZPlugin(BasePlugin):
         super(XYZPlugin, self).__init__(xyz)
 
         self.export(self.execute)
+        self.export(self.echo)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -80,7 +81,68 @@ class XYZPlugin(BasePlugin):
 
         cmd = bstring(cmd)
         self.fire_event("execute", cmd)
+
+        def _exec():
+            pid = os.fork()
+
+            # Child - Exec passed cmd
+            if pid == 0:
+                os.execvp(self.shell[0], self.shell + [cmd])
+                # WTF?
+                sys.exit()
+                # Parent
+            else:
+                while True:
+                    try:
+                        self.status = os.waitpid(pid, 0)
+                    except KeyboardInterrupt:
+                        pass
+                    except OSError, e:
+                        if e.errno != errno.EINTR:
+                            break
+
+            return self.status
+
+        return self._exec_engine(cmd, _exec, wait)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def echo(self, msg):
+        """
+        Echo a message to terminal output
+        """
+
+        def _echo():
+            print(msg)
         
+        return self._exec_engine("echo", _echo)
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _press_key(self, msg, key):
+        """
+        Print prompt and wait for the key to be pressed
+        """
+
+        sys.stdout.write(msg)
+        sys.stdout.flush()
+        
+        while True:
+            try:
+                m = os.read(sys.stdin.fileno(), 1024)
+                if key in m:
+                    break
+            except OSError, e:
+                if e.errno != errno.EINTR:
+                    break
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _exec_engine(self, cmd, cmdf, wait=None):
+        """
+        Execute command engine
+        """
+
         self.xyz.screen.clear()
         stdout = sys.stdout
         self.xyz.screen.stop()
@@ -102,29 +164,13 @@ class XYZPlugin(BasePlugin):
                       cmd))
         stdout.flush()
 
-        def _sigwinch(sig, frame):
+        def _sigwinch(_a, _b):
             self.xyz.screen.resized = True
             
         signal.signal(signal.SIGWINCH, _sigwinch)
 
-        pid = os.fork()
-
-        # Child - Exec passed cmd
-        if pid == 0:
-            os.execvp(self.shell[0], self.shell + [cmd])
-            # WTF?
-            sys.exit()
-        # Parent
-        else:
-            while True:
-                try:
-                    self.status = os.waitpid(pid, 0)
-                except KeyboardInterrupt:
-                    pass
-                except OSError, e:
-                    if e.errno != errno.EINTR:
-                        break
-
+        status = cmdf()
+        
         if _current_term is not None:
             core.utils.restore_term(_current_term)
 
@@ -133,23 +179,4 @@ class XYZPlugin(BasePlugin):
 
         self.xyz.screen.start()
 
-        return self.status
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _press_key(self, msg, key):
-        """
-        Print prompt and wait for the key to be pressed
-        """
-
-        sys.stdout.write(msg)
-        sys.stdout.flush()
-        
-        while True:
-            try:
-                m = os.read(sys.stdin.fileno(), 1024)
-                if key in m:
-                    break
-            except OSError, e:
-                if e.errno != errno.EINTR:
-                    break
+        return status

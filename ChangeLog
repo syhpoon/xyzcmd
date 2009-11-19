@@ -4,6 +4,14 @@ XYZCommander changelog
 [Version 0.0.3]
 ===============
 
+* [CONF] New internal cmd "alias" is used to print all xyzcmd's aliases.
+
+* [CONF] New DSL method - section().
+  Return whole configuration section contents as a dictionary or None.
+
+* [PLUGIN] New method :core:shell:echo()
+  Method allows to show any custom string similar to command output.
+
 * [PLUGIN] Added two hooks to :sys:cmd plugin to save command history on
   exit and to restore its contents upon startup.
 

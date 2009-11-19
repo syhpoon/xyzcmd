@@ -31,6 +31,7 @@ functions are available:
 
 * :ref:`let <let>`
 * :ref:`val <val>`
+* :ref:`section <section>`
 * :ref:`unlet <unlet>`
 * :ref:`load <load>`
 * :ref:`bind <bind>`
@@ -73,6 +74,21 @@ Retrieve `variable` value.
 Example::
 
   val("skin", sect="xyz")
+
+.. _section:
+
+section(sect="local")
++++++++++++++++++++++
+Return whole configuration section contents as a dictionary or None
+if undefined
+
+Example::
+
+  icmd("alias",
+     lambda _: call(":core:shell:echo",
+                    "\n".join(["alias %s='%s'" % (k, v)
+                               for k, v in section("aliases").iteritems()
+                               ])))
 
 .. _unlet:
 
