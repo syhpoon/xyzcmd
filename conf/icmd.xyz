@@ -9,6 +9,7 @@ icmd("cd",
      lambda arg: call(":sys:panel:chdir", arg.rstrip()) if arg else
      call(":sys:panel:chdir", env("HOME", "/")))
 
+# Show defined aliases
 icmd("alias",
      lambda _: call(":core:shell:echo",
                     "\n".join(["alias %s='%s'" % (k, v)

@@ -15,30 +15,30 @@ action(
     lambda obj: call(":sys:panel:chdir", obj.full_path))
 
 ## Multimedia
-action(r'iname{".*\\\.(avi|wmv|mov|asf|mpg|flv|mkv|mp3)$"}',
-       lambda obj: shell("mplayer", "-fs", "-vo", "sdl", obj.path))
+action(r'iname{".*\\.(avi|wmv|mov|asf|mpg|flv|mkv|mp3)$"}',
+       lambda obj: shell("mplayer", "-fs", "-vo", "sdl", obj.path, wait=False))
 
 ## Documents
 # PDF
-action(r'iname{".*\\\.pdf$"}', lambda obj: shell("xpdf", obj.path, bg=True))
+action(r'iname{".*\\.pdf$"}', lambda obj: shell("xpdf", obj.path, bg=True))
 
 ## Programming sources
 # C
-action(r'type{file} and name{".*\\\.(c|h)$"}',
+action(r'type{file} and name{".*\\.(c|h)$"}',
        lambda obj: shell(env("EDITOR", "vi"), obj.path))
 
 # C++
-action(r'type{file} and iname{".*\\\.(cpp|cxx|hpp|hxx)$"}',
+action(r'type{file} and iname{".*\\.(cpp|cxx|hpp|hxx)$"}',
        lambda obj: shell(env("EDITOR", "vi"), obj.path))
 
 # Win exe files
-action(r'type{file} and iname{".*\\\.exe$"}',
+action(r'type{file} and iname{".*\\.exe$"}',
        lambda obj: shell("wine", obj.path))
 
 ## VFS
-action('name{"\\\.tar$"}', lambda obj: call(":sys:panel:chdir",
-                                            vfs_path(obj.path, "tar")))
-action('name{"\\\.tar.gz$"}', lambda obj: call(":sys:panel:chdir",
-                                               vfs_path(obj.path, "gztar")))
-action('name{"\\\.tar.bz2$"}', lambda obj: call(":sys:panel:chdir",
-                                                vfs_path(obj.path, "bz2tar")))
+action('name{"\\.tar$"}', lambda obj: call(":sys:panel:chdir",
+                                           vfs_path(obj.path, "tar")))
+action('name{"\\.tar.gz$"}', lambda obj: call(":sys:panel:chdir",
+                                              vfs_path(obj.path, "gztar")))
+action('name{"\\.tar.bz2$"}', lambda obj: call(":sys:panel:chdir",
+                                               vfs_path(obj.path, "bz2tar")))

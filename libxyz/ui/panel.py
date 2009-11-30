@@ -160,6 +160,7 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.switch_active)
         _panel_plugin.export(self.get_selected)
         _panel_plugin.export(self.get_tagged)
+        _panel_plugin.export(self.get_untagged)
         _panel_plugin.export(self.get_current)
         _panel_plugin.export(self.get_active)
         _panel_plugin.export(self.toggle_tag)
@@ -298,6 +299,15 @@ class Panel(lowui.WidgetWrap):
         """
 
         return (self.active if active else self.inactive).get_tagged()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    def get_untagged(self, active=True):
+        """
+        Return list of not tagged VFSObject instances
+        """
+
+        return (self.active if active else self.inactive).get_untagged()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
@@ -943,6 +953,16 @@ class Block(lowui.FlowWidget):
         """
 
         return [self.entries[x] for x in self._tagged]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_untagged(self):
+        """
+        Return list of not tagged VFSObject instances
+        """
+
+        return [self.entries[x] for x in xrange(self._len)
+                if x not in self._tagged]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

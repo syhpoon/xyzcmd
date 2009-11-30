@@ -9,6 +9,9 @@ XYZCommander changelog
 * [CONF] New DSL method - section().
   Return whole configuration section contents as a dictionary or None.
 
+* [PLUGIN] New method :sys:panel:get_untagged()
+  Method returns list of not tagged VFSObject instances.
+
 * [PLUGIN] New method :core:shell:echo()
   Method allows to show any custom string similar to command output.
 
