@@ -115,6 +115,10 @@ class XYZ(object):
         cls.macros["INACT_CWD"] = lambda: cls.xyz.pm.from_load(":sys:panel",
                                                                "cwd")(False)
 
+        cls.macros["ACT_PATH"] = lambda: \
+                                   cls.xyz.pm.from_load(":sys:panel",
+                                                        "get_selected")().path
+
         cls.macros["INACT_PATH"] = lambda: \
                                    cls.xyz.pm.from_load(":sys:panel",
                                                         "get_selected"
