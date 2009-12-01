@@ -4,27 +4,42 @@ XYZCommander changelog
 [Version 0.0.3]
 ===============
 
-* [CONF] New internal cmd "alias" is used to print all xyzcmd's aliases.
+[CONF]
+------
+* New internal cmd "alias" is used to print all xyzcmd's aliases.
 
-* [CONF] New DSL method - section().
+* New DSL method - section().
   Return whole configuration section contents as a dictionary or None.
 
-* [PLUGIN] New method :sys:panel:get_untagged()
+[PLUGIN]
+--------
+* New method :sys:panel:get_untagged()
   Method returns list of not tagged VFSObject instances.
 
-* [PLUGIN] New method :core:shell:echo()
+* New method :core:shell:echo()
   Method allows to show any custom string similar to command output.
 
-* [PLUGIN] Added two hooks to :sys:cmd plugin to save command history on
+* Added two hooks to :sys:cmd plugin to save command history on
   exit and to restore its contents upon startup.
 
-* [PLUGIN] :core:shell plugin receives a 'wait' configuration flag, indicating
+* :core:shell receives a 'wait' configuration flag, indicating
   whether to wait for user input after command executed.
 
-* [PLUGIN] :core:shell plugin receives a 'setup_shell' configuration flag,
+* :core:shell receives a 'setup_shell' configuration flag,
   indicating whether to run system shell-specific initialization.
 
-* [UI] New shortcut - (META-=) to quickly change directory in active panel
+* :sys:panel receives three new filter-related variables:
+  filters_enable - enables object filtering
+  filters_policy - dtermines filtering policy
+  fitlers - list of FSRules to be sequentially applied on objects
+
+* New method :sys:panel:filter
+  Method takes a list of VFSObject objects and filters out entries according to
+  filters defined in plugin configuration.
+
+[UI]
+----
+* New shortcut - (META-=) to quickly change directory in active panel
   to the same as in the inactive one.
 
 [Version 0.0.2]

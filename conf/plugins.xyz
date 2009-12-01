@@ -11,6 +11,18 @@ plugin_conf(":sys:cmd", {
     "history_depth": 200
     })
 
+plugin_conf(":sys:panel", {
+    # Whether to enable filtering.
+    "filters_enabled": False,
+    
+    # Filters policy. If True - filter out objects which match the rule,
+    # If False - filter out objects which do not match the rule.
+    "filters_policy": True,
+
+    # List of permanent filters. Filters applied in defined order sequentially.
+    "filters": []
+    })
+
 plugin_conf(":sys:logger", {
     # Log levels to track
     "levels": ["PANIC", "ERROR", "WARNING", "INFO"],

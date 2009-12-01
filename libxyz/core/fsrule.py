@@ -183,6 +183,8 @@ class FSRule(parser.BaseParser):
 
         super(FSRule, self).__init__()
 
+        self.raw_rule = rule
+        
         self._stack = []
         self._done = False
         self._cur_obj = None

@@ -43,6 +43,7 @@ class Panel(lowui.WidgetWrap):
 
     def __init__(self, xyz):
         self.xyz = xyz
+        self.conf = self.xyz.conf[u"plugins"][u":sys:panel"]
 
         self._keys = libxyz.ui.Keys()
 
@@ -56,11 +57,28 @@ class Panel(lowui.WidgetWrap):
         self._cmd = libxyz.ui.Cmd(xyz)
         _cwd = os.getcwd()
 
+        self.filters = self._build_filters()
+        self.xyz.hm.register("event:conf_update", self._update_conf_hook)
+
         self.block1 = Block(xyz, _blocksize, _cwd, self._enc, active=True)
         self.block2 = Block(xyz, _blocksize, _cwd, self._enc)
         self._compose()
 
         super(Panel, self).__init__(self._widget)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _update_conf_hook(self, var, val, sect):
+        """
+        Hook for update conf event
+        """
+
+        # Not ours
+        if sect != "plugins" or var != ":sys:panel":
+            return
+
+        if "filters" in val or "filters_enabled" in val:
+            self.filters = self._build_filters()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -74,6 +92,31 @@ class Panel(lowui.WidgetWrap):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def _build_filters(self):
+        """
+        Compile filters
+        """
+
+        filters = []
+        
+        # No need to compile
+        if not self.conf[u"filters_enabled"]:
+            return filters
+
+        for f in self.conf[u"filters"]:
+            try:
+                rule = libxyz.core.FSRule(ustring(f))
+            except libxyz.exceptions.ParseError, e:
+                xyzlog.error(_(u"Error compiling filter: %s" %
+                               ustring(str(e))))
+                continue
+            else:
+                filters.append(rule)
+
+        return filters
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     @property
     def active(self):
         if self.block1.active:
@@ -181,6 +224,7 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.select)
         _panel_plugin.export(self.cwd)
         _panel_plugin.export(self.vfs_driver)
+        _panel_plugin.export(self.filter)
 
         _panel_plugin.VERSION = u"0.1"
         _panel_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
@@ -495,6 +539,26 @@ class Panel(lowui.WidgetWrap):
 
         return (self.active if active else self.inactive).vfs_driver
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def filter(self, objects):
+        """
+        Filter objects
+        """
+
+        if not self.conf[u"filters_enabled"]:
+            return objects
+
+        policy = self.conf[u"filters_policy"]
+
+        def policyf(res):
+            return not res if policy == True else res
+
+        for f in self.filters:
+            objects = [x for x in objects if policyf(f.match(x))]
+
+        return objects
+
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 class Block(lowui.FlowWidget):
@@ -541,6 +605,7 @@ class Block(lowui.FlowWidget):
         self._custom_info = None
         self._keys = libxyz.ui.Keys()
         self._cmd = self.xyz.pm.load(":sys:cmd")
+        self._filter = self.xyz.pm.from_load(":sys:panel", "filter")
 
         self._pending = libxyz.core.Queue(20)
         self._re_raw = r".*"
@@ -571,7 +636,7 @@ class Block(lowui.FlowWidget):
         return w.rows((maxcol,), focus)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def display_widget(self, (maxcol,), focus):
         return lowui.BoxAdapter(self.block, self.size.rows)
 
@@ -582,10 +647,12 @@ class Block(lowui.FlowWidget):
 
         self._dir = _dir
 
-        _entries = [_parent]
+        _entries = []
         _entries.extend(_dirs)
         _entries.extend(_files)
-
+        _entries = self._filter(_entries)
+        _entries.insert(0, _parent)
+        
         self._title = truncate(_dir.full_path, self.size.cols - 4,
                                self._enc, True)
 

@@ -169,14 +169,14 @@ class XYZ(object):
         if sect not in _conf:
             _conf[sect] = {}
 
-        cls.xyz.hm.dispatch(cls.EVENT_CONF_UPDATE, var, val, sect)
-        
         if var in _conf[sect] and isinstance(_conf[sect][var], dict) and \
         isinstance(val, dict):
             # Update rather than overwrite
             _conf[sect][var].update(val)
         else:
             cls.xyz.conf[sect][var] = val
+
+        cls.xyz.hm.dispatch(cls.EVENT_CONF_UPDATE, var, val, sect)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
