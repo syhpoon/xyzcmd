@@ -4,15 +4,19 @@ XYZCommander changelog
 [Version 0.0.3]
 ===============
 
-[CONF]
-------
+[New features]
+--------------
+* Permanents filters
+
+[Configuration]
+---------------
 * New internal cmd "alias" is used to print all xyzcmd's aliases.
 
 * New DSL method - section().
   Return whole configuration section contents as a dictionary or None.
 
-[PLUGIN]
---------
+[Plugins]
+---------
 * New method :sys:panel:get_untagged()
   Method returns list of not tagged VFSObject instances.
 
