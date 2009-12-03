@@ -22,7 +22,7 @@ import libxyz.core
 import libxyz.const
 import libxyz.exceptions
 
-from libxyz.core.utils import ustring, bstring
+from libxyz.core.utils import ustring, bstring, is_func
 from libxyz.ui import lowui
 from libxyz.ui import align
 from libxyz.ui import Shortcut
@@ -225,11 +225,25 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.cwd)
         _panel_plugin.export(self.vfs_driver)
         _panel_plugin.export(self.filter)
+        _panel_plugin.export(self.sort)
 
         _panel_plugin.VERSION = u"0.1"
         _panel_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
         _panel_plugin.BRIEF_DESCRIPTION = u"Panel plugin"
         _panel_plugin.HOMEPAGE = u"xyzcmd.syhpoon.name"
+        _panel_plugin.DOC = u"""\
+Configuration variables:
+filters_enabled - Enable permanent filters. Default - False
+filters_policy - Filters policy.
+ If True - filter out objects which matching the rule.
+ If False - filter out objects which do not match the rule. Default - True
+filters - List of permanent filters.
+ Filters applied in defined order sequentially. Default - []
+sorting_policy - Active sorting policy name or None. Default - None
+sorting - Defined sorting policies. Each key corresponds to a policy name
+ and value is either a function with two arguments (VFSObject) behaving
+ like cmp() or a list of those functions. If value is a list, each function
+ applied sequentially. Default - []"""
 
         self.xyz.pm.register(_run_plugin)
         self.xyz.pm.register(_panel_plugin)
@@ -546,16 +560,43 @@ class Panel(lowui.WidgetWrap):
         Filter objects
         """
 
-        if not self.conf[u"filters_enabled"]:
+        if not self.conf["filters_enabled"]:
             return objects
 
-        policy = self.conf[u"filters_policy"]
+        policy = self.conf["filters_policy"]
 
         def policyf(res):
             return not res if policy == True else res
 
         for f in self.filters:
             objects = [x for x in objects if policyf(f.match(x))]
+
+        return objects
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def sort(self, objects):
+        """
+        Sort objects
+        """
+
+        policy = self.conf["sorting_policy"]
+
+        if policy is None:
+            return objects
+        
+        if policy not in self.conf["sorting"]:
+            xyzlog.warning(_(u"Unable to find `%s` sorting policy" %
+                             ustring(policy)))
+            return objects
+
+        policy_data = self.conf["sorting"][policy]
+
+        if is_func(policy_data):
+            objects.sort(cmp=policy_data)
+        elif isinstance(policy_data, list):
+            for f in policy_data:
+                objects.sort(cmp=f)
 
         return objects
 
@@ -606,6 +647,7 @@ class Block(lowui.FlowWidget):
         self._keys = libxyz.ui.Keys()
         self._cmd = self.xyz.pm.load(":sys:cmd")
         self._filter = self.xyz.pm.from_load(":sys:panel", "filter")
+        self._sort = self.xyz.pm.from_load(":sys:panel", "sort")
 
         self._pending = libxyz.core.Queue(20)
         self._re_raw = r".*"
@@ -651,6 +693,7 @@ class Block(lowui.FlowWidget):
         _entries.extend(_dirs)
         _entries.extend(_files)
         _entries = self._filter(_entries)
+        _entries = self._sort(_entries)
         _entries.insert(0, _parent)
         
         self._title = truncate(_dir.full_path, self.size.cols - 4,

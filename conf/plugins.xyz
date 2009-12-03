@@ -1,14 +1,15 @@
 # Plugins configuration file. Default settings. Do not edit.
 
+
 plugin_conf(":sys:cmd", {
     # Command line prompt
     "prompt": "$ ",
     
     # Size of undo buffer
     "undo_depth": 10,
-    
+
     # Size of typed commands history buffer
-    "history_depth": 200
+    "history_depth": 200,
     })
 
 plugin_conf(":sys:panel", {
@@ -20,7 +21,17 @@ plugin_conf(":sys:panel", {
     "filters_policy": True,
 
     # List of permanent filters. Filters applied in defined order sequentially.
-    "filters": []
+    "filters": [],
+
+    # Active sorting policy name or None
+    "sorting_policy": None,
+
+    # Defined sorting policies.
+    # Each key corresponds to a policy name and value is either a function
+    # with two arguments (VFSObject) behaving like cmp()
+    # or a list of those functions.
+    # If value is a list, each function applied sequentially.
+    "sorting": {}
     })
 
 plugin_conf(":sys:logger", {

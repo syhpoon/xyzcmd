@@ -7,6 +7,7 @@ XYZCommander changelog
 [New features]
 --------------
 * Permanents filters
+* Custom sorting
 
 [Configuration]
 ---------------
@@ -32,14 +33,23 @@ XYZCommander changelog
 * :core:shell receives a 'setup_shell' configuration flag,
   indicating whether to run system shell-specific initialization.
 
-* :sys:panel receives three new filter-related variables:
+* :sys:panel receives five new filter-related variables:
   filters_enable - enables object filtering
   filters_policy - dtermines filtering policy
   fitlers - list of FSRules to be sequentially applied on objects
+  sorting_policy - Active sorting policy name or None
+  sorting - Defined sorting policies. Each key corresponds to a policy
+            name and value is either a function with two arguments (VFSObject)
+            behaving like cmp() or a list of those functions.
+            If value is a list, each function applied sequentially.
 
 * New method :sys:panel:filter
   Method takes a list of VFSObject objects and filters out entries according to
   filters defined in plugin configuration.
+
+* New method :sys:panel:sort
+  Method takes a list of VFSObject objects and sorts entries according to
+  sorting policy defined in plugin configuration.
 
 [UI]
 ----
