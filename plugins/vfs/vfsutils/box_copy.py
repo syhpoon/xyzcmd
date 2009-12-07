@@ -63,10 +63,10 @@ class CopyBox(lowui.WidgetWrap):
         self.widgets = lowui.Pile(w)
         box = lowui.AttrWrap(lowui.Filler(self.widgets), self._attr("box"))
 
-        self.w = uilib.Border(box, caption, self._attr("title"),
+        self.widget = uilib.Border(box, caption, self._attr("title"),
                               self._attr("border"))
                               
-        super(CopyBox, self).__init__(self.w)
+        super(CopyBox, self).__init__(self.widget)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
@@ -80,7 +80,7 @@ class CopyBox(lowui.WidgetWrap):
             mount = lowui.Overlay(mount, self.xyz.top, uilib.align.CENTER,
                                width, uilib.align.MIDDLE, height)
 
-            return lowui.Overlay(self.w, mount, uilib.align.CENTER,
+            return lowui.Overlay(self.widget, mount, uilib.align.CENTER,
                                  width - 2, uilib.align.MIDDLE, height - 2)
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
