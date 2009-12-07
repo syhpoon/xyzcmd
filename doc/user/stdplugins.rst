@@ -154,7 +154,56 @@ Events:
 
 ``:ui:`` plugins
 ----------------
-**TODO**
+UI plugins usually provide new UI widgets and functionality related to
+ui subsystem in general.
+
+List of standard *:ui:* plugins:
+
+* :ref:`:ui:bookmarks <ui-bookmarks>`
+* :ref:`:ui:testinput <ui-testinput>`
+
+.. _ui-bookmarks:
+
+``:ui:bookmarks``
++++++++++++++++++
+Plugin is used to handle frequently used directories bookmarks.
+
+Public methods:
+
+**add_bookmark(path, name=None)**
+   Add new bookmark entry.
+   If name is not specified, path is used instead
+
+**del_bookmark(name)**
+  Delete saved bookmark entry by name.
+
+**get_path(name)**
+  Get bookmark path by name.
+
+**show_bookmarks()**
+  Show saved bookmarks in popup dialog. One can navigate through the list
+  by pressing *UP* and *DOWN* keys. Pressing *RETURN* on the entry causes
+  |XYZ| to chdir to specified path in active panel.
+
+  Entry number can be used to quickly select particular entry, just type the
+  number and then press *RETURN*.
+
+.. _ui-testinput:
+
+``:ui:testinput``
++++++++++++++++++
+Simple dialog to show pressed keys.
+This can be useful when selecting appropriate keybind defined in keys.xyz file.
+
+Public methods:
+
+**show_box(use_wrap=True)**
+  Show test_box dialog.
+  use_wrap: Whether to use input wrapper which honours learned keys.
+
+  Upon pressing any key the shortcut and raw key will be shown.
+  Shortcut is what XYZCommander expects to see in configuration files.
+  Raw is what low-level library emits to focus widget.
 
 ``:vfs:`` plugins
 -----------------
