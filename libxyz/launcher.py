@@ -92,6 +92,10 @@ class Launcher(object):
         self.xyz.screen = uilib.display.init_display(
             self._conf.get("driver", self.xyz.conf["xyz"]["term_lib"]))
 
+        # Urwid 0.9.9 issue
+        if hasattr(self.xyz.screen, "set_input_timeouts"):
+            self.xyz.screen.set_input_timeouts(0)
+
         self.xyz.screen.register_palette(self.xyz.skin.get_palette_list())
         self.xyz.skin.set_screen(self.xyz.screen)
         self.xyz.screen.run_wrapper(self._run)

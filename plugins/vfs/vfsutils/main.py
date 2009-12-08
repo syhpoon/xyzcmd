@@ -255,7 +255,7 @@ class XYZPlugin(BasePlugin):
         for obj in objs:
             if cancel.isSet():
                 break
-            
+
             uilib.MessageBox(self.xyz, self.xyz.top,
                              msg % ustring(obj.full_path),
                              caption).show(wait=False)
