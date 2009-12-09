@@ -55,12 +55,18 @@ class InputWrapper(object):
 
         _input = None
 
+        if allow_empty:
+            # Urwid 0.9.9 issue
+            if hasattr(self.xyz.screen, "set_input_timeouts"):
+                self.xyz.screen.set_input_timeouts(0)
+
         while True:
             _in = self.xyz.screen.get_input()
 
             if not _in:
                 if allow_empty:
-                    return _in
+                    _input = _in
+                    break
                 else:
                     continue
 
@@ -73,6 +79,11 @@ class InputWrapper(object):
                 _input = _in
             finally:
                 break
+
+        if allow_empty:
+            # Urwid 0.9.9 issue
+            if hasattr(self.xyz.screen, "set_input_timeouts"):
+                self.xyz.screen.set_input_timeouts(None)
 
         return _input
 
