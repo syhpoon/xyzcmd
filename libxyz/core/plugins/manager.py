@@ -65,7 +65,7 @@ class PluginManager(object):
             raise XYZValueError(_(u"Invalid argument type %s. List expected" %
                                   type(dirs)))
         else:
-            sys.path.extend(dirs)
+            sys.path = dirs + sys.path
 
         self.xyz = xyz
 
