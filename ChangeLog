@@ -6,6 +6,7 @@ XYZCommander changelog
 
 [New features]
 --------------
+* Python2.4 support
 * Permanents filters
 * Custom sorting
 
