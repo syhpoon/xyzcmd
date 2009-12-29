@@ -165,9 +165,9 @@ class XYZPlugin(BasePlugin):
         except ParseError, e:
             xyzlog.error(_(u"Error parsing bookmarks file: %s") %
                          ustring(str(e)))
-            return None
-        finally:
-            _file.close()
+        _file.close()
+
+        return None
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

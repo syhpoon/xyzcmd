@@ -94,7 +94,8 @@ class VFSDispatcher(object):
         driver = None
 
         for entry in re.split(self.vfsre, path):
-            entry = os.sep if not entry else entry
+            if not entry:
+                entry = os.sep
             
             vfs = self.vfsre2.search(entry)
 
@@ -123,16 +124,34 @@ class VFSDispatcher(object):
         """
         Return full path
         """
-        
-        return (parent.full_path if parent else "") + \
-               ("#vfs-%s#" % vfs if vfs else "") + path
 
+        if parent:
+            p = parent.full_path
+        else:
+            p = ""
+
+        if vfs:
+            v = "#vfs-%s#" % vfs
+        else:
+            v = ""
+
+        return p + v + path
+    
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def get_ext_path(self, parent, vfs):
         """
         Return external path
         """
-        
-        return (parent.full_path if parent else "") + \
-               ("#vfs-%s#" % vfs if vfs else "")
+
+        if parent:
+            p = parent.full_path
+        else:
+            p = ""
+
+        if vfs:
+            v = "#vfs-%s#" % vfs
+        else:
+            v = ""
+
+        return p + v

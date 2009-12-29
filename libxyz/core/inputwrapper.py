@@ -77,8 +77,8 @@ class InputWrapper(object):
                 _input = [self.keycodes[tuple(_in)]]
             except KeyError:
                 _input = _in
-            finally:
-                break
+
+            break
 
         if allow_empty:
             # Urwid 0.9.9 issue
@@ -100,6 +100,9 @@ class InputWrapper(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _resized_set(self, value):
-        self._resized = True if value else False
-
+        if value:
+            self._resized = True
+        else:
+            self._resized = False
+            
     resized = property(_resized_get, _resized_set)

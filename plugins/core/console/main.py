@@ -73,9 +73,12 @@ class XYZPlugin(BasePlugin):
             """
             Fetch previous command from history
             """
-            
-            _i = -1 if k == self._keys.UP else 1
-            
+
+            if k == self._keys.UP:
+                _i = -1
+            else:
+                _i = 1
+
             _pos = len(self._history) - 1 + (self._index + _i)
             
             if _pos < 0:

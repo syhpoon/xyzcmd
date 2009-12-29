@@ -347,7 +347,12 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         Get selected VFSObject instance
         """
 
-        return (self.active if active else self.inactive).get_selected()
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.get_selected()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -356,7 +361,12 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         Return list of tagged VFSObject instances
         """
 
-        return (self.active if active else self.inactive).get_tagged()
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.get_tagged()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
@@ -365,7 +375,12 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         Return list of not tagged VFSObject instances
         """
 
-        return (self.active if active else self.inactive).get_untagged()
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.get_untagged()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
@@ -374,7 +389,12 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         Return VFSObject instance of current VFSObject
         """
 
-        return (self.active if active else self.inactive).get_current()
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.get_current()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -393,7 +413,12 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         Tag selected file
         """
 
-        return (self.active if active else self.inactive).toggle_tag()
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.toggle_tag()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -402,7 +427,12 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         Tag every single object in current dir
         """
 
-        return (self.active if active else self.inactive).tag_all()
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.tag_all()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -411,7 +441,12 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         Untag every single object in current dir
         """
 
-        return (self.active if active else self.inactive).untag_all()
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.untag_all()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -420,7 +455,12 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         Invert currently tagged files
         """
 
-        return (self.active if active else self.inactive).tag_invert()
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.tag_invert()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -429,7 +469,12 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         Tag files by combined rule
         """
 
-        return (self.active if active else self.inactive).tag_rule()
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.tag_rule()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -438,7 +483,12 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         Untag files by combined rules
         """
 
-        return (self.active if active else self.inactive).untag_rule()
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.untag_rule()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -463,7 +513,12 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         Reload contents
         """
 
-        return (self.active if active else self.inactive).reload()
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.reload()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -482,7 +537,12 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         Perfrom action on selected object
         """
 
-        return (self.active if active else self.inactive).action()
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.action()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -491,8 +551,12 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         Change directory
         """
 
-        return (self.active if active else self.inactive).chdir(path,
-                                                                active=active)
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.chdir(path, active=active)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -512,7 +576,6 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
 
         self.active.search_backward()
 
-
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def search_cycle(self):
@@ -529,7 +592,12 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         Show only tagged entries
         """
 
-        return (self.active if active else self.inactive).show_tagged()
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.show_tagged()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -538,7 +606,12 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         Select VFS object by given name in current directory
         """
 
-        return (self.active if active else self.inactive).select(name)
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.select(name)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -547,7 +620,12 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         Get current working directory
         """
 
-        return (self.active if active else self.inactive).cwd
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.cwd
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
@@ -556,7 +634,12 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         Return vfs driver used by object. None stands for LocalVFS
         """
 
-        return (self.active if active else self.inactive).vfs_driver
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.vfs_driver
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -571,7 +654,12 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         policy = self.conf["filters_policy"]
 
         def policyf(res):
-            return not res if policy == True else res
+            if policy == True:
+                result = not res
+            else:
+                result = res
+
+            return result
 
         for f in self.filters:
             objects = [x for x in objects if policyf(f.match(x))]

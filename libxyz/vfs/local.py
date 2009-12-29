@@ -107,9 +107,13 @@ class LocalVFSObject(vfsobj.VFSObject):
             }
 
         try:
-            (self._copy_dir if self.is_dir() else self._copy_file)\
-                            (self.full_path, path, existcb, errorcb,
-                             save_attrs, follow_links, env, cancel)
+            if self.is_dir():
+                f = self._copy_dir
+            else:
+                f = self._copy_file
+
+            f(self.full_path, path, existcb, errorcb,
+              save_attrs, follow_links, env, cancel)
         except XYZRuntimeError:
             # Aborted
             return False
@@ -198,8 +202,12 @@ class LocalVFSObject(vfsobj.VFSObject):
                 srcobj = os.path.join(src, f)
                 dstobj = os.path.join(dst, f)
 
-                (_move_dir if os.path.isdir(srcobj) else _move_file)\
-                           (srcobj, dstobj, *args, **kwargs)
+                if os.path.isdir(srcobj):
+                    fun = _move_dir
+                else:
+                    fun = _move_file
+                    
+                fun(srcobj, dstobj, *args, **kwargs)
 
             try:
                 os.rmdir(src)
@@ -216,9 +224,13 @@ class LocalVFSObject(vfsobj.VFSObject):
             }
 
         try:
-            (_move_dir if self.is_dir() else _move_file)\
-                       (self.full_path, path, existcb, errorcb, save_attrs,
-                        follow_links, env, cancel=cancel)
+            if self.is_dir():
+                fun = _move_dir
+            else:
+                fun = _move_file
+
+            fun(self.full_path, path, existcb, errorcb, save_attrs,
+                follow_links, env, cancel=cancel)
         except XYZRuntimeError:
             # Aborted
             return False
@@ -390,8 +402,12 @@ class LocalVFSObject(vfsobj.VFSObject):
                 linkto = os.readlink(src)
                 os.symlink(linkto, dstto)
             else:
-                (shutil.copy2 if save_attrs else shutil.copyfile)\
-                              (src, dstto)
+                if save_attrs:
+                    fun = shutil.copy2
+                else:
+                    fun = shutil.copyfile
+
+                fun(src, dstto)
 
             return True
         except Exception, e:
@@ -441,6 +457,10 @@ class LocalVFSObject(vfsobj.VFSObject):
             srcobj = os.path.join(src, f)
             dstobj = os.path.join(dst, f)
 
-            (self._copy_dir if os.path.isdir(srcobj) else self._copy_file)\
-                            (srcobj, dstobj, existcb, errorcb, save_attrs,
-                             follow_links, env, cancel)
+            if os.path.isdir(srcobj):
+                fun = self._copy_dir
+            else:
+                fun = self._copy_file
+
+            fun(srcobj, dstobj, existcb, errorcb, save_attrs,
+                follow_links, env, cancel)

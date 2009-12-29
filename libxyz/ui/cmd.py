@@ -28,6 +28,7 @@ from libxyz.ui import Keys
 from libxyz.ui.utils import refresh
 from libxyz.core.utils import ustring, bstring, is_func
 from libxyz.core.dsl import XYZ
+from libxyz.exceptions import XYZRuntimeError
 
 class Cmd(lowui.FlowWidget):
     """
@@ -112,9 +113,12 @@ class Cmd(lowui.FlowWidget):
             f = self._ud.openfile(self._history_file, "w", "data")
             f.write("\n".join([bstring(u"".join(x)) for x in self._history]))
         except XYZRuntimeError, e:
+            if f:
+                f.close()
+
             xyzlog.info(_(u"Unable to open history data file: %s")
                         % ustring(str(e)))
-        finally:
+        else:
             if f:
                 f.close()
 
@@ -140,9 +144,9 @@ class Cmd(lowui.FlowWidget):
                 self._history.push([x for x in ustring(line.rstrip())])
         except Exception:
             pass
-        finally:
-            if f:
-                f.close()
+        
+        if f:
+            f.close()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
@@ -620,8 +624,12 @@ class Cmd(lowui.FlowWidget):
         # Do not run shell, execute internal command
         if _cmd in self.xyz.conf["commands"]:
             try:
-                self.xyz.conf["commands"][_cmd](
-                    _rest if _rest is None else bstring(_rest))
+                if _rest is None:
+                    arg = _rest
+                else:
+                    arg = bstring(_rest)
+
+                self.xyz.conf["commands"][_cmd](arg)
             except Exception, e:
                 xyzlog.error(_("Error executing internal command %s: %s") %
                              (_cmd, ustring(str(e))))
@@ -867,7 +875,10 @@ class Cmd(lowui.FlowWidget):
             else:
                 result.append(x)
 
-        return "".join(result) if join else result
+        if join:
+            return "".join(result)
+        else:
+            return result
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

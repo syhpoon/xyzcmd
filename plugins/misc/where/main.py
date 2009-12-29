@@ -50,9 +50,9 @@ class XYZPlugin(BasePlugin):
             chdir(inact, active=False)
         except Exception:
             pass
-        finally:
-            if f:
-                f.close()
+        
+        if f:
+            f.close()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -72,6 +72,5 @@ class XYZPlugin(BasePlugin):
         except XYZRuntimeError, e:
             xyzlog.info(_(u"Unable to open where data file: %s")
                         % ustring(str(e)))
-        finally:
-            if f:
-                f.close()
+        if f:
+            f.close()

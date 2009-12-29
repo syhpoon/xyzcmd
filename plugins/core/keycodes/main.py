@@ -200,8 +200,9 @@ class XYZPlugin(BasePlugin):
         try:
             cPickle.dump(data, _file)
         except cPickle.PicklingError:
+            _file.close()
             raise PluginError(_(u"Unable to save learned data"))
-        finally:
+        else:
             _file.close()
 
         # Update inputwrapper data to make it available without restarting

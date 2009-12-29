@@ -19,18 +19,18 @@ from distutils.core import setup
 import glob
 import os
 
-try:
-    import bdist_debian
-    cmdclass={'bdist_debian': bdist_debian.bdist_debian}
-except ImportError:
-    cmdclass={}
+cmdclass={}
 
 def include_rec(path, base, stripf=None):
     data = []
     
     for dirname, _, files in os.walk(path):
-        data.append((stripf(base % dirname) if stripf else base % dirname,
-                     [os.path.join(dirname, x) for x in files]))
+        if stripf:
+            arg = stripf(base % dirname)
+        else:
+            arg = base % dirname
+
+        data.append((arg, [os.path.join(dirname, x) for x in files]))
 
     return data
 

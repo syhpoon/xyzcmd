@@ -153,22 +153,32 @@ class XYZPlugin(BasePlugin):
         if not objs:
             return
 
-        srctxt = bstring(ustring(objs[0].full_path) if
-                         len(objs) == 1 else _(u"%d objects") % len(objs))
+        if len(objs) == 1:
+            srctxt = ustring(objs[0].full_path)
+        else:
+            srctxt = _(u"%d objects") % len(objs)
+            
+        srctxt = bstring(srctxt)
 
+        if move:
+            _m = _(u"Move")
+            msg = _(u"Moving object: %s")
+            caption = _(u"Moving")
+            unable_msg = _(u"Unable to move object: %s")
+            unable_caption = _(u"Move error")
+        else:
+            _m = _(u"Copy")
+            msg = _(u"Copying object: %s")
+            caption = _(u"Copying")
+            unable_msg = _(u"Unable to copy object: %s")
+            unable_caption = _(u"Copy error")
+
+        msg += _(u"\nESCAPE to abort")
         data = CopyBox(self.xyz, srctxt, self._panel.cwd(active=False),
-                       bstring(_(u"Move") if move else _(u"Copy"))).show()
+                       bstring(_m)).show()
 
         if data is None:
             return
-
-        msg = _(u"Moving object: %s") if move else \
-              _(u"Copying object: %s")
-        msg += _(u"\nESCAPE to abort")
-        caption = _(u"Moving") if move else _(u"Copying")
-        unable_msg = _(u"Unable to move object: %s") if move else \
-                     _(u"Unable to copy object: %s")
-        unable_caption = _(u"Move error") if move else _(u"Copy error")
 
         stopped = threading.Event()
         cancel = threading.Event()
@@ -197,8 +207,9 @@ class XYZPlugin(BasePlugin):
                 uilib.MessageBox(self.xyz, self.xyz.top,
                                  caption, caption).show(wait=False)
 
+                free.set()
                 return _rec or 'abort'
-            finally:
+            except Exception:
                 free.set()
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -222,8 +233,9 @@ class XYZPlugin(BasePlugin):
                 uilib.MessageBox(self.xyz, self.xyz.top,
                                  caption, caption).show(wait=False)
 
+                free.set()
                 return _rec or 'abort'
-            finally:
+            except Exception:
                 free.set()
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -242,13 +254,18 @@ class XYZPlugin(BasePlugin):
             stopped.clear()
 
             try:
-                getattr(o, "move" if move else "copy")(data["dst"], **args)
+                if move:
+                    attr = "move"
+                else:
+                    attr = "copy"
+
+                getattr(o, attr)(data["dst"], **args)
             except StopIteration, e:
                 pass
             except Exception, e:
                 err.append(ustring(str(e)))
-            finally:
-                stopped.set()
+
+            stopped.set()
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         

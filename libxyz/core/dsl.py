@@ -14,8 +14,6 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import with_statement
-
 import sys
 import os
 import traceback
@@ -246,7 +244,8 @@ class XYZ(object):
         try:
             cls.xyz.km.bind(method, shortcut, context=context)
         except Exception, e:
-            error(_(u"Unable to bind shortcut: %s") % (ustring(str(e))))
+            error(_(u"Unable to bind shortcut %s: %s") % (str(shortcut),
+                                                          ustring(str(e))))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -268,8 +267,16 @@ class XYZ(object):
         Execute DSL in file
         """
 
-        with open(filename) as fh:
-            cls.execute(fh.read())
+        f = None
+
+        try:
+            f = open(filename)
+            cls.execute(f.read())
+        except Exception:
+            pass
+
+        if f:
+            f.close()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -365,7 +372,11 @@ class XYZ(object):
         if kwargs.get("current", False):
             cmd = "./%s" % cmd
 
-        bg = ["&"] if kwargs.get("bg", False) else []
+        if kwargs.get("bg", False):
+            bg = ["&"]
+        else:
+            bg = []
+
         reloadp = kwargs.get("reload", True)
         wait = kwargs.get("wait", None)
 
@@ -474,8 +485,11 @@ class XYZ(object):
         if obj is not None and obj not in cls.api:
             error(_(u"Invalid function %s") % obj)
 
-        objs = [obj] if obj else cls.api
-
+        if obj:
+            objs = [obj]
+        else:
+            objs = cls.api
+            
         return "\n".join([fmt(x) for x in objs]).replace("\t", " ")
             
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

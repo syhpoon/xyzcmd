@@ -110,8 +110,8 @@ class NumEntry(ListEntry):
                 xyzlog.error(_(u"Error in entry callback: %s" %
                            ustring(str(e))))
                 xyzlog.debug(ustring(traceback.format_exc()))
-            finally:
-                return key
+
+            return key
         elif key.isdigit():
             self._num.append(key)
         else:

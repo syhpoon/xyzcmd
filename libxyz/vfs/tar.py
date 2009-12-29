@@ -29,8 +29,15 @@ class TarVFSObject(vfsobj.VFSObject):
     """
     Tar archive interface
     """
+
+    def either(self, a, b):
+        if self.root:
+            return a
+        else:
+            return b()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    either = lambda self, a, b: a if self.root else b()
     get_name = lambda self, x: os.path.basename(x.name)
     get_path = lambda self, x: os.path.join(self.ext_path, x.lstrip(os.sep))
 
@@ -108,10 +115,17 @@ class TarVFSObject(vfsobj.VFSObject):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     def _prepare(self):
-        self.root = True if self.path == os.sep else False
-        self.tarobj = self.kwargs["tarobj"] if "tarobj" in self.kwargs else \
-                      None
-        self.obj = None if self.root else self._init_obj()
+        if self.path == os.sep:
+            self.root = True
+        else:
+            self.root = False
+
+        self.tarobj = self.kwargs.get("tarobj", None)
+
+        if self.root:
+            self.obj = None
+        else:
+            self.obj = self._init_obj()
 
         self.ftype = self._find_type()
         self.vtype = self.ftype.vtype
@@ -142,9 +156,11 @@ class TarVFSObject(vfsobj.VFSObject):
         directory level
         """
 
-        return True if e.startswith(d.lstrip(os.sep)) and \
-               len(util.split_path(e)) == (len(util.split_path(d)) + 1) \
-               else False
+        if e.startswith(d.lstrip(os.sep)) and \
+           len(util.split_path(e)) == (len(util.split_path(d)) + 1):
+            return True
+        else:
+            return False
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     

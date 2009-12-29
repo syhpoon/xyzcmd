@@ -156,8 +156,9 @@ class Skin(object):
         try:
             _data = _multi_p.parse(_skinfile)
         except ParseError, e:
+            _skinfile.close()
             raise SkinError(_(u"Error parsing skin file: %s" % str(e)))
-        finally:
+        else:
             _skinfile.close()
 
         return _data

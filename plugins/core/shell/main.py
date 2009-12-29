@@ -13,7 +13,7 @@ import libxyz.core as core
 from libxyz.core.utils import bstring
 from libxyz.core.plugins import BasePlugin
 
-from .bash import bash_setup
+from bash import bash_setup
 
 class XYZPlugin(BasePlugin):
     "Shell plugin"

@@ -5,9 +5,12 @@
 #
 
 # Internal chdir
-icmd("cd",
-     lambda arg: call(":sys:panel:chdir", arg.rstrip()) if arg else
-     call(":sys:panel:chdir", env("HOME", "/")))
+def _cd(arg):
+    if arg:
+        call(":sys:panel:chdir", arg.rstrip())
+    else:
+        call(":sys:panel:chdir", env("HOME", "/"))
+icmd("cd", _cd)
 
 # Show defined aliases
 icmd("alias",

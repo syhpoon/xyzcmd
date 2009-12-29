@@ -307,7 +307,10 @@ class PluginManager(object):
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        _plugins = self._loaded if self._loaded else [plugin]
+        if self._loaded:
+            _plugins = self._loaded
+        else:
+            _plugins = [plugin]
         
         for plugin_name in self._loaded:
             self.xyz.hm.dispatch(self.EVENT_FIN, self._loaded[plugin_name])
