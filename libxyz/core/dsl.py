@@ -272,8 +272,9 @@ class XYZ(object):
         try:
             f = open(filename)
             cls.execute(f.read())
-        except Exception:
-            pass
+        except Exception, e:
+            error(_(u"Unable to execute file%s") % (
+                ustring(str(e))))
 
         if f:
             f.close()

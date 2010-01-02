@@ -23,11 +23,13 @@ import os
 
 import libxyz
 import libxyz.core as core
+import libxyz.pselector
 
 from nose.tools import raises
 from libxyz.exceptions import *
 from libxyz.vfs import VFSDispatcher
 from libxyz.vfs.local import LocalVFSObject
+from libxyz import const
 
 # Global data
 xyz = None
@@ -196,11 +198,21 @@ class TestDSL(object):
         self.xyz = core.XYZData()
         self.xyz.conf = {"xyz": {}}
         self.xyz.conf["xyz"]["plugins"] = {":core:shell": "ENABLE"}
+        self.xyz.conf["xyz"]["shell"] = "/bin/bash"
         self.xyz.km = core.KeyManager(self.xyz, [])
         self.xyz.pm = core.plugins.PluginManager(
             self.xyz, libxyz.PathSelector().get_plugins_dir())
         self.xyz.hm = core.HookManager()
         self.dsl = core.dsl.XYZ(self.xyz)
+
+        ps = libxyz.pselector.PathSelector()
+        main_conf = ps.get_conf(const.XYZ_CONF_FILE)[0]
+        plugins_conf = ps.get_conf(const.PLUGINS_CONF_FILE)[0]
+
+        confs = [main_conf, plugins_conf]
+
+        for conf in confs:
+            self.dsl.exec_file(conf)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
