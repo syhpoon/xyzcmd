@@ -198,7 +198,6 @@ class TestDSL(object):
         self.xyz = core.XYZData()
         self.xyz.conf = {"xyz": {}}
         self.xyz.conf["xyz"]["plugins"] = {":core:shell": "ENABLE"}
-        self.xyz.conf["xyz"]["shell"] = "/bin/bash"
         self.xyz.km = core.KeyManager(self.xyz, [])
         self.xyz.pm = core.plugins.PluginManager(
             self.xyz, libxyz.PathSelector().get_plugins_dir())
@@ -252,6 +251,20 @@ class TestDSL(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def testSection(self):
+        data = {
+            "a1": "z1",
+            "a2": "z2",
+            "a3": [1,2,3]
+            }
+
+        for k, v in data.iteritems():
+            self.dsl.let(k, v, "section-test")
+
+        assert self.dsl.section("section-test") == data
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     def testUnlet(self):
         self.setupValues()
 
@@ -263,3 +276,24 @@ class TestDSL(object):
 
     def testLoad(self):
         self.dsl.load(":core:shell:execute")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testBind(self):
+        method = lambda x: x
+        sc = self.dsl.kbd("Ctrl", "a")
+
+        self.dsl.bind(method, sc)
+        self.dsl.bind(method, sc, "XYZ")
+
+        assert self.xyz.km.get_binds()["DEFAULT"][sc] == method
+        assert self.xyz.km.get_binds()["XYZ"][sc] == method
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testKbd(self):
+        sc1 = self.dsl.kbd("Ctrl", "z")
+        sc2 = self.dsl.kbd("Ctrl", "x", "a")
+
+        assert sc1 == libxyz.ui.Shortcut(sc=["Ctrl", "z"])
+        assert sc2 == libxyz.ui.Shortcut(sc=["Ctrl", "x", "a"])
