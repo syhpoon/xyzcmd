@@ -226,6 +226,9 @@ class Launcher(object):
         if skin is None:
             skin = self.xyz.sm.get(const.DEFAULT_SKIN)
 
+        # Purge unused skins to save some memory
+        self.xyz.sm.clear()
+
         self.xyz.screen.register_palette(skin.get_palette_list())
 
         if hasattr(self.xyz.screen, "set_terminal_properties"):

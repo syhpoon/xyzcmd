@@ -28,10 +28,13 @@ PROG = u"XYZCommander"
 HOMEPAGE = u"xyzcmd.syhpoon.name"
 
 # User directory
-USER_DIR = ".xyzcmd"
+USER_DIR = u".xyzcmd"
+
+# System directory prefix
+SYSTEM_PREFIX = u"/usr"
 
 # System directory
-SYSTEM_DIR = os.path.join(sys.prefix, "share/xyzcmd")
+SYSTEM_DIR = os.path.join(SYSTEM_PREFIX, "share/xyzcmd")
 
 # Subdirectory with configuration files
 CONF_DIR = u"conf"
