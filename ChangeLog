@@ -9,6 +9,7 @@ XYZCommander changelog
 * Python2.4 support
 * Permanents filters
 * Custom sorting
+* High-color mode support with urwid >= 0.9.9
 
 [Configuration]
 ---------------
@@ -16,6 +17,19 @@ XYZCommander changelog
 
 * New DSL method - section().
   Return whole configuration section contents as a dictionary or None.
+
+* New DSL method - fsrule().
+  Return libxyz.core.FSRule instance from string.
+
+* New DSL method - palette().
+  Create internal palette object.
+
+* New DSL method - skin().
+  Make and register new skin.
+
+* New option 'term_colors' in main.xyz. It defines color mode.
+  Valid values are: 1, 16 (default), 88 and 256. It also can be defined
+  using -c command line flag.
 
 [Plugins]
 ---------
@@ -56,6 +70,13 @@ XYZCommander changelog
 ----
 * New shortcut - (META-=) to quickly change directory in active panel
   to the same as in the inactive one.
+
+[Skins]
+-------
+* Skins were completely reworked. Now skin file uses python syntax and
+  DSL helper functions: skin and palette to define new skin
+
+* High-color mode now supported with urwid version >= 0.9.9.
 
 [Version 0.0.2]
 ===============

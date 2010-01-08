@@ -67,4 +67,4 @@ VFS_CONF_FILE = u"vfs.xyz"
 HOOKS_CONF_FILE = u"hooks.xyz"
 
 # Default fallback skin name
-DEFAULT_SKIN = u"default"
+DEFAULT_SKIN = u"seablue"

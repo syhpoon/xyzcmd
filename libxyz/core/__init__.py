@@ -17,6 +17,7 @@
 __all__ = (
     'ODict',
     'FSRule',
+    'SkinManager',
     'Skin',
     'XYZData',
     'UserData',
@@ -30,7 +31,6 @@ __all__ = (
 
 from odict import ODict
 from fsrule import FSRule
-from skin import Skin
 from xyzdata import XYZData
 from userdata import UserData
 from keymanager import KeyManager
@@ -38,4 +38,6 @@ from inputwrapper import InputWrapper
 from queue import Queue
 from hookmanager import HookManager
 from actionmanager import ActionManager
+from skin import Skin
+from skin import SkinManager
 import utils

@@ -14,20 +14,16 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-import os.path
-
 import libxyz
 
 from libxyz.core.plugins import Namespace
 from libxyz.core.utils import ustring
 from libxyz.core.utils import is_func
-from libxyz.core import dsl
 
 from libxyz.ui import Shortcut
 
 from libxyz.exceptions import PluginError
 from libxyz.exceptions import KeyManagerError
-from libxyz.exceptions import DSLError
 
 class KeyManager(object):
     """
@@ -37,16 +33,13 @@ class KeyManager(object):
     CONTEXT_DEFAULT = u"DEFAULT"
     CONTEXT_SELF = u"@"
 
-    def __init__(self, xyz, confpathes):
+    def __init__(self, xyz):
         self.xyz = xyz
-        self.confpathes = confpathes
         self.keys = libxyz.ui.Keys()
 
         self._loaded_methods = {}
         self._bind_data = {}
         self._prefixes = []
-
-        self._path_sel = libxyz.PathSelector()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -75,24 +68,6 @@ class KeyManager(object):
             pass
 
         return _method
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def parse_configs(self):
-        # First mandatory system keys file
-        try:
-            dsl.exec_file(self.confpathes[0])
-        except DSLError, e:
-            raise KeyManagerError(_(u"Error parsing config %s: %s" %
-                                    (self.confpathes[0], ustring(str(e)))))
-
-        # Next optional user's keys file
-        if os.path.exists(self.confpathes[1]):
-            try:
-                dsl.exec_file(self.confpathes[1])
-            except DSLError, e:
-                raise KeyManagerError(_(u"Error parsing config %s: %s" %
-                                    (self.confpathes[1], ustring(str(e)))))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

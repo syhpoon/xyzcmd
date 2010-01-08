@@ -23,6 +23,7 @@ import gettext
 import getopt
 import locale
 import os
+import glob
 import __builtin__
 
 import libxyz
@@ -54,16 +55,22 @@ class Launcher(object):
 
         gettext.install(u"xyzcmd")
 
-        self.cmdopts = "d:vh"
+        self.cmdopts = "d:c:vh"
+
+        self.allowed_colors = (1, 16, 88, 256)
         self.xyz = core.XYZData()
         self.xyz.conf = {}
         self.xyz.hm = core.HookManager()
         self.dsl = dsl.XYZ(self.xyz)
+        self.xyz.sm = core.SkinManager()
+        self.xyz.am = core.ActionManager(self.xyz)
+        self.xyz.km = core.KeyManager(self.xyz)
         self.xyz.vfs = VFSDispatcher(self.xyz)
 
         self._path_sel = libxyz.PathSelector()
         self._conf = {}
         self._saved_term = None
+        self._started = False
 
         self._create_home()
 
@@ -77,23 +84,22 @@ class Launcher(object):
         self._set_enc()
 
         self.parse_args()
-        self.parse_configs()
-        self.init_skin()
+        self.parse_configs_1()
 
         self.xyz.term = core.utils.setup_term()
         self.xyz.pm = PluginManager(self.xyz,
                                     self._path_sel.get_plugins_dir())
 
         self.init_logger()
-        self.init_actions()
-        self.init_keys()
-
+        
         self.xyz.input = core.InputWrapper(self.xyz)
         self.xyz.screen = uilib.display.init_display(
             self._conf.get("driver", self.xyz.conf["xyz"]["term_lib"]))
 
-        self.xyz.screen.register_palette(self.xyz.skin.get_palette_list())
-        self.xyz.skin.set_screen(self.xyz.screen)
+        self.init_skin()
+        self.parse_configs_2()
+
+        self._started = True
         self.xyz.screen.run_wrapper(self._run)
 
         self.finalize()
@@ -156,6 +162,9 @@ class Launcher(object):
         for _o, _a in _opts:
             if _o == "-d":
                 self._conf["driver"] = _a
+            elif _o == "-c":
+                _colors = int(_a)
+                self._conf["colors"] = _colors
             elif _o == "-v":
                 self.version()
                 self.quit()
@@ -209,51 +218,34 @@ class Launcher(object):
 
     def init_skin(self):
         """
-        Initialize skin
+        Init selected skin
         """
 
-        _system, _user = self._path_sel.get_skin(
-            self.xyz.conf[u"xyz"][u"skin"])
+        skin = self.xyz.sm.get(self.xyz.conf[u"xyz"][u"skin"])
 
-        _path = self._path_sel.get_first_of((_user, _system))
+        if skin is None:
+            skin = self.xyz.sm.get(const.DEFAULT_SKIN)
 
-        if _path is None:
-            _path = self._path_sel.get_skin(const.DEFAULT_SKIN)[0]
+        self.xyz.screen.register_palette(skin.get_palette_list())
 
-        try:
-            self.xyz.skin = core.Skin(_system)
-        except SkinError, e:
-            self.error(_(u"Unable to load skin file: %s" % e))
+        if hasattr(self.xyz.screen, "set_terminal_properties"):
+            colors = self._conf.get("colors",
+                                    self.xyz.conf["xyz"]["term_colors"])
+
+            if colors not in self.allowed_colors:
+                self.usage()
+                self.quit()
+            else:
+                self.xyz.screen.set_terminal_properties(colors=colors)
+
+        self.xyz.skin = skin
+        self.xyz.skin.set_screen(self.xyz.screen)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def init_keys(self):
+    def parse_configs_1(self):
         """
-        Initialize keys manager
-        """
-
-        self.xyz.km = core.KeyManager(self.xyz, self._path_sel.get_conf(
-                                                const.KEYS_CONF_FILE))
-        self.xyz.km.parse_configs()
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def init_actions(self):
-        """
-        Init action manager
-        """
-
-        self.xyz.am = core.ActionManager(self.xyz,
-                                         self._path_sel.get_conf(
-                                             const.ACTIONS_CONF_FILE))
-
-        self.xyz.am.parse_configs()
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def parse_configs(self):
-        """
-        Parse configuration
+        Parse configuration. Phase 1
         """
 
         self._parse_conf_file(const.XYZ_CONF_FILE)
@@ -263,10 +255,23 @@ class Launcher(object):
         self._parse_conf_file(const.VFS_CONF_FILE)
         self._parse_conf_file(const.HOOKS_CONF_FILE)
 
+        # Load skins
+        self._parse_skins()
+
         # local_encoding set, override guessed encoding
         if "local_encoding" in self.xyz.conf["xyz"]:
             __builtin__.__dict__["xyzenc"] = \
                                       self.xyz.conf["xyz"]["local_encoding"]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def parse_configs_2(self):
+        """
+        Parse configuration. Phase 2
+        """
+        
+        self._parse_conf_file(const.ACTIONS_CONF_FILE)
+        self._parse_conf_file(const.KEYS_CONF_FILE)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -279,22 +284,57 @@ class Launcher(object):
         _system, _user = self._path_sel.get_conf(conf_file)
 
         # Exec system config first
-        try:
-            dsl.exec_file(_system)
-        except DSLError, e:
-            self.error(_(u"Error parsing system config %s: %s") %
-                       (_system, ustring(str(e))))
+        self._parse_file(_system, _(u"Error parsing system config %s: %s"))
 
         # Now try to exec users's conf, if exists
         if os.path.exists(_user):
-            try:
-                dsl.exec_file(_user)
-            except DSLError, e:
-                self.error(_(u"Error parsing user config %s: %s") %
-                           (_user, ustring(str(e))))
+            self._parse_file(_user, _(u"Error parsing user config %s: %s"))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def _parse_skins(self):
+        """
+        Load all skins in system and user home dirs
+        """
+
+        user_skins, system_skins = self._path_sel.get_skins_dir()
+
+        system_skins = glob.glob(os.path.join(system_skins, "*"))
+
+        if os.path.exists(user_skins):
+            user_skins = glob.glob(os.path.join(user_skins, "*"))
+        else:
+            user_skins = []
+
+        for skin in system_skins + user_skins:
+            res = self._parse_file(skin, error=False)
+            
+            if res != True:
+                self.error(_(u"Skipping skin %s due to parsing error: %s" %
+                              (skin, res)), False)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _parse_file(self, file, tmpl=None, error=True):
+        """
+        Parse XYZCommander config
+        """
+
+        if tmpl is None:
+            tmpl = _(u"Error parsing config %s: %s")
+
+        try:
+            dsl.exec_file(file)
+        except DSLError, e:
+            if error:
+                self.error(tmpl % (file, ustring(str(e))))
+            else:
+                return ustring(str(e))
+
+        return True
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     def usage(self):
         """
         Show usage
@@ -302,8 +342,9 @@ class Launcher(object):
 
         print _(u"""\
 %s version %s
-Usage: %s [-d driver][-vh]
+Usage: %s [-d driver][-c colors][-vh]
     -d  -- Display driver (raw (default) or curses)
+    -c  -- Number of colors terminal supports (1, 16 (default), 88, 256)
     -v  -- Show version
     -h  -- Show this help message\
 """ % (const.PROG, Version.version, os.path.basename(sys.argv[0])))
@@ -333,9 +374,9 @@ Usage: %s [-d driver][-vh]
         Print error message and optionally quit
         """
 
-        try:
+        if self._started:
             xyzlog.log(msg)
-        except NameError:
+        else:
             # Before logger initiated, print errors to stdout
             print msg
 

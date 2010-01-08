@@ -14,22 +14,17 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-import os.path
-
 from libxyz.core import FSRule
-from libxyz.core import dsl
 from libxyz.core.utils import ustring
 from libxyz.exceptions import XYZRuntimeError
-from libxyz.exceptions import DSLError
 
 class ActionManager(object):
     """
     Action rules handler
     """
 
-    def __init__(self, xyz, confs):
+    def __init__(self, xyz):
         self.xyz = xyz
-        self._confs = confs
         self._actions = []
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -50,24 +45,6 @@ class ActionManager(object):
                 ustring(str(e)))
         
         self._actions.insert(0, (_rule, fn))
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def parse_configs(self):
-        # First mandatory system keys file
-        try:
-            dsl.exec_file(self._confs[0])
-        except DSLError, e:
-            raise XYZRuntimeError(_(u"Error parsing config %s: %s" %
-                                    (self._confs[0], ustring(str(e)))))
-
-        # Next optional user's keys file
-        if os.path.exists(self._confs[1]):
-            try:
-                dsl.exec_file(self._confs[1])
-            except DSLError, e:
-                raise XYZRuntimeError(_(u"Error parsing config %s: %s" %
-                                        (self._confs[1], ustring(str(e)))))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

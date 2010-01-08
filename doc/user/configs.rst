@@ -51,6 +51,9 @@ functions are available:
 * :ref:`vfs <vfs>`
 * :ref:`hook <hook>`
 * :ref:`unhook <unhook>`
+* :ref:`fsrule <fsrule>`
+* :ref:`palette <palette>`
+* :ref:`skin <skin>`
 
 .. _let:
 
@@ -363,6 +366,88 @@ Example::
 uhook(event)
 ++++++++++++
 Remove all hooks for the event.
+
+.. fsrule:
+
+fsrule(rule)
+++++++++++++
+Convert string rule to libxyz.core.FSRule instance.
+This method primarily used in skin files, where matching fsrules
+are defined.
+
+Example::
+
+   "fs.rules": [
+        ( 
+            # Broken links
+            fsrule(r'type{link} and not link_exists{?}'),
+            BG_PALETTE({"foreground": "DARK_RED"})
+        ),
+
+.. _palette:
+
+palette(config)
++++++++++++++++
+Create internal palette object. It is primarily used in skin files.
+
+Config is a dictionary of form:
+{
+    'foreground': COLOR,
+    'background': COLOR,
+    'fg_attributes': [ATTR],
+    'mono': [ATTR],
+    'foreground_high': HG_COLOR,
+    'background_high': HG_COLOR
+}
+
+Example::
+
+  palette({
+      "foreground": "DARK_BLUE",
+      "background": "LIGHT_GRAY",
+      "fg_attributes": ["BOLD", "UNDERLINE"]
+  })
+
+.. _skin:
+
+skin(kwargs)
+++++++++++++
+Create and register new skin.
+
+kwargs include:
+
+*name* (string)
+  Skin name
+
+*author* (string)
+  Skin author
+
+*version* (string)
+  Skin version
+
+*description* (string)
+  Skin description
+
+*rules* (dict)
+  Skin rulesets
+
+Example (part of |XYZ| default skin)::
+
+ skin(name="seablue",
+      author="Max E. Kuznecov <syhpoon@syhpoon.name>",
+      version="0.3",
+      description="XYZCommander Seablue skin",
+
+      rules = {
+          "fs.rules": [
+              (
+                  # Broken links
+                  fsrule(r'type{link} and not link_exists{?}'),
+                  BG_PALETTE({"foreground": "DARK_RED"})
+              )
+          ]
+      }
+ )
 
 Files
 -----

@@ -1,96 +1,176 @@
-AUTHOR: "Max E. Kuznecov <syhpoon@syhpoon.name>"
-VERSION: "0.2"
-DESCRIPTION: "XYZCommander Grass skin"
+BG_PALETTE = palette({
+    "background": "DARK_GREEN"
+    })
 
-# Filesystem objects
-fs.rules {
-	&BG = DARK_GREEN
+skin(name="grass",
+     author="Max E. Kuznecov <syhpoon@syhpoon.name>",
+     version="0.3",
+     description="XYZCommander Grass skin",
 
-	# Broken links
-	"type{link} and not link_exists{?}" = DARK_RED, &BG
-	# Executables
-	"type{file} and perm{+0111}" = LIGHT_BLUE, &BG
+     rules = {
+         "fs.rules": [
+             (
+                 # Broken links
+                 fsrule(r'type{link} and not link_exists{?}'),
+                 BG_PALETTE({"foreground": "DARK_RED"})
+             ),
+             (
+                 # Executables
+                 fsrule(r'type{file} and perm{+0111}'),
+                 BG_PALETTE({"foreground": "LIGHT_BLUE"})
+             ),
+             (
+                 # core files
+                 fsrule(r'type{file} and name{".*\\.core$"}'),
+                 BG_PALETTE({"foreground": "DARK_RED"})
+             ),
+             (
+                 # Hidden files
+                 fsrule(r'name{"^\\.{1}[^.]"}'),
+                 BG_PALETTE({"foreground": "DARK_GRAY"}),
+             ),
+             (
+                 fsrule(r'type{file}'),
+                 BG_PALETTE({"foreground": "LIGHT_GRAY"})
+             ),
+             (
+                 fsrule(r'type{dir}'),
+                 BG_PALETTE({"foreground": "WHITE"})
+             ),
+             (
+                 fsrule(r"type{link}"),
+                 BG_PALETTE({"foreground": "LIGHT_CYAN"})
+             ),
+             (
+                 fsrule(r'type{socket}'),
+                 BG_PALETTE({"foreground": "LIGHT_MAGENTA"})
+             ),
+             (
+                 fsrule(r'type{fifo}'),
+                 BG_PALETTE({"foreground": "LIGHT_BLUE"})
+             ),
+             (
+                 fsrule(r'type{char}'),
+                 BG_PALETTE({"foreground": "DARK_GRAY"})
+             ),
+             (
+                 fsrule(r'type{block}'),
+                 BG_PALETTE({"foreground": "DARK_MAGENTA"})
+             )
+             ],
 
-	'''type{file} and name{".*\\.core$"}''' = DARK_RED, &BG
-	'''name{"^\\.{1}[^.]"}''' = DARK_GRAY, &BG
+         ### User interface objects
 
-	"type{file}" = LIGHT_GRAY, &BG
-	"type{dir}" = WHITE, &BG
-	"type{link}" = LIGHT_CYAN, &BG
-	"type{socket}" = LIGHT_MAGENTA, &BG
-	"type{fifo}" = LIGHT_BLUE, &BG
-	"type{char}" = DARK_GRAY, &BG
-	"type{block}" = DARK_MAGENTA, &BG
-}
+         # Base widget
+         "ui.widget": [
+             ("button", palette({
+                 "foreground": "DARK_GREEN",
+                 "background": "LIGHT_GRAY"
+                 })
+              )],
 
-### User interface objects
+         # Base box widgets
+         "ui.box": [
+             ("title", BG_PALETTE({"foreground": "LIGHT_GRAY"})),
+             ("box", palette({
+                 "foreground": "BLACK",
+                 "background": "LIGHT_GRAY"
+                 })
+             ),
+             ("border", palette({
+                 "foreground": "DARK_GREEN",
+                 "background": "LIGHT_GRAY"
+                 })
+             ),
+             ("mount", palette({
+                 "foreground": "DEFAULT",
+                 "background": "LIGHT_GRAY"
+                 })
+             ),
+             ("input", BG_PALETTE({"foreground": "LIGHT_GRAY"})),
+         ],
 
-# Base widget
-ui.widget {
-	button = DARK_GREEN, LIGHT_GRAY
-}
+         # Error message box
+         "ui.error_box": [
+             ("title", palette({
+                 "foreground": "WHITE",
+                 "background": "BLACK"
+                 })
+              ),
+             ("box", palette({
+                 "foreground": "WHITE",
+                 "background": "DARK_RED"
+                 })
+              ),
+             ("border", palette({
+                 "foreground": "WHITE",
+                 "background": "DARK_RED"
+                 })
+              ),
+             ("mount", palette({
+                 "foreground": "WHITE",
+                 "background": "DARK_RED"
+                 })
+              ),
+         ],
 
-# Base box widgets
-ui.box {
-	&BG = LIGHT_GRAY
+         # Input box
+         "ui.input_box": [
+             ("input", BG_PALETTE({"foreground": "WHITE"}))
+         ],
 
-	title = &BG, DARK_GREEN
-	box = BLACK, &BG
-	border = DARK_GREEN, &BG
-	mount = DEFAULT, &BG
-        input = &BG, DARK_GREEN
-}
+         # Panel widget
+         "ui.panel": [
+             ("cwdtitle", palette({
+                 "foreground": "BLACK",
+                 "background": "LIGHT_GRAY"
+                 })
+             ),
+             ("cwdtitleinact", BG_PALETTE({"foreground": "WHITE"})),
+             ("panel", BG_PALETTE({"foreground": "LIGHT_GRAY"})),
+             ("cursor", palette({
+                 "foreground": "BLACK",
+                 "background": "LIGHT_GRAY"
+                 })
+             ),
+             ("search", palette({
+                 "foreground": "WHITE",
+                 "background": "DARK_CYAN"
+                 })
+             ),
+             ("info", BG_PALETTE({"foreground": "WHITE"})),
+             ("border", BG_PALETTE({"foreground": "WHITE"})),
+             ("tagged", BG_PALETTE({"foreground": "LIGHT_CYAN"})),
+          ],
 
-# Error message box
-ui.error_box {
-	&FG = WHITE
-	&BG = DARK_RED
+         # XYZListBox
+         "ui.list_box": [
+             ("title", palette({
+                 "foreground": "DARK_GREEN",
+                 "background": "LIGHT_GRAY"
+                 })
+             ),
+             ("selected", BG_PALETTE({"foreground": "WHITE"})),
+         ],
+         
+         # Command line widget
+         "ui.cmd": [
+             ("prompt", BG_PALETTE({"foreground": "WHITE"})),
+             ("text", BG_PALETTE({"foreground": "LIGHT_GRAY"})),
+         ],
 
-	title = &FG, BLACK
-	box = &FG, &BG
-	border = &FG, &BG
-	mount = &FG, &BG
-}
-
-# Input box
-ui.input_box {
-	input = WHITE, DARK_GREEN
-}
-
-# Panel widget
-ui.panel {
-	&BG = DARK_GREEN
-
-	cwdtitle = BLACK, LIGHT_GRAY
-	cwdtitleinact = WHITE, &BG
-	panel = LIGHT_GRAY, &BG
-	cursor = BLACK, LIGHT_GRAY
-	search = WHITE, DARK_CYAN
-	info = WHITE, &BG
-	border = WHITE, &BG
-	tagged = LIGHT_CYAN, &BG
-}
-
-# XYZListBox
-ui.list_box {
-	title = DARK_GREEN, LIGHT_GRAY
-	selected = WHITE, DARK_GREEN
-}
-
-# Command line widget
-ui.cmd {
-	&BG = DARK_GREEN
-
-	prompt = WHITE, &BG
-	text = LIGHT_GRAY, &BG
-}
-
-# Settings for :core:console
-plugin.console
-{
-        &BG = DARK_GREEN
-
-        input = BLACK, LIGHT_GRAY
-        header = BLACK, LIGHT_GRAY
-        output = WHITE, &BG
-}
+         # Settings for :core:console
+         "plugin.console": [
+             ("input", palette({
+                 "foreground": "BLACK",
+                 "background": "LIGHT_GRAY"
+                 })
+             ),
+             ("header", palette({
+                 "foreground": "BLACK",
+                 "background": "LIGHT_GRAY"
+                 })
+             ),
+             ("output", BG_PALETTE({"foreground": "WHITE"})),
+         ]
+     })

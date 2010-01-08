@@ -22,7 +22,12 @@ import __builtin__
 from libxyz.core.utils import ustring
 from libxyz.core.utils import is_func
 from libxyz.core.plugins import Namespace
+from libxyz.core import FSRule
+
+from libxyz.ui.colors import Palette
 from libxyz.ui import Shortcut
+
+from skin import Skin
 
 import libxyz.exceptions as ex
 
@@ -79,6 +84,9 @@ class XYZ(object):
            "vfs_path",
            "hook",
            "unhook",
+           "fsrule",
+           "palette",
+           "skin"
            ]
 
     EVENT_CONF_UPDATE = u"event:conf_update"
@@ -543,9 +551,61 @@ class XYZ(object):
         """
 
         return cls.xyz.hm.clear(event)
-        
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
+    @classmethod
+    @instantiated
+    def fsrule(cls, rule):
+        """
+        Return libxyz.core.FSRule instance
+        """
+
+        try:
+            return FSRule(rule)
+        except Exception, e:
+            error(_(u"Error parsing FSRule: %s") % ustring(str(e)))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def palette(cls, config):
+        """
+        Create internal palette object
+
+        @param config: Dictionary of form:
+        {
+           'foreground': COLOR,
+           'background': COLOR,
+           'fg_attributes': [ATTR],
+           'mono': [ATTR],
+           'foreground_high': HG_COLOR,
+           'background_high': HG_COLOR
+        }
+        """
+
+        try:
+            return Palette(None, *Palette.convert(config))
+        except Exception, e:
+            error(_(u"Error creating Palette instance: %s") % ustring(str(e)))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def skin(cls, **kwargs):
+        """
+        Make and register new skin
+        """
+
+        try:
+            cls.xyz.sm.add(Skin(**kwargs))
+        except Exception, e:
+            error(_(u"Error creating Skin instance: %s") % ustring(str(e)))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     @classmethod
     @instantiated
     def execute(cls, source):

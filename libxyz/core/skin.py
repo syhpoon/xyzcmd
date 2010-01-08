@@ -14,54 +14,84 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import re
-
-import libxyz.parser as parser
-
-from libxyz.exceptions import ParseError
 from libxyz.exceptions import SkinError
-from libxyz.exceptions import XYZValueError
-from libxyz.exceptions import FSRuleError
-from libxyz.core import FSRule
+from fsrule import FSRule
+from odict import ODict
+from utils import ustring
 
-import libxyz.ui as uilib
+from libxyz.ui.colors import Palette, Foreground, Background
+#import libxyz.ui as uilib
+
+class SkinManager(object):
+    """
+    Store and manage defined skins
+    """
+
+    def __init__(self):
+        self._skins = {}
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def add(self, skin):
+        """
+        Add new sking to storage
+        """
+
+        if not isinstance(skin, Skin):
+            raise SkinError(_(u"Invalid skin argument: %s. "\
+                              u"libxyz.core.Skin instance expected!"
+                              % type(skin)))
+        else:
+            self._skins[skin.name] = skin
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get(self, name):
+        """
+        Get stored skin instance
+
+        @return: Either Skin isntance or None if was not stored
+        """
+
+        return self._skins.get(name, None)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def clear(self):
+        """
+        Clear storage
+        """
+
+        self._skins = {}
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
 
 class Skin(object):
     """
     Skin object. Provides simple interface to defined skin rulesets.
     """
 
-    def __init__(self, path):
+    def __init__(self, name=None, author=None, version=None,
+                 description=None, rules=None):
         """
-        @param path: Path to skin file
         """
 
-        if not os.access(path, os.R_OK):
-            raise SkinError(_(u"Unable to open skin file for reading"))
-        else:
-            self.path = path
-
-        self._data = {}
-
+        self.name = name
+        self.author = author
+        self.version = version
+        self.description = description
+        self.rules = self._make_rules(rules)
         self.screen = None
 
         # Default fallback palette
-        self._default = uilib.colors.Palette(u"default",
-                        uilib.colors.Foreground(u"DEFAULT"),
-                        uilib.colors.Background(u"DEFAULT"),
-                        uilib.colors.Monochrome(u"DEFAULT"))
-
-        # 1. Parse
-        self._data = self._parse()
-
-        # 2. Order parsed data
-        self._check()
+        self._default = Palette("default", 
+                                Foreground("DEFAULT"),
+                                Background("DEFAULT"))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __str__(self):
-        return u"<Skin object: %s>" % str(self.path)
+        return u"<Skin object: %s>" % ustring(self.name)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -71,7 +101,7 @@ class Skin(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __getitem__(self, key):
-        return self._data[key]
+        return self.rules[key]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -80,104 +110,33 @@ class Skin(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _parse(self):
-        def palette_validator(block, var, val):
-            """
-            Make L{libxyz.ui.colors.Palette} object of palette definition
-            """
+    def _make_rules(self, raw_rules):
+        """
+        Internalize rules
+        """
 
-            _p = self._default.copy()
+        rules = {}
 
-            if isinstance(val, basestring):
-                _val = (val,)
-            else:
-                _val = [x.strip() for x in val]
+        for block, rsets in raw_rules.iteritems():
+            if block not in rules:
+                rules[block] = ODict()
 
-            _p.fg = uilib.colors.Foreground(_val[0])
+            for (resource, palette) in rsets:
+                if isinstance(resource, FSRule):
+                    var = resource.raw_rule
+                else:
+                    var = resource
 
-            if len(_val) > 1:
-                _p.bg = uilib.colors.Background(_val[1])
-            if len(_val) > 2:
-                _p.ma = tuple([uilib.colors.Monochrome(x) for x in _val[2:]])
+                palette.name = self._make_name(block, var)
 
-            _p.name = self._make_name(block, var)
+                rules[block][resource] = palette
 
-            return _p
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        def trans_cr(rule):
-            """
-            Transform string rules to FSRule objects
-            """
-
-            try:
-                return FSRule(rule)
-            except (ParseError, FSRuleError), e:
-                raise XYZValueError(e)
-
-        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        # Prepare parsers
-
-        _fs_rules_opt = {u"count": 1,
-                         u"value_validator": palette_validator,
-                         u"varre": re.compile(r".+"),
-                         u"var_transform": trans_cr,
-                         }
-
-        _fs_rules_p = parser.BlockParser(_fs_rules_opt)
-
-        _ui_opt = {u"count": 1,
-                   u"value_validator": palette_validator,
-                   }
-        _ui_p = parser.BlockParser(_ui_opt)
-
-        _plugin_opt = {u"count": 1,
-                       u"value_validator": palette_validator,
-                       }
-        _plugin_p = parser.BlockParser(_plugin_opt)
-
-        _flat_opt = {u"count": 1}
-        _flat_p = parser.FlatParser(_flat_opt)
-
-        _parsers = {
-                    u"fs.rules": _fs_rules_p,
-                    re.compile(r"ui\.(\w)+"): _ui_p,
-                    re.compile(r"plugin\.([\w_-])+"): _plugin_p,
-                    (u"AUTHOR", u"VERSION", u"DESCRIPTION"): _flat_p,
-                    }
-
-        _multi_opt = {u"tokens": (":",)}
-        _multi_p = parser.MultiParser(_parsers, _multi_opt)
-
-        _skinfile = open(self.path, "r")
-
-        try:
-            _data = _multi_p.parse(_skinfile)
-        except ParseError, e:
-            _skinfile.close()
-            raise SkinError(_(u"Error parsing skin file: %s" % str(e)))
-        else:
-            _skinfile.close()
-
-        return _data
-
+        return rules
+                
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _make_name(self, block, resource):
-        return "%(resource)s@%(block)s" % locals()
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _check(self):
-        """
-        Check and variables
-        """
-
-        for _required in (u"AUTHOR", u"DESCRIPTION", u"VERSION"):
-            if _required not in self._data:
-                raise SkinError(_(u"Missing required variable: %s"%_required))
+        return "%s@%s" % (resource, block)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -189,12 +148,9 @@ class Skin(object):
 
         _list = [self._default.get_palette()]
 
-        for _name, _pdata in self._data.iteritems():
-            if not isinstance(_pdata, parser.ParsedData):
-                continue
-
-            for _var, _val in _pdata.iteritems():
-                if isinstance(_val, uilib.colors.Palette):
+        for _name, _block in self.rules.iteritems():
+            for _var, _val in _block.iteritems():
+                if isinstance(_val, Palette):
                     _list.append(_val.get_palette())
 
         return _list
@@ -226,7 +182,7 @@ class Skin(object):
                 _w = u"ui.%s" % _w
 
             try:
-                return self._data[_w][name]
+                return self.rules[_w][name]
             except KeyError:
                 pass
 
@@ -239,6 +195,6 @@ class Skin(object):
 
     def get_palette(self, block, name):
         try:
-            return self._data[block][name].name
+            return self.rules[block][name].name
         except KeyError:
             return None

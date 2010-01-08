@@ -82,3 +82,11 @@ class PathSelector(object):
         _systempath = os.path.join(self.system_dir, self.plugins_dir)
 
         return [_userpath, _systempath]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_skins_dir(self):
+        _userpath = os.path.join(self.user_dir, self.skins_dir)
+        _systempath = os.path.join(self.system_dir, self.skins_dir)
+
+        return [_userpath, _systempath]

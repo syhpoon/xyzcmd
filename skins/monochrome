@@ -1,72 +1,85 @@
-# Default XYZ skin
+BG_PALETTE = palette({
+    "background": "LIGHT_GRAY"
+    })
 
-AUTHOR: "Max E. Kuznecov <syhpoon@syhpoon.name>"
-VERSION: "0.1"
-DESCRIPTION: "XYZCommander monochrome skin"
+skin(name="monochrome",
+     author="Max E. Kuznecov <syhpoon@syhpoon.name>",
+     version="0.3",
+     description="XYZCommander monochrome skin",
 
-### User interface objects
+     rules = {
+         "ui.widget": [
+             ("title", palette({
+                 "foreground": "WHITE",
+                 "background": "DEFAULT"
+                 })
+              ),
+             ("box", BG_PALETTE({"foreground": "BLACK"})),
+             ("border", BG_PALETTE({"foreground": "BLACK"})),
+             ("mount", BG_PALETTE({"foreground": "DEFAULT"})),
+             ("input", palette({
+                 "foreground": "LIGHT_GRAY",
+                 "background": "DEFAULT"
+                 })
+              )
+         ],
+         "ui.error_box": [
+             ("title", palette({
+                 "foreground": "WHITE",
+                 "background": "BLACK"
+                 })
+              ),
+             ("box", palette({
+                 "foreground": "WHITE",
+                 "background": "DARK_RED"
+                 })
+              ),
+             ("border", palette({
+                 "foreground": "WHITE",
+                 "background": "DARK_RED"
+                 })
+              ),
+             ("mount", palette({
+                 "foreground": "WHITE",
+                 "background": "DARK_RED"
+                 })
+              )
+         ],
+         
+         # Input box
+         "ui.input_box": [
+             ("input", palette({
+                 "foreground": "WHITE",
+                 "background": "DEFAULT"
+                 })
+              )
+         ],
 
-# Base widget
-ui.widget {
-	button = BLACK, LIGHT_GRAY
-}
-
-# Base box widgets
-ui.box {
-	&BG = LIGHT_GRAY
-
-	title = WHITE, DEFAULT
-	box = BLACK, &BG
-	border = BLACK, &BG
-	mount = DEFAULT, &BG
-        input = &BG, DEFAULT
-}
-
-# Error message box
-ui.error_box {
-	&BG = DARK_RED
-
-	title = WHITE, BLACK
-	box = WHITE, &BG
-	border = WHITE, &BG
-	mount = WHITE, &BG
-}
-
-# Input box
-ui.input_box {
-	input = WHITE, DEFAULT
-}
-
-ui.panel {
-	&BG = LIGHT_GRAY
-
-	cwdtitle = BLACK, &BG
-	cwdtitleinact = WHITE, DEFAULT
-	panel = DEFAULT, DEFAULT
-	cursor = BLACK, &BG
-	search = WHITE, &BG
-	info = WHITE, DEFAULT
-	border = DEFAULT, DEFAULT
-	tagged = WHITE, &BG
-}
-
-# XYZListBox
-ui.list_box {
-	title = BLACK, LIGHT_GRAY
-	selected = WHITE, DEFAULT
-}
-
-# Command line widget
-ui.cmd {
-	prompt = WHITE, DEFAULT
-	text = LIGHT_GRAY, DEFAULT
-}
-
-# Settings for :core:console
-plugin.console
-{
-        input = BLACK, LIGHT_GRAY
-        header = BLACK, LIGHT_GRAY
-        output = WHITE, DEFAULT
-
-}
+         # Panel widget
+         "ui.panel": [
+             ("cwdtitle", palette({
+                 "foreground": "BLACK",
+                 "background": "LIGHT_GRAY"
+                 })
+             ),
+             ("cwdtitleinact", palette({
+                 "foreground": "WHITE",
+                 "background": "DEFAULT"
+                 })
+              ),
+             ("panel", palette({
+                 "foreground": "DEFAULT",
+                 "background": "DEFAULT"})
+              ),
+             ("cursor", BG_PALETTE({"foreground": "BLACK"})),
+             ("search", BG_PALETTE({"foreground": "WHITE"})),
+             ("info", palette({
+                 "foreground": "WHITE",
+                 "background": "DEFAULT"})
+              ),
+             ("border", palette({
+                 "foreground": "DEFAULT",
+                 "background": "DEFAULT"})
+              ),
+             ("tagged", BG_PALETTE({"foreground": "WHITE"})),
+          ]})

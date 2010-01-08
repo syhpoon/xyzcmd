@@ -26,6 +26,7 @@ class XYZData(object):
                  "km",
                  "hm",
                  "am",
+                 "sm",
                  "conf",
                  "input",
                  "term",
