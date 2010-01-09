@@ -164,7 +164,10 @@ class BaseHighColor(Color):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     def _set_color(self, color):
-        self.color = color
+        if color in self.colors:
+            self.color = self.colors[color]
+        else:
+            self.color = color
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 

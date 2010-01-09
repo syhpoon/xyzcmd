@@ -55,7 +55,7 @@ class Launcher(object):
 
         gettext.install(u"xyzcmd")
 
-        self.cmdopts = "d:c:vh"
+        self.cmdopts = "d:c:s:vh"
 
         self.allowed_colors = (1, 16, 88, 256)
         self.xyz = core.XYZData()
@@ -165,6 +165,8 @@ class Launcher(object):
             elif _o == "-c":
                 _colors = int(_a)
                 self._conf["colors"] = _colors
+            elif _o == "-s":
+                self._conf["skin"] = _a
             elif _o == "-v":
                 self.version()
                 self.quit()
@@ -221,7 +223,8 @@ class Launcher(object):
         Init selected skin
         """
 
-        skin = self.xyz.sm.get(self.xyz.conf[u"xyz"][u"skin"])
+        skin = self.xyz.sm.get(self._conf.get("skin",
+                                              self.xyz.conf[u"xyz"][u"skin"]))
 
         if skin is None:
             skin = self.xyz.sm.get(const.DEFAULT_SKIN)
@@ -345,9 +348,10 @@ class Launcher(object):
 
         print _(u"""\
 %s version %s
-Usage: %s [-d driver][-c colors][-vh]
+Usage: %s [-d driver][-c colors][-s skin][-vh]
     -d  -- Display driver (raw (default) or curses)
     -c  -- Number of colors terminal supports (1, 16 (default), 88, 256)
+    -s  -- Skin name
     -v  -- Show version
     -h  -- Show this help message\
 """ % (const.PROG, Version.version, os.path.basename(sys.argv[0])))

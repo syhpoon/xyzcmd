@@ -10,6 +10,7 @@ XYZCommander changelog
 * Permanents filters
 * Custom sorting
 * High-color mode support with urwid >= 0.9.9
+* New command line options: -c colors and -s skin
 
 [Configuration]
 ---------------
