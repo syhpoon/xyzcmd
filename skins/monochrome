@@ -9,6 +9,10 @@ skin(name="monochrome",
 
      rules = {
          "ui.widget": [
+             ("button", BG_PALETTE({"foreground": "BLACK"})),
+             ],
+
+         "ui.box": [
              ("title", palette({
                  "foreground": "WHITE",
                  "background": "DEFAULT"
@@ -82,4 +86,37 @@ skin(name="monochrome",
                  "background": "DEFAULT"})
               ),
              ("tagged", BG_PALETTE({"foreground": "WHITE"})),
-          ]})
+         ],
+
+         # XYZListBox
+         "ui.list_box": [
+             ("title", BG_PALETTE({"foreground": "BLACK"})),
+             ("selected", palette({
+                 "foreground": "WHITE",
+                 "background": "DEFAULT"})
+             ),
+         ],
+         
+         # Command line widget
+         "ui.cmd": [
+             ("prompt", palette({
+                 "foreground": "WHITE",
+                 "background": "DEFAULT"})
+              ),
+             ("text", palette({
+                 "foreground": "LIGHT_GRAY",
+                 "background": "DEFAULT"})
+              ),
+         ],
+
+         # Settings for :core:console
+         "plugin.console": [
+             ("input", BG_PALETTE({"foreground": "BLACK"})),
+             ("header", BG_PALETTE({"foreground": "BLACK"})),
+             ("output", palette({
+                 "foreground": "WHITE",
+                 "background": "DEFAULT"
+                 })
+             ),
+         ]
+         })

@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+import urwid
+
 def init_display(lib):
     """
     Initiate terminal driver
@@ -27,3 +29,9 @@ def init_display(lib):
         import urwid.raw_display as display
         
     return display.Screen()
+
+def is_lowui_ge_0_9_9():
+    if hasattr(urwid, "VERSION") and urwid.VERSION >= (0, 9, 9):
+        return True
+    else:
+        return False

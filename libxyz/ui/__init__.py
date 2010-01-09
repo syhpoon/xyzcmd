@@ -71,3 +71,4 @@ from entry import NumEntry
 from shortcut import Shortcut
 from cmd import Cmd
 from panel import Panel
+

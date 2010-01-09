@@ -19,6 +19,7 @@ import re
 
 from libxyz.ui import lowui
 from libxyz.exceptions import XYZValueError
+from libxyz.ui.display import is_lowui_ge_0_9_9
 
 class Color(object):
     """
@@ -370,7 +371,7 @@ class Palette(object):
 
         result = (self.name, fg, bg, mono)
 
-        if lowui.VERSION >= (0, 9, 9):
+        if is_lowui_ge_0_9_9():
             result += (fg_high, bg_high)
 
         return result

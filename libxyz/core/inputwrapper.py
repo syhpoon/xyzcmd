@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+from libxyz.ui.display import is_lowui_ge_0_9_9
+
 class InputWrapper(object):
     """
     Wrap get_input and seek in user-defined keycodes before return keys
@@ -56,8 +58,7 @@ class InputWrapper(object):
         _input = None
 
         if allow_empty:
-            # Urwid 0.9.9 issue
-            if hasattr(self.xyz.screen, "set_input_timeouts"):
+            if is_lowui_ge_0_9_9():
                 self.xyz.screen.set_input_timeouts(0)
 
         while True:
@@ -81,8 +82,7 @@ class InputWrapper(object):
             break
 
         if allow_empty:
-            # Urwid 0.9.9 issue
-            if hasattr(self.xyz.screen, "set_input_timeouts"):
+            if is_lowui_ge_0_9_9():
                 self.xyz.screen.set_input_timeouts(None)
 
         return _input
