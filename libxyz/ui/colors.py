@@ -350,7 +350,7 @@ class Palette(object):
         fg_attrs = self.fg_attrs
 
         # Append attributes to foreground color
-        if fg_attrs is not None:
+        if fg_attrs is not None and is_lowui_ge_0_9_9():
             fg = ",".join([fg] + [x.color for x in fg_attrs])
 
         bg = self.bg.color
@@ -364,7 +364,7 @@ class Palette(object):
         if fg_high is not None:
             fg_high = fg_high.color
             
-            if fg_attrs is not None:
+            if fg_attrs is not None and is_lowui_ge_0_9_9():
                 fg_high = ",".join([fg_high] + [x.color for x in fg_attrs])
 
         bg_high = self.bg_high
