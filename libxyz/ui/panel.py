@@ -500,7 +500,7 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         self.block1, self.block2 = self.block2, self.block1
         self._compose()
 
-        if libxyz.ui.display.is_lowui_ge_0_9_9():
+        if hasattr(self, "set_w"):
             self.set_w(self._widget)
         else:
             self._w = self._widget

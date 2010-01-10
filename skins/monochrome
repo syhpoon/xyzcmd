@@ -8,6 +8,16 @@ skin(name="monochrome",
      description="XYZCommander monochrome skin",
 
      rules = {
+         "fs.rules": [
+             (
+                 fsrule(r"type{dir}"),
+                 palette({
+                     "foreground": "WHITE",
+                     "background": "DEFAULT",
+                     "fg_attributes": ["BOLD"]
+                     })
+             ),
+         ],
          "ui.widget": [
              ("button", BG_PALETTE({"foreground": "BLACK"})),
              ],
