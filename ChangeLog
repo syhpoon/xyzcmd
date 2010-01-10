@@ -1,19 +1,19 @@
 XYZCommander changelog
 ----------------------
 
-[Version 0.0.3]
-===============
+Version 0.0.3
+=============
 
-[New features]
---------------
+New features
+------------
 * Python2.4 support
 * Permanents filters
 * Custom sorting
 * High-color mode support with urwid >= 0.9.9
 * New command line options: -c colors and -s skin
 
-[Configuration]
----------------
+Configuration
+-------------
 * New internal cmd "alias" is used to print all xyzcmd's aliases.
 
 * New DSL method - section().
@@ -32,8 +32,8 @@ XYZCommander changelog
   Valid values are: 1, 16 (default), 88 and 256. It also can be defined
   using -c command line flag.
 
-[Plugins]
----------
+Plugins
+-------
 * New method :sys:panel:get_untagged()
   Method returns list of not tagged VFSObject instances.
 
@@ -67,65 +67,76 @@ XYZCommander changelog
   Method takes a list of VFSObject objects and sorts entries according to
   sorting policy defined in plugin configuration.
 
-[UI]
-----
+UI
+--
 * New shortcut - (META-=) to quickly change directory in active panel
   to the same as in the inactive one.
 
-[Skins]
--------
+Skins
+-----
 * Skins were completely reworked. Now skin file uses python syntax and
   DSL helper functions: skin and palette to define new skin
 
 * High-color mode now supported with urwid version >= 0.9.9.
 
-[Version 0.0.2]
-===============
+Version 0.0.2
+=============
 
-* [UI] New box widget: ButtonBox.
+Core
+----
+* New events and hooks mechanism.
+  It is now possible to set own hooks on all events.
+
+Plugins
+-------
+* New method :vfs:vfsutils:remove()
+  Method shows a dialog for [recursively] deleting VFSObjects.
+  Bound to F8.
+
+* New method :vfs:vfsutils:copy()
+  Method shows a dialog for [recursively] copying VFSObjects.
+  Bound to F5.
+
+* New method :vfs:vfsutils:move()
+  Method shows a dialog for [recursively] moving VFSObjects.
+  Bound to F6.
+
+* New plugin :misc:where.
+  Plugin provides an ability to load/restore path locations on both panels
+
+* New plugin :fsrules:magic.
+  Plugin adds an ability to match files based on magic database.
+
+UI
+--
+* New box widget: ButtonBox.
   Widget shows a dialog box with custom buttons.
 
-* [UI] New method :sys:panel:get_active()
+* New method :sys:panel:get_active()
   Method returns list of tagged VFSObject instances or list of single selected
   object if none tagged.
 
-* [UI] New method :sys:panel:get_current().
+* New method :sys:panel:get_current().
   Method returns VFSObject instance of current directory.
 
-* [UI] New method :sys:panel:vfs_driver().
+* New method :sys:panel:vfs_driver().
   Method returns vfs driver used by current object
 
-* [UI] New method :sys:cmd:put().
+* New method :sys:cmd:put().
   Method allows to put arbitrary string to command line.
 
-* [UI] New method :sys:panel:search_cycle().
+* New method :sys:panel:search_cycle().
   Method allows to search objects in current
   working directory in direction downwards-from up to selected file.
   Set this method as default binding for META-S.
 
-* [PLUGIN] New method :vfs:vfsutils:remove()
-  Method shows a dialog for [recursively] deleting VFSObjects.
-  Bound to F8.
+Skins
+-----
+* New box rule attribute - input.
+  It is used for any text input widgets
 
-* [PLUGIN] New method :vfs:vfsutils:copy()
-  Method shows a dialog for [recursively] copying VFSObjects.
-  Bound to F5.
-
-* [PLUGIN] New method :vfs:vfsutils:move()
-  Method shows a dialog for [recursively] moving VFSObjects.
-  Bound to F6.
-
-* [PLUGIN] New plugin :misc:where.
-  Plugin provides an ability to load/restore path locations on both panels
-
-* [PLUGIN] New plugin :fsrules:magic.
-  Plugin adds an ability to match files based on magic database.
-
-* [VFS] Implemented Tar VFS module. Default actions set to use it on
+VFS
+---
+* Implemented Tar VFS module. Default actions set to use it on
   *.tar, *.tar.gz and *.tar.bz2 named files.
 
-* [CORE] New events and hooks mechanism.
-  It is now possible to set own hooks on all events.
-
-* [SKINS] New box rule attribute - input.
-  It is used for any text input widgets
