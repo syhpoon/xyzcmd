@@ -1,0 +1,193 @@
+PALETTE = palette({
+    "foreground": "DEFAULT",
+    "background": "DEFAULT",
+    "background_high": "#ffd"
+    })
+
+skin(name="lighty",
+     author="Max E. Kuznecov and my lovely wife ;)",
+     version="0.1",
+     description="XYZCommander lighty skin",
+     colors=(256,),
+
+     rules = {
+         "fs.rules": [
+             (
+                 # Broken links
+                 fsrule(r'type{link} and not link_exists{?}'),
+                 PALETTE({"fg_attributes": ["BOLD"],
+                          "foreground_high": "#800"})
+             ),
+             (
+                 # Executables
+                 fsrule(r'type{file} and perm{+0111}'),
+                 PALETTE({"foreground_high": "#060"})
+             ),
+             (
+                 # core files
+                 fsrule(r'type{file} and name{".*\\.core$"}'),
+                 PALETTE({"fg_attributes": ["BOLD"],
+                          "foreground_high": "#a60"})
+             ),
+             (
+                 # Hidden files
+                 fsrule(r'name{"^\\.{1}[^.]"}'),
+                 PALETTE({"foreground_high": "g31"}),
+             ),
+             (
+                 fsrule(r'type{file}'),
+                 PALETTE({"foreground_high": "#80d"})
+             ),
+             (
+                 fsrule(r'type{dir}'),
+                 PALETTE({"fg_attributes": ["BOLD"],
+                          "foreground_high": "#006"})
+             ),
+             (
+                 fsrule(r"type{link}"),
+                 PALETTE({"foreground_high": "#f88"})
+             ),
+             (
+                 fsrule(r'type{socket}'),
+                 PALETTE({"foreground_high": "#a66"})
+             ),
+             (
+                 fsrule(r'type{fifo}'),
+                 PALETTE({"foreground_high": "#0af"})
+             ),
+             (
+                 fsrule(r'type{char}'),
+                 PALETTE({"foreground_high": "#fa6"})
+             ),
+             (
+                 fsrule(r'type{block}'),
+                 PALETTE({"foreground_high": "#a80"})
+             )
+             ],
+
+         ### User interface objects
+
+         # Base widget
+         "ui.widget": [
+             ("button", PALETTE({
+                 "foreground_high": "#008",
+                 "background_high": "#ffa"
+                 })
+              )],
+
+         # Base box widgets
+         "ui.box": [
+             ("title", PALETTE({
+                 "fg_attributes": ["BOLD"],
+                 "foreground_high": "#008",
+                 "background_high": "#ffa"
+                 })),
+             ("box", PALETTE({
+                 "foreground_high": "#008",
+                 "background_high": "#ffa"
+                 })
+             ),
+             ("border", PALETTE({
+                 "foreground_high": "#008",
+                 "background_high": "#ffa"
+                 })
+             ),
+             ("mount", PALETTE({
+                 "background_high": "#ffa"
+                 })
+             ),
+             ("input", PALETTE({"foreground_high": "#008",
+                                "background_high": "#ffd"
+                                })),
+         ],
+
+         # Error message box
+         "ui.error_box": [
+             ("title", palette({
+                 "foreground": "WHITE",
+                 "background": "DARK_RED"
+                 })
+              ),
+             ("box", palette({
+                 "foreground": "WHITE",
+                 "background": "DARK_RED"
+                 })
+              ),
+             ("border", palette({
+                 "foreground": "WHITE",
+                 "background": "DARK_RED"
+                 })
+              ),
+             ("mount", palette({
+                 "foreground": "WHITE",
+                 "background": "DARK_RED"
+                 })
+              ),
+         ],
+
+         # Input box
+         "ui.input_box": [
+             ("input", PALETTE({"foreground_high": "#008",
+                                "background_high": "#ffd"}))
+         ],
+
+         # Panel widget
+         "ui.panel": [
+             ("cwdtitle", PALETTE({
+                 "fg_attributes": ["BOLD"],
+                 "foreground_high": "#008",
+                 "background_high": "#ddd"
+                 })
+             ),
+             ("cwdtitleinact", PALETTE({"foreground_high": "#606",
+                                        "background_high": "#ffd"}
+                                       )),
+             ("panel", PALETTE({"foreground": "LIGHT_GRAY"})),
+             ("cursor", palette({
+                 "foreground": "BLACK",
+                 "background": "LIGHT_GRAY"
+                 })
+             ),
+             ("search", PALETTE({"background_high": "#880"})),
+             ("info", PALETTE({"foreground_high": "#008"})),
+             ("border", PALETTE({"foreground_high": "#008"})),
+             ("tagged", PALETTE({"foreground_high": "#66f",
+                                 "background_high": "#ddf"})),
+          ],
+
+         # XYZListBox
+         "ui.list_box": [
+             ("title", PALETTE({
+                 "foreground_high": "#008",
+                 "background_high":"#ffa"
+                 })
+             ),
+             ("selected", palette({
+                 "foreground": "BLACK",
+                 "background": "LIGHT_GRAY"
+                 })
+             )
+         ],
+         
+         # Command line widget
+         "ui.cmd": [
+             ("prompt", PALETTE({"foreground_high": "#008"})),
+             ("text", PALETTE({"foreground_high": "#008"})),
+         ],
+
+         # Settings for :core:console
+         "plugin.console": [
+             ("input", palette({
+                 "foreground": "BLACK",
+                 "background": "LIGHT_GRAY"
+                 })
+             ),
+             ("header", palette({
+                 "foreground": "BLACK",
+                 "background": "LIGHT_GRAY",
+                 "fg_attributes": ["BOLD"]
+                 })
+             ),
+             ("output", PALETTE({"foreground_high": "#008"})),
+         ]
+     })
