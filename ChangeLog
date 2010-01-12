@@ -79,6 +79,8 @@ Skins
 
 * High-color mode now supported with urwid version >= 0.9.9.
 
+* New high-color mode skin added - ligthy.
+
 Version 0.0.2
 =============
 

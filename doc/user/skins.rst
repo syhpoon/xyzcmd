@@ -10,45 +10,35 @@ Customizable elements are:
 * Elements of filesystem based on :ref:`FSRule` description:
 * All user interface widgets
 
-Skin-definition file is a plain-text file containing skin-directives.
-Every skin has a name. Name of the file which holds skin definition
-is a skin name.
+Skin-definition file is a python-script file containing skin-directives.
 Skin-files may be located in skins subdirectory of xyzcmd main installation
-path or in user .xyz/skins directory.
+path or in user .xyzcmd/skins directory.
+All files in those directories executed
+for script definitions. Although single skin file can contain multiple
+skin definitions, it is advisable to put only one skin into an appropriately
+ named file.
 
-Constants
----------
-
-There are three mandatory constants to be defined in every skin.
-
-**AUTHOR**
-   Skin author name. Preferably in format: Name <author@foo.bar>
-
-**VERSION**
-   Skin version
-
-**DESCRIPTION**
-   Some skin description
-
-Constants are defined using ``<CONST>: VALUE`` syntax.
+Skins are defined using :func:`skin` DSL function (see :ref:`skin`).
 
 Filesystem types
 ----------------
-
 File objects can be highlighted using FSRule descriptions.
 See :ref:`FSRule` for detailed information about syntax.
 
+File object rules are defined in **fs.rules** section of rules
+dictionary argument of :func:`skin` function.
+
 General fs ruleset definition syntax::
 
-   fs.rules {
-      <rule> = <FG>[,<BG>][,<MA1>[,<MA2>]...]
+   "fs.rules": [
+      (fsrule('<FSRule string'),
+      <Palette config>),
       ...
-   }
+   ]
 
-Here, `<rule>` is a FSRule string describing filesystem object.
+Here, `<FSRule string>` is a FSRule string describing filesystem object.
 
-`<FG>,[,<BG>][,<MA1>[,<MA2>,...]]` is a definition of object visual
-representation.
+`<Palette config>` is a definition of object visual representation.
 
 <FG> 
    Foreground color. Possible values include:

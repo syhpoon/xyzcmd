@@ -428,6 +428,10 @@ kwargs include:
 *description* (string)
   Skin description
 
+*colors* (tuple)
+ Tuple of color modes skin is compatible with.
+ If not set, skin is considered to be compatible with any color mode.
+
 *rules* (dict)
   Skin rulesets
 

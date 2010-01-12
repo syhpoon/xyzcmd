@@ -20,7 +20,6 @@ from odict import ODict
 from utils import ustring
 
 from libxyz.ui.colors import Palette, Foreground, Background
-#import libxyz.ui as uilib
 
 class SkinManager(object):
     """
@@ -72,15 +71,14 @@ class Skin(object):
     """
 
     def __init__(self, name=None, author=None, version=None,
-                 description=None, rules=None):
-        """
-        """
+                 description=None, colors=None, rules=None):
 
         self.name = name
         self.author = author
         self.version = version
         self.description = description
         self.rules = self._make_rules(rules)
+        self.colors = colors
         self.screen = None
 
         # Default fallback palette

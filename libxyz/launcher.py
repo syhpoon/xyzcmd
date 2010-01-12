@@ -100,6 +100,8 @@ class Launcher(object):
         self.parse_configs_2()
 
         self._started = True
+        xyzlog.process_pending()
+
         self.xyz.screen.run_wrapper(self._run)
 
         self.finalize()
@@ -223,8 +225,21 @@ class Launcher(object):
         Init selected skin
         """
 
+        colors = self._conf.get("colors",
+                                self.xyz.conf["xyz"]["term_colors"])
+
+        if colors not in self.allowed_colors:
+            self.usage()
+            self.quit()
+
         skin = self.xyz.sm.get(self._conf.get("skin",
                                               self.xyz.conf[u"xyz"][u"skin"]))
+
+
+        if skin and skin.colors and colors not in skin.colors:
+            xyzlog.warning(_(u"Skin %s is not usable with requested "\
+                             u"color settings. Using default.") % skin.name)
+            skin = self.xyz.sm.get(const.DEFAULT_SKIN)
 
         if skin is None:
             skin = self.xyz.sm.get(const.DEFAULT_SKIN)
@@ -235,14 +250,7 @@ class Launcher(object):
         self.xyz.screen.register_palette(skin.get_palette_list())
 
         if hasattr(self.xyz.screen, "set_terminal_properties"):
-            colors = self._conf.get("colors",
-                                    self.xyz.conf["xyz"]["term_colors"])
-
-            if colors not in self.allowed_colors:
-                self.usage()
-                self.quit()
-            else:
-                self.xyz.screen.set_terminal_properties(colors=colors)
+            self.xyz.screen.set_terminal_properties(colors=colors)
 
         self.xyz.skin = skin
         self.xyz.skin.set_screen(self.xyz.screen)
@@ -314,7 +322,7 @@ class Launcher(object):
 
         for skin in system_skins + user_skins:
             res = self._parse_file(skin, error=False)
-            
+
             if res != True:
                 self.error(_(u"Skipping skin %s due to parsing error: %s" %
                               (skin, res)), False)

@@ -55,6 +55,7 @@ class Logger(object):
 
         self._lines = lines
         self._data = Queue(self._lines)
+        self._pending = []
 
         self._set_internal_plugin()
 
@@ -89,6 +90,11 @@ class Logger(object):
         if level is None:
             level = self.loglevel.UNKNOWN
 
+        # Urwid is not yet inited, postpone
+        if self.xyz.skin is None:
+            self._pending.append((level, msg))
+            return
+
         _sel_attr = self.xyz.skin.attr(uilib.XYZListBox.resolution,
                                        u"selected")
 
@@ -98,6 +104,20 @@ class Logger(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def process_pending(self):
+        """
+        Process pending messages
+        """
+
+        if self._pending:
+            
+            for l, m in self._pending:
+                self.log(m, l)
+
+            self._pending = []
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     panic = lambda self, msg: self.log(msg, level=self.loglevel.PANIC)
     error = lambda self, msg: self.log(msg, level=self.loglevel.ERROR)
     warning = lambda self, msg: self.log(msg, level=self.loglevel.WARNING)
