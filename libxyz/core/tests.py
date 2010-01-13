@@ -133,7 +133,7 @@ class TestActionManager(object):
         
         self.xyz = core.XYZData()
         self.dsl = core.dsl.XYZ(self.xyz)
-        self.am = core.ActionManager(xyz, [])
+        self.am = core.ActionManager(xyz)
         self.xyz.vfs = VFSDispatcher(self.xyz)
         self.files = files
 
@@ -155,23 +155,6 @@ class TestActionManager(object):
 
     def testRegisterCorrectRule(self):
         assert self.am.register("size{100}", lambda: None) is None
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    @raises(XYZRuntimeError)
-    def testParseConfigIncorrect(self):
-        am = core.ActionManager(self.xyz, [files["actions_bad"], "none"])
-        self.xyz.am = am
-
-        am.parse_configs()
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-    def testParseConfigCorrect(self):
-        am = core.ActionManager(self.xyz, [files["actions_good"], "none"])
-        self.xyz.am = am
-
-        assert am.parse_configs() is None
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -198,7 +181,7 @@ class TestDSL(object):
         self.xyz = core.XYZData()
         self.xyz.conf = {"xyz": {}}
         self.xyz.conf["xyz"]["plugins"] = {":core:shell": "ENABLE"}
-        self.xyz.km = core.KeyManager(self.xyz, [])
+        self.xyz.km = core.KeyManager(self.xyz)
         self.xyz.pm = core.plugins.PluginManager(
             self.xyz, libxyz.PathSelector().get_plugins_dir())
         self.xyz.hm = core.HookManager()

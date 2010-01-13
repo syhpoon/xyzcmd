@@ -49,6 +49,26 @@ class TestColors(object):
         assert colors.Foreground("LIGHT_RED")
         assert colors.Foreground("DEFAULT")
 
+        assert colors.Foreground("BLACK")
+        assert colors.Foreground("BROWN")
+        assert colors.Foreground("YELLOW")
+        assert colors.Foreground("WHITE")
+        assert colors.Foreground("DEFAULT")
+
+        assert colors.Foreground("DARK_BLUE")
+        assert colors.Foreground("DARK_MAGENTA")
+        assert colors.Foreground("DARK_CYAN")
+        assert colors.Foreground("DARK_RED")
+        assert colors.Foreground("DARK_GREEN")
+        assert colors.Foreground("DARK_GRAY")
+
+        assert colors.Foreground("LIGHT_GRAY")
+        assert colors.Foreground("LIGHT_RED")
+        assert colors.Foreground("LIGHT_GREEN")
+        assert colors.Foreground("LIGHT_BLUE")
+        assert colors.Foreground("LIGHT_MAGENTA")
+        assert colors.Foreground("LIGHT_CYAN")
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @raises(XYZValueError)
@@ -66,29 +86,68 @@ class TestColors(object):
         Check correct color
         """
 
+        assert colors.Background("BLACK")
         assert colors.Background("BROWN")
-        assert colors.Background("DARK_RED")
-        assert colors.Background("LIGHT_GRAY")
         assert colors.Background("DEFAULT")
+
+        assert colors.Background("DARK_RED")
+        assert colors.Background("DARK_GREEN")
+        assert colors.Background("DARK_BLUE")
+        assert colors.Background("DARK_MAGENTA")
+        assert colors.Background("DARK_CYAN")
+
+        assert colors.Background("LIGHT_GRAY")
+
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @raises(XYZValueError)
-    def testMonochromeColor1(self):
+    def testAttributeColor1(self):
         """
-        Raise error on wrong color
+        Raise error on wrong attribute
         """
 
-        colors.Monochrome("AAA")
+        colors.Attribute("AAA")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def testMonochromeColor2(self):
+    def testAttributeColor2(self):
         """
-        Check correct color
+        Check correct attribute
         """
 
-        assert colors.Monochrome("BOLD")
-        assert colors.Monochrome("UNDERLINE")
-        assert colors.Monochrome("STANDOUT")
-        assert colors.Monochrome("DEFAULT")
+        assert colors.Attribute("BOLD")
+        assert colors.Attribute("UNDERLINE")
+        assert colors.Attribute("BLINK")
+        assert colors.Attribute("STANDOUT")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @raises(XYZValueError)
+    def testHighForegroundColorIncorrect(self):
+        colors.ForegroundHigh("WTF?")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @raises(XYZValueError)
+    def testHighBackgroundColorIncorrect(self):
+        colors.ForegroundHigh("WTF?")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _testHighColorCorrect(self, cl):
+        assert colors.ForegroundHigh("#009")
+        assert colors.ForegroundHigh("#fcc")
+        assert colors.ForegroundHigh("g40")
+        assert colors.ForegroundHigh("g#cc")
+        assert colors.ForegroundHigh("h8")
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testForegroundHighColorCorrect(self):
+        self._testHighColorCorrect(colors.ForegroundHigh)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def testBackgroundHighColorCorrect(self):
+        self._testHighColorCorrect(colors.BackgroundHigh)
