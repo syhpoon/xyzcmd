@@ -98,7 +98,6 @@ class TestColors(object):
 
         assert colors.Background("LIGHT_GRAY")
 
-
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @raises(XYZValueError)
@@ -136,11 +135,11 @@ class TestColors(object):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _testHighColorCorrect(self, cl):
-        assert colors.ForegroundHigh("#009")
-        assert colors.ForegroundHigh("#fcc")
-        assert colors.ForegroundHigh("g40")
-        assert colors.ForegroundHigh("g#cc")
-        assert colors.ForegroundHigh("h8")
+        assert cl("#009")
+        assert cl("#fcc")
+        assert cl("g40")
+        assert cl("g#cc")
+        assert cl("h8")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -151,3 +150,8 @@ class TestColors(object):
 
     def testBackgroundHighColorCorrect(self):
         self._testHighColorCorrect(colors.BackgroundHigh)
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class TestPalette(object):
+    pass

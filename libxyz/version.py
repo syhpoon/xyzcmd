@@ -19,7 +19,7 @@ class Version(object):
     XYZComander version
     """
 
-    string_version = u"0.0.3 devel"
+    string_version = u"0.0.3"
     version = string_version
 
     # Three digit int

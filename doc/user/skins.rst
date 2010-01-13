@@ -26,12 +26,12 @@ File objects can be highlighted using FSRule descriptions.
 See :ref:`FSRule` for detailed information about syntax.
 
 File object rules are defined in **fs.rules** section of rules
-dictionary argument of :func:`skin` function.
+argument of :func:`skin` function.
 
 General fs ruleset definition syntax::
 
    "fs.rules": [
-      (fsrule('<FSRule string'),
+      (fsrule('<FSRule string>'),
       <Palette config>),
       ...
    ]
@@ -39,9 +39,9 @@ General fs ruleset definition syntax::
 Here, `<FSRule string>` is a FSRule string describing filesystem object.
 
 `<Palette config>` is a definition of object visual representation.
+See :ref:`` for :func:`palette` description.
 
-<FG> 
-   Foreground color. Possible values include:
+Available foreground colors:
 
       * BLACK
       * BROWN
@@ -61,8 +61,7 @@ Here, `<FSRule string>` is a FSRule string describing filesystem object.
       * LIGHT_MAGENTA
       * LIGHT_CYAN
 
-<BG>
-   Background color. Possible values include:
+Available background colors:
 
       * BLACK
       * BROWN
@@ -74,31 +73,34 @@ Here, `<FSRule string>` is a FSRule string describing filesystem object.
       * DARK_CYAN
       * LIGHT_GRAY
 
-<MA>
-   Monochrome terminal attributes. Possible values include:
+Available foreground attributes:
 
       * BOLD
       * UNDERLINE
-      * STANDOUT
+      * BLINK
       * DEFAULT
 
-   Monochrome attribute can hold more than one value.
+Attributtes can be set in a list, including more than one value at a time.
 
 So, regular files with executable bits set can be matched as following::
 
-   fs.rules {
-      "type{file} and perm{+0111}" = WHITE, BLACK
-   }
+   "fs.rules": [(
+      fsrule(r"type{file} and perm{+0111}"),
+      palette({
+         "foreground": "WHITE",
+         "background": "BLACK"})
+   )]
 
-More complex rules can be split along several lines using x-quoted strings::
+Additional rule::
 
-   fs.rules {
-      '''
-      type{dir} or type{file}
-      and (owner{user} or owner{root})
-      and perm{+4000}
-      ''' = DARK_RED, BLACK
-      }
+   "fs.rules": [(
+      fsrule(r"""type{dir} or type{file} and (owner{user} or owner{root})
+                 and perm{+4000}"""),
+      palette({
+         "foreground": "DARK_RED",
+         "background": "BLACK"
+       })
+     )]
 
 Order
 -----

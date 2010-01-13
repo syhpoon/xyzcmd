@@ -17,7 +17,6 @@
 import copy
 import re
 
-from libxyz.ui import lowui
 from libxyz.exceptions import XYZValueError
 from libxyz.ui.display import is_lowui_ge_0_9_9
 
