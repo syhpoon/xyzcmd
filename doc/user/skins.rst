@@ -136,17 +136,23 @@ For example the MessageBox widget requires three resources to be defined:
 
 So ruleset may look like following::
 
-   ui.message_box {
-      mount = YELLOW, DARK_GREEN
-      box =  WHITE, DARK_RED
-      title = YELLOW, DARK_BLUE
-   }
+   "ui.message_box": [(
+      "mount": palette({
+          "foreground": "YELLOW",
+          "background": "DARK_GREEN"
+          })),
+
+      ("box": palette({
+          "foreground": "WHITE",
+          "background": "DARK_RED"
+          })),
+      ("title": palette({
+          "foreground": "YELLOW",
+          "background": "DARK_BLUE"
+          }))
+   ]
 
 In case such a ruleset exists in skin file, skin manager will load above
 definitions and will use it for every message_box widget.
 Otherwise skin manager will look for next ruleset defined in ``resolution``,
 in our case it is ``box``. And so forth.
-
-Here the following question may arise: what if some of the rulesets will not
-have defined all the resources required?
-The answer is simple: all missing resources take a DEFAULT color value.
