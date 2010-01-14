@@ -1261,7 +1261,8 @@ class Block(lowui.FlowWidget):
         Tag every single object in current dir
         """
 
-        self._tagged = [i for i in xrange(self._len)]
+        self._tagged = [i for i in xrange(self._len) if
+                        self.entries[i].name != ".."]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
