@@ -153,7 +153,6 @@ class Skin(object):
                 if isinstance(_val, Palette):
                     _list.append(_val.get_palette(display))
 
-        import pdb; pdb.set_trace() 
         return _list
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
