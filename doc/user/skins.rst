@@ -82,6 +82,19 @@ Available foreground attributes:
 
 Attributtes can be set in a list, including more than one value at a time.
 
+With urwid library version starting from 0.9.9 it is possible to provide
+ additional colors, if terminal emulator supports this feature.
+Also note, that high-colors mode is only available for raw display driver 
+(term_lib in main.xyz or -d switch).
+
+Extended colors can be specified in following formats:
+* '#009' (0% red, 0% green, 60% red, like HTML colors)
+* '#fcc' (100% red, 80% green, 80% blue)
+* 'g40' (40% gray, decimal), 'g#cc' (80% gray, hex),
+* '#000', 'g0', 'g#00' (black),
+* '#fff', 'g100', 'g#ff' (white)
+* 'h8' (color number 8), 'h255' (color number 255)
+
 So, regular files with executable bits set can be matched as following::
 
    "fs.rules": [(
