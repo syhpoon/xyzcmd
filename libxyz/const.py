@@ -31,7 +31,7 @@ HOMEPAGE = u"xyzcmd.syhpoon.name"
 USER_DIR = u".xyzcmd"
 
 # System directory prefix
-SYSTEM_PREFIX = u"/usr"
+SYSTEM_PREFIX = os.getenv("XYZCMD_PREFIX", sys.prefix)
 
 # System directory
 SYSTEM_DIR = os.path.join(SYSTEM_PREFIX, "share/xyzcmd")

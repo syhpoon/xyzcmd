@@ -11,6 +11,9 @@ New features
 * Custom sorting
 * High-color mode support with urwid >= 0.9.9
 * New command line options: -c colors and -s skin
+* XYZCommander's system prefix can be set using XYZCMD_PREFIX environment
+  variable in case of custom installation, by default it is equal
+  to sys.prefix.
 
 Configuration
 -------------
