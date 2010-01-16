@@ -70,6 +70,7 @@ class Launcher(object):
         self._path_sel = libxyz.PathSelector()
         self._conf = {}
         self._saved_term = None
+        self._driver = None
         self._started = False
 
         self._create_home()
@@ -86,6 +87,9 @@ class Launcher(object):
         self.parse_args()
         self.parse_configs_1()
 
+        self._driver = self._conf.get("driver",
+                                      self.xyz.conf["xyz"]["term_lib"])
+        
         self.xyz.term = core.utils.setup_term()
         self.xyz.pm = PluginManager(self.xyz,
                                     self._path_sel.get_plugins_dir())
@@ -93,8 +97,7 @@ class Launcher(object):
         self.init_logger()
         
         self.xyz.input = core.InputWrapper(self.xyz)
-        self.xyz.screen = uilib.display.init_display(
-            self._conf.get("driver", self.xyz.conf["xyz"]["term_lib"]))
+        self.xyz.screen = uilib.display.init_display(self._driver)
 
         self.init_skin()
         self.parse_configs_2()
@@ -247,7 +250,7 @@ class Launcher(object):
         # Purge unused skins to save some memory
         self.xyz.sm.clear()
 
-        self.xyz.screen.register_palette(skin.get_palette_list())
+        self.xyz.screen.register_palette(skin.get_palette_list(self._driver))
 
         if hasattr(self.xyz.screen, "set_terminal_properties"):
             self.xyz.screen.set_terminal_properties(colors=colors)

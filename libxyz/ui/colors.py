@@ -17,6 +17,7 @@
 import copy
 import re
 
+from libxyz import const
 from libxyz.exceptions import XYZValueError
 from libxyz.ui.display import is_lowui_ge_0_9_9
 
@@ -340,16 +341,18 @@ class Palette(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def get_palette(self):
+    def get_palette(self, display=const.DEFAULT_DISPLAY_DRIVER):
         """
         Return urwid-compatible palette tuple
         """
+
+        raw = display == "raw"
 
         fg = self.fg.color
         fg_attrs = self.fg_attrs
 
         # Append attributes to foreground color
-        if fg_attrs is not None and is_lowui_ge_0_9_9():
+        if fg_attrs is not None and is_lowui_ge_0_9_9() and raw:
             fg = ",".join([fg] + [x.color for x in fg_attrs])
 
         bg = self.bg.color
@@ -363,7 +366,7 @@ class Palette(object):
         if fg_high is not None:
             fg_high = fg_high.color
             
-            if fg_attrs is not None and is_lowui_ge_0_9_9():
+            if fg_attrs is not None and is_lowui_ge_0_9_9() and raw:
                 fg_high = ",".join([fg_high] + [x.color for x in fg_attrs])
 
         bg_high = self.bg_high
@@ -373,7 +376,7 @@ class Palette(object):
 
         result = (self.name, fg, bg, mono)
 
-        if is_lowui_ge_0_9_9():
+        if is_lowui_ge_0_9_9() and raw:
             result += (fg_high, bg_high)
 
         return result

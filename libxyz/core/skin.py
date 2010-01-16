@@ -19,6 +19,8 @@ from fsrule import FSRule
 from odict import ODict
 from utils import ustring
 
+from libxyz import const
+
 from libxyz.ui.colors import Palette, Foreground, Background
 
 class SkinManager(object):
@@ -138,19 +140,20 @@ class Skin(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def get_palette_list(self):
+    def get_palette_list(self, display=const.DEFAULT_DISPLAY_DRIVER):
         """
         Return list of defined palettes.
         It is usually passed to register_palette() function
         """
 
-        _list = [self._default.get_palette()]
+        _list = [self._default.get_palette(display)]
 
         for _name, _block in self.rules.iteritems():
             for _var, _val in _block.iteritems():
                 if isinstance(_val, Palette):
-                    _list.append(_val.get_palette())
+                    _list.append(_val.get_palette(display))
 
+        import pdb; pdb.set_trace() 
         return _list
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

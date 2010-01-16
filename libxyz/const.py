@@ -71,3 +71,6 @@ HOOKS_CONF_FILE = u"hooks.xyz"
 
 # Default fallback skin name
 DEFAULT_SKIN = u"seablue"
+
+# Default display driver. raw or curses
+DEFAULT_DISPLAY_DRIVER = u"raw"
