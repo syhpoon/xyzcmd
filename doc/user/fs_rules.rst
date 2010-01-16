@@ -49,8 +49,8 @@ Available expressions are:
 * :ref:`link_type <type>`
 * :ref:`link_perm <perm>`
 * :ref:`link_owner <owner>`
-* :ref:`link_name <regexp>`
-* :ref:`link_iname <regexp>`
+* :ref:`link_name <name>`
+* :ref:`link_iname <name>`
 * :ref:`link_size <size>`
 * :ref:`link_exists`
 
@@ -129,13 +129,13 @@ Argument can be specified as ``[uid][:gid]``. uid and gid both can be either
 symbolic or numeric::
 
       # Files owned by root and group wheel
-      "type{file} and owner{root:wheel}
+      "type{file} and owner{root:wheel}"
 
       # Directories owned by username
       "type{dir} and owner{username}"
 
       # Sockets owned by group operator
-      "type{socket} and owner{:operator}
+      "type{socket} and owner{:operator}"
 
       # Objects owner by user with uid 1050
       "owner{1050}"
@@ -154,14 +154,14 @@ An argument is an arbitrary regular-expression string::
       # Hidden files
       name{"^\\.{1}[^.]"}
 
-.. _size:
-
 .. _iname:
 
 iname
 -----
 ``iname`` expression is the same as the ``name`` above but it is
 case-insensitive.
+
+.. _size:
 
 size
 ----

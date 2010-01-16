@@ -367,7 +367,7 @@ uhook(event)
 ++++++++++++
 Remove all hooks for the event.
 
-.. fsrule:
+.. _fsrule:
 
 fsrule(rule)
 ++++++++++++
@@ -390,15 +390,16 @@ palette(config)
 +++++++++++++++
 Create internal palette object. It is primarily used in skin files.
 
-Config is a dictionary of form:
-{
+Config is a dictionary of form::
+
+ {
     'foreground': COLOR,
     'background': COLOR,
     'fg_attributes': [ATTR],
     'mono': [ATTR],
     'foreground_high': HG_COLOR,
     'background_high': HG_COLOR
-}
+ }
 
 Example::
 
@@ -410,8 +411,8 @@ Example::
 
 .. _skin:
 
-skin(kwargs)
-++++++++++++
+skin(**kwargs)
+++++++++++++++
 Create and register new skin.
 
 kwargs include:
@@ -485,7 +486,10 @@ Here's the list of |XYZ| system configuration files:
 
 *hooks.xyz*
   Hooks configuration.
- 
+
+*skins/* 
+  Skin files.
+
 Shortcuts
 ---------
 Shortcut is a combination of keys pressed.
