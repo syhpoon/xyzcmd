@@ -55,6 +55,8 @@ class XYZPlugin(BasePlugin):
 
         if not _dir:
             return
+        else:
+            _dir = bstring(_dir)
 
         try:
             self._panel.get_current().mkdir(_dir)
