@@ -116,12 +116,17 @@ class ButtonBox(Box):
 
     def _init_buttons(self, buttons):
         _b_attr = self._attr("button")
+        _actb_attr = self._attr("button_active")
+        
         _b_size = max([len(b[0]) for b in buttons]) + 4 # [ ... ]
 
         data = [lowui.AttrWrap(libxyz.ui.XYZButton(x[0]), _b_attr)
                 for x in buttons]
 
-        return lowui.GridFlow(data, _b_size, 2, 0, align.CENTER)
+        buttons = lowui.GridFlow(data, _b_size, 2, 0, align.CENTER)
+        buttons.focus_cell.set_attr(_actb_attr)
+
+        return buttons
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -129,6 +134,9 @@ class ButtonBox(Box):
         """
         Move focus
         """
+
+        _inact = self._attr("button")
+        _act = self._attr("button_active")
 
         _cells = self._buttons.cells
         _index = lambda: _cells.index(self._buttons.focus_cell)
@@ -156,7 +164,9 @@ class ButtonBox(Box):
                 pass
 
             if _widget is not None:
+                self._buttons.focus_cell.set_attr(_inact)
                 self._buttons.set_focus(_widget)
+                self._buttons.focus_cell.set_attr(_act)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

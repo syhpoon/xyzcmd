@@ -67,7 +67,13 @@ skin(name="grass",
                  "foreground": "DARK_GREEN",
                  "background": "LIGHT_GRAY"
                  })
-              )],
+              ),
+             ("button_active", palette({
+                 "foreground": "WHITE",
+                 "background": "DARK_GREEN"
+                 })
+              )
+             ],
 
          # Base box widgets
          "ui.box": [

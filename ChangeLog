@@ -1,6 +1,13 @@
 XYZCommander changelog
 ----------------------
 
+Version 0.0.4
+=============
+
+Skins
+-----
+* New attribute for selected buttons - button_active.
+
 Version 0.0.3
 =============
 

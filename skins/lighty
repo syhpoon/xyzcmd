@@ -73,7 +73,14 @@ skin(name="lighty",
                  "foreground_high": "#008",
                  "background_high": "#ffa"
                  })
-              )],
+              ),
+                          
+             ("button_active", PALETTE({
+                 "foreground_high": "#ffa",
+                 "background_high": "#008"
+                 })
+              )
+             ],
 
          # Base box widgets
          "ui.box": [

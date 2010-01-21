@@ -67,7 +67,13 @@ skin(name="glamour",
                  "foreground": "DARK_MAGENTA",
                  "background": "LIGHT_GRAY"
                  })
-              )],
+              ),
+             ("button_active", palette({
+                 "foreground": "WHITE",
+                 "background": "DARK_MAGENTA"
+                 })
+              )
+             ],
 
          # Base box widgets
          "ui.box": [

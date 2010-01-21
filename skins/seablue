@@ -67,7 +67,13 @@ skin(name="seablue",
                  "foreground": "DARK_BLUE",
                  "background": "LIGHT_GRAY"
                  })
-              )],
+              ),
+             ("button_active", palette({
+                 "foreground": "WHITE",
+                 "background": "DARK_BLUE"
+                 })
+              )
+             ],
 
          # Base box widgets
          "ui.box": [
