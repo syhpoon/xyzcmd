@@ -3,10 +3,18 @@ XYZCommander changelog
 
 Version 0.0.4
 =============
-
 Skins
 -----
 * New attribute for selected buttons - button_active.
+
+VFS
+---
+* Fixed bug when permission bits where ignored in recursive copying
+* Implemented VFS objects caching. This highly improves non-local VFS
+  handlers working speed.
+* Implemented copy() method for tar VFS handler. That is it is now possible
+  to copy objects from inside archives to local filesystem.
+
 
 Version 0.0.3
 =============

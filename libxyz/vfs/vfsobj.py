@@ -246,4 +246,3 @@ class VFSObject(object):
     
     def _prepare(self):
         raise NotImplementedError(self.__ni_msg)
-

@@ -30,6 +30,8 @@ class VFSDispatcher(object):
     def __init__(self, xyz):
         self.xyz = xyz
         self._handlers = {}
+        self._cache = {}
+
         self.vfsre = re.compile(r'(#vfs-\w+#)')
         self.vfsre2 = re.compile(r'^#vfs-(\w+)#$')
 
@@ -58,13 +60,14 @@ class VFSDispatcher(object):
         """
 
         enc = enc or xyzenc
-
         data = self._parse_path(path)
 
         if not data:
             raise VFSError(_(u"Invalid path: %s.") % path)
 
         handler = None
+
+        kw = {}
 
         for p, vfs in data:
             if vfs not in self._handlers:
@@ -73,6 +76,9 @@ class VFSDispatcher(object):
             else:
                 full_path = self.get_full_path(p, vfs, handler)
                 ext_path = self.get_ext_path(handler, vfs)
+                kwtmp = self.get_cache(p)
+                kw.update(kwtmp)
+                kw.update(kwargs)
 
                 handler = self._handlers[vfs](
                     self.xyz,
@@ -82,12 +88,44 @@ class VFSDispatcher(object):
                     vfs,
                     handler,
                     enc,
-                    **kwargs)
+                    **kw)
 
         return handler
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def set_cache(self, path, data):
+        """
+        Save some data for VFS object
+        This data dict is appended to VFSObject's kwargs dict
+        every time dispatch() is called
+        """
+
+        self._cache[path] = data
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_cache(self, path):
+        """
+        Return saved cache for the object or {} if none was saved
+        """
+
+        return self._cache.get(path, {}).copy()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def clear_cache(self, path):
+        """
+        Clear cache for given path
+        """
+
+        try:
+            del(self._cache[path])
+        except KeyError:
+            pass
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     def _parse_path(self, path):
         files = []
 

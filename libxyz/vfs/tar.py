@@ -19,7 +19,8 @@ import stat
 import tarfile
 import time
 
-from libxyz.core.utils import ustring, bstring
+from libxyz.exceptions import XYZRuntimeError
+from libxyz.core.utils import ustring
 from libxyz.vfs import types as vfstypes
 from libxyz.vfs import vfsobj
 from libxyz.vfs import util
@@ -38,7 +39,7 @@ class TarVFSObject(vfsobj.VFSObject):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    get_name = lambda self, x: os.path.basename(x.name)
+    get_name = lambda self, x: os.path.basename(x.name.rstrip(os.path.sep))
     get_path = lambda self, x: os.path.join(self.ext_path, x.lstrip(os.sep))
 
     file_type_map = {
@@ -51,7 +52,8 @@ class TarVFSObject(vfsobj.VFSObject):
         }
 
     def __init__(self, *args, **kwargs):
-        self.tarobj = None
+        self.tarobj = kwargs.get('tarobj', None)
+
         super(TarVFSObject, self).__init__(*args, **kwargs)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -83,35 +85,44 @@ class TarVFSObject(vfsobj.VFSObject):
             _parent = self.xyz.vfs.get_parent(self.parent.path, self.enc)
         else:
             _parent = self.xyz.vfs.dispatch(
-                self.get_path(os.path.dirname(self.path)), self.enc,
-                tarobj=self.tarobj)
+                self.get_path(os.path.dirname(self.path)), self.enc)
             _parent.name = ".."
 
         return [
             _parent,
             self,
-            [self.xyz.vfs.dispatch(self.get_path(x.name),
-                                   self.enc, tarobj=self.tarobj)
+            [self.xyz.vfs.dispatch(self.get_path(x.name), self.enc)
              for x in _dirs],
-            [self.xyz.vfs.dispatch(self.get_path(x.name),
-                                   self.enc, tarobj=self.tarobj)
+            [self.xyz.vfs.dispatch(self.get_path(x.name), self.enc)
              for x in _files],
             ]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    # def copy(self, path, existcb=None, errorcb=None, save_attrs=True,
-    #          follow_links=False, cancel=None):
+    def copy(self, path, existcb=None, errorcb=None, save_attrs=True,
+             follow_links=False, cancel=None):
         
-    #     env = {
-    #         'override': 'abort',
-    #         'error': 'abort'
-    #         }
+        env = {
+            'override': 'abort',
+            'error': 'abort'
+            }
 
-    #     tarobj = self._open_archive()
+        tarobj = self._open_archive()
 
-    #     return tarobj.extractall(path, [self._init_obj()])
-        
+        try:
+            if self.is_dir():
+                f = self._copy_dir
+            else:
+                f = self._copy_file
+
+            f(self.path, path, existcb, errorcb,
+              save_attrs, follow_links, env, cancel, tarobj=tarobj)
+        except XYZRuntimeError:
+            # Aborted
+            return False
+        else:
+            return True
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     def _prepare(self):
@@ -142,6 +153,18 @@ class TarVFSObject(vfsobj.VFSObject):
             (_(u"Access mode"), ustring(self.mode)),
             (_(u"Type-specific data"), self.data),
             )
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _normalize(self, path):
+        """
+        Normalize path
+        """
+
+        if path.startswith(os.sep):
+            return path.lstrip(os.sep)
+        else:
+            return path
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -218,9 +241,9 @@ class TarVFSObject(vfsobj.VFSObject):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _init_obj(self):
+    def _init_obj(self, altpath=None):
         tarobj = self._open_archive()
-        path = self.path.lstrip(os.sep)
+        path = (altpath or self.path).lstrip(os.sep)
 
         try:
             obj = tarobj.getmember(path)
@@ -241,5 +264,144 @@ class TarVFSObject(vfsobj.VFSObject):
                 _mode = "r:bz2"
 
             self.tarobj = tarfile.open(self.parent.path, mode=_mode)
+            self.xyz.vfs.set_cache(self.parent.path, {'tarobj': self.tarobj})
     
         return self.tarobj
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _copy_file(self, src, dst, existcb, errorcb, save_attrs,
+                   follow_links, env, cancel=None, tarobj=None):
+        """
+        File-to-file copy
+        """
+
+        obj = self._init_obj(src)
+
+        if os.path.exists(dst) and os.path.isdir(dst):
+            dstto = os.path.join(dst, os.path.basename(src))
+        else:
+            dstto = dst
+
+        if os.path.exists(dstto):
+            if env['override'] not in ('override all', 'skip all'):
+                if existcb:
+                    try:
+                        env['override'] = existcb(
+                            self.xyz.vfs.dispatch(dstto))
+                    except Exception:
+                        env['override'] = 'abort'
+
+            if env['override'] == 'abort':
+                raise XYZRuntimeError()
+            elif env['override'] in ('skip', 'skip all'):
+                return False
+
+        try:
+            if not follow_links and obj.issym():
+                os.symlink(obj.linkname, dstto)
+            else:
+                if obj.issym():
+                    objdir = os.path.dirname(obj.name)
+                    src = os.path.join(objdir, obj.linkname)
+
+                self._do_copy(src, dstto, save_attrs, tarobj, obj)
+
+            return True
+        except Exception, e:
+            if env['error'] != 'skip all':
+                if errorcb:
+                    try:
+                        env['error'] = errorcb(
+                            self.xyz.vfs.dispatch(self.full_path), str(e))
+                    except Exception:
+                        env['error'] = 'abort'
+
+                if env['error'] == 'abort':
+                    raise XYZRuntimeError()
+
+        return False
+    
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _copy_dir(self, src, dst, existcb, errorcb, save_attrs,
+                  follow_links, env, cancel=None, tarobj=None):
+        """
+        Dir-to-dir copy
+        """
+
+        obj = self._init_obj(src)
+
+        if os.path.exists(dst) and os.path.isdir(dst) and \
+               os.path.basename(src) != os.path.basename(dst):
+            dst = os.path.join(dst, os.path.basename(src))
+
+        if not follow_links and obj.issym():
+            os.symlink(obj.linkname, dst)
+
+            return True
+
+        if obj.isdir() and not os.path.exists(dst):
+            os.makedirs(dst)
+
+        files = [x for x in tarobj.getmembers() if
+                 self.in_dir(obj.name, x.name)]
+
+        for f in files:
+            if cancel is not None and cancel.isSet():
+                raise StopIteration()
+
+            srcobj = f.name
+            dstobj = os.path.join(dst, self.get_name(f))
+
+            if self._init_obj(srcobj).isdir():
+                fun = self._copy_dir
+            else:
+                fun = self._copy_file
+
+            fun(srcobj, dstobj, existcb, errorcb, save_attrs,
+                follow_links, env, cancel, tarobj)
+
+        if obj.isdir() and save_attrs:
+            self._copystat(obj, dst)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _do_copy(self, src, dst, save_attrs, tarobj, obj):
+        """
+        Copy file from inside archive
+        """
+
+        fsrc = tarobj.extractfile(self._normalize(src))
+
+        fdst = open(dst, "w")
+
+        while True:
+            block = fsrc.read(4096)
+
+            # EOF
+            if block == '':
+                break
+
+            fdst.write(block)
+
+        fsrc.close()
+        fdst.close()
+
+        if save_attrs:
+            self._copystat(obj, dst)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _copystat(self, obj, dst):
+        try:
+            os.chown(dst, obj.uid, obj.gid)
+        except Exception, e:
+            xyzlog.warning(_(u"Unable to chown %s: %s") %
+                           (ustring(dst), ustring(str(e))))
+
+        try:
+            os.chmod(dst, obj.mode)
+        except Exception, e:
+            xyzlog.warning(_(u"Unable to chmod %s: %s") %
+                           (ustring(dst), ustring(str(e))))
