@@ -445,9 +445,6 @@ class LocalVFSObject(vfsobj.VFSObject):
         if os.path.isdir(src) and not os.path.exists(dst):
             os.makedirs(dst)
 
-            if save_attrs and self.ftype == self._find_type(dst):
-                shutil.copystat(src, dst)
-
         files = os.listdir(src)
 
         for f in files:
@@ -464,3 +461,7 @@ class LocalVFSObject(vfsobj.VFSObject):
 
             fun(srcobj, dstobj, existcb, errorcb, save_attrs,
                 follow_links, env, cancel)
+
+        if os.path.isdir(src) and save_attrs:
+            shutil.copystat(src, dst)
+
