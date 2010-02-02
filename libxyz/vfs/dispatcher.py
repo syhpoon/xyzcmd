@@ -22,6 +22,7 @@ Path format is following:
 
 import os
 import re
+import time
 
 from libxyz.vfs import VFSObject
 from libxyz.exceptions import VFSError
@@ -31,6 +32,7 @@ class VFSDispatcher(object):
         self.xyz = xyz
         self._handlers = {}
         self._cache = {}
+        self._cache_data = {}
 
         self.vfsre = re.compile(r'(#vfs-\w+#)')
         self.vfsre2 = re.compile(r'^#vfs-(\w+)#$')
@@ -110,7 +112,25 @@ class VFSDispatcher(object):
         Return saved cache for the object or {} if none was saved
         """
 
-        return self._cache.get(path, {}).copy()
+        atime = self._cache_data.get(path, None)
+        now = int(time.time())
+
+        # Cache obsoleted
+        if atime is not None and \
+               now - atime >= self.xyz.conf["vfs"]["cache_time"]:
+
+            self.clear_cache(path)
+            del(self._cache_data[path])
+
+            data = {}
+        else:
+            data = self._cache.get(path, {}).copy()
+
+        # Update access timestamp
+        if data:
+            self._cache_data[path] = now
+
+        return data
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

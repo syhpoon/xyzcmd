@@ -3,6 +3,13 @@ XYZCommander changelog
 
 Version 0.0.4
 =============
+
+Configuration
+-------------
+* New variable cache_time (integer) in section vfs.
+  Variable sets number of seconds during which VFS cache obsoletes.
+  Default 60.
+
 Skins
 -----
 * New attribute for selected buttons - button_active.
