@@ -57,3 +57,8 @@ plugin_conf(":core:shell", {
     # Whether to run system shell-specific initialization
     "setup_shell": True
     })
+
+plugin_conf(":core:complete", {
+    # List of domains to use
+    "domains": ["binpath", "fs"]
+    })

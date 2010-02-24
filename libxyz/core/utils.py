@@ -19,6 +19,7 @@ import os
 import termios
 import copy
 import types
+import difflib
 
 def ustring(string, enc=None):
     """
@@ -136,3 +137,21 @@ def is_func(obj):
     
     return isinstance(obj, types.FunctionType) or \
            isinstance(obj, types.MethodType)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def intersect(s1, s2):
+    """
+    Find intersection between two strings
+    """
+    
+    m = difflib.SequenceMatcher(None, s1, s2)
+
+    match = m.get_matching_blocks()
+
+    # No match
+    if len(match) <= 1 or match[0][2] == 0:
+        return s2
+    else:
+        _, j, n = match[0]
+        return s2[j + n:]

@@ -15,6 +15,7 @@ load(":core:keycodes:*")
 load(":core:bindlist:show_binds")
 load(":core:shell:*")
 load(":core:console:*")
+load(":core:complete:*")
 
 load(":ui:testinput:show_box")
 load(":ui:bookmarks:*")
@@ -39,6 +40,7 @@ def _act():
         call(":sys:panel:action")
     else:
         call(":sys:cmd:execute")
+
 bind(_act, kbd("ENTER"))
 
 bind(":sys:cmd:history_prev", kbd("META-p"))
@@ -114,3 +116,24 @@ bind(lambda: shell(env("PAGER", "less"), macro("ACT_PATH"), wait=False),
 bind(lambda: shell(env("EDITOR", "vi"), macro("ACT_PATH")), kbd("F4"))
 
 bind(lambda: call(":sys:panel:chdir", macro("INACT_CWD")), kbd("META-="))
+
+def complete():
+    import os
+    import re
+    from libxyz.core.utils import bstring, intersect
+
+    cmd = bstring(call(":sys:cmd:get"))
+
+    # Treat as path
+    if cmd.startswith(os.path.sep) or cmd.startswith("./"):
+        data = call(":core:complete:dialog", cmd, ["fs"])
+    # Treat as command in $PATH
+    else:
+        data = call(":core:complete:dialog", cmd, ["binpath"])
+
+    if data is not None:
+        data = intersect(cmd, data)
+        call(":sys:cmd:put", data)
+
+bind(complete, kbd("META-TAB"))
+

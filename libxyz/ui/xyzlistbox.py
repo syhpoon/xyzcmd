@@ -47,13 +47,14 @@ class XYZListBox(lowui.WidgetWrap):
         self._walker = walker
         self._keys = Keys()
 
-        self._listbox = lowui.AttrWrap(lowui.ListBox(walker),
-                                       self._attr(u"box"))
+        self.listbox = lowui.ListBox(walker)
+        self.title = title
+        self._listbox = lowui.AttrWrap(self.listbox, self._attr(u"box"))
 
-        _box = Border(self._listbox, title, self._attr(u"title"),
-                      self._attr(u"border"))
+        self._box = Border(self._listbox, title, self._attr(u"title"),
+                           self._attr(u"border"))
 
-        _box = lowui.Overlay(_box, body, align.CENTER, _dim[0],
+        _box = lowui.Overlay(self._box, body, align.CENTER, _dim[0],
                              align.MIDDLE, _dim[1])
 
         super(XYZListBox, self).__init__(_box)
@@ -96,6 +97,16 @@ class XYZListBox(lowui.WidgetWrap):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def set_title(self, title):
+        """
+        Change title
+        """
+
+        self.title = title
+        self._box.set_title(title)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     def _attr(self, name):
         """
         Find palette

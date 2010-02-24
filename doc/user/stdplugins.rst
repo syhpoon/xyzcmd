@@ -19,6 +19,7 @@ Here is the list of standard *:core:* plugins:
 * :ref:`:core:keycodes <core-keycodes>`
 * :ref:`:core:pluginlist <core-pluginlist>`
 * :ref:`:core:shell <core-shell>`
+* :ref:`:core:complete <core-complete>`
 
 .. _core-bindlist:
 
@@ -120,6 +121,42 @@ Events:
 
 ``:core:shell``
 +++++++++++++++
+Plugin allows to execute commands by spawning external shell.
+
+Public methods:
+
+**execute(cmd, wait=None)**
+  Execute command in shell.
+  If wait flag is set, the user will be prompted to press key upon command
+  execution completed, otherwise it will immediately return to |XYZ|.
+
+**echo(msg)**
+  Echo a message to terminal output.
+
+*:core:shell* plugin provides additional configuration, based on user's
+shell. For example, for bash it tries to import all aliases into |XYZ| 's
+own aliases subsystem, making them available from inside |XYZ|.
+
+Configuration options:
+
+**wait**
+  Boolean flag indicating whether to wait for user pressing
+  key after command executed. Default True.
+
+**setup_shell**
+  Boolean flag indicating whether to run system shell-specific initialization.
+  Default True.
+
+Events:
+
+**event:core:shell:execute**
+  Fires before command execution.
+  Arguments: a command to be executed
+
+.. _core-shell:
+
+``:core:complete``
+++++++++++++++++++
 Plugin allows to execute commands by spawning external shell.
 
 Public methods:

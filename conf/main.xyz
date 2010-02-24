@@ -14,6 +14,7 @@ plugins_on(":sys:run",
            ":core:bindlist",
            ":core:shell",
            ":core:console",
+           ":core:complete",
 
            ":misc:hello",
            ":misc:about",

@@ -65,6 +65,10 @@ class ListEntry(lowui.FlowWidget):
     def keypress(self, (maxcol,), key):
         return key
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    text = property(lambda self: self._text)
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 class NumEntry(ListEntry):

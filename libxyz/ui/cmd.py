@@ -197,6 +197,7 @@ class Cmd(lowui.FlowWidget):
         _cmd_plugin.export(self.put_active_cwd)
         _cmd_plugin.export(self.put_inactive_cwd)
         _cmd_plugin.export(self.put)
+        _cmd_plugin.export(self.get)
         _cmd_plugin.export(self.escape)
         _cmd_plugin.export(self.replace_aliases)
 
@@ -844,11 +845,20 @@ class Cmd(lowui.FlowWidget):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def get(self):
+        """
+        Get cmd contents
+        """
+
+        return "".join(self._data)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def _put_engine(self, obj):
         """
         Put list content to cmd
         """
-        
+
         map(lambda x: self._put_object(x), 
             self.escape([bstring(x) for x in ustring(obj)]) + [" "])
         self._invalidate()

@@ -22,6 +22,23 @@ VFS
 * Implemented copy() method for tar VFS handler. That is it is now possible
   to copy objects from inside archives to local filesystem.
 
+Plugins
+-------
+* New plugin - :core:complete.
+  Plugin provides ability to auto-complete provided text in different domains.
+  Currently two domains implemented: 
+  * binpath - searches through directories defined in $PATH variable
+  * fs - searches through filesystem hierarchy
+
+  Auto-completion function bound to Alt-Tab by default.
+
+* New method :sys:cmd:get()
+  Method retrieves current cmd contents.
+
+UI
+--
+* New method :sys:cmd:get().
+  Method allows to get current command line contents.
 
 Version 0.0.3
 =============
