@@ -236,7 +236,7 @@ is an inode, so it would be enough to make sure it is number::
 Next we need a match function wich will be called when match()
 method is invoked on :class:`FSRule` instance.
 
-Match function takes two variables:
+Match function takes two arguments:
 :class:`VFSObject` instance and a transformed value returned
 by our transformation function above::
 
