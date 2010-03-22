@@ -95,7 +95,10 @@ skin(name="monochrome",
                  "foreground": "DEFAULT",
                  "background": "DEFAULT"})
               ),
-             ("tagged", BG_PALETTE({"foreground": "WHITE"})),
+             ("tagged", BG_PALETTE(
+                 {"foreground": "WHITE",
+                  "background_high": "g50"
+                  })),
          ],
 
          # XYZListBox
