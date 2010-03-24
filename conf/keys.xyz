@@ -177,4 +177,3 @@ def complete():
         call(":sys:cmd:put", data)
 
 bind(complete, kbd("META-TAB"))
-

@@ -17,6 +17,8 @@ Configuration
 Skins
 -----
 * New attribute for selected buttons - button_active.
+* New attribute for tab bar - tabbar
+* New attribute for active tab - tabact
 
 Events
 ------
@@ -45,7 +47,7 @@ Plugins
   * binpath - searches through directories defined in $PATH variable
   * fs - searches through filesystem hierarchy
 
-  Auto-completion function bound to Alt-Tab by default.
+  Auto-completion function bound to META-Tab by default.
 
 * New method :sys:cmd:get()
   Method retrieves current cmd contents.
@@ -75,8 +77,6 @@ Plugins
   Bound to Ctrl-c p to switch to the previous tab in active panel and to
   Ctrl-c P to switch to the previous tab in inactive one.
 
-UI
---
 * New method :sys:cmd:get().
   Method allows to get current command line contents.
 
