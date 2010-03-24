@@ -160,6 +160,15 @@ skin(name="lighty",
              ("border", PALETTE({"foreground_high": "#008"})),
              ("tagged", PALETTE({"foreground_high": "#66f",
                                  "background_high": "#ddf"})),
+             ("tabbar", PALETTE({
+                 "foreground_high": "BLACK"
+                 })
+              ),
+             ("tabact", PALETTE({
+                 "fg_attributes": ["BOLD"],
+                 "foreground_high": "#80f",
+                 })
+              )
           ],
 
          # XYZListBox

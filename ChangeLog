@@ -4,6 +4,10 @@ XYZCommander changelog
 Version 0.0.4
 =============
 
+New features
+------------
+* Tabs in navigation panels
+
 Configuration
 -------------
 * New variable cache_time (integer) in section vfs.
@@ -14,13 +18,24 @@ Skins
 -----
 * New attribute for selected buttons - button_active.
 
+Events
+------
+* New event event:sys:panel:switch_tab.
+  Fires when switching to another tab.
+
+* New event event:sys:panel:new_tab.
+  Fires when new tab is added.
+
+* New event event:sys:panel:del_tab.
+  Fires when tab is deleted.
+
 VFS
 ---
 * Fixed bug when permission bits where ignored in recursive copying
 * Implemented VFS objects caching. This highly improves non-local VFS
   handlers working speed.
 * Implemented copy() method for tar VFS handler. That is it is now possible
-  to copy objects from inside archives to local filesystem.
+  to copy objects from inside tar archives to local filesystem.
 
 Plugins
 -------
@@ -34,6 +49,31 @@ Plugins
 
 * New method :sys:cmd:get()
   Method retrieves current cmd contents.
+
+* New method :sys:panel:new_tab().
+  Create new tab.
+  Bound to Ctrl-c c to create tab in active panel and to
+  Ctrl-c C to create tab in inactive one.
+
+* New method :sys:panel:del_tab().
+  Delete tab.
+  Bound to Ctrl-c d to delete tab in active panel and to
+  Ctrl-c D to delete tab in inactive one.
+
+* New method :sys:panel:switch_tab().
+  Switch to particular tab.
+  Bound to Ctrl-c [0-9] to switch to tab with provided index in active panel
+  and to Ctrl-c SHIFT-[0-9] to switch to tab in inactive one.
+
+* New method :sys:panel:next_tab().
+  Switch to the next tab.
+  Bound to Ctrl-c n to switch to the next tab in active panel and to
+  Ctrl-c N to switch to the next tab in inactive one.
+
+* New method :sys:panel:prev_tab().
+  Switch to the previous tab.
+  Bound to Ctrl-c p to switch to the previous tab in active panel and to
+  Ctrl-c P to switch to the previous tab in inactive one.
 
 UI
 --

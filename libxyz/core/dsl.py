@@ -335,7 +335,7 @@ class XYZ(object):
 
     @classmethod
     @instantiated
-    def call(cls, method, *args):
+    def call(cls, method, *args, **kwargs):
         """
         Call plugin method
         """
@@ -343,7 +343,7 @@ class XYZ(object):
         try:
             p = Namespace(method)
             m = cls.xyz.pm.from_load(p.pfull, p.method)
-            return m(*args)
+            return m(*args, **kwargs)
         except Exception, e:
             error(_(u"Unable to execute method %s: %s" %
                     (method, ustring(str(e)))))

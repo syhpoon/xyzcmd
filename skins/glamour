@@ -147,6 +147,19 @@ skin(name="glamour",
              ("info", BG_PALETTE({"foreground": "WHITE"})),
              ("border", BG_PALETTE({"foreground": "WHITE"})),
              ("tagged", BG_PALETTE({"foreground": "YELLOW"})),
+             ("tabbar", BG_PALETTE({
+                 "foreground": "WHITE"
+                 })
+              ),
+             ("tabact", palette({
+                 "foreground": "BLACK",
+                 "background": "LIGHT_GRAY",
+                 "fg_attributes": ["BOLD"],
+                 "foreground_high": "#0ff",
+                 "background_high": "DARK_MAGENTA"
+                 })
+              )
+
           ],
 
          # XYZListBox

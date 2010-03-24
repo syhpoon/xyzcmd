@@ -147,6 +147,18 @@ skin(name="grass",
              ("info", BG_PALETTE({"foreground": "WHITE"})),
              ("border", BG_PALETTE({"foreground": "WHITE"})),
              ("tagged", BG_PALETTE({"foreground": "LIGHT_CYAN"})),
+             ("tabbar", BG_PALETTE({
+                 "foreground": "WHITE"
+                 })
+              ),
+             ("tabact", palette({
+                 "foreground": "BLACK",
+                 "background": "LIGHT_GRAY",
+                 "fg_attributes": ["BOLD"],
+                 "foreground_high": "#ff0",
+                 "background_high": "DARK_GREEN"
+                 })
+              )
           ],
 
          # XYZListBox

@@ -99,6 +99,17 @@ skin(name="monochrome",
                  {"foreground": "WHITE",
                   "background_high": "g50"
                   })),
+             ("tabbar", BG_PALETTE({
+                 "foreground": "WHITE",
+                 "background": "DEFAULT"
+                 })
+              ),
+             ("tabact", palette({
+                 "foreground": "BLACK",
+                 "fg_attributes": ["BOLD"],
+                 "background": "LIGHT_GRAY"})
+              ),
+
          ],
 
          # XYZListBox

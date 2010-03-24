@@ -100,18 +100,19 @@ class Background(Color):
     """
 
     colors = {
-              u"BLACK": u"black",
-              u"BROWN": u"brown",
-              u"DEFAULT": u"default",
+        u"BLACK": u"black",
+        u"BROWN": u"brown",
+        u"DEFAULT": u"default",
 
-              u"DARK_RED": u"dark red",
-              u"DARK_GREEN": u"dark green",
-              u"DARK_BLUE": u"dark blue",
-              u"DARK_MAGENTA": u"dark magenta",
-              u"DARK_CYAN": u"dark cyan",
+        u"DARK_RED": u"dark red",
+        u"DARK_GREEN": u"dark green",
+        u"DARK_BLUE": u"dark blue",
+        u"DARK_MAGENTA": u"dark magenta",
+        u"DARK_CYAN": u"dark cyan",
 
-              u"LIGHT_GRAY": u"light gray",
-              }
+        u"LIGHT_GRAY": u"light gray",
+        u"DARK_GRAY": u"dark gray"
+        }
 
     ctype = u"background"
 

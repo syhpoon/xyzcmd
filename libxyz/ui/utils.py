@@ -32,11 +32,14 @@ def refresh(func):
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-def truncate(text, cols, enc, backward=False):
+def truncate(text, cols, enc=None, backward=False):
     """
     Truncate text if its length exceeds cols
     If backward is True, text will be truncated from the beginning
     """
+
+    if enc is None:
+        enc = xyzenc
 
     text = ustring(text, enc)
 

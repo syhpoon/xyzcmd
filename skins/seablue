@@ -27,7 +27,9 @@ skin(name="seablue",
              (
                  # Hidden files
                  fsrule(r'name{"^\\.{1}[^.]"}'),
-                 BG_PALETTE({"foreground": "DARK_GRAY"}),
+                 BG_PALETTE({"foreground": "DARK_GRAY",
+                             "foreground_high": "g45"
+                             }),
              ),
              (
                  fsrule(r'type{file}'),
@@ -147,6 +149,18 @@ skin(name="seablue",
              ("info", BG_PALETTE({"foreground": "WHITE"})),
              ("border", BG_PALETTE({"foreground": "WHITE"})),
              ("tagged", BG_PALETTE({"foreground": "YELLOW"})),
+             ("tabbar", BG_PALETTE({
+                 "foreground": "WHITE"
+                 })
+              ),
+             ("tabact", palette({
+                 "foreground": "BLACK",
+                 "background": "LIGHT_GRAY",
+                 "fg_attributes": ["BOLD"],
+                 "foreground_high": "#0f8",
+                 "background_high": "DARK_BLUE"
+                 })
+              )
           ],
 
          # XYZListBox

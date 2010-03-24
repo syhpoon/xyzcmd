@@ -40,6 +40,9 @@ class Panel(lowui.WidgetWrap):
     context = u":sys:panel"
 
     EVENT_SHUTDOWN = u"event:shutdown"
+    EVENT_SWITCH_TAB = u"event:sys:panel:switch_tab"
+    EVENT_NEW_TAB = u"event:sys:panel:new_tab"
+    EVENT_DEL_TAB = u"event:sys:panel:del_tab"
 
     def __init__(self, xyz):
         self.xyz = xyz
@@ -226,6 +229,11 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.vfs_driver)
         _panel_plugin.export(self.filter)
         _panel_plugin.export(self.sort)
+        _panel_plugin.export(self.new_tab)
+        _panel_plugin.export(self.del_tab)
+        _panel_plugin.export(self.switch_tab)
+        _panel_plugin.export(self.next_tab)
+        _panel_plugin.export(self.prev_tab)
 
         _panel_plugin.VERSION = u"0.1"
         _panel_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
@@ -244,6 +252,17 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
  and value is either a function with two arguments (VFSObject) behaving
  like cmp() or a list of those functions. If value is a list, each function
  applied sequentially. Default - []"""
+
+        _panel_plugin.EVENTS = [
+            ("switch_tab", "Fires when switching to another tab. "\
+             "Arguments: Block instance and new tab index."),
+            
+            ("new_tab", "Fires when new tab is added. "\
+             "Arguments: Block instance and new tab index."),
+
+            ("del_tab", "Fires when tab is delete. "\
+             "Arguments: Block instance and deleted tab index."),
+            ]
 
         self.xyz.pm.register(_run_plugin)
         self.xyz.pm.register(_panel_plugin)
@@ -692,6 +711,76 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
 
         return objects
 
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def new_tab(self, tabname=None, active=True):
+        """
+        Create new tab
+        """
+
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.tab_bar.new_tab(tabname)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def del_tab(self, index=None, active=True):
+        """
+        Delete tab. If index is None - delete current tab
+        """
+
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.tab_bar.del_tab(index)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def switch_tab(self, index, active=True):
+        """
+        Switch to tab
+        """
+
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.tab_bar.switch_tab(index)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def next_tab(self, active=True):
+        """
+        Switch to the next tab
+        """
+
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.tab_bar.next_tab()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def prev_tab(self, active=True):
+        """
+        Switch to the previous  tab
+        """
+
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.tab_bar.prev_tab()
+
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
 class Block(lowui.FlowWidget):
@@ -733,6 +822,7 @@ class Block(lowui.FlowWidget):
         self._vfsobj = None
         self._title = u""
         self._tagged = []
+        self._tab_data = []
 
         self._cursor_attr = None
         self._custom_info = None
@@ -747,7 +837,7 @@ class Block(lowui.FlowWidget):
         self._enc = enc
         self.vfs_driver = None
 
-        self.chdir(path)
+        self.tab_bar = TabBar(self.xyz, self.attr, self)
 
         self._winfo = lowui.Text(u"")
         self._sep = libxyz.ui.Separator()
@@ -756,10 +846,19 @@ class Block(lowui.FlowWidget):
         _title_attr = self._get_title_attr()
 
         self.frame = lowui.Frame(lowui.Filler(lowui.Text("")), footer=_info)
+        
         self.border = libxyz.ui.Border(self.frame, self._title,
                                        _title_attr, self.attr(u"border"))
-        self.block = lowui.AttrWrap(self.border, self.attr(u"panel"))
-        
+        self.block = lowui.Frame(
+            lowui.AttrWrap(self.border, self.attr(u"panel")),
+            header=self.tab_bar)
+
+        self.xyz.hm.register(Panel.EVENT_SWITCH_TAB, self._switch_tab_hook)
+        self.xyz.hm.register(Panel.EVENT_NEW_TAB, self._new_tab_hook)
+        self.xyz.hm.register(Panel.EVENT_DEL_TAB, self._del_tab_hook)
+
+        self.tab_bar.new_tab()
+
         super(Block, self).__init__()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -821,7 +920,7 @@ class Block(lowui.FlowWidget):
 
         # Reduce original sizes in order to fit into overlay
         maxcol_orig, maxcol = maxcol, maxcol - 2
-        maxrow_orig, maxrow = maxrow, maxrow - 4
+        maxrow_orig, maxrow = maxrow, maxrow - 5
 
         # Search for pending action
         while True:
@@ -887,14 +986,14 @@ class Block(lowui.FlowWidget):
 
         _info = self._make_info()
         self.frame.set_footer(_info)
-        
+
         combined = lowui.CanvasCombine(canvases)
         border = self.block.render((maxcol_orig, maxrow_orig), focus)
 
         if _len > maxrow:
             combined.trim_end(_len - maxrow)
 
-        return lowui.CanvasOverlay(combined, border, 1, 1)
+        return lowui.CanvasOverlay(combined, border, 1, 2)
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1372,6 +1471,15 @@ class Block(lowui.FlowWidget):
                 del(_old_vfs)
 
         self.cwd = path
+        self._tab_data[self.tab_bar.active_tab] = path
+
+        if path == os.path.sep:
+            new_tab_name = path
+        else:
+            new_tab_name = os.path.basename(path)
+
+        self.tab_bar.rename_tab(self.tab_bar.active_tab,
+                                truncate(new_tab_name, 15, self._enc))
 
         # Call chdir only for local objects
         if isinstance(self._vfsobj, LocalVFSObject) and active:
@@ -1506,3 +1614,222 @@ class Block(lowui.FlowWidget):
 
         self._cursor_attr = None
         self._custom_info = None
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _switch_tab_hook(self, block, index):
+        """
+        Switch tab hook
+        """
+
+        # It's for other block
+        if block is not self:
+            return
+
+        try:
+            self.chdir(self._tab_data[index])
+        except IndexError:
+            pass
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _new_tab_hook(self, block, index):
+        """
+        New tab hook
+        """
+
+        # It's for other block
+        if block is not self:
+            return
+
+        self._tab_data.append(self.cwd)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _del_tab_hook(self, block, index):
+        """
+        Delete tab hook
+        """
+
+        # It's for other block
+        if block is not self:
+            return
+
+        try:
+            del(self._tab_data[index])
+        except IndexError:
+            pass
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class TabBar(lowui.FlowWidget):
+    """
+    Tabs bar
+    """
+
+    def __init__(self, xyz, attr, block):
+        self.xyz = xyz
+        self.block = block
+        self._attr = attr
+        
+        self._active_tab = 0
+        self._tabs = []
+
+        super(TabBar, self).__init__()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    active_tab = property(lambda self: self._active_tab)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    @refresh
+    def new_tab(self, tabname=None):
+        """
+        Add new tab
+        """
+
+        if tabname is None:
+            tabname = "Tab"
+
+        self._tabs.append(tabname)
+        newidx = len(self._tabs) - 1
+
+        self.xyz.hm.dispatch(Panel.EVENT_NEW_TAB, self.block, newidx)
+        self.switch_tab(newidx)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @refresh
+    def del_tab(self, index=None):
+        """
+        Delete tab by index
+        """
+
+        if index is None:
+            index = self._active_tab
+
+        _len = len(self._tabs)
+        
+        if _len > 1 and index < _len:
+            del(self._tabs[index])
+
+            if self._active_tab >= len(self._tabs):
+                self._active_tab -= 1
+
+            self.xyz.hm.dispatch(Panel.EVENT_DEL_TAB, self.block, index)
+
+            self.switch_tab(self._active_tab)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @refresh
+    def switch_tab(self, index):
+        """
+        Switch to tab by index
+        """
+
+        if index < len(self._tabs):
+            self._active_tab = index
+            self.xyz.hm.dispatch(Panel.EVENT_SWITCH_TAB, self.block,
+                                 self._active_tab)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @refresh
+    def next_tab(self):
+        """
+        Switch to the next tab
+        """
+
+        index = self._active_tab + 1
+
+        if index >= len(self._tabs):
+            index = 0
+
+        self.switch_tab(index)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @refresh
+    def prev_tab(self):
+        """
+        Switch to the previous  tab
+        """
+
+        index = self._active_tab - 1
+
+        if index < 0:
+            index = len(self._tabs) - 1
+
+        self.switch_tab(index)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @refresh
+    def rename_tab(self, index, new_name):
+        """
+        Rename tab at index
+        """
+
+        if index >= len(self._tabs):
+            return
+        else:
+            self._tabs[index] = new_name
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def render(self, (maxcol,), focus=False):
+        """
+        Render the tab bar
+        """
+
+        make_c = lambda text, at: lowui.AttrWrap(
+            lowui.Text(text), self._attr(at)).render((maxcol,))
+
+        canvases = []
+
+        length = 0
+
+        for idx in xrange(len(self._tabs)):
+            tabname = self._gen_tab_name(self._tabs[idx], idx)
+            length += len(tabname)
+            
+            if idx == self._active_tab:
+                canv = make_c(tabname, "tabact")
+            else:
+                canv = make_c(tabname, "tabbar")
+
+            canvases.append((canv, None, False, len(tabname)))
+
+
+        if length < maxcol:
+            canvases.append((make_c("", "tabbar"), None, False,
+                             maxcol - length))
+
+        combined = lowui.CanvasJoin(canvases)
+
+        if length > maxcol:
+            more = lowui.AttrWrap(
+                lowui.Text(" >>"),
+                self._attr("tabbar")).render((3,))
+
+            combined.pad_trim_left_right(0, -(length - maxcol))
+            combined.overlay(more, maxcol - 3, 0)
+
+        return combined
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def rows(self, (maxcol,), focus=False):
+        """
+        Return the number of lines that will be rendered
+        """
+
+        return 1
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _gen_tab_name(self, tab, idx):
+        return "{%d %s} " % (idx, tab)
+

@@ -88,6 +88,47 @@ bind(":sys:panel:search_cycle", kbd("META-s"))
 bind(":sys:panel:search_backward", kbd("META-w"))
 bind(":sys:panel:show_tagged", kbd("META-g"))
 
+# Tabs bindings
+bind(":sys:panel:new_tab", kbd("CTRL-c", "c"))
+bind(":sys:panel:del_tab", kbd("CTRL-c", "d"))
+bind(":sys:panel:next_tab", kbd("CTRL-c", "n"))
+bind(":sys:panel:prev_tab", kbd("CTRL-c", "p"))
+bind(lambda: call(":sys:panel:switch_tab", 0), kbd("CTRL-c", "0"))
+bind(lambda: call(":sys:panel:switch_tab", 1), kbd("CTRL-c", "1"))
+bind(lambda: call(":sys:panel:switch_tab", 2), kbd("CTRL-c", "2"))
+bind(lambda: call(":sys:panel:switch_tab", 3), kbd("CTRL-c", "3"))
+bind(lambda: call(":sys:panel:switch_tab", 4), kbd("CTRL-c", "4"))
+bind(lambda: call(":sys:panel:switch_tab", 5), kbd("CTRL-c", "5"))
+bind(lambda: call(":sys:panel:switch_tab", 6), kbd("CTRL-c", "6"))
+bind(lambda: call(":sys:panel:switch_tab", 7), kbd("CTRL-c", "7"))
+bind(lambda: call(":sys:panel:switch_tab", 8), kbd("CTRL-c", "8"))
+bind(lambda: call(":sys:panel:switch_tab", 9), kbd("CTRL-c", "9"))
+
+bind(lambda: call(":sys:panel:new_tab", active=False), kbd("CTRL-c", "C"))
+bind(lambda: call(":sys:panel:del_tab", active=False), kbd("CTRL-c", "D"))
+bind(lambda: call(":sys:panel:next_tab", active=False), kbd("CTRL-c", "N"))
+bind(lambda: call(":sys:panel:prev_tab", active=False), kbd("CTRL-c", "P"))
+bind(lambda: call(":sys:panel:switch_tab", 0, active=False),
+     kbd("CTRL-c", ")"))
+bind(lambda: call(":sys:panel:switch_tab", 1, active=False),
+     kbd("CTRL-c", "!"))
+bind(lambda: call(":sys:panel:switch_tab", 2, active=False),
+     kbd("CTRL-c", "@"))
+bind(lambda: call(":sys:panel:switch_tab", 3, active=False),
+     kbd("CTRL-c", "#"))
+bind(lambda: call(":sys:panel:switch_tab", 4, active=False),
+     kbd("CTRL-c", "$"))
+bind(lambda: call(":sys:panel:switch_tab", 5, active=False),
+     kbd("CTRL-c", "%"))
+bind(lambda: call(":sys:panel:switch_tab", 6, active=False),
+     kbd("CTRL-c", "^"))
+bind(lambda: call(":sys:panel:switch_tab", 7, active=False),
+     kbd("CTRL-c", "&"))
+bind(lambda: call(":sys:panel:switch_tab", 8, active=False),
+     kbd("CTRL-c", "*"))
+bind(lambda: call(":sys:panel:switch_tab", 9, active=False),
+     kbd("CTRL-c", "("))
+
 bind(":sys:logger:show_console", kbd("META-l"))
 bind(":sys:run:shutdown", kbd("F10"))
 bind(":sys:run:repaint", kbd("CTRL-l"))

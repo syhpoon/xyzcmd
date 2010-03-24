@@ -73,6 +73,7 @@ Available background colors:
       * DARK_BLUE
       * DARK_MAGENTA
       * DARK_CYAN
+      * DARK_GRAY
       * LIGHT_GRAY
 
 Available foreground attributes:
