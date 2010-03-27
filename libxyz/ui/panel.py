@@ -40,6 +40,7 @@ class Panel(lowui.WidgetWrap):
     context = u":sys:panel"
 
     EVENT_SHUTDOWN = u"event:shutdown"
+    EVENT_BEFORE_SWITCH_TAB = u"event:sys:panel:before_switch_tab"
     EVENT_SWITCH_TAB = u"event:sys:panel:switch_tab"
     EVENT_NEW_TAB = u"event:sys:panel:new_tab"
     EVENT_DEL_TAB = u"event:sys:panel:del_tab"
@@ -254,13 +255,20 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
  applied sequentially. Default - []"""
 
         _panel_plugin.EVENTS = [
-            ("switch_tab", "Fires when switching to another tab. "\
+            ("before_switch_tab",
+             "Fires before switching to another tab. "\
+             "Arguments: Block instance and old tab index."),
+
+            ("switch_tab",
+             "Fires when switching to another tab. "\
              "Arguments: Block instance and new tab index."),
             
-            ("new_tab", "Fires when new tab is added. "\
+            ("new_tab",
+             "Fires when new tab is added. "\
              "Arguments: Block instance and new tab index."),
 
-            ("del_tab", "Fires when tab is delete. "\
+            ("del_tab",
+             "Fires when tab is delete. "\
              "Arguments: Block instance and deleted tab index."),
             ]
 
@@ -853,6 +861,8 @@ class Block(lowui.FlowWidget):
             lowui.AttrWrap(self.border, self.attr(u"panel")),
             header=self.tab_bar)
 
+        self.xyz.hm.register(Panel.EVENT_BEFORE_SWITCH_TAB,
+                             self._before_switch_tab_hook)
         self.xyz.hm.register(Panel.EVENT_SWITCH_TAB, self._switch_tab_hook)
         self.xyz.hm.register(Panel.EVENT_NEW_TAB, self._new_tab_hook)
         self.xyz.hm.register(Panel.EVENT_DEL_TAB, self._del_tab_hook)
@@ -1433,6 +1443,11 @@ class Block(lowui.FlowWidget):
         If active is False do not call os.chdir
         """
 
+        try:
+            old_selected = self.entries[self.selected].name
+        except IndexError:
+            old_selected = None
+
         if reload:
             _path = os.path.normpath(path)
             _parent = None
@@ -1471,7 +1486,7 @@ class Block(lowui.FlowWidget):
                 del(_old_vfs)
 
         self.cwd = path
-        self._tab_data[self.tab_bar.active_tab] = path
+        self._tab_data[self.tab_bar.active_tab] = (path, old_selected)
 
         if path == os.path.sep:
             new_tab_name = path
@@ -1617,6 +1632,26 @@ class Block(lowui.FlowWidget):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def _before_switch_tab_hook(self, block, index):
+        """
+        Before switch tab hook
+        """
+
+        # It's for other block
+        if block is not self:
+            return
+
+        try:
+            # Save position
+            path = self._tab_data[index][0]
+            self._tab_data[index] = (path, self.entries[self.selected].name)
+
+            self.chdir(path)
+        except IndexError:
+            pass
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def _switch_tab_hook(self, block, index):
         """
         Switch tab hook
@@ -1627,13 +1662,18 @@ class Block(lowui.FlowWidget):
             return
 
         try:
-            self.chdir(self._tab_data[index])
+            path, name = self._tab_data[index]
+
+            self.chdir(path)
+
+            if name is not None:
+                self.select(name)
         except IndexError:
             pass
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _new_tab_hook(self, block, index):
+    def _new_tab_hook(self, block, _index):
         """
         New tab hook
         """
@@ -1642,7 +1682,12 @@ class Block(lowui.FlowWidget):
         if block is not self:
             return
 
-        self._tab_data.append(self.cwd)
+        try:
+            selected = self.entries[self.selected].name
+        except IndexError:
+            selected = None
+
+        self._tab_data.append((self.cwd, selected))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1730,6 +1775,8 @@ class TabBar(lowui.FlowWidget):
         """
 
         if index < len(self._tabs):
+            self.xyz.hm.dispatch(Panel.EVENT_BEFORE_SWITCH_TAB, self.block,
+                                 self._active_tab)
             self._active_tab = index
             self.xyz.hm.dispatch(Panel.EVENT_SWITCH_TAB, self.block,
                                  self._active_tab)

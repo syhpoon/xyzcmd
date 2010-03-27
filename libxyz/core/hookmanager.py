@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+import traceback
+
 from libxyz.core.utils import ustring
 
 class HookManager(object):
@@ -70,6 +72,9 @@ class HookManager(object):
                 xyzlog.error(
                     _(u"Error running callback procedure for event %s") %
                     ustring(str(e)))
+
+                xyzlog.debug(ustring(traceback.format_exc()))
+
                 return False
 
         return True
