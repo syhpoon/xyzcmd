@@ -235,6 +235,8 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.switch_tab)
         _panel_plugin.export(self.next_tab)
         _panel_plugin.export(self.prev_tab)
+        _panel_plugin.export(self.get_tabs)
+        _panel_plugin.export(self.active_tab)
 
         _panel_plugin.VERSION = u"0.1"
         _panel_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
@@ -788,6 +790,35 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
             obj = self.inactive
 
         return obj.tab_bar.prev_tab()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_tabs(self, active=True):
+        """
+        Return list of tabs in format:
+        [(path, selected_name)]
+        """
+
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.get_tabs()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def active_tab(self, active=True):
+        """
+        Get active tab index
+        """
+
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.tab_bar.active_tab
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -1704,6 +1735,15 @@ class Block(lowui.FlowWidget):
             del(self._tab_data[index])
         except IndexError:
             pass
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_tabs(self):
+        """
+        Return list of open tabs
+        """
+
+        return self._tab_data
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 

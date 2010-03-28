@@ -4,10 +4,11 @@ XYZCommander changelog
 Version 0.0.4
 =============
 
-New features
-------------
+Overview
+--------
 * Tabs in navigation panels
 * Auto-completion subsystem
+* VFS caching
 
 Configuration
 -------------
@@ -23,6 +24,9 @@ Skins
 
 Events
 ------
+* New event event:sys:panel:before_switch_tab.
+  Fires before switching to another tab.
+
 * New event event:sys:panel:switch_tab.
   Fires when switching to another tab.
 
@@ -81,11 +85,19 @@ Plugins
 * New method :sys:cmd:get().
   Method allows to get current command line contents.
 
+* New method :sys:panel:get_tabs().
+  Return list of tabs in format (path, selected_entry_name).
+
+* New method :sys:panel:active_tab().
+  Return index of currently active tab.
+
+* Plugin :misc:where is extended to save/restore tabs as well
+
 Version 0.0.3
 =============
 
-New features
-------------
+Overview
+--------
 * Python2.4 support
 * Permanents filters
 * Custom sorting
