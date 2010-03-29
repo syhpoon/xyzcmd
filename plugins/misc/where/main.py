@@ -19,7 +19,7 @@ class XYZPlugin(BasePlugin):
     BRIEF_DESCRIPTION = _(u"Save panels locations")
     FULL_DESCRIPTION = _(u"When starting load previously saved locations")
     NAMESPACE = u"misc"
-    MIN_XYZ_VERSION = 2
+    MIN_XYZ_VERSION = 4
     DOC = None
     HOMEPAGE = "http://xyzcmd.syhpoon.name/"
     EVENTS = None
@@ -109,10 +109,10 @@ class XYZPlugin(BasePlugin):
 
             restore_tabs(data, tabsnum, False)
 
-            switch(active_tab)
             switch(iactive_tab, active=False)
-            select(selected)
+            switch(active_tab)
             select(iselected, active=False)
+            select(selected)
         except IOError:
             pass
         
