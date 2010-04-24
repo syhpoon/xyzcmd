@@ -133,7 +133,7 @@ class CopyBox(lowui.WidgetWrap):
                 break
             elif self._keys.ENTER in _input:
                 result = {
-                    'dst': self.dstw.get_edit_text(),
+                    'dst': bstring(self.dstw.get_edit_text()),
                     'save_attributes': self.save_attrw.get_state(),
                     'follow_links': self.follow_linksw.get_state()
                     }

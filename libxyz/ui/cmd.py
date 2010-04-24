@@ -305,7 +305,7 @@ class Cmd(lowui.FlowWidget):
         """
         Process pressed key
         """
-        
+
         _meth = self.xyz.km.process(key)
 
         if _meth is not None:
@@ -609,12 +609,11 @@ class Cmd(lowui.FlowWidget):
         """
 
         # We're inside non-local VFS, execution is not allowed
-        
         if XYZ.call(":sys:panel:vfs_driver"):
             xyzlog.error(
                 _(u"Unable to execute commands on non-local filesystems"))
             return
-        
+
         if not self._data:
             return
 
@@ -871,7 +870,7 @@ class Cmd(lowui.FlowWidget):
         @param obj: String to escape
         @param join: If False return list otherwise return joined string
         """
-        
+
         result = []
         toescape = [" ", "'", '"', "*", "?", "\\", "&", "#",
                     "(", ")",
