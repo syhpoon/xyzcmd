@@ -295,7 +295,7 @@ class Cmd(lowui.FlowWidget):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _put_object(self, char):
-        self._data.insert(self._index, char)
+        self._data.insert(self._index, ustring(char))
         self._index += 1
         self._vindex += 1
 
@@ -618,7 +618,7 @@ class Cmd(lowui.FlowWidget):
             return
 
         self._save_history()
-        _data = self.replace_aliases("".join(self._data))
+        _data = self.replace_aliases(bstring(u"".join(self._data)))
         _cmd, _rest = split_cmd(_data)
 
         # Do not run shell, execute internal command
@@ -627,7 +627,7 @@ class Cmd(lowui.FlowWidget):
                 if _rest is None:
                     arg = _rest
                 else:
-                    arg = bstring(_rest)
+                    arg = _rest
 
                 self.xyz.conf["commands"][_cmd](arg)
             except Exception, e:
@@ -638,8 +638,8 @@ class Cmd(lowui.FlowWidget):
                 self._execf = self.xyz.pm.from_load(":core:shell", "execute")
 
             if not hasattr(self, "_reloadf"):
-                self._reloadf =self.xyz.pm.from_load(":sys:panel",
-                                                     "reload_all")
+                self._reloadf = self.xyz.pm.from_load(":sys:panel",
+                                                      "reload_all")
                 
             self._execf(_data)
             self._reloadf()
@@ -670,7 +670,6 @@ class Cmd(lowui.FlowWidget):
                 xyzlog.error(_(u"Invalid alias type: %s") %
                              ustring(str(type(raw_alias))))
                 return data
-                
 
             return re.sub(r"^%s" % cmd, alias, data)
         except KeyError:
@@ -849,7 +848,7 @@ class Cmd(lowui.FlowWidget):
         Get cmd contents
         """
 
-        return "".join(self._data)
+        return bstring(u"".join(self._data))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -859,7 +858,7 @@ class Cmd(lowui.FlowWidget):
         """
 
         map(lambda x: self._put_object(x), 
-            self.escape([bstring(x) for x in ustring(obj)]) + [" "])
+            self.escape([x for x in ustring(obj)]) + [u" "])
         self._invalidate()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -872,20 +871,20 @@ class Cmd(lowui.FlowWidget):
         """
 
         result = []
-        toescape = [" ", "'", '"', "*", "?", "\\", "&", "#",
-                    "(", ")",
-                    "[", "]",
-                    "{", "}",
+        toescape = [u" ", u"'", u'"', u"*", u"?", u"\\", u"&", u"#",
+                    u"(", ")",
+                    u"[", "]",
+                    u"{", "}",
                     ]
 
         for x in obj:
             if x in toescape:
-                result.extend(["\\", x])
+                result.extend([u"\\", x])
             else:
                 result.append(x)
 
         if join:
-            return "".join(result)
+            return u"".join(result)
         else:
             return result
 
@@ -906,7 +905,7 @@ def split_cmd(cmdline):
     Return command name and the rest of the command line
     """
 
-    _r =  cmdline.split(" ", 1)
+    _r = cmdline.split(" ", 1)
 
     if len(_r) == 1:
         return _r[0], None
