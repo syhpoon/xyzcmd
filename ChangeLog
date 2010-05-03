@@ -48,9 +48,10 @@ Plugins
 -------
 * New plugin - :core:complete.
   Plugin provides ability to auto-complete provided text in different domains.
-  Currently two domains implemented: 
+  Currently three domains implemented: 
   * binpath - searches through directories defined in $PATH variable
   * fs - searches through filesystem hierarchy
+  * service - searches through services in /etc/init.d
 
   Auto-completion function bound to META-Tab by default.
 

@@ -47,7 +47,7 @@ class BaseDomain(object):
         Take current buffer and return list-generator of all
                 matched entries in current domain.
 
-        @param buf: Current buffer
+        @param buf: List of comma-separated strings from initial buffer
         @return: list-generator
         """
 

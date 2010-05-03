@@ -21,6 +21,8 @@ import copy
 import types
 import difflib
 
+from libxyz.parser import Lexer
+
 def ustring(string, enc=None):
     """
     Return unicode string
@@ -155,3 +157,26 @@ def intersect(s1, s2):
     else:
         _, j, n = match[0]
         return s2[j + n:]
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def split_cmd(cmd):
+    """
+    Split command line
+    """
+
+    lexer = Lexer(cmd, [])
+    lexer.escaping_on()
+
+    data = []
+
+    while True:
+        res = lexer.lexer()
+
+        if res is None:
+            break
+        else:
+            __, val = res
+            data.append(val)
+
+    return data

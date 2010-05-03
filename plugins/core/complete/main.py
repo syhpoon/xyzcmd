@@ -3,8 +3,11 @@
 # Max E. Kuznecov <syhpoon@syhpoon.name> 2010
 #
 
+import os
+import re
+
 from libxyz.core import ODict
-from libxyz.core.utils import ustring, bstring
+from libxyz.core.utils import ustring, bstring, intersect, split_cmd
 from libxyz.core.plugins import BasePlugin
 
 from libxyz.ui import lowui
@@ -34,6 +37,7 @@ class XYZPlugin(BasePlugin):
         self._domains = ODict()
 
         self.export(self.complete)
+        self.export(self.smart_complete)
         self.export(self.dialog)
         self._keys = Keys()
 
@@ -41,13 +45,20 @@ class XYZPlugin(BasePlugin):
 
     def prepare(self):
         # Domains initialization
+        try:
 
-        for domain in self.conf["domains"]:
-            try:
+            for domain in self.conf["domains"]:
                 self._domains[domain] = self._init_domain(domain)
-            except Exception, e:
-                xyzlog.warning(_(u"Error ininitalizing domain %s: %s") %
-                                (domain, ustring(str(e))))
+
+            behaviour = []
+
+            for (pattern, domain) in self.conf["behaviour"]:
+                behaviour.append((re.compile(pattern), domain))
+
+            self.conf["behaviour"] = behaviour
+        except Exception, e:
+            xyzlog.warning(_(u"Error ininitalizing plugin: %s") %
+                           (ustring(str(e))))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -82,6 +93,46 @@ class XYZPlugin(BasePlugin):
             result.append(self._domains[d].complete(buf))
 
         return result
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def smart_complete(self, cmd):
+        """
+        Try to guess what completion domain can be used based on
+        provided buffer and defined behaviour.
+
+        @param cmd: Current buffer
+        @return: List of list-generator each entry for each domain
+        """
+
+        if not cmd:
+            return
+
+        data = None
+        pat_used = False
+
+        # First check the behaviour patterns
+        for (pattern, domain) in self.conf["behaviour"]:
+            if pattern.search(cmd) is not None:
+                pat_used = True
+                data = self.dialog(cmd, [domain])
+                break
+
+        # Else default fallback behaviour applied
+        if pat_used == False:
+            buf = split_cmd(cmd)[-1]
+
+            # Treat as path
+            if buf.startswith(os.path.sep) or buf.startswith("./") or \
+                   buf.startswith("../"):
+                data = self.dialog(buf, ["fs"])
+            else:
+                # Treat as command in $PATH
+                data = self.dialog(buf, ["binpath"])
+
+        if data is not None:
+            data = intersect(cmd, data)
+            self.xyz.pm.from_load(":sys:cmd", "put")(data)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

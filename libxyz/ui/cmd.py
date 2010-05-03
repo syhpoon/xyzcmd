@@ -877,6 +877,9 @@ class Cmd(lowui.FlowWidget):
                     u"{", "}",
                     ]
 
+        if isinstance(obj, basestring):
+            obj = ustring(obj)
+
         for x in obj:
             if x in toescape:
                 result.extend([u"\\", x])

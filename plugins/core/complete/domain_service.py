@@ -17,26 +17,16 @@
 import os
 import itertools
 
-from libxyz.core.utils import bstring
+from libxyz.core.utils import bstring, split_cmd
 
 from domain_base import BaseDomain
 
 class Domain(BaseDomain):
     """
-    Bin path domain
+    service(8) domain
     """
 
-    def prepare(self):
-        """
-        Preparation stuff
-        """
-
-        path = os.getenv("PATH", "")
-
-        for d in path.split(":"):
-            self._update(d)
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    INITD_DIR = "/etc/init.d"
 
     def complete(self, buf):
         """
@@ -47,15 +37,15 @@ class Domain(BaseDomain):
         @return: list-generator
         """
 
-        return itertools.ifilter(lambda x: x.startswith(bstring(buf)),
-                                 self._data)
+        cmd = split_cmd(bstring(buf))
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        _len = len(cmd)
 
-    def _update(self, directory):
-        """
-        Update binpath set with files in directory
-        """
-        
-        for _, _, files in os.walk(directory):
-            self._data |= set(files)
+        if len(cmd) == 1:
+            obj = ""
+        else:
+            obj = cmd[-1]
+
+        _, _, files = os.walk(self.INITD_DIR).next()
+
+        return itertools.ifilter(lambda x: x.startswith(obj), files)

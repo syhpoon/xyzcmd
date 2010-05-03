@@ -137,6 +137,8 @@ bind(":core:pluginlist:show_list", kbd("META-t"))
 bind(":core:keycodes:learn_keys", kbd("META-y"))
 bind(":core:bindlist:show_binds", kbd("META-r"))
 bind(":core:console:show", kbd("META-c"))
+bind(lambda: call(":core:complete:smart_complete", call(":sys:cmd:get")),
+     kbd("META-TAB"))
 
 bind(":ui:testinput:show_box", kbd("META-e"))
 bind(":ui:bookmarks:show_bookmarks", kbd("META-\\"))
@@ -155,25 +157,4 @@ bind(lambda: shell(env("PAGER", "less"), macro("ACT_PATH"), wait=False),
      kbd("F3"))
 
 bind(lambda: shell(env("EDITOR", "vi"), macro("ACT_PATH")), kbd("F4"))
-
 bind(lambda: call(":sys:panel:chdir", macro("INACT_CWD")), kbd("META-="))
-
-def complete():
-    import os
-    import re
-    from libxyz.core.utils import bstring, intersect
-
-    cmd = bstring(call(":sys:cmd:get"))
-
-    # Treat as path
-    if cmd.startswith(os.path.sep) or cmd.startswith("./"):
-        data = call(":core:complete:dialog", cmd, ["fs"])
-    # Treat as command in $PATH
-    else:
-        data = call(":core:complete:dialog", cmd, ["binpath"])
-
-    if data is not None:
-        data = intersect(cmd, data)
-        call(":sys:cmd:put", data)
-
-bind(complete, kbd("META-TAB"))

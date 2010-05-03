@@ -60,5 +60,15 @@ plugin_conf(":core:shell", {
 
 plugin_conf(":core:complete", {
     # List of domains to use
-    "domains": ["binpath", "fs"]
+    "domains": [
+        "binpath",
+        "fs",
+        "service"
+        ],
+
+    # Behaviour
+    # List of tuples: (regexp_cmd_pattern, domain)
+    "behaviour": [
+        (r'^\s*service\s+\w*\s*$', 'service')
+        ]
     })
