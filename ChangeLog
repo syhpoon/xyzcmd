@@ -58,6 +58,9 @@ Plugins
 * New method :sys:cmd:get()
   Method retrieves current cmd contents.
 
+* New method :sys:cmd:append()
+  Method append string to the end of cmd.
+
 * New method :sys:panel:new_tab().
   Create new tab.
   Bound to Ctrl-c c to create tab in active panel and to

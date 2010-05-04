@@ -110,6 +110,7 @@ class XYZPlugin(BasePlugin):
 
         data = None
         pat_used = False
+        buf = bstring(split_cmd(cmd)[-1])
 
         # First check the behaviour patterns
         for (pattern, domain) in self.conf["behaviour"]:
@@ -120,8 +121,6 @@ class XYZPlugin(BasePlugin):
 
         # Else default fallback behaviour applied
         if pat_used == False:
-            buf = split_cmd(cmd)[-1]
-
             # Treat as path
             if buf.startswith(os.path.sep) or buf.startswith("./") or \
                    buf.startswith("../"):
@@ -131,8 +130,8 @@ class XYZPlugin(BasePlugin):
                 data = self.dialog(buf, ["binpath"])
 
         if data is not None:
-            data = intersect(cmd, data)
-            self.xyz.pm.from_load(":sys:cmd", "put")(data)
+            data = intersect(buf, data)
+            self.xyz.pm.from_load(":sys:cmd", "append")(data)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

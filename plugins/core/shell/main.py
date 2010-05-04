@@ -166,7 +166,7 @@ class XYZPlugin(BasePlugin):
 
         def _sigwinch(_a, _b):
             self.xyz.screen.resized = True
-            
+
         signal.signal(signal.SIGWINCH, _sigwinch)
 
         status = cmdf()

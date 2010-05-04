@@ -19,7 +19,6 @@ import os
 import termios
 import copy
 import types
-import difflib
 
 from libxyz.parser import Lexer
 
@@ -146,17 +145,15 @@ def intersect(s1, s2):
     """
     Find intersection between two strings
     """
-    
-    m = difflib.SequenceMatcher(None, s1, s2)
 
-    match = m.get_matching_blocks()
+    s1 = ustring(s1)
+    s2 = ustring(s2)
 
-    # No match
-    if len(match) <= 1 or match[0][2] == 0:
-        return s2
-    else:
-        _, j, n = match[0]
-        return s2[j + n:]
+    for index in range(len(s2) - 1, 0, -1):
+        if s1.endswith(s2[:index]):
+            return s2[index:]
+
+    return s1
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -165,7 +162,7 @@ def split_cmd(cmd):
     Split command line
     """
 
-    lexer = Lexer(cmd, [])
+    lexer = Lexer(ustring(cmd), [])
     lexer.escaping_on()
 
     data = []

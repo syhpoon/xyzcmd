@@ -26,7 +26,7 @@ from libxyz.ui import XYZListBox
 from libxyz.ui import NumEntry
 from libxyz.ui import Keys
 from libxyz.ui.utils import refresh
-from libxyz.core.utils import ustring, bstring, is_func
+from libxyz.core.utils import ustring, bstring, is_func, split_cmd
 from libxyz.core.dsl import XYZ
 from libxyz.exceptions import XYZRuntimeError
 
@@ -198,6 +198,7 @@ class Cmd(lowui.FlowWidget):
         _cmd_plugin.export(self.put_inactive_cwd)
         _cmd_plugin.export(self.put)
         _cmd_plugin.export(self.get)
+        _cmd_plugin.export(self.append)
         _cmd_plugin.export(self.escape)
         _cmd_plugin.export(self.replace_aliases)
 
@@ -619,7 +620,7 @@ class Cmd(lowui.FlowWidget):
 
         self._save_history()
         _data = self.replace_aliases(bstring(u"".join(self._data)))
-        _cmd, _rest = split_cmd(_data)
+        _cmd, _rest = _split_cmd(_data)
 
         # Do not run shell, execute internal command
         if _cmd in self.xyz.conf["commands"]:
@@ -657,7 +658,7 @@ class Cmd(lowui.FlowWidget):
         @param data: String
         """
 
-        cmd, _ = split_cmd(data)
+        cmd, _ = _split_cmd(data)
 
         try:
             raw_alias = self.xyz.conf["aliases"][cmd]
@@ -834,12 +835,13 @@ class Cmd(lowui.FlowWidget):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    def put(self, obj):
+    def put(self, obj, space=True):
         """
         Put arbitrary string to cmd line starting from the cursor position
+        @param space: Flag indicating whether to append space char after the obj
         """
 
-        return self._put_engine(obj)
+        return self._put_engine(obj, space=space)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -852,13 +854,28 @@ class Cmd(lowui.FlowWidget):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _put_engine(self, obj):
+    def append(self, obj):
+        """
+        Append arbitrary string at the end of cmd
+        """
+
+        self.cursor_end()
+        self.put(obj, space=False)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _put_engine(self, obj, space=True):
         """
         Put list content to cmd
         """
 
+        if space:
+            extra = [u" "]
+        else:
+            extra = []
+
         map(lambda x: self._put_object(x), 
-            self.escape([x for x in ustring(obj)]) + [u" "])
+            self.escape([x for x in ustring(obj)]) + extra)
         self._invalidate()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -903,12 +920,12 @@ class Cmd(lowui.FlowWidget):
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
-def split_cmd(cmdline):
+def _split_cmd(cmdline):
     """
     Return command name and the rest of the command line
     """
 
-    _r = cmdline.split(" ", 1)
+    _r = split_cmd(cmdline)
 
     if len(_r) == 1:
         return _r[0], None
