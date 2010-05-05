@@ -36,7 +36,7 @@ def include_rec(path, base, stripf=None):
 
 setup(
     name = "xyzcmd",
-    version = "0.0.3",
+    version = "0.0.4",
     scripts = ["xyzcmd"],
     packages = ["libxyz",
                 "libxyz.core",
@@ -51,7 +51,7 @@ setup(
         ("share/xyzcmd/conf", glob.glob("conf/*")),
         ("share/doc/xyzcmd/api", glob.glob("doc/api/*")),
         ("share/xyzcmd/skins", glob.glob("skins/*")),
-        ("share/doc/xyzcmd", ["ChangeLog"]),
+        ("share/doc/xyzcmd", ["ChangeLog", "doc/overview.pdf"]),
         ] +
     include_rec("plugins", "share/xyzcmd/%s") +
     include_rec("doc/user-manual", "share/doc/xyzcmd/%s",
