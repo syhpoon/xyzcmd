@@ -152,6 +152,9 @@ class XYZPlugin(BasePlugin):
             for entry in sorted(gen):
                 _wdata.append(ListEntry(entry, _sel_attr))
 
+        if len(_wdata) == 1:
+            return _wdata[0].text
+
         _walker = lowui.PollingListWalker(_wdata)
         _dim = tuple([x - 2 for x in self.xyz.screen.get_cols_rows()])
 

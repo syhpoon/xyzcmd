@@ -153,7 +153,7 @@ def intersect(s1, s2):
         if s1.endswith(s2[:index]):
             return s2[index:]
 
-    return s1
+    return s2
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
