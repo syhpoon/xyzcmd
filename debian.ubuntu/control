@@ -1,0 +1,23 @@
+Source: xyzcmd
+Section: utils
+Priority: optional
+Maintainer: Max E. Kuznecov <syhpoon@syhpoon.name>
+Build-Depends: python-support (>= 0.6.4), cdbs, debhelper (>= 7)
+Standards-Version: 3.8.3
+XS-Python-Version: >= 2.4
+Homepage: http://xyzcmd.syhpoon.name/
+
+Package: xyzcmd
+Architecture: all
+Depends: ${python:Depends}, python-urwid 
+XB-Python-Version: ${python:Versions}
+Description: XYZCommander is a pure console visual file manager.
+ XYZCommander is a pure console visual file manager.
+ Main features:
+ * Tight integration with python run–time system — most of the settings can be changed "on the fly" via management console.
+ * Powerful configuration system - define own actions, aliases, internal commands, key bindings.
+ * Extensible plug-in system - even core functionality implemented mainly using plug–ins, keeping base system small and clean.
+ * Events & hooks subsystem - a flexible way of reacting on certain system events.
+ * Customizable look-n-feel - every widget component look can be changed via skins.
+ * Unicode support
+
