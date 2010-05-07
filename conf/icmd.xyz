@@ -18,3 +18,6 @@ icmd("alias",
                     "\n".join(["alias %s='%s'" % (k, v)
                                for k, v in section("aliases").iteritems()
                                ])))
+
+# Exit
+icmd("exit", lambda _: call(":sys:run:shutdown", confirm=False))

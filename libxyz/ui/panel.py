@@ -279,15 +279,21 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def shutdown(self):
+    def shutdown(self, confirm=True):
         """
         Quit program
         """
 
-        _q = _(u"Really quit %s?") % libxyz.const.PROG
-        _title = libxyz.const.PROG
+        indeed = True
+        
+        if confirm:
+            _q = _(u"Really quit %s?") % libxyz.const.PROG
+            _title = libxyz.const.PROG
 
-        if libxyz.ui.YesNoBox(self.xyz, self.xyz.top, _q, _title).show():
+            indeed = libxyz.ui.YesNoBox(self.xyz, self.xyz.top, _q,
+                                        _title).show()
+
+        if indeed:
             self._stop = True
             self.xyz.hm.dispatch(self.EVENT_SHUTDOWN)
 
