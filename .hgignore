@@ -1,9 +1,0 @@
-_cl
-_todo 
-NOTES
-TODO
-VFS
-syntax: glob
-**/*.pyc
-.emacs.desktop
-doc/local/*
