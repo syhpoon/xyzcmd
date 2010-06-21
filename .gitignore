@@ -1,0 +1,8 @@
+_cl
+_todo 
+NOTES
+TODO
+VFS
+**/*.pyc
+.emacs.desktop
+doc/local/*
