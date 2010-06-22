@@ -4,6 +4,15 @@ XYZCommander changelog
 Version 0.0.5
 =============
 
+Plugins
+-------
+* New method :sys:panel:get_all()
+  Method returns list of all VFSObject instances in panel.
+
+* New method :sys:panel:tag_diff()
+  Tag all the objects in active panel which are missing from the inactive one.
+  Bound to Ctrl-x d.
+
 Configuration
 -------------
 * New icmd - exit.

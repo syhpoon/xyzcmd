@@ -209,6 +209,7 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.get_tagged)
         _panel_plugin.export(self.get_untagged)
         _panel_plugin.export(self.get_current)
+        _panel_plugin.export(self.get_all)
         _panel_plugin.export(self.get_active)
         _panel_plugin.export(self.toggle_tag)
         _panel_plugin.export(self.tag_all)
@@ -216,6 +217,7 @@ class Panel(lowui.WidgetWrap):
         _panel_plugin.export(self.tag_invert)
         _panel_plugin.export(self.tag_rule)
         _panel_plugin.export(self.untag_rule)
+        _panel_plugin.export(self.tag_diff)
         _panel_plugin.export(self.swap_blocks)
         _panel_plugin.export(self.reload)
         _panel_plugin.export(self.reload_all)
@@ -421,7 +423,7 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
     
     def get_current(self, active=True):
         """
-        Return VFSObject instance of current VFSObject
+        Return VFSObject instance of selected
         """
 
         if active:
@@ -440,6 +442,20 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         """
 
         return self.get_tagged() or [self.get_selected()]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_all(self, active=True):
+        """
+        Return list of VFSObject instances in panel
+        """
+
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.get_all()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -527,6 +543,21 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def tag_diff(self, active=True):
+        """
+        Tag all the objects in active panel which are missing from the inactive
+        one
+        """
+
+        if active:
+            obj = self.active
+        else:
+            obj = self.inactive
+
+        return obj.tag_diff()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     def swap_blocks(self):
         """
         Swap panel blocks
@@ -1288,10 +1319,19 @@ class Block(lowui.FlowWidget):
 
     def get_current(self):
         """
-        Get current VFSObject instance
+        Get VFSObject instance of current directory
         """
 
         return self._vfsobj
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_all(self):
+        """
+        Return list of VFSObject instances in panel
+        """
+
+        return self.entries
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1419,6 +1459,22 @@ class Block(lowui.FlowWidget):
         """
 
         self._tagged = []
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @refresh
+    def tag_diff(self):
+        """
+        Tag all the objects in active panel which are missing from the inactive
+        one
+        """
+
+        inactive_names = [x.name for x in
+                          self.xyz.pm.from_load(":sys:panel", "get_all")(
+                              active=False)]
+
+        self._tagged = [i for i in xrange(self._len) if
+                        self.entries[i].name not in inactive_names]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -87,6 +87,7 @@ bind(":sys:panel:reload", kbd("CTRL-r"))
 bind(":sys:panel:search_cycle", kbd("META-s"))
 bind(":sys:panel:search_backward", kbd("META-w"))
 bind(":sys:panel:show_tagged", kbd("META-g"))
+bind(":sys:panel:tag_diff", kbd("CTRL-x", "d"))
 
 # Tabs bindings
 bind(":sys:panel:new_tab", kbd("CTRL-c", "c"))

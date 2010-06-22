@@ -3,6 +3,6 @@ _todo
 NOTES
 TODO
 VFS
-**/*.pyc
+*.pyc
 .emacs.desktop
 doc/local/*
