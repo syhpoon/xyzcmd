@@ -16,6 +16,8 @@
 
 from libxyz.core.utils import ustring
 from libxyz.ui import lowui
+from libxyz.vfs import VFSObject
+
 import libxyz.ui
 
 class ListEntry(lowui.FlowWidget):
@@ -120,3 +122,52 @@ class NumEntry(ListEntry):
             self._num.append(key)
         else:
             return key
+
+#++++++++++++++++++++++++++++++++++++++++++++++++
+
+class BlockEntries(list):
+    """
+    Wrapper for list of block entries
+    """
+
+    def __init__(self, xyz, data):
+        self.xyz = xyz
+        self.length = len(data)
+        self.palettes = {}
+
+        try:
+            self._rules = self.xyz.skin["fs.rules"]
+        except KeyError:
+            self._rules = {}
+
+        super(BlockEntries, self).__init__(data)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def insert(self, idx, obj):
+        list.insert(self, idx, obj)
+        self.length = len(self)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __getslice__(self, i, j):
+        if j > self.length:
+            j = self.length
+        
+        return [self[x] for x in range(i, j)]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    def __getitem__(self, idx):
+        item = list.__getitem__(self, idx)
+
+        if not isinstance(item, VFSObject):
+            item = self.xyz.vfs.dispatch(item)
+
+            self[idx] = item
+
+            for _exp, _attr in self._rules.iteritems():
+                if _exp.match(self[idx]):
+                    self.palettes[idx] = _attr.name
+
+        return item

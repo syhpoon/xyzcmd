@@ -30,6 +30,7 @@ from libxyz.vfs import types
 from libxyz.vfs import util
 from libxyz.vfs import mode
 from libxyz.core.utils import ustring, bstring
+from libxyz.ui import BlockEntries
 
 class LocalVFSObject(vfsobj.VFSObject):
     """
@@ -41,11 +42,10 @@ class LocalVFSObject(vfsobj.VFSObject):
     def walk(self):
         """
         Directory tree walker
-        @return: tuple (parent, dir, dirs, files) where:
+        @return: tuple (parent, dir, objects) where:
                  parent - parent dir LocalVFSObject instance
                  dir - current LocalVFSObject instance
-                 dirs - list of LocalVFSObject objects of directories
-                 files - list of LocalVFSObject objects of files
+                 objects - BlockEntries of LocalVFSObject objects
         """
 
         try:
@@ -59,13 +59,11 @@ class LocalVFSObject(vfsobj.VFSObject):
         _parent = self.xyz.vfs.get_parent(_dir, self.enc)
 
         get_path = lambda x: os.path.abspath(os.path.join(self.path, x))
-        
-        return [
-            _parent,
-            self,
-            [self.xyz.vfs.dispatch(get_path(x), self.enc) for x in _dirs],
-            [self.xyz.vfs.dispatch(get_path(x), self.enc) for x in _files],
-            ]
+
+        return [_parent, self,
+                BlockEntries(self.xyz,
+                    [get_path(x) for x in _dirs] +
+                    [get_path(x) for x in _files])]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -464,4 +462,3 @@ class LocalVFSObject(vfsobj.VFSObject):
 
         if os.path.isdir(src) and save_attrs:
             shutil.copystat(src, dst)
-

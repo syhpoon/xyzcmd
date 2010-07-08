@@ -16,6 +16,7 @@
 
 import os
 import traceback
+import time
 
 import libxyz.ui
 import libxyz.core
@@ -26,6 +27,7 @@ from libxyz.core.utils import ustring, bstring, is_func
 from libxyz.ui import lowui
 from libxyz.ui import align
 from libxyz.ui import Shortcut
+from libxyz.ui import BlockEntries
 from libxyz.ui.utils import refresh
 from libxyz.ui.utils import truncate
 from libxyz.vfs.types import VFSTypeFile
@@ -891,10 +893,8 @@ class Block(lowui.FlowWidget):
         self._from = 0
         self._to = 0
         self._force_reload = False
-        self.entries = []
+        self.entries = BlockEntries(self.xyz, [])
         self._dir = None
-        self._len = 0
-        self._palettes = []
         self._vfsobj = None
         self._title = u""
         self._tagged = []
@@ -937,12 +937,13 @@ class Block(lowui.FlowWidget):
 
         self.tab_bar.new_tab()
 
+        self._setup(self.xyz.vfs.dispatch(path, self._enc))
+
         super(Block, self).__init__()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     def rows(self, (maxcol,), focus=False):
-        # TODO: cache
         w = self.display_widget((maxcol,), focus)
         return w.rows((maxcol,), focus)
 
@@ -954,15 +955,12 @@ class Block(lowui.FlowWidget):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     def _setup(self, vfsobj):
-        _parent, _dir, _dirs, _files = vfsobj.walk()
-
+        _parent, _dir, _entries = vfsobj.walk()
+        
         self._dir = _dir
 
-        _entries = []
-        _entries.extend(_dirs)
-        _entries.extend(_files)
-        _entries = self._filter(_entries)
-        _entries = self._sort(_entries)
+        #_entries = self._filter(_entries)
+        #_entries = self._sort(_entries)
         _entries.insert(0, _parent)
         
         self._title = truncate(_dir.full_path, self.size.cols - 4,
@@ -974,11 +972,8 @@ class Block(lowui.FlowWidget):
         self._tagged = []
 
         self.entries = _entries
-        self._len = len(self.entries)
-        self._palettes = self._process_skin_rulesets()
         self._vfsobj = vfsobj
         self.vfs_driver = vfsobj.driver
-
         self._force_reload = True
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1047,8 +1042,8 @@ class Block(lowui.FlowWidget):
                 _own_attr = self.attr(u"cursor")
             elif _abs_i in self._tagged:
                 _own_attr = self.attr(u"tagged")
-            elif _abs_i in self._palettes:
-                _own_attr = self._palettes[_abs_i]
+            elif _abs_i in self.entries.palettes:
+                _own_attr = self.entries.palettes[_abs_i]
 
             if _own_attr is not None:
                 x = lowui.AttrWrap(lowui.Text(bstring(_text, self._enc)),
@@ -1112,7 +1107,7 @@ class Block(lowui.FlowWidget):
         Get currently visible piece of entries
         """
 
-        _len = self._len
+        _len = self.entries.length
         _from, _to, self._vindex = self._update_vindex(rows)
 
         if reload or ((_from, _to) != (self._from, self._to)):
@@ -1125,28 +1120,6 @@ class Block(lowui.FlowWidget):
                 self._display.append(_text)
 
         return self._display
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _process_skin_rulesets(self):
-        """
-        Process defined fs.* rulesets
-        """
-
-        _result = {}
-
-        try:
-            _rules = self.xyz.skin[u"fs.rules"]
-        except KeyError:
-            return _result
-
-        for i in xrange(self._len):
-            for _exp, _attr in _rules.iteritems():
-                if _exp.match(self.entries[i]):
-                    _result[i] = _attr.name
-                    break
-
-        return _result
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1233,7 +1206,7 @@ class Block(lowui.FlowWidget):
         Next entry
         """
 
-        if self.selected < self._len - 1:
+        if self.selected < self.entries.length - 1:
             self.selected += 1
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1265,7 +1238,7 @@ class Block(lowui.FlowWidget):
         Bottom entry
         """
 
-        self.selected = self._len - 1
+        self.selected = self.entries.length - 1
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1276,7 +1249,7 @@ class Block(lowui.FlowWidget):
         """
 
         def _do_next_block(cols, rows):
-            if self.selected + rows >= self._len:
+            if self.selected + rows >= self.entries.length:
                 return self.bottom()
             else:
                 self.selected += rows
@@ -1349,7 +1322,7 @@ class Block(lowui.FlowWidget):
         Return list of not tagged VFSObject instances
         """
 
-        return [self.entries[x] for x in xrange(self._len)
+        return [self.entries[x] for x in xrange(self.entries.length)
                 if x not in self._tagged]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1417,7 +1390,7 @@ class Block(lowui.FlowWidget):
 
         try:
             if tag:
-                self._tagged = [i for i in xrange(self._len) if
+                self._tagged = [i for i in xrange(self.entries.length) if
                                 _rule.match(self.entries[i])]
             else:
                 self._tagged = [i for i in self._tagged if not
@@ -1436,7 +1409,7 @@ class Block(lowui.FlowWidget):
         Invert currently tagged files
         """
 
-        self._tagged = [i for i in xrange(self._len)
+        self._tagged = [i for i in xrange(self.entries.length)
                         if i not in self._tagged]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1447,7 +1420,7 @@ class Block(lowui.FlowWidget):
         Tag every single object in current dir
         """
 
-        self._tagged = [i for i in xrange(self._len) if
+        self._tagged = [i for i in xrange(self.entries.length) if
                         self.entries[i].name != ".."]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1473,7 +1446,7 @@ class Block(lowui.FlowWidget):
                           self.xyz.pm.from_load(":sys:panel", "get_all")(
                               active=False)]
 
-        self._tagged = [i for i in xrange(self._len) if
+        self._tagged = [i for i in xrange(self.entries.length) if
                         self.entries[i].name not in inactive_names]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1488,8 +1461,8 @@ class Block(lowui.FlowWidget):
 
         self._setup(self._vfsobj)
 
-        if self.selected >= self._len:
-            self.selected = self._len - 1
+        if self.selected >= self.entries.length:
+            self.selected = self.entries.length - 1
 
         # Try to find previously selected object
         if self.entries[self.selected].name != _selected.name:
@@ -1503,7 +1476,7 @@ class Block(lowui.FlowWidget):
         Select VFS object by given name in current directory
         """
 
-        for i in xrange(self._len):
+        for i in xrange(self.entries.length):
             if self.entries[i].name == name:
                 self.selected = i
                 break
@@ -1536,6 +1509,10 @@ class Block(lowui.FlowWidget):
         If active is False do not call os.chdir
         """
 
+        import time
+
+        a = time.time()
+        
         try:
             old_selected = self.entries[self.selected].name
         except IndexError:
@@ -1569,7 +1546,7 @@ class Block(lowui.FlowWidget):
 
             # We've just stepped out from dir, try to focus on it
             if _parent == _path:
-                for x in xrange(self._len):
+                for x in xrange(self.entries.length):
                     if self.entries[x].name == _old:
                         self.selected = x
                         break
@@ -1593,6 +1570,8 @@ class Block(lowui.FlowWidget):
         if isinstance(self._vfsobj, LocalVFSObject) and active:
             os.chdir(path)
 
+        xyzlog.debug("chdir: %s: %s" % (path, str(time.time()-a)))
+        
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @refresh
@@ -1601,7 +1580,7 @@ class Block(lowui.FlowWidget):
         Search forward for matching object while user types
         """
 
-        return self._search_engine(lambda x: (xrange(x, self._len)))
+        return self._search_engine(lambda x: (xrange(x, self.entries.length)))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1621,7 +1600,7 @@ class Block(lowui.FlowWidget):
         currently selected
         """
 
-        return self._search_engine(lambda x: range(x, self._len) +
+        return self._search_engine(lambda x: range(x, self.entries.length) +
                                              range(0, x))
     
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1635,11 +1614,10 @@ class Block(lowui.FlowWidget):
         if not self._tagged:
             return
 
-        self.entries = [self.entries[x] for x in self._tagged]
-        self._len = len(self.entries)
+        self.entries = BlockEntries(self.xyz,
+                                    [self.entries[x] for x in self._tagged])
         self.selected = 0
         self._tagged = []
-        self._palettes = self._process_skin_rulesets()
 
         _tagged = _(u"TAGGED")
 

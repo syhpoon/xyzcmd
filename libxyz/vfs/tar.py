@@ -25,6 +25,7 @@ from libxyz.vfs import types as vfstypes
 from libxyz.vfs import vfsobj
 from libxyz.vfs import util
 from libxyz.vfs import mode
+from libxyz.ui import BlockEntries
 
 class TarVFSObject(vfsobj.VFSObject):
     """
@@ -61,11 +62,11 @@ class TarVFSObject(vfsobj.VFSObject):
     def walk(self):
         """
         Directory tree walker
-        @return: tuple (parent, dir, dirs, files) where:
+        @return: tuple (parent, dir, objects) where:
         parent - parent dir *VFSObject instance
         dir - current dir TarVFSObject instance
         dirs - list of TarVFSObject objects of directories
-        files - list of TarVFSObject objects of files
+        objects - BlockEntries of LocalVFSObject objects
         """
 
         tarobj = self._open_archive()
@@ -91,12 +92,10 @@ class TarVFSObject(vfsobj.VFSObject):
         return [
             _parent,
             self,
-            [self.xyz.vfs.dispatch(self.get_path(x.name), self.enc)
-             for x in _dirs],
-            [self.xyz.vfs.dispatch(self.get_path(x.name), self.enc)
-             for x in _files],
-            ]
-
+            BlockEntries(self.xyz,
+                         [self.get_path(x.name) for x in _dirs] +
+                         [self.get_path(x.name) for x in _files])]
+                         
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def copy(self, path, existcb=None, errorcb=None, save_attrs=True,

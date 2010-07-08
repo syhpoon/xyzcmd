@@ -113,9 +113,9 @@ class VFSObject(object):
         if not self.is_dir():
             return False
 
-        _, _, dirs, files = self.walk()
+        _, _, objs = self.walk()
 
-        return len(dirs) == 0 and len(files) == 0
+        return len(objs) == 0
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -227,7 +227,7 @@ class VFSObject(object):
 
     def walk(self):
         """
-        Directory tree generator
+        Directory tree walker
         """
 
         raise NotImplementedError(self.__ni_msg)

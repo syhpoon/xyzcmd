@@ -40,6 +40,7 @@ __all__ = (
     'XYZListBox',
     'ListEntry',
     'NumEntry',
+    'BlockEntries',
     'Shortcut',
     'Cmd',
     'Panel',
@@ -68,7 +69,7 @@ from prompt import Prompt
 from xyzlistbox import XYZListBox
 from entry import ListEntry
 from entry import NumEntry
+from entry import BlockEntries
 from shortcut import Shortcut
 from cmd import Cmd
 from panel import Panel
-
