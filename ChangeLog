@@ -4,6 +4,11 @@ XYZCommander changelog
 Version 0.0.5
 =============
 
+Overview
+--------
+* Heavy VFW walker optimization: 36 to 42 times faster to enter the directory,
+  and a lot less memeory intensive as well.
+
 Plugins
 -------
 * New method :sys:panel:get_all()
