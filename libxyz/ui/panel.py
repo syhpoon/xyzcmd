@@ -1107,7 +1107,6 @@ class Block(lowui.FlowWidget):
         Get currently visible piece of entries
         """
 
-        _len = self.entries.length
         _from, _to, self._vindex = self._update_vindex(rows)
 
         if reload or ((_from, _to) != (self._from, self._to)):

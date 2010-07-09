@@ -61,9 +61,7 @@ class LocalVFSObject(vfsobj.VFSObject):
         get_path = lambda x: os.path.abspath(os.path.join(self.path, x))
 
         return [_parent, self,
-                BlockEntries(self.xyz,
-                    [get_path(x) for x in _dirs] +
-                    [get_path(x) for x in _files])]
+                BlockEntries(self.xyz, _dirs + _files, get_path)]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

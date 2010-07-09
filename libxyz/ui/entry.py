@@ -130,10 +130,15 @@ class BlockEntries(list):
     Wrapper for list of block entries
     """
 
-    def __init__(self, xyz, data):
+    def __init__(self, xyz, data, trans=None):
         self.xyz = xyz
         self.length = len(data)
         self.palettes = {}
+
+        if callable(trans):
+            self.trans = trans
+        else:
+            self.trans = lambda x: x
 
         try:
             self._rules = self.xyz.skin["fs.rules"]
@@ -162,7 +167,7 @@ class BlockEntries(list):
         item = list.__getitem__(self, idx)
 
         if not isinstance(item, VFSObject):
-            item = self.xyz.vfs.dispatch(item)
+            item = self.xyz.vfs.dispatch(self.trans(item))
 
             self[idx] = item
 

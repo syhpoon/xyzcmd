@@ -65,7 +65,6 @@ class TarVFSObject(vfsobj.VFSObject):
         @return: tuple (parent, dir, objects) where:
         parent - parent dir *VFSObject instance
         dir - current dir TarVFSObject instance
-        dirs - list of TarVFSObject objects of directories
         objects - BlockEntries of LocalVFSObject objects
         """
 
@@ -92,9 +91,8 @@ class TarVFSObject(vfsobj.VFSObject):
         return [
             _parent,
             self,
-            BlockEntries(self.xyz,
-                         [self.get_path(x.name) for x in _dirs] +
-                         [self.get_path(x.name) for x in _files])]
+            BlockEntries(self.xyz, _dirs + _files,
+                         lambda x: self.get_path(x.name))]
                          
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
