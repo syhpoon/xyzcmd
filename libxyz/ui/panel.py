@@ -92,7 +92,7 @@ class Panel(lowui.WidgetWrap):
         """
         Compose widgets
         """
-        
+
         columns = lowui.Columns([self.block1, self.block2], 0)
         self._widget = lowui.Pile([columns, self._cmd])
 
@@ -104,7 +104,7 @@ class Panel(lowui.WidgetWrap):
         """
 
         filters = []
-        
+
         # No need to compile
         if not self.conf[u"filters_enabled"]:
             return filters
@@ -122,7 +122,7 @@ class Panel(lowui.WidgetWrap):
         return filters
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     @property
     def active(self):
         if self.block1.active:
@@ -174,13 +174,13 @@ class Panel(lowui.WidgetWrap):
                     _dim = self.xyz.screen.get_cols_rows()
                     _bsize = libxyz.ui.Size(rows=_dim[1] - 1,
                                             cols=_dim[0] / 2 - 2)
-                    
+
                     self.block1.size = _bsize
                     self.block2.size = _bsize
                     self._cmd._invalidate()
                     self.block1._invalidate()
                     self.block2._invalidate()
-                                
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _set_plugins(self):
@@ -268,7 +268,7 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
             ("switch_tab",
              "Fires when switching to another tab. "\
              "Arguments: Block instance and new tab index."),
-            
+
             ("new_tab",
              "Fires when new tab is added. "\
              "Arguments: Block instance and new tab index."),
@@ -289,7 +289,7 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         """
 
         indeed = True
-        
+
         if confirm:
             _q = _(u"Really quit %s?") % libxyz.const.PROG
             _title = libxyz.const.PROG
@@ -408,7 +408,7 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         return obj.get_tagged()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def get_untagged(self, active=True):
         """
         Return list of not tagged VFSObject instances
@@ -422,7 +422,7 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         return obj.get_untagged()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def get_current(self, active=True):
         """
         Return VFSObject instance of selected
@@ -559,7 +559,7 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         return obj.tag_diff()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def swap_blocks(self):
         """
         Swap panel blocks
@@ -695,7 +695,7 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
         return obj.cwd
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def vfs_driver(self, active=True):
         """
         Return vfs driver used by object. None stands for LocalVFS
@@ -744,7 +744,7 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
 
         if policy is None:
             return objects
-        
+
         if policy not in self.conf["sorting"]:
             xyzlog.warning(_(u"Unable to find `%s` sorting policy" %
                              ustring(policy)))
@@ -922,7 +922,7 @@ class Block(lowui.FlowWidget):
         _title_attr = self._get_title_attr()
 
         self.frame = lowui.Frame(lowui.Filler(lowui.Text("")), footer=_info)
-        
+
         self.border = libxyz.ui.Border(self.frame, self._title,
                                        _title_attr, self.attr(u"border"))
         self.block = lowui.Frame(
@@ -942,7 +942,7 @@ class Block(lowui.FlowWidget):
         super(Block, self).__init__()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def rows(self, (maxcol,), focus=False):
         w = self.display_widget((maxcol,), focus)
         return w.rows((maxcol,), focus)
@@ -953,16 +953,16 @@ class Block(lowui.FlowWidget):
         return lowui.BoxAdapter(self.block, self.size.rows)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def _setup(self, vfsobj):
         _parent, _dir, _entries = vfsobj.walk()
-        
+
         self._dir = _dir
 
         #_entries = self._filter(_entries)
         #_entries = self._sort(_entries)
         _entries.insert(0, _parent)
-        
+
         self._title = truncate(_dir.full_path, self.size.cols - 4,
                                self._enc, True)
 
@@ -987,7 +987,7 @@ class Block(lowui.FlowWidget):
         """
         Render block
         """
-        
+
         w = self.display_widget((maxcol,), focus)
         maxrow = w.rows((maxcol,), focus)
 
@@ -1018,7 +1018,7 @@ class Block(lowui.FlowWidget):
                            [self.entries[x].size for x in self._tagged
                             if isinstance(self.entries[x].ftype, VFSTypeFile)
                             ], 0)), _tlen)
-            
+
             self._sep.set_text(bstring(_text, self._enc),
                                self.attr(u"tagged"))
         else:
@@ -1067,7 +1067,7 @@ class Block(lowui.FlowWidget):
             combined.trim_end(_len - maxrow)
 
         return lowui.CanvasOverlay(combined, border, 1, 2)
-    
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _make_info(self):
@@ -1077,7 +1077,7 @@ class Block(lowui.FlowWidget):
         return _info
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def _make_number_readable(self, num):
         _res = []
 
@@ -1141,7 +1141,7 @@ class Block(lowui.FlowWidget):
 
         _part2 = vfsobj.info
         _part1 = truncate(vfsobj.visual, cols - len(_part2) - 2, self._enc)
-        
+
         _text = u"%s%s%s" % (_part1,
                              u" " * (cols - (self.term_width(_part1) +
                                              self.term_width(_part2)) -
@@ -1364,7 +1364,7 @@ class Block(lowui.FlowWidget):
         """
         Tag engine
         """
-        
+
         if tag:
             _title = _(u"Tag group")
         else:
@@ -1373,7 +1373,7 @@ class Block(lowui.FlowWidget):
         _input = libxyz.ui.InputBox(self.xyz, self.xyz.top,
                                     _("Type FS Rule"),
                                     title=_title, text=self._rule_raw)
-        
+
         _raw = _input.show()
 
         if _raw is None:
@@ -1511,7 +1511,7 @@ class Block(lowui.FlowWidget):
         import time
 
         a = time.time()
-        
+
         try:
             old_selected = self.entries[self.selected].name
         except IndexError:
@@ -1570,7 +1570,7 @@ class Block(lowui.FlowWidget):
             os.chdir(path)
 
         xyzlog.debug("chdir: %s: %s" % (path, str(time.time()-a)))
-        
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @refresh
@@ -1601,7 +1601,7 @@ class Block(lowui.FlowWidget):
 
         return self._search_engine(lambda x: range(x, self.entries.length) +
                                              range(0, x))
-    
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @refresh
@@ -1623,7 +1623,7 @@ class Block(lowui.FlowWidget):
         if not self._title.endswith(_tagged):
             self._title = truncate(u"%s:%s" % (self._title, _tagged),
                                    self.size.cols - 4, self._enc, True)
-        
+
             if hasattr(self, "border"):
                 self.border.set_title(self._title)
 
@@ -1692,7 +1692,7 @@ class Block(lowui.FlowWidget):
                         _skip = False
                         _current_pos  = i + 1
                         continue
-                    
+
                     self.selected = i
                     _collected = _tmp
                     break
@@ -1795,7 +1795,7 @@ class TabBar(lowui.FlowWidget):
         self.xyz = xyz
         self.block = block
         self._attr = attr
-        
+
         self._active_tab = 0
         self._tabs = []
 
@@ -1806,7 +1806,7 @@ class TabBar(lowui.FlowWidget):
     active_tab = property(lambda self: self._active_tab)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     @refresh
     def new_tab(self, tabname=None):
         """
@@ -1834,7 +1834,7 @@ class TabBar(lowui.FlowWidget):
             index = self._active_tab
 
         _len = len(self._tabs)
-        
+
         if _len > 1 and index < _len:
             del(self._tabs[index])
 
@@ -1920,7 +1920,7 @@ class TabBar(lowui.FlowWidget):
         for idx in xrange(len(self._tabs)):
             tabname = self._gen_tab_name(self._tabs[idx], idx)
             length += len(tabname)
-            
+
             if idx == self._active_tab:
                 canv = make_c(tabname, "tabact")
             else:
@@ -1958,4 +1958,3 @@ class TabBar(lowui.FlowWidget):
 
     def _gen_tab_name(self, tab, idx):
         return "{%d %s} " % (idx, tab)
-
