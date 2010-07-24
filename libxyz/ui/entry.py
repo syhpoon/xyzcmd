@@ -158,11 +158,11 @@ class BlockEntries(list):
     def __getslice__(self, i, j):
         if j > self.length:
             j = self.length
-        
+
         return [self[x] for x in range(i, j)]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def __getitem__(self, idx):
         item = list.__getitem__(self, idx)
 
@@ -176,3 +176,18 @@ class BlockEntries(list):
                     self.palettes[idx] = _attr.name
 
         return item
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __iter__(self):
+        for i in xrange(self.length):
+            yield self[i]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def copy(self):
+        """
+        Return exact copy of itself
+        """
+
+        return BlockEntries(self.xyz, self[:], self.trans)
