@@ -58,7 +58,7 @@ class XYZPlugin(BasePlugin):
         panel-2 tab-n path
         panel-2 tab-n selected
         """
-        
+
         chdir = self.xyz.pm.from_load(":sys:panel", "chdir")
         new_tab = self.xyz.pm.from_load(":sys:panel", "new_tab")
         select = self.xyz.pm.from_load(":sys:panel", "select")
@@ -84,6 +84,7 @@ class XYZPlugin(BasePlugin):
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         f = None
+
         try:
             f = self._ud.openfile(self._wfile, "r", "data")
             data = [x.rstrip() for x in f.readlines()]
@@ -113,7 +114,7 @@ class XYZPlugin(BasePlugin):
             switch(active_tab)
             select(iselected, active=False)
             select(selected)
-        except IOError:
+        except Exception:
             pass
         
         if f:
@@ -165,3 +166,4 @@ class XYZPlugin(BasePlugin):
                         % ustring(str(e)))
         if f:
             f.close()
+
