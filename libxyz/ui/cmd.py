@@ -70,7 +70,7 @@ class Cmd(lowui.FlowWidget):
         self._plugin = self._init_plugin()
         self._ud = libxyz.core.UserData()
         self._history_file = "history"
-        
+
         _conf = self._plugin.conf
         self.prompt = Prompt(_conf[u"prompt"], self._attr(u"prompt"))
         self._undo = libxyz.core.Queue(_conf[u"undo_depth"])
@@ -96,7 +96,7 @@ class Cmd(lowui.FlowWidget):
             "undo_depth": lambda x: self._undo.set_size(x),
             "history_depth": lambda x: self._history.set_size(x),
             }
-        
+
         for k, v in val.iteritems():
             if k in mapping:
                 mapping[k](v)
@@ -130,7 +130,7 @@ class Cmd(lowui.FlowWidget):
         """
 
         f = None
-        
+
         try:
             f = self._ud.openfile(self._history_file, "r", "data")
             data = f.readlines()
@@ -144,12 +144,12 @@ class Cmd(lowui.FlowWidget):
                 self._history.push([x for x in ustring(line.rstrip())])
         except Exception:
             pass
-        
+
         if f:
             f.close()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def _init_plugin(self):
         """
         Init virtual plugin
@@ -241,9 +241,9 @@ class Cmd(lowui.FlowWidget):
 
         _canv_text = lowui.AttrWrap(lowui.Text("".join(_data)),
                                     self._text_attr).render((maxcol,))
-            
+
         _canvases = []
-        
+
         if _prompt_len > 0:
             _canvases.append((_canv_prompt, None, False, _prompt_len))
 
@@ -301,7 +301,7 @@ class Cmd(lowui.FlowWidget):
         self._vindex += 1
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def keypress(self, size, key):
         """
         Process pressed key
@@ -620,6 +620,7 @@ class Cmd(lowui.FlowWidget):
 
         self._save_history()
         _data = self.replace_aliases(bstring(u"".join(self._data)))
+        _data = self.expand_user(_data)
         _cmd, _rest = _split_cmd(_data)
 
         # Do not run shell, execute internal command
@@ -641,10 +642,10 @@ class Cmd(lowui.FlowWidget):
             if not hasattr(self, "_reloadf"):
                 self._reloadf = self.xyz.pm.from_load(":sys:panel",
                                                       "reload_all")
-                
+
             self._execf(_data)
             self._reloadf()
-        
+
         self._clear_cmd()
         self._invalidate()
 
@@ -679,9 +680,14 @@ class Cmd(lowui.FlowWidget):
             xyzlog.error(_(u"Unable to replace an alias %s: %s") %
                          (ustring(cmd), ustring(str(e))))
             return data
-        
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
+    def expand_user(self, data):
+        # TODO
+        return data
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def is_empty(self):
         """
@@ -825,7 +831,7 @@ class Cmd(lowui.FlowWidget):
         return self._put_engine(self._panel.cwd())
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def put_inactive_cwd(self):
         """
         Put current working directory of inactive panel to cmd line
@@ -834,7 +840,7 @@ class Cmd(lowui.FlowWidget):
         return self._put_engine(self._panel.cwd(False))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def put(self, obj, space=True):
         """
         Put arbitrary string to cmd line starting from the cursor position
@@ -874,7 +880,7 @@ class Cmd(lowui.FlowWidget):
         else:
             extra = []
 
-        map(lambda x: self._put_object(x), 
+        map(lambda x: self._put_object(x),
             self.escape([x for x in ustring(obj)]) + extra)
         self._invalidate()
 
@@ -914,7 +920,7 @@ class Cmd(lowui.FlowWidget):
         """
         Set command line prompt
         """
-        
+
         self.prompt = Prompt(new, self._attr(u"prompt"))
         self._invalidate()
 

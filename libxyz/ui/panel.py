@@ -1550,7 +1550,6 @@ class Block(lowui.FlowWidget):
                         self.selected = x
                         break
 
-            # TODO: 2-3 level cache
             if _old_vfs:
                 del(_old_vfs)
 
