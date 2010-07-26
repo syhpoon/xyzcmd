@@ -183,11 +183,3 @@ class BlockEntries(list):
         for i in xrange(self.length):
             yield self[i]
 
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def copy(self):
-        """
-        Return exact copy of itself
-        """
-
-        return BlockEntries(self.xyz, self[:], self.trans)
