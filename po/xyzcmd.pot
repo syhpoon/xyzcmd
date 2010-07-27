@@ -1,0 +1,654 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2010-07-28 01:14+EEST\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: ./libxyz/core/actionmanager.py:44
+msgid "Unable to register action: invalid rule: %s"
+msgstr ""
+
+#: ./libxyz/core/dsl.py:41
+msgid "Class must be instantiated first!"
+msgstr ""
+
+#: ./libxyz/core/dsl.py:54
+msgid "DSL Error: %s"
+msgstr ""
+
+#: ./libxyz/core/dsl.py:240
+msgid "Unable to load plugin %s: %s"
+msgstr ""
+
+#: ./libxyz/core/dsl.py:255
+msgid "Unable to bind shortcut %s: %s"
+msgstr ""
+
+#: ./libxyz/core/dsl.py:284
+msgid "Unable to execute file: %s"
+msgstr ""
+
+#: ./libxyz/core/dsl.py:302
+msgid "Unable to register action: %s"
+msgstr ""
+
+#: ./libxyz/core/dsl.py:329
+msgid "Unable to expand macro %s: %s"
+msgstr ""
+
+#: ./libxyz/core/dsl.py:401
+msgid "Error in DSL shell execution: %s"
+msgstr ""
+
+#: ./libxyz/core/dsl.py:425
+msgid "Invalid object type: %s. Function expected"
+msgstr ""
+
+#: ./libxyz/core/dsl.py:467
+msgid "Invalid opts type: %s. Dict instance expected"
+msgstr ""
+
+#: ./libxyz/core/dsl.py:495
+msgid "Invalid function %s"
+msgstr ""
+
+#: ./libxyz/core/dsl.py:516
+msgid "Error setting VFS prefix: %s"
+msgstr ""
+
+#: ./libxyz/core/dsl.py:542
+msgid "Error registering new hook: %s"
+msgstr ""
+
+#: ./libxyz/core/dsl.py:567
+msgid "Error parsing FSRule: %s"
+msgstr ""
+
+#: ./libxyz/core/dsl.py:591
+msgid "Error creating Palette instance: %s"
+msgstr ""
+
+#: ./libxyz/core/dsl.py:605
+msgid "Error creating Skin instance: %s"
+msgstr ""
+
+#: ./libxyz/core/dsl.py:620
+msgid "Error in DSL execution: %s"
+msgstr ""
+
+#: ./libxyz/core/fsrule.py:125
+msgid "Error extending FSRule: token %s already registered"
+msgstr ""
+
+#: ./libxyz/core/fsrule.py:129
+msgid "Error extending FSRule: trans_func and match_func arguments must be functions."
+msgstr ""
+
+#: ./libxyz/core/fsrule.py:355
+msgid "Invalid argument type: %s, VFSObject expected"
+msgstr ""
+
+#: ./libxyz/core/fsrule.py:513
+msgid "Error in calling extended transformation function: %s"
+msgstr ""
+
+#: ./libxyz/core/fsrule.py:640
+msgid "Invalid size{} argument: %s"
+msgstr ""
+
+#: ./libxyz/core/fsrule.py:811
+msgid "Error in calling extended match function: %s"
+msgstr ""
+
+#: ./libxyz/core/fsrule.py:814
+msgid "Unable to find match function for token: %s"
+msgstr ""
+
+#: ./libxyz/core/hookmanager.py:41
+msgid "HookManager: Callable argument expected"
+msgstr ""
+
+#: ./libxyz/core/hookmanager.py:73
+msgid "Error running callback procedure for event %s"
+msgstr ""
+
+#: ./libxyz/core/keymanager.py:80
+msgid "Invalid shortcut type: %s."
+msgstr ""
+
+#: ./libxyz/core/keymanager.py:149
+msgid "<Internal function object>"
+msgstr ""
+
+#: ./libxyz/core/keymanager.py:151
+msgid "Invalid method type: %s. Must be string or function"
+msgstr ""
+
+#: ./libxyz/core/logger/logger.py:77
+msgid "Logger console"
+msgstr ""
+
+#: ./libxyz/core/queue.py:43
+msgid "Max-size must be a positive integer number"
+msgstr ""
+
+#: ./libxyz/launcher.py:243
+msgid "Skin %s is not usable with requested color settings. Using default."
+msgstr ""
+
+#: ./libxyz/launcher.py:304
+msgid "Error parsing system config %s: %s"
+msgstr ""
+
+#: ./libxyz/launcher.py:308
+msgid "Error parsing user config %s: %s"
+msgstr ""
+
+#: ./libxyz/launcher.py:341
+msgid "Error parsing config %s: %s"
+msgstr ""
+
+#: ./libxyz/parser/base.py:27
+msgid "Must be implemented in child class"
+msgstr ""
+
+#: ./libxyz/parser/base.py:41
+msgid "Parse error"
+msgstr ""
+
+#: ./libxyz/parser/base.py:50
+msgid "Syntax error"
+msgstr ""
+
+#: ./libxyz/parser/block.py:219
+msgid "Unknown variable %s"
+msgstr ""
+
+#: ./libxyz/parser/block.py:221
+msgid "Invalid variable name: %s"
+msgstr ""
+
+#: ./libxyz/parser/block.py:227
+msgid "Variable transformation error: %s"
+msgstr ""
+
+#: ./libxyz/parser/block.py:342 ./libxyz/parser/lexer.py:170
+msgid "Unterminated quote"
+msgstr ""
+
+#: ./libxyz/parser/block.py:346
+msgid "Unclosed block"
+msgstr ""
+
+#: ./libxyz/parser/flat.py:227
+msgid "Unterminated expression"
+msgstr ""
+
+#: ./libxyz/parser/sourcedata.py:48
+msgid "Source string"
+msgstr ""
+
+#: ./libxyz/ui/box_error.py:27 ./plugins/vfs/vfsutils/main.py:138
+msgid "Error"
+msgstr ""
+
+#: ./libxyz/ui/box_input.py:48
+msgid "Press ENTER to submit value. ESCAPE to quit"
+msgstr ""
+
+#: ./libxyz/ui/box_yesno.py:28 ./plugins/vfs/vfsutils/main.py:107
+#: ./plugins/vfs/vfsutils/main.py:194
+msgid "Yes"
+msgstr ""
+
+#: ./libxyz/ui/box_yesno.py:29 ./plugins/vfs/vfsutils/main.py:108
+msgid "No"
+msgstr ""
+
+#: ./libxyz/ui/cmd.py:119
+msgid "Unable to open history data file: %s"
+msgstr ""
+
+#: ./libxyz/ui/cmd.py:615
+msgid "Unable to execute commands on non-local filesystems"
+msgstr ""
+
+#: ./libxyz/ui/cmd.py:636
+msgid "Error executing internal command %s: %s"
+msgstr ""
+
+#: ./libxyz/ui/cmd.py:672
+msgid "Invalid alias type: %s"
+msgstr ""
+
+#: ./libxyz/ui/cmd.py:680
+msgid "Unable to replace an alias %s: %s"
+msgstr ""
+
+#: ./libxyz/ui/cmd.py:785
+msgid "History"
+msgstr ""
+
+#: ./libxyz/ui/panel.py:164
+msgid "Error executing bind (%s): %s"
+msgstr ""
+
+#: ./libxyz/ui/panel.py:294
+msgid "Really quit %s?"
+msgstr ""
+
+#: ./libxyz/ui/panel.py:1015
+msgid "%s bytes (%d)"
+msgstr ""
+
+#: ./libxyz/ui/panel.py:1369
+msgid "Tag group"
+msgstr ""
+
+#: ./libxyz/ui/panel.py:1371
+msgid "Untag group"
+msgstr ""
+
+#: ./libxyz/ui/panel.py:1374
+msgid "Type FS Rule"
+msgstr ""
+
+#: ./libxyz/ui/panel.py:1498
+msgid "Action error: %s"
+msgstr ""
+
+#: ./libxyz/ui/panel.py:1533 ./libxyz/ui/panel.py:1540
+msgid "Unable to chdir to %s: %s"
+msgstr ""
+
+#: ./libxyz/ui/panel.py:1620
+msgid "TAGGED"
+msgstr ""
+
+#: ./libxyz/ui/shortcut.py:30
+msgid "Only one of the arguments must be provided"
+msgstr ""
+
+#: ./libxyz/vfs/dispatcher.py:52
+msgid "Invalid class: %s. VFSObject dervied expected."
+msgstr ""
+
+#: ./libxyz/vfs/dispatcher.py:68
+msgid "Invalid path: %s."
+msgstr ""
+
+#: ./libxyz/vfs/dispatcher.py:77
+msgid "Unable to find VFS handler for %s."
+msgstr ""
+
+#: ./libxyz/vfs/local.py:54
+msgid "Unable to walk on %s"
+msgstr ""
+
+#: ./libxyz/vfs/local.py:92
+msgid "Unable to create directory inside %s object type"
+msgstr ""
+
+#: ./libxyz/vfs/local.py:248 ./libxyz/vfs/tar.py:144 ./libxyz/vfs/zip.py:147
+msgid "Name"
+msgstr ""
+
+#: ./libxyz/vfs/local.py:249 ./libxyz/vfs/tar.py:145 ./libxyz/vfs/zip.py:148
+msgid "Type"
+msgstr ""
+
+#: ./libxyz/vfs/local.py:250
+msgid "Access time"
+msgstr ""
+
+#: ./libxyz/vfs/local.py:251 ./libxyz/vfs/tar.py:146 ./libxyz/vfs/zip.py:149
+msgid "Modification time"
+msgstr ""
+
+#: ./libxyz/vfs/local.py:252
+msgid "Change time"
+msgstr ""
+
+#: ./libxyz/vfs/local.py:253 ./libxyz/vfs/tar.py:147 ./libxyz/vfs/zip.py:150
+msgid "Size in bytes"
+msgstr ""
+
+#: ./libxyz/vfs/local.py:254 ./libxyz/vfs/tar.py:148 ./libxyz/vfs/zip.py:151
+msgid "Owner"
+msgstr ""
+
+#: ./libxyz/vfs/local.py:255 ./libxyz/vfs/tar.py:149 ./libxyz/vfs/zip.py:152
+msgid "Group"
+msgstr ""
+
+#: ./libxyz/vfs/local.py:256 ./libxyz/vfs/tar.py:150 ./libxyz/vfs/zip.py:153
+msgid "Access mode"
+msgstr ""
+
+#: ./libxyz/vfs/local.py:257
+msgid "Inode"
+msgstr ""
+
+#: ./libxyz/vfs/local.py:258 ./libxyz/vfs/tar.py:151 ./libxyz/vfs/zip.py:154
+msgid "Type-specific data"
+msgstr ""
+
+#: ./libxyz/vfs/local.py:327
+msgid "Error creating VFS object: %s"
+msgstr ""
+
+#: ./libxyz/vfs/tar.py:397 ./libxyz/vfs/zip.py:400
+msgid "Unable to chown %s: %s"
+msgstr ""
+
+#: ./libxyz/vfs/tar.py:403 ./libxyz/vfs/zip.py:406
+msgid "Unable to chmod %s: %s"
+msgstr ""
+
+#: ./libxyz/vfs/vfsobj.py:86
+msgid "Feature not implemented"
+msgstr ""
+
+#: ./plugins/core/bindlist/main.py:50
+msgid "Bind"
+msgstr ""
+
+#: ./plugins/core/bindlist/main.py:50
+msgid "Context"
+msgstr ""
+
+#: ./plugins/core/bindlist/main.py:50
+msgid "Method"
+msgstr ""
+
+#: ./plugins/core/bindlist/main.py:67
+msgid "Keybindings"
+msgstr ""
+
+#: ./plugins/core/complete/main.py:60
+msgid "Error ininitalizing plugin: %s"
+msgstr ""
+
+#: ./plugins/core/complete/main.py:161
+msgid "Complete"
+msgstr ""
+
+#: ./plugins/core/console/main.py:59
+msgid "Management console"
+msgstr ""
+
+#: ./plugins/core/keycodes/main.py:119
+msgid ""
+"Please press key %s\n"
+"Press ENTER to skip key\n"
+"Press ESCAPE to quit dialog"
+msgstr ""
+
+#: ./plugins/core/keycodes/main.py:138
+msgid "Save learned keys?"
+msgstr ""
+
+#: ./plugins/core/keycodes/main.py:204
+msgid "Unable to save learned data"
+msgstr ""
+
+#: ./plugins/core/pluginlist/main.py:41
+msgid "Fires upon showing dialog. Arguments: No"
+msgstr ""
+
+#: ./plugins/core/pluginlist/main.py:43
+msgid "Fires when showing detaild plugin info.Arguments: Plugin object"
+msgstr ""
+
+#: ./plugins/core/pluginlist/main.py:73
+msgid "Active plugins list"
+msgstr ""
+
+#: ./plugins/core/pluginlist/main.py:132
+msgid "Public data"
+msgstr ""
+
+#: ./plugins/core/pluginlist/main.py:150
+msgid "Public methods"
+msgstr ""
+
+#: ./plugins/core/pluginlist/main.py:167
+msgid "N/A"
+msgstr ""
+
+#: ./plugins/core/pluginlist/main.py:198
+msgid "Plugin doc"
+msgstr ""
+
+#: ./plugins/core/pluginlist/main.py:205
+msgid "Plugin events"
+msgstr ""
+
+#: ./plugins/core/shell/bash.py:45
+msgid "Error setting up bash: %s"
+msgstr ""
+
+#: ./plugins/core/shell/main.py:24
+msgid "Shell wrapper"
+msgstr ""
+
+#: ./plugins/core/shell/main.py:25
+msgid "Execute commands in external shell"
+msgstr ""
+
+#: ./plugins/core/shell/main.py:36
+msgid "Fires before command execution. Arguments: a command to be executed"
+msgstr ""
+
+#: ./plugins/core/shell/main.py:178
+msgid "Press ENTER to continue..."
+msgstr ""
+
+#: ./plugins/fsrules/magic/main.py:30
+msgid "Plugin extends FSRule functionality to match objects based on magic database description"
+msgstr ""
+
+#: ./plugins/misc/where/main.py:19
+msgid "Save panels locations"
+msgstr ""
+
+#: ./plugins/misc/where/main.py:20
+msgid "When starting load previously saved locations"
+msgstr ""
+
+#: ./plugins/misc/where/main.py:165
+msgid "Unable to open where data file: %s"
+msgstr ""
+
+#: ./plugins/ui/bookmarks/main.py:144
+msgid "Bookmarks"
+msgstr ""
+
+#: ./plugins/ui/bookmarks/main.py:157
+msgid "Unable to open bookmarks file: %s"
+msgstr ""
+
+#: ./plugins/ui/bookmarks/main.py:166
+msgid "Error parsing bookmarks file: %s"
+msgstr ""
+
+#: ./plugins/ui/testinput/main.py:45
+msgid "Press any key. Escape twice to quit."
+msgstr ""
+
+#: ./plugins/ui/testinput/main.py:51
+msgid "Input test"
+msgstr ""
+
+#: ./plugins/vfs/fileinfo/main.py:59
+msgid "VFS Object Info"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/box_copy.py:34
+msgid "Source:"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/box_copy.py:36
+msgid "Destination:"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/box_copy.py:41
+msgid "Save attributes"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/box_copy.py:43
+msgid "Follow links"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/box_copy.py:48
+msgid "TAB to cycle. ENTER to submit. ESCAPE to cancel"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:23
+msgid "Useful VFS routines"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:24
+msgid "Dialogs for common VFS operations"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:51
+msgid "New directory name"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:52
+msgid "Create directory"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:64
+msgid "Unable to create directory: %s"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:86
+msgid "Really remove %d objects?"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:89
+msgid "Really remove %s (%s)?"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:93
+msgid "Remove object"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:106 ./plugins/vfs/vfsutils/main.py:195
+msgid "All"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:109 ./plugins/vfs/vfsutils/main.py:198
+#: ./plugins/vfs/vfsutils/main.py:225
+msgid "Abort"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:116
+msgid ""
+"Directory is not empty\n"
+"Remove it recursively?"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:118
+msgid "Remove %s"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:128
+msgid "Removing object: %s"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:130
+msgid "Removing"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:136
+msgid "Unable to remove object: %s"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:139
+msgid "Error removing object: %s"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:161
+msgid "%d objects"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:166
+msgid "Move"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:167
+msgid "Moving object: %s"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:168
+msgid "Moving"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:169
+msgid "Unable to move object: %s"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:170
+msgid "Move error"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:172
+msgid "Copy"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:173
+msgid "Copying object: %s"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:174
+msgid "Copying"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:175
+msgid "Unable to copy object: %s"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:176 ./plugins/vfs/vfsutils/main.py:233
+msgid "Copy error"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:178
+msgid ""
+"\n"
+"ESCAPE to abort"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:196 ./plugins/vfs/vfsutils/main.py:223
+msgid "Skip"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:197 ./plugins/vfs/vfsutils/main.py:224
+msgid "Skip all"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:206
+msgid "Object %s already exists. Really override?"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:207
+msgid "Override %s"
+msgstr ""
+
+#: ./plugins/vfs/vfsutils/main.py:231
+msgid "An error occured %s: %s"
+msgstr ""
+

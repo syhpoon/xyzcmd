@@ -13,5 +13,6 @@ rm -f debian/xyzcmd.postinst.debhelper
 rm -f debian/xyzcmd.preinst.debhelper
 rm -f debian/xyzcmd.prerm.debhelper
 rm -f debian/xyzcmd.substvars
+rm -f po/mo/*
 
 cd doc/user && make clean
