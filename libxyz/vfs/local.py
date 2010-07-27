@@ -86,12 +86,13 @@ class LocalVFSObject(vfsobj.VFSObject):
         Create new dir inside object (only valid for directory object types)
         """
 
-        if not self.is_dir():
+        if not (self.is_dir() or
+                (self.is_link() and self.data.is_dir())):
             raise XYZValueError(
                 _(u"Unable to create directory inside %s object type") %
                 self.ftype)
         else:
-            os.mkdir(os.path.join(self.path, newdir))
+            os.mkdir(newdir)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
