@@ -325,7 +325,7 @@ class LocalVFSObject(vfsobj.VFSObject):
                     self.data = self.xyz.vfs.dispatch(_fullpath, self.enc)
                 except VFSError, e:
                     xyzlog.error(_(u"Error creating VFS object: %s") %
-                                 ustring(str(e)))
+                                 unicode(e))
                 else:
                     if isinstance(self.data.ftype, types.VFSTypeDir):
                         self.vtype = "~"

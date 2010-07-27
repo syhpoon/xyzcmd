@@ -62,7 +62,7 @@ class XYZPlugin(BasePlugin):
             self._panel.get_current().mkdir(_dir)
         except Exception, e:
             xyzlog.error(_(u"Unable to create directory: %s") %
-                         ustring(str(e)))
+                         unicode(e))
         else:
             self._panel.reload()
             self._panel.select(_dir)
@@ -134,10 +134,10 @@ class XYZPlugin(BasePlugin):
             except Exception, e:
                 uilib.ErrorBox(self.xyz, self.xyz.top,
                                _(u"Unable to remove object: %s") %
-                               (ustring(str(e))),
+                               (unicode(e)),
                                _(u"Error")).show()
                 xyzlog.error(_(u"Error removing object: %s") %
-                             ustring(str(e)))
+                             unicode(e))
                 break
 
         self._panel.reload()
@@ -265,7 +265,7 @@ class XYZPlugin(BasePlugin):
             except StopIteration, e:
                 pass
             except Exception, e:
-                err.append(ustring(str(e)))
+                err.append(unicode(e))
 
             stopped.set()
 

@@ -36,7 +36,7 @@ from libxyz.version import Version
 from libxyz.core.plugins import PluginManager
 from libxyz.core import logger
 from libxyz.core import dsl
-from libxyz.core.utils import ustring
+from libxyz.core.utils import ustring, bstring
 from libxyz.vfs import VFSDispatcher
 
 from libxyz.exceptions import *
@@ -53,7 +53,7 @@ class Launcher(object):
         Initialization
         """
 
-        gettext.install(u"xyzcmd")
+        gettext.install(u"xyzcmd", unicode=True)
 
         self.cmdopts = "d:c:s:vh"
 
@@ -344,9 +344,9 @@ class Launcher(object):
             dsl.exec_file(file)
         except DSLError, e:
             if error:
-                self.error(tmpl % (file, ustring(str(e))))
+                self.error(tmpl % (file, unicode(e)))
             else:
-                return ustring(str(e))
+                return unicode(e)
 
         return True
 

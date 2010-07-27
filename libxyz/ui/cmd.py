@@ -117,7 +117,7 @@ class Cmd(lowui.FlowWidget):
                 f.close()
 
             xyzlog.info(_(u"Unable to open history data file: %s")
-                        % ustring(str(e)))
+                        % unicode(e))
         else:
             if f:
                 f.close()
@@ -318,7 +318,7 @@ class Cmd(lowui.FlowWidget):
                 try:
                     map(lambda x: self._put_object(x), _good)
                 except Exception, e:
-                    xyzlog.error(_(ustring(str(e))))
+                    xyzlog.error(_(unicode(e)))
                     xyzlog.debug(ustring(traceback.format_exc()))
                 else:
                     self._invalidate()
@@ -634,7 +634,7 @@ class Cmd(lowui.FlowWidget):
                 self.xyz.conf["commands"][_cmd](arg)
             except Exception, e:
                 xyzlog.error(_("Error executing internal command %s: %s") %
-                             (_cmd, ustring(str(e))))
+                             (_cmd, unicode(e)))
         else:
             if not hasattr(self, "_execf"):
                 self._execf = self.xyz.pm.from_load(":core:shell", "execute")
@@ -678,7 +678,7 @@ class Cmd(lowui.FlowWidget):
             return data
         except Exception, e:
             xyzlog.error(_(u"Unable to replace an alias %s: %s") %
-                         (ustring(cmd), ustring(str(e))))
+                         (ustring(cmd), unicode(e)))
             return data
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

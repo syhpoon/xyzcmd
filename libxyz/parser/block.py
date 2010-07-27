@@ -225,7 +225,7 @@ class BlockParser(BaseParser):
                     self._varname = self.var_transform(word)
                 except XYZValueError, e:
                     self.error(_(u"Variable transformation error: %s") %
-                               libxyz.core.utils.ustring(str(e)))
+                               libxyz.core.utils.unicode(e))
             else:
                 self._varname = word
 

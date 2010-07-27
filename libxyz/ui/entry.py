@@ -114,7 +114,7 @@ class NumEntry(ListEntry):
                 self._enter_cb(_index)
             except Exception, e:
                 xyzlog.error(_(u"Error in entry callback: %s" %
-                           ustring(str(e))))
+                           unicode(e)))
                 xyzlog.debug(ustring(traceback.format_exc()))
 
             return key

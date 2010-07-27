@@ -195,7 +195,7 @@ class XYZPlugin(BasePlugin):
         try:
             _file = self._ud.openfile(self._keysfile, "wb", self._keyssubdir)
         except XYZRuntimeError, e:
-            raise PluginError(_(u"Unable to open file: %s" % ustring(str(e))))
+            raise PluginError(_(u"Unable to open file: %s" % unicode(e)))
 
         try:
             cPickle.dump(data, _file)

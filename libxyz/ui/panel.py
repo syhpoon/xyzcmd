@@ -114,7 +114,7 @@ class Panel(lowui.WidgetWrap):
                 rule = libxyz.core.FSRule(ustring(f))
             except libxyz.exceptions.ParseError, e:
                 xyzlog.error(_(u"Error compiling filter: %s" %
-                               ustring(str(e))))
+                               unicode(e)))
                 continue
             else:
                 filters.append(rule)
@@ -162,7 +162,7 @@ class Panel(lowui.WidgetWrap):
                     self._cmd.keypress(_dim, _input)
                 except Exception, e:
                     xyzlog.error(_(u"Error executing bind (%s): %s") %
-                                 (Shortcut(_input), ustring(str(e))))
+                                 (Shortcut(_input), unicode(e)))
                     xyzlog.debug(ustring(traceback.format_exc(),
                                          self._enc))
 
@@ -1384,7 +1384,7 @@ class Block(lowui.FlowWidget):
         try:
             _rule = libxyz.core.FSRule(ustring(_raw, self._enc))
         except libxyz.exceptions.ParseError, e:
-            xyzlog.error(ustring(str(e)))
+            xyzlog.error(unicode(e))
             return
 
         try:
@@ -1397,7 +1397,7 @@ class Block(lowui.FlowWidget):
         except libxyz.exceptions.FSRuleError, e:
             self._tagged = []
 
-            xyzlog.error(ustring(str(e)))
+            xyzlog.error(unicode(e))
             return
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1495,7 +1495,7 @@ class Block(lowui.FlowWidget):
             try:
                 _action(_selected)
             except Exception, e:
-                xyzlog.error(_(u"Action error: %s") % (ustring(str(e))))
+                xyzlog.error(_(u"Action error: %s") % (unicode(e)))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

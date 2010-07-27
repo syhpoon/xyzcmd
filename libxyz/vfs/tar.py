@@ -395,10 +395,10 @@ class TarVFSObject(vfsobj.VFSObject):
             os.chown(dst, obj.uid, obj.gid)
         except Exception, e:
             xyzlog.warning(_(u"Unable to chown %s: %s") %
-                           (ustring(dst), ustring(str(e))))
+                           (ustring(dst), unicode(e)))
 
         try:
             os.chmod(dst, obj.mode)
         except Exception, e:
             xyzlog.warning(_(u"Unable to chmod %s: %s") %
-                           (ustring(dst), ustring(str(e))))
+                           (ustring(dst), unicode(e)))

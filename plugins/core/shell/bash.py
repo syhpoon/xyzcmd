@@ -42,4 +42,4 @@ def bash_setup(path):
                 if match:
                     XYZ.alias(match.group(1), match.group(2))
     except Exception, e:
-        xyzlog.warning(_(u"Error setting up bash: %s") % ustring(str(e)))
+        xyzlog.warning(_(u"Error setting up bash: %s") % unicode(e))

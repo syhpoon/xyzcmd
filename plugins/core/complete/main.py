@@ -58,7 +58,7 @@ class XYZPlugin(BasePlugin):
             self.conf["behaviour"] = behaviour
         except Exception, e:
             xyzlog.warning(_(u"Error ininitalizing plugin: %s") %
-                           (ustring(str(e))))
+                           (unicode(e)))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

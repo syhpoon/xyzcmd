@@ -163,7 +163,7 @@ class XYZPlugin(BasePlugin):
             f.write("\n".join(data))
         except XYZRuntimeError, e:
             xyzlog.info(_(u"Unable to open where data file: %s")
-                        % ustring(str(e)))
+                        % unicode(e))
         if f:
             f.close()
 

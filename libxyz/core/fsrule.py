@@ -511,7 +511,7 @@ class FSRule(parser.BaseParser):
                     _cur.arg = self.TRANSFORM_EXTENDED[_cur.otype](_arg)
                 except Exception, e:
                     self.error(_(u"Error in calling extended transformation "\
-                                 u"function: %s") % ustring(str(e)))
+                                 u"function: %s") % unicode(e))
             else:
                 _cur.arg = _arg
 
@@ -809,7 +809,7 @@ class Expression(object):
                 _res = self.MATCH_EXTENDED[self.otype](vfsobj, self.arg)
             except Exception, e:
                 self.error(_(u"Error in calling extended match "\
-                             u"function: %s") % ustring(str(e)))
+                             u"function: %s") % unicode(e))
         else:
             raise FSRuleError(_(u"Unable to find match function for token: %s")
                               % self.otype)

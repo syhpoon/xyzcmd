@@ -250,7 +250,7 @@ class PluginManager(object):
                     _cb(inst, *_args)
                 except Exception, e:
                     xyzlog.warning(_(u"Error in wait_for() callback: %s" %
-                               ustring(str(e))))
+                               unicode(e)))
             del(self._waiting[plugin.pfull])
 
         self._loaded[plugin.pfull] = inst

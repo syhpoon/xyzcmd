@@ -42,7 +42,7 @@ class ActionManager(object):
         except Exception, e:
             raise XYZRuntimeError(
                 _(u"Unable to register action: invalid rule: %s") % 
-                ustring(str(e)))
+                unicode(e))
         
         self._actions.insert(0, (_rule, fn))
 

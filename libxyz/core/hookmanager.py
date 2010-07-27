@@ -71,7 +71,7 @@ class HookManager(object):
             except Exception, e:
                 xyzlog.error(
                     _(u"Error running callback procedure for event %s") %
-                    ustring(str(e)))
+                    unicode(e))
 
                 xyzlog.debug(ustring(traceback.format_exc()))
 

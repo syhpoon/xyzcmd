@@ -238,7 +238,7 @@ class XYZ(object):
             cls.xyz.km.load(plugin)
         except Exception, e:
             error(_(u"Unable to load plugin %s: %s") %
-                  (plugin, ustring(str(e))))
+                  (plugin, unicode(e)))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -253,7 +253,7 @@ class XYZ(object):
             cls.xyz.km.bind(method, shortcut, context=context)
         except Exception, e:
             error(_(u"Unable to bind shortcut %s: %s") % (str(shortcut),
-                                                          ustring(str(e))))
+                                                          unicode(e)))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -281,8 +281,7 @@ class XYZ(object):
             f = open(filename)
             cls.execute(f.read())
         except Exception, e:
-            error(_(u"Unable to execute file%s") % (
-                ustring(str(e))))
+            error(_(u"Unable to execute file: %s") % unicode(e))
 
         if f:
             f.close()
@@ -299,7 +298,7 @@ class XYZ(object):
         try:
             cls.xyz.am.register(rule, fn)
         except Exception, e:
-            error(_(u"Unable to register action: %s") % ustring(str(e)))
+            error(_(u"Unable to register action: %s") % unicode(e))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -327,7 +326,7 @@ class XYZ(object):
                 return cls.macros[macroname]()
             except Exception, e:
                 xyzlog.warning(_(u"Unable to expand macro %s: %s") %
-                               (ustring(macroname), ustring(str(e))))
+                               (ustring(macroname), unicode(e)))
         # Return unchanged
         return macroname
 
@@ -346,7 +345,7 @@ class XYZ(object):
             return m(*args, **kwargs)
         except Exception, e:
             error(_(u"Unable to execute method %s: %s" %
-                    (method, ustring(str(e)))))
+                    (method, unicode(e))))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -398,7 +397,7 @@ class XYZ(object):
             if reloadp:
                 reloadf()
         except Exception, e:
-            error(_(u"Error in DSL shell execution: %s") % ustring(str(e)))
+            error(_(u"Error in DSL shell execution: %s") % unicode(e))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -513,7 +512,7 @@ class XYZ(object):
         try:
             return cls.xyz.vfs.register(prefix, vfsclass)
         except Exception, e:
-            error(_(u"Error setting VFS prefix: %s") % ustring(str(e)))
+            error(_(u"Error setting VFS prefix: %s") % unicode(e))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -539,7 +538,7 @@ class XYZ(object):
         try:
             return cls.xyz.hm.register(event, proc)
         except Exception, e:
-            error(_(u"Error registering new hook: %s") % ustring(str(e)))
+            error(_(u"Error registering new hook: %s") % unicode(e))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -564,7 +563,7 @@ class XYZ(object):
         try:
             return FSRule(rule)
         except Exception, e:
-            error(_(u"Error parsing FSRule: %s") % ustring(str(e)))
+            error(_(u"Error parsing FSRule: %s") % unicode(e))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -588,7 +587,7 @@ class XYZ(object):
         try:
             return Palette(None, *Palette.convert(config))
         except Exception, e:
-            error(_(u"Error creating Palette instance: %s") % ustring(str(e)))
+            error(_(u"Error creating Palette instance: %s") % unicode(e))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -602,7 +601,7 @@ class XYZ(object):
         try:
             cls.xyz.sm.add(Skin(**kwargs))
         except Exception, e:
-            error(_(u"Error creating Skin instance: %s") % ustring(str(e)))
+            error(_(u"Error creating Skin instance: %s") % unicode(e))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -617,7 +616,7 @@ class XYZ(object):
         try:
             exec source in cls._env.copy()
         except Exception, e:
-            error(_(u"Error in DSL execution: %s") % ustring(str(e)))
+            error(_(u"Error in DSL execution: %s") % unicode(e))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
