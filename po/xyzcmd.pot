@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-07-28 01:14+EEST\n"
+"POT-Creation-Date: 2010-07-28 01:37+EEST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,51 +39,51 @@ msgstr ""
 msgid "Unable to execute file: %s"
 msgstr ""
 
-#: ./libxyz/core/dsl.py:302
+#: ./libxyz/core/dsl.py:301
 msgid "Unable to register action: %s"
 msgstr ""
 
-#: ./libxyz/core/dsl.py:329
+#: ./libxyz/core/dsl.py:328
 msgid "Unable to expand macro %s: %s"
 msgstr ""
 
-#: ./libxyz/core/dsl.py:401
+#: ./libxyz/core/dsl.py:400
 msgid "Error in DSL shell execution: %s"
 msgstr ""
 
-#: ./libxyz/core/dsl.py:425
+#: ./libxyz/core/dsl.py:424
 msgid "Invalid object type: %s. Function expected"
 msgstr ""
 
-#: ./libxyz/core/dsl.py:467
+#: ./libxyz/core/dsl.py:466
 msgid "Invalid opts type: %s. Dict instance expected"
 msgstr ""
 
-#: ./libxyz/core/dsl.py:495
+#: ./libxyz/core/dsl.py:494
 msgid "Invalid function %s"
 msgstr ""
 
-#: ./libxyz/core/dsl.py:516
+#: ./libxyz/core/dsl.py:515
 msgid "Error setting VFS prefix: %s"
 msgstr ""
 
-#: ./libxyz/core/dsl.py:542
+#: ./libxyz/core/dsl.py:541
 msgid "Error registering new hook: %s"
 msgstr ""
 
-#: ./libxyz/core/dsl.py:567
+#: ./libxyz/core/dsl.py:566
 msgid "Error parsing FSRule: %s"
 msgstr ""
 
-#: ./libxyz/core/dsl.py:591
+#: ./libxyz/core/dsl.py:590
 msgid "Error creating Palette instance: %s"
 msgstr ""
 
-#: ./libxyz/core/dsl.py:605
+#: ./libxyz/core/dsl.py:604
 msgid "Error creating Skin instance: %s"
 msgstr ""
 
-#: ./libxyz/core/dsl.py:620
+#: ./libxyz/core/dsl.py:619
 msgid "Error in DSL execution: %s"
 msgstr ""
 
