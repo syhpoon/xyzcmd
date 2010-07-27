@@ -38,7 +38,7 @@ class LocalVFSObject(vfsobj.VFSObject):
     """
 
     ### Public API
-    
+
     def walk(self):
         """
         Directory tree walker
@@ -56,6 +56,7 @@ class LocalVFSObject(vfsobj.VFSObject):
 
         _dirs.sort()
         _files.sort()
+
         _parent = self.xyz.vfs.get_parent(_dir, self.enc)
 
         get_path = lambda x: os.path.abspath(os.path.join(self.path, x))
@@ -77,7 +78,7 @@ class LocalVFSObject(vfsobj.VFSObject):
                 os.rmdir(self.path)
         else:
             os.unlink(self.path)
-    
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def mkdir(self, newdir):
@@ -96,7 +97,7 @@ class LocalVFSObject(vfsobj.VFSObject):
 
     def copy(self, path, existcb=None, errorcb=None, save_attrs=True,
              follow_links=False, cancel=None):
-        
+
         env = {
             'override': 'abort',
             'error': 'abort'
@@ -186,11 +187,11 @@ class LocalVFSObject(vfsobj.VFSObject):
 
             if os.path.isdir(src) and not os.path.exists(dst):
                 os.makedirs(dst)
-                
+
             files = os.listdir(src)
 
             cancel = kwargs.get('cancel', None)
-            
+
             for f in files:
                 if cancel is not None and cancel.isSet():
                     raise StopIteration()
@@ -202,7 +203,7 @@ class LocalVFSObject(vfsobj.VFSObject):
                     fun = _move_dir
                 else:
                     fun = _move_file
-                    
+
                 fun(srcobj, dstobj, *args, **kwargs)
 
             try:
@@ -233,7 +234,7 @@ class LocalVFSObject(vfsobj.VFSObject):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ## Internal stuff
-    
+
     def _prepare(self):
         self.ftype = self._find_type(self.path)
         self.vtype = self.ftype.vtype
@@ -241,7 +242,7 @@ class LocalVFSObject(vfsobj.VFSObject):
         self._set_attributes()
 
         _time = lambda x: ustring(time.ctime(x))
-                
+
         self.attributes = (
             (_(u"Name"), ustring(self.name)),
             (_(u"Type"), ustring(self.ftype)),
@@ -286,7 +287,7 @@ class LocalVFSObject(vfsobj.VFSObject):
             return "%s (%s)" % (bstring(gid), _name)
         else:
             return bstring(gid)
-        
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _find_type(self, path):
@@ -300,7 +301,7 @@ class LocalVFSObject(vfsobj.VFSObject):
             raise VFSError(_(u"Unable to stat file %s: %s" % (path, str(e))))
 
         return util.get_file_type(self._stat.st_mode)
-    
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _set_attributes(self):
@@ -419,7 +420,7 @@ class LocalVFSObject(vfsobj.VFSObject):
                     raise XYZRuntimeError()
 
         return False
-    
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _copy_dir(self, src, dst, existcb, errorcb, save_attrs,
@@ -435,7 +436,7 @@ class LocalVFSObject(vfsobj.VFSObject):
         if not follow_links and os.path.islink(src):
             linkto = os.readlink(src)
             os.symlink(linkto, dst)
-            
+
             return True
 
         if os.path.isdir(src) and not os.path.exists(dst):
