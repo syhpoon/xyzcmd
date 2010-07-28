@@ -86,7 +86,10 @@ skin(name="monochrome",
                  "background": "DEFAULT"})
               ),
              ("cursor", BG_PALETTE({"foreground": "BLACK"})),
-             ("search", BG_PALETTE({"foreground": "WHITE"})),
+             ("search", BG_PALETTE(
+                 {"foreground": "WHITE",
+                  "background_high": "g50"
+                  })),
              ("info", palette({
                  "foreground": "WHITE",
                  "background": "DEFAULT"})
