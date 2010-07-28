@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-07-28 01:37+EEST\n"
+"POT-Creation-Date: 2010-07-28 23:13+EEST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -281,7 +281,7 @@ msgid "Only one of the arguments must be provided"
 msgstr ""
 
 #: ./libxyz/vfs/dispatcher.py:52
-msgid "Invalid class: %s. VFSObject dervied expected."
+msgid "Invalid class: %s. VFSObject derived expected."
 msgstr ""
 
 #: ./libxyz/vfs/dispatcher.py:68
