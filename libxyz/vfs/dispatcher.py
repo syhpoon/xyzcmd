@@ -49,7 +49,7 @@ class VFSDispatcher(object):
 
         if not issubclass(vfs_obj_class, VFSObject):
             raise VFSError(
-                _(u"Invalid class: %s. VFSObject dervied expected.") %
+                _(u"Invalid class: %s. VFSObject derived expected.") %
                 str(vfs_obj_class))
 
         self._handlers[prefix] = vfs_obj_class
