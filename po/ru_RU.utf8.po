@@ -155,96 +155,96 @@ msgstr "Ошибка разбора системного конфигураци�
 
 #: libxyz/launcher.py:308
 msgid "Error parsing user config %s: %s"
-msgstr ""
+msgstr "Ошибка разбора пользовательского конфигурационного файла %s: %s"
 
 #: libxyz/launcher.py:341
 msgid "Error parsing config %s: %s"
-msgstr ""
+msgstr "Ошибка разбора конфигурационного файла %s: %s"
 
 #: libxyz/parser/base.py:27
 msgid "Must be implemented in child class"
-msgstr ""
+msgstr "Должно быть реализовано в дочернем классе"
 
 #: libxyz/parser/base.py:41
 msgid "Parse error"
-msgstr ""
+msgstr "Ошибка разбора"
 
 #: libxyz/parser/base.py:50
 msgid "Syntax error"
-msgstr ""
+msgstr "Синтаксическая ошибка"
 
 #: libxyz/parser/block.py:219
 msgid "Unknown variable %s"
-msgstr ""
+msgstr "Неизвестная переменная %s"
 
 #: libxyz/parser/block.py:221
 msgid "Invalid variable name: %s"
-msgstr ""
+msgstr "Неверное имя переменной: %s"
 
 #: libxyz/parser/block.py:227
 msgid "Variable transformation error: %s"
-msgstr ""
+msgstr "Ошибка преобразования переменной: %s"
 
 #: libxyz/parser/block.py:342 libxyz/parser/lexer.py:170
 msgid "Unterminated quote"
-msgstr ""
+msgstr "Незакрытая кавычка"
 
 #: libxyz/parser/block.py:346
 msgid "Unclosed block"
-msgstr ""
+msgstr "Незакрытый блок"
 
 #: libxyz/parser/flat.py:227
 msgid "Unterminated expression"
-msgstr ""
+msgstr "Незавершенное выражение"
 
 #: libxyz/parser/sourcedata.py:48
 msgid "Source string"
-msgstr ""
+msgstr "Исходная строка"
 
 #: libxyz/ui/box_error.py:27 plugins/vfs/vfsutils/main.py:138
 msgid "Error"
-msgstr ""
+msgstr "Ошибка"
 
 #: libxyz/ui/box_input.py:48
 msgid "Press ENTER to submit value. ESCAPE to quit"
-msgstr ""
+msgstr "Нажмите ENTER чтобы ввести значение. ESCAPE - чтобы выйти"
 
 #: libxyz/ui/box_yesno.py:28 plugins/vfs/vfsutils/main.py:107
 #: plugins/vfs/vfsutils/main.py:194
 msgid "Yes"
-msgstr ""
+msgstr "Да"
 
 #: libxyz/ui/box_yesno.py:29 plugins/vfs/vfsutils/main.py:108
 msgid "No"
-msgstr ""
+msgstr "Нет"
 
 #: libxyz/ui/cmd.py:119
 msgid "Unable to open history data file: %s"
-msgstr ""
+msgstr "Невозможно открыть файл-историю: %s"
 
 #: libxyz/ui/cmd.py:615
 msgid "Unable to execute commands on non-local filesystems"
-msgstr ""
+msgstr "Невозможно выполнять команды на нелокальных файловых системах"
 
 #: libxyz/ui/cmd.py:636
 msgid "Error executing internal command %s: %s"
-msgstr ""
+msgstr "Ошибка выполнения внутренней команды %s: %s"
 
 #: libxyz/ui/cmd.py:672
 msgid "Invalid alias type: %s"
-msgstr ""
+msgstr "Неверный тип алиаса: %s"
 
 #: libxyz/ui/cmd.py:680
 msgid "Unable to replace an alias %s: %s"
-msgstr ""
+msgstr "Невозможно заменить алиас %s: %s"
 
 #: libxyz/ui/cmd.py:785
 msgid "History"
-msgstr ""
+msgstr "История"
 
 #: libxyz/ui/panel.py:164
 msgid "Error executing bind (%s): %s"
-msgstr ""
+msgstr "Ошибка выполнения (%s): %s"
 
 #: libxyz/ui/panel.py:294
 msgid "Really quit %s?"
@@ -252,103 +252,103 @@ msgstr "Действительно выйти из %s?"
 
 #: libxyz/ui/panel.py:1015
 msgid "%s bytes (%d)"
-msgstr ""
+msgstr "%s байт (%d)"
 
 #: libxyz/ui/panel.py:1369
 msgid "Tag group"
-msgstr ""
+msgstr "Отметить группу"
 
 #: libxyz/ui/panel.py:1371
 msgid "Untag group"
-msgstr ""
+msgstr "Снять отметку"
 
 #: libxyz/ui/panel.py:1374
 msgid "Type FS Rule"
-msgstr ""
+msgstr "Введите FS Rule"
 
 #: libxyz/ui/panel.py:1498
 msgid "Action error: %s"
-msgstr ""
+msgstr "Ошибка: %s"
 
 #: libxyz/ui/panel.py:1533 libxyz/ui/panel.py:1540
 msgid "Unable to chdir to %s: %s"
-msgstr ""
+msgstr "Невозможно перейти в %s: %s"
 
 #: libxyz/ui/panel.py:1620
 msgid "TAGGED"
-msgstr ""
+msgstr "ОТМЕТКА"
 
 #: libxyz/ui/shortcut.py:30
 msgid "Only one of the arguments must be provided"
-msgstr ""
+msgstr "Необходимо предоставить только один из аргументов"
 
 #: libxyz/vfs/dispatcher.py:52
-msgid "Invalid class: %s. VFSObject dervied expected."
-msgstr ""
+msgid "Invalid class: %s. VFSObject derived expected."
+msgstr "Неверный класс: %s. Требуется дочерний от VFSObject"
 
 #: libxyz/vfs/dispatcher.py:68
 msgid "Invalid path: %s."
-msgstr ""
+msgstr "Неверный путь: %s."
 
 #: libxyz/vfs/dispatcher.py:77
 msgid "Unable to find VFS handler for %s."
-msgstr ""
+msgstr "Невозможно найти обработчик для %s."
 
 #: libxyz/vfs/local.py:54
 msgid "Unable to walk on %s"
-msgstr ""
+msgstr "Невозможно перейти в %s"
 
 #: libxyz/vfs/local.py:92
 msgid "Unable to create directory inside %s object type"
-msgstr ""
+msgstr "Невозможно создать каталог внутри объекта типа %s"
 
 #: libxyz/vfs/local.py:248 libxyz/vfs/tar.py:144 libxyz/vfs/zip.py:147
 msgid "Name"
-msgstr ""
+msgstr "Имя"
 
 #: libxyz/vfs/local.py:249 libxyz/vfs/tar.py:145 libxyz/vfs/zip.py:148
 msgid "Type"
-msgstr ""
+msgstr "Тип"
 
 #: libxyz/vfs/local.py:250
 msgid "Access time"
-msgstr ""
+msgstr "Дата доступа"
 
 #: libxyz/vfs/local.py:251 libxyz/vfs/tar.py:146 libxyz/vfs/zip.py:149
 msgid "Modification time"
-msgstr ""
+msgstr "Дата изменения данных (mtime)"
 
 #: libxyz/vfs/local.py:252
 msgid "Change time"
-msgstr ""
+msgstr "Дата изменения inode (ctime)"
 
 #: libxyz/vfs/local.py:253 libxyz/vfs/tar.py:147 libxyz/vfs/zip.py:150
 msgid "Size in bytes"
-msgstr ""
+msgstr "Размер в байтах"
 
 #: libxyz/vfs/local.py:254 libxyz/vfs/tar.py:148 libxyz/vfs/zip.py:151
 msgid "Owner"
-msgstr ""
+msgstr "Владелец"
 
 #: libxyz/vfs/local.py:255 libxyz/vfs/tar.py:149 libxyz/vfs/zip.py:152
 msgid "Group"
-msgstr ""
+msgstr "Группа"
 
 #: libxyz/vfs/local.py:256 libxyz/vfs/tar.py:150 libxyz/vfs/zip.py:153
 msgid "Access mode"
-msgstr ""
+msgstr "Режим доступа"
 
 #: libxyz/vfs/local.py:257
 msgid "Inode"
-msgstr ""
+msgstr "Inode"
 
 #: libxyz/vfs/local.py:258 libxyz/vfs/tar.py:151 libxyz/vfs/zip.py:154
 msgid "Type-specific data"
-msgstr ""
+msgstr "Дополнительные данные"
 
 #: libxyz/vfs/local.py:327
 msgid "Error creating VFS object: %s"
-msgstr ""
+msgstr "Ошибка создания VFS объекта: %s"
 
 #: libxyz/vfs/tar.py:397 libxyz/vfs/zip.py:400
 msgid "Unable to chown %s: %s"
