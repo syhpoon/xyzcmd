@@ -308,7 +308,7 @@ class XYZ(object):
         """
         Expand macro name.
 
-        Availbale macros:
+        Available macros:
         * ACT_CWD        -- Working directory in active panel
         * INACT_CWD      -- Working directory in inactive panel
         * ACT_PATH       -- Full selected object path in active panel
