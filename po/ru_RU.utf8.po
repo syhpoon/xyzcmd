@@ -352,43 +352,43 @@ msgstr "Ошибка создания VFS объекта: %s"
 
 #: libxyz/vfs/tar.py:397 libxyz/vfs/zip.py:400
 msgid "Unable to chown %s: %s"
-msgstr ""
+msgstr "Невозможно изменить владельца %s: %s"
 
 #: libxyz/vfs/tar.py:403 libxyz/vfs/zip.py:406
 msgid "Unable to chmod %s: %s"
-msgstr ""
+msgstr "Невозможно изменить права доступа %s: %s"
 
 #: libxyz/vfs/vfsobj.py:86
 msgid "Feature not implemented"
-msgstr ""
+msgstr "Данная функция не реализована"
 
 #: plugins/core/bindlist/main.py:50
 msgid "Bind"
-msgstr ""
+msgstr "Привязать"
 
 #: plugins/core/bindlist/main.py:50
 msgid "Context"
-msgstr ""
+msgstr "Контекст"
 
 #: plugins/core/bindlist/main.py:50
 msgid "Method"
-msgstr ""
+msgstr "Метод"
 
 #: plugins/core/bindlist/main.py:67
 msgid "Keybindings"
-msgstr ""
+msgstr "Комбинации клавиш"
 
 #: plugins/core/complete/main.py:60
 msgid "Error ininitalizing plugin: %s"
-msgstr ""
+msgstr "Ошибка инициализации плагина: %s"
 
 #: plugins/core/complete/main.py:161
 msgid "Complete"
-msgstr ""
+msgstr "Дополнения"
 
 #: plugins/core/console/main.py:59
 msgid "Management console"
-msgstr ""
+msgstr "Консоль управления"
 
 #: plugins/core/keycodes/main.py:119
 msgid ""
@@ -396,262 +396,271 @@ msgid ""
 "Press ENTER to skip key\n"
 "Press ESCAPE to quit dialog"
 msgstr ""
+"Пожалуйста нажмите клавишу %s\n"
+"Нажмите ENTER чтобы пропустить текущую клавишу\n"
+"Нажмите ESCAPE чтобы выйти"
 
 #: plugins/core/keycodes/main.py:138
 msgid "Save learned keys?"
-msgstr ""
+msgstr "Сохранить данные?"
 
 #: plugins/core/keycodes/main.py:204
 msgid "Unable to save learned data"
-msgstr ""
+msgstr "Невозможно сохранить данные"
 
 #: plugins/core/pluginlist/main.py:41
 msgid "Fires upon showing dialog. Arguments: No"
-msgstr ""
+msgstr "Запускается при показе диалоге. Аргументы: Нет"
 
 #: plugins/core/pluginlist/main.py:43
 msgid "Fires when showing detaild plugin info.Arguments: Plugin object"
-msgstr ""
+msgstr "Запускается при показе детальной информации о плагине. Аргументы: Объект плагина"
 
 #: plugins/core/pluginlist/main.py:73
 msgid "Active plugins list"
-msgstr ""
+msgstr "Список активных плагинов"
 
 #: plugins/core/pluginlist/main.py:132
 msgid "Public data"
-msgstr ""
+msgstr "Данные"
 
 #: plugins/core/pluginlist/main.py:150
 msgid "Public methods"
-msgstr ""
+msgstr "Методы"
 
 #: plugins/core/pluginlist/main.py:167
 msgid "N/A"
-msgstr ""
+msgstr "Н/Д"
 
 #: plugins/core/pluginlist/main.py:198
 msgid "Plugin doc"
-msgstr ""
+msgstr "Документация"
 
 #: plugins/core/pluginlist/main.py:205
 msgid "Plugin events"
-msgstr ""
+msgstr "События"
 
 #: plugins/core/shell/bash.py:45
 msgid "Error setting up bash: %s"
-msgstr ""
+msgstr "Ошибка настройки bash: %s"
 
 #: plugins/core/shell/main.py:24
 msgid "Shell wrapper"
-msgstr ""
+msgstr "Обёртка для системной оболчки"
 
 #: plugins/core/shell/main.py:25
 msgid "Execute commands in external shell"
-msgstr ""
+msgstr "Выполнение команд во внешней оболчке"
 
 #: plugins/core/shell/main.py:36
 msgid "Fires before command execution. Arguments: a command to be executed"
-msgstr ""
+msgstr "Запускается перед выполнением команды. Аргументы: команда"
 
 #: plugins/core/shell/main.py:178
 msgid "Press ENTER to continue..."
-msgstr ""
+msgstr "Нажмите ENTER для продолжения..."
 
 #: plugins/fsrules/magic/main.py:30
 msgid ""
 "Plugin extends FSRule functionality to match objects based on magic database "
 "description"
 msgstr ""
+"Плагин расширяет функцилнальность FSRule возможностью отмечать объекты в "
+"соответствии с базой magic"
 
 #: plugins/misc/where/main.py:19
 msgid "Save panels locations"
-msgstr ""
+msgstr "Сохранить расположения панелей"
 
 #: plugins/misc/where/main.py:20
 msgid "When starting load previously saved locations"
-msgstr ""
+msgstr "При старте, загрузить ранее сохранённые позиции"
 
 #: plugins/misc/where/main.py:165
 msgid "Unable to open where data file: %s"
-msgstr ""
+msgstr "Невозможно открыть файл с данными: %s"
 
 #: plugins/ui/bookmarks/main.py:144
 msgid "Bookmarks"
-msgstr ""
+msgstr "Закладки"
 
 #: plugins/ui/bookmarks/main.py:157
 msgid "Unable to open bookmarks file: %s"
-msgstr ""
+msgstr "Невозможно открыть файл закладок: %s"
 
 #: plugins/ui/bookmarks/main.py:166
 msgid "Error parsing bookmarks file: %s"
-msgstr ""
+msgstr "Ошибка разбора файла закладок: %s"
 
 #: plugins/ui/testinput/main.py:45
 msgid "Press any key. Escape twice to quit."
-msgstr ""
+msgstr "Нажмите любую клавишу. Нажмите Escape дважды чтобы выйти."
 
 #: plugins/ui/testinput/main.py:51
 msgid "Input test"
-msgstr ""
+msgstr "Тест вводимых значений"
 
 #: plugins/vfs/fileinfo/main.py:59
 msgid "VFS Object Info"
-msgstr ""
+msgstr "Информация о VFS объекте"
 
 #: plugins/vfs/vfsutils/box_copy.py:34
 msgid "Source:"
-msgstr ""
+msgstr "Источник:"
 
 #: plugins/vfs/vfsutils/box_copy.py:36
 msgid "Destination:"
-msgstr ""
+msgstr "Назначение:"
 
 #: plugins/vfs/vfsutils/box_copy.py:41
 msgid "Save attributes"
-msgstr ""
+msgstr "Сохранить аттрибуты"
 
 #: plugins/vfs/vfsutils/box_copy.py:43
 msgid "Follow links"
-msgstr ""
+msgstr "Следовать по ссылкам"
 
 #: plugins/vfs/vfsutils/box_copy.py:48
 msgid "TAB to cycle. ENTER to submit. ESCAPE to cancel"
-msgstr ""
+msgstr "TAB - переключение полей. ENTER - ввод значения. ENTER - отмена"
 
 #: plugins/vfs/vfsutils/main.py:23
 msgid "Useful VFS routines"
-msgstr ""
+msgstr "Полезные утилиты VFS"
 
 #: plugins/vfs/vfsutils/main.py:24
 msgid "Dialogs for common VFS operations"
-msgstr ""
+msgstr "Диалоги для различных действий с VFS"
 
 #: plugins/vfs/vfsutils/main.py:51
 msgid "New directory name"
-msgstr ""
+msgstr "Название нового каталога"
 
 #: plugins/vfs/vfsutils/main.py:52
 msgid "Create directory"
-msgstr ""
+msgstr "Создать каталог"
 
 #: plugins/vfs/vfsutils/main.py:64
 msgid "Unable to create directory: %s"
-msgstr ""
+msgstr "Невозможно создать каталог: %s"
 
 #: plugins/vfs/vfsutils/main.py:86
 msgid "Really remove %d objects?"
-msgstr ""
+msgstr "Действительно удалить %d объектов?"
 
 #: plugins/vfs/vfsutils/main.py:89
 msgid "Really remove %s (%s)?"
-msgstr ""
+msgstr "Действительно удалить %s (%s)?"
 
 #: plugins/vfs/vfsutils/main.py:93
 msgid "Remove object"
-msgstr ""
+msgstr "Удалить объект"
 
 #: plugins/vfs/vfsutils/main.py:106 plugins/vfs/vfsutils/main.py:195
 msgid "All"
-msgstr ""
+msgstr "Все"
 
 #: plugins/vfs/vfsutils/main.py:109 plugins/vfs/vfsutils/main.py:198
 #: plugins/vfs/vfsutils/main.py:225
 msgid "Abort"
-msgstr ""
+msgstr "Прервать"
 
 #: plugins/vfs/vfsutils/main.py:116
 msgid ""
 "Directory is not empty\n"
 "Remove it recursively?"
 msgstr ""
+"Каталог не пустой\n"
+"Удалить рексурсивно?"
 
 #: plugins/vfs/vfsutils/main.py:118
 msgid "Remove %s"
-msgstr ""
+msgstr "Удалить %s"
 
 #: plugins/vfs/vfsutils/main.py:128
 msgid "Removing object: %s"
-msgstr ""
+msgstr "Удаление объекта: %s"
 
 #: plugins/vfs/vfsutils/main.py:130
 msgid "Removing"
-msgstr ""
+msgstr "Удаление"
 
 #: plugins/vfs/vfsutils/main.py:136
 msgid "Unable to remove object: %s"
-msgstr ""
+msgstr "Невозможно удалить объект: %s"
 
 #: plugins/vfs/vfsutils/main.py:139
 msgid "Error removing object: %s"
-msgstr ""
+msgstr "Ошибка удаления объекта: %s"
 
 #: plugins/vfs/vfsutils/main.py:161
 msgid "%d objects"
-msgstr ""
+msgstr "%d объектов"
 
 #: plugins/vfs/vfsutils/main.py:166
 msgid "Move"
-msgstr ""
+msgstr "Переместить"
 
 #: plugins/vfs/vfsutils/main.py:167
 msgid "Moving object: %s"
-msgstr ""
+msgstr "Перемещение объекта: %s"
 
 #: plugins/vfs/vfsutils/main.py:168
 msgid "Moving"
-msgstr ""
+msgstr "Перемещение"
 
 #: plugins/vfs/vfsutils/main.py:169
 msgid "Unable to move object: %s"
-msgstr ""
+msgstr "Невозможно переместить объект: %s"
 
 #: plugins/vfs/vfsutils/main.py:170
 msgid "Move error"
-msgstr ""
+msgstr "Ошибка перемещения"
 
 #: plugins/vfs/vfsutils/main.py:172
 msgid "Copy"
-msgstr ""
+msgstr "Копировать"
 
 #: plugins/vfs/vfsutils/main.py:173
 msgid "Copying object: %s"
-msgstr ""
+msgstr "Копирование объекта: %s"
 
 #: plugins/vfs/vfsutils/main.py:174
 msgid "Copying"
-msgstr ""
+msgstr "Копирование"
 
 #: plugins/vfs/vfsutils/main.py:175
 msgid "Unable to copy object: %s"
-msgstr ""
+msgstr "Невозможно скопировать объект: %s"
 
 #: plugins/vfs/vfsutils/main.py:176 plugins/vfs/vfsutils/main.py:233
 msgid "Copy error"
-msgstr ""
+msgstr "Ошибка копирования"
 
 #: plugins/vfs/vfsutils/main.py:178
 msgid ""
 "\n"
 "ESCAPE to abort"
 msgstr ""
+"\n"
+"ESCAPE - прервать"
 
 #: plugins/vfs/vfsutils/main.py:196 plugins/vfs/vfsutils/main.py:223
 msgid "Skip"
-msgstr ""
+msgstr "Пропустить"
 
 #: plugins/vfs/vfsutils/main.py:197 plugins/vfs/vfsutils/main.py:224
 msgid "Skip all"
-msgstr ""
+msgstr "Пропустить всё"
 
 #: plugins/vfs/vfsutils/main.py:206
 msgid "Object %s already exists. Really override?"
-msgstr ""
+msgstr "Объект %s уже существует. Перезаписать?"
 
 #: plugins/vfs/vfsutils/main.py:207
 msgid "Override %s"
-msgstr ""
+msgstr "Перезаписать %s"
 
 #: plugins/vfs/vfsutils/main.py:231
 msgid "An error occured %s: %s"
-msgstr ""
+msgstr "Произошла ошибка %s: %s"

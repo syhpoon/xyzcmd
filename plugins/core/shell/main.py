@@ -124,7 +124,7 @@ class XYZPlugin(BasePlugin):
         Print prompt and wait for the key to be pressed
         """
 
-        sys.stdout.write(msg)
+        sys.stdout.write(bstring(msg))
         sys.stdout.flush()
         
         while True:

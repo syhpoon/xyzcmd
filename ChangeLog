@@ -8,6 +8,7 @@ Overview
 --------
 * Heavy VFS walker optimization: 36 to 42 times faster to enter the directory,
   and a lot less memeory intensive as well.
+* New Russian translation.
 
 Plugins
 -------
@@ -21,6 +22,11 @@ Plugins
 Configuration
 -------------
 * New icmd - exit.
+
+I18N
+----
+* Added infrastructure for i18n.
+* Added new Russian translation.
 
 Version 0.0.4
 =============
