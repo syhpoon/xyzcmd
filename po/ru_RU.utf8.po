@@ -364,7 +364,7 @@ msgstr "Данная функция не реализована"
 
 #: plugins/core/bindlist/main.py:50
 msgid "Bind"
-msgstr "Привязать"
+msgstr "Привязка"
 
 #: plugins/core/bindlist/main.py:50
 msgid "Context"
@@ -465,7 +465,7 @@ msgid ""
 "Plugin extends FSRule functionality to match objects based on magic database "
 "description"
 msgstr ""
-"Плагин расширяет функцилнальность FSRule возможностью отмечать объекты в "
+"Плагин расширяет функциональность FSRule возможностью отмечать объекты в "
 "соответствии с базой magic"
 
 #: plugins/misc/where/main.py:19
@@ -474,7 +474,7 @@ msgstr "Сохранить расположения панелей"
 
 #: plugins/misc/where/main.py:20
 msgid "When starting load previously saved locations"
-msgstr "При старте, загрузить ранее сохранённые позиции"
+msgstr "При старте, загружает ранее сохранённые позиции"
 
 #: plugins/misc/where/main.py:165
 msgid "Unable to open where data file: %s"
