@@ -121,7 +121,7 @@ class XYZPlugin(BasePlugin):
                     break
                 elif _rec == CODE_ALL:
                     force = True
-                elif _rec == CODE_NO:
+                elif _rec in (CODE_NO, None):
                     continue
 
             uilib.MessageBox(self.xyz, self.xyz.top,
