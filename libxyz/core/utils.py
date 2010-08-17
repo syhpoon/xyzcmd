@@ -21,6 +21,7 @@ import copy
 import types
 
 from libxyz.parser import Lexer
+from libxyz.exceptions import XYZValueError
 
 def ustring(string, enc=None):
     """
@@ -177,3 +178,22 @@ def split_cmd(cmd):
             data.append(val)
 
     return data
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def typer(*types, **kw):
+    msg = kw.get('msg', _(u"Invalid argument type %s"))
+    error = kw.get('error', XYZValueError)
+
+    def _wrap1(fun):
+        def _wrap2(*args, **kwargs):
+            for t, arg in zip(types, args):
+                if t is not None:
+                    if not isinstance(arg, t):
+                        raise error(msg % str(type(arg)))
+
+            return fun(*args, **kwargs)
+
+        return _wrap2
+
+    return _wrap1
