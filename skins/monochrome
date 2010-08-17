@@ -10,7 +10,7 @@ skin(name="monochrome",
      rules = {
          "fs.rules": [
              (
-                 fsrule(r"type{dir}"),
+                 fsrule(r"type{dir} or (type{link} and link_type{dir})"),
                  palette({
                      "foreground": "WHITE",
                      "background": "DEFAULT",
