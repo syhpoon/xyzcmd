@@ -1508,10 +1508,6 @@ class Block(lowui.FlowWidget):
         If active is False do not call os.chdir
         """
 
-        import time
-
-        a = time.time()
-
         try:
             old_selected = self.entries[self.selected].name
         except IndexError:
@@ -1567,8 +1563,6 @@ class Block(lowui.FlowWidget):
         # Call chdir only for local objects
         if isinstance(self._vfsobj, LocalVFSObject) and active:
             os.chdir(path)
-
-        xyzlog.debug("chdir: %s: %s" % (path, str(time.time()-a)))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

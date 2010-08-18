@@ -188,8 +188,7 @@ def typer(*types, **kw):
     def _wrap1(fun):
         def _wrap2(*args, **kwargs):
             for t, arg in zip(types, args):
-                if t is not None:
-                    if not isinstance(arg, t):
+                if t is not None and not isinstance(arg, t):
                         raise error(msg % str(type(arg)))
 
             return fun(*args, **kwargs)

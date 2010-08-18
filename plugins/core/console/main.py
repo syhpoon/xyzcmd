@@ -172,3 +172,4 @@ class XYZPlugin(BasePlugin):
         """
 
         self.output.extend([lowui.Text(x) for x in bstring(msg).split("\n")])
+        

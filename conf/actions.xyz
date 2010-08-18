@@ -36,11 +36,11 @@ action(r'type{file} and iname{".*\\.exe$"}',
        lambda obj: shell("wine", obj.path))
 
 ## VFS
-action(r'name{"\\.tar$"}', lambda obj: call(":sys:panel:chdir",
-                                           vfs_path(obj.path, "tar")))
-action(r'name{"\\.tar.gz$"}', lambda obj: call(":sys:panel:chdir",
-                                              vfs_path(obj.path, "gztar")))
-action(r'name{"\\.tgz$"}', lambda obj: call(":sys:panel:chdir",
-                                            vfs_path(obj.path, "gztar")))
-action(r'name{"\\.tar.bz2$"}', lambda obj: call(":sys:panel:chdir",
-                                               vfs_path(obj.path, "bz2tar")))
+action(r'name{"\\.tar$"}',
+       lambda obj: call(":sys:panel:chdir", vfs_path(obj.full_path, "tar")))
+action(r'name{"\\.tar.gz$"}',
+       lambda obj: call(":sys:panel:chdir", vfs_path(obj.full_path, "gztar")))
+action(r'name{"\\.tgz$"}',
+       lambda obj: call(":sys:panel:chdir", vfs_path(obj.full_path, "gztar")))
+action(r'name{"\\.tar.bz2$"}',
+       lambda obj: call(":sys:panel:chdir", vfs_path(obj.full_path, "bz2tar")))

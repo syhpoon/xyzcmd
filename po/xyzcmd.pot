@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-07-30 00:24+EEST\n"
+"POT-Creation-Date: 2010-08-17 23:32+EEST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -141,6 +141,10 @@ msgstr ""
 
 #: ./libxyz/core/queue.py:43
 msgid "Max-size must be a positive integer number"
+msgstr ""
+
+#: ./libxyz/core/utils.py:185
+msgid "Invalid argument type %s"
 msgstr ""
 
 #: ./libxyz/launcher.py:243
