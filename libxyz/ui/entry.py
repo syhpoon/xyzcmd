@@ -151,6 +151,7 @@ class BlockEntries(list):
 
     def insert(self, idx, obj):
         list.insert(self, idx, obj)
+        self._set_palette(idx, obj)
         self.length = len(self)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -170,10 +171,7 @@ class BlockEntries(list):
             item = self.xyz.vfs.dispatch(self.trans(item))
 
             self[idx] = item
-
-            for _exp, _attr in self._rules.iteritems():
-                if _exp.match(self[idx]):
-                    self.palettes[idx] = _attr.name
+            self._set_palette(idx, item)
 
         return item
 
@@ -182,4 +180,11 @@ class BlockEntries(list):
     def __iter__(self):
         for i in xrange(self.length):
             yield self[i]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _set_palette(self, idx, item):
+        for _exp, _attr in self._rules.iteritems():
+            if _exp.match(item):
+                self.palettes[idx] = _attr.name
 
