@@ -69,8 +69,6 @@ class VFSDispatcher(object):
 
         handler = None
 
-        kw = {}
-
         for p, vfs in data:
             if vfs not in self._handlers:
                 raise VFSError(
@@ -78,9 +76,6 @@ class VFSDispatcher(object):
             else:
                 full_path = self.get_full_path(p, vfs, handler)
                 ext_path = self.get_ext_path(handler, vfs)
-                kwtmp = self.get_cache(p)
-                kw.update(kwtmp)
-                kw.update(kwargs)
 
                 handler = self._handlers[vfs](
                     self.xyz,
@@ -90,7 +85,7 @@ class VFSDispatcher(object):
                     vfs,
                     handler,
                     enc,
-                    **kw)
+                    **kwargs)
 
         return handler
 
@@ -122,9 +117,9 @@ class VFSDispatcher(object):
             self.clear_cache(path)
             del(self._cache_data[path])
 
-            data = {}
+            data = None
         else:
-            data = self._cache.get(path, {}).copy()
+            data = self._cache.get(path, None)
 
         # Update access timestamp
         if data:
@@ -145,7 +140,7 @@ class VFSDispatcher(object):
             pass
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def _parse_path(self, path):
         files = []
 
@@ -154,7 +149,7 @@ class VFSDispatcher(object):
         for entry in re.split(self.vfsre, path):
             if not entry:
                 entry = os.sep
-            
+
             vfs = self.vfsre2.search(entry)
 
             if driver is not None:
@@ -194,7 +189,7 @@ class VFSDispatcher(object):
             v = ""
 
         return p + v + path
-    
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def get_ext_path(self, parent, vfs):

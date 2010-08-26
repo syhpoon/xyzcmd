@@ -32,6 +32,15 @@ from libxyz.vfs import mode
 from libxyz.core.utils import ustring, bstring
 from libxyz.ui import BlockEntries
 
+def ensure_opened(func):
+    def wrap(self, *args, **kwargs):
+        if self.fileobj is None:
+            raise VFSError(_(u"Object must be opened before any operation"))
+        else:
+            return func(self, *args, **kwargs)
+
+    return wrap
+
 class LocalVFSObject(vfsobj.VFSObject):
     """
     Local VFS object is used to access local filesystem
@@ -232,6 +241,65 @@ class LocalVFSObject(vfsobj.VFSObject):
         except XYZRuntimeError:
             # Aborted
             return False
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def open(self, mode='r'):
+        """
+        Open self object in provided mode
+        """
+
+        if self.fileobj:
+            return self
+        else:
+            self.fileobj = open(self.path, mode)
+
+            return self
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def close(self):
+        """
+        Close self object
+        """
+
+        if self.fileobj is None:
+            return
+        else:
+            try:
+                self.fileobj.close()
+            finally:
+                self.fileobj = None
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @ensure_opened
+    def read(self, bytes=None):
+        """
+        Read bytes from self object
+        """
+
+        return self.fileobj.read(bytes)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @ensure_opened
+    def tell(self):
+        """
+        Tell file position
+        """
+
+        return self.fileobj.tell()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @ensure_opened
+    def seek(self, offset, whence=0):
+        """
+        Perform seek() on object
+        """
+
+        return self.fileobj.seek(offset, whence)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ## Internal stuff

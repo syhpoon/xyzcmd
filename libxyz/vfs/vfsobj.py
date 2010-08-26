@@ -28,12 +28,16 @@ class VFSObject(object):
                  enc=None, **kwargs):
         self.xyz = xyz
         self.enc = enc or xyzenc
+        # Internal VFS path
         self.path = bstring(path, self.enc)
+        # Full VFS path
         self.full_path = bstring(full_path, self.enc)
+        # External VFS path
         self.ext_path = bstring(ext_path, self.enc)
         self.parent = parent
         self.driver = driver
         self.kwargs = kwargs
+        self.fileobj = None
 
         # File name
         self.name = os.path.basename(self.path)
@@ -91,11 +95,11 @@ class VFSObject(object):
         """
         Return True if instance is representing regular file
         """
-        
+
         return isinstance(self.ftype, types.VFSTypeFile)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def is_dir(self):
         """
         Return True if instance is representing directory
@@ -145,7 +149,7 @@ class VFSObject(object):
         return isinstance(self.ftype, types.VFSTypeBlock)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def is_fifo(self):
         """
         Return True if instance is representing FIFO
@@ -202,9 +206,9 @@ class VFSObject(object):
         Move object
         Arguments are the same as for copy()
         """
-        
+
         raise NotImplementedError(self.__ni_msg)
-    
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def mkdir(self, newdir):
@@ -222,12 +226,57 @@ class VFSObject(object):
         """
 
         raise NotImplementedError(self.__ni_msg)
-    
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def walk(self):
         """
         Directory tree walker
+        """
+
+        raise NotImplementedError(self.__ni_msg)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def open(self, mode='r'):
+        """
+        Open self object in provided mode
+        """
+
+        raise NotImplementedError(self.__ni_msg)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def close(self):
+        """
+        Close self object
+        """
+
+        raise NotImplementedError(self.__ni_msg)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def read(self, bytes=None):
+        """
+        Read bytes from self object
+        """
+
+        raise NotImplementedError(self.__ni_msg)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def tell(self):
+        """
+        Tell file position
+        """
+
+        raise NotImplementedError(self.__ni_msg)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def seek(self, offset, whence=None):
+        """
+        Perform seek() on object
         """
 
         raise NotImplementedError(self.__ni_msg)
@@ -241,8 +290,17 @@ class VFSObject(object):
 
     def __unicode__(self):
         return ustring(self.__str__)
-    
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def _prepare(self):
         raise NotImplementedError(self.__ni_msg)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def __del__(self):
+        if self.fileobj:
+            try:
+                self.close()
+            except Exception:
+                pass

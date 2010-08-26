@@ -39,9 +39,10 @@ class TarVFSObject(vfsobj.VFSObject):
             return b()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     get_name = lambda self, x: os.path.basename(x.name.rstrip(os.path.sep))
     get_path = lambda self, x: os.path.join(self.ext_path, x.lstrip(os.sep))
+    get_int_path = lambda self, x: x.lstrip(os.sep)
 
     file_type_map = {
         lambda obj: obj.isfile(): vfstypes.VFSTypeFile(),
@@ -53,12 +54,10 @@ class TarVFSObject(vfsobj.VFSObject):
         }
 
     def __init__(self, *args, **kwargs):
-        self.tarobj = kwargs.get('tarobj', None)
-
         super(TarVFSObject, self).__init__(*args, **kwargs)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def walk(self):
         """
         Directory tree walker
@@ -82,7 +81,7 @@ class TarVFSObject(vfsobj.VFSObject):
                                          self.get_name(y)))
 
         if self.path == os.sep:
-            _parent = self.xyz.vfs.get_parent(self.parent.path, self.enc)
+            _parent = self.xyz.vfs.get_parent(self.parent.full_path, self.enc)
         else:
             _parent = self.xyz.vfs.dispatch(
                 self.get_path(os.path.dirname(self.path)), self.enc)
@@ -93,12 +92,12 @@ class TarVFSObject(vfsobj.VFSObject):
             self,
             BlockEntries(self.xyz, _dirs + _files,
                          lambda x: self.get_path(x.name))]
-                         
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def copy(self, path, existcb=None, errorcb=None, save_attrs=True,
              follow_links=False, cancel=None):
-        
+
         env = {
             'override': 'abort',
             'error': 'abort'
@@ -121,14 +120,71 @@ class TarVFSObject(vfsobj.VFSObject):
             return True
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
+    def open(self, mode='r'):
+        """
+        Open self object in provided mode
+        """
+
+        if self.fileobj:
+            return self
+        else:
+            self.fileobj = self.tarobj.extractfile(
+                self.get_int_path(self.path))
+
+            return self
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def close(self):
+        """
+        Close self object
+        """
+
+        if self.fileobj is None:
+            return
+        else:
+            try:
+                self.fileobj.close()
+            finally:
+                self.fileobj = None
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def read(self, bytes=None):
+        """
+        Read bytes from self object
+        """
+
+        return self.fileobj.read(bytes)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def tell(self):
+        """
+        Tell file position
+        """
+
+        return self.fileobj.tell()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def seek(self, offset, whence=0):
+        """
+        Perform seek() on object
+        """
+
+        return self.fileobj.seek(offset, whence)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def _prepare(self):
         if self.path == os.sep:
             self.root = True
         else:
             self.root = False
 
-        self.tarobj = self.kwargs.get("tarobj", None)
+        self.tarobj = self._find_tarobj()
 
         if self.root:
             self.obj = None
@@ -183,7 +239,7 @@ class TarVFSObject(vfsobj.VFSObject):
             return False
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def _find_type(self):
         """
         Find out file type
@@ -191,13 +247,13 @@ class TarVFSObject(vfsobj.VFSObject):
 
         if self.root:
             return self.parent.ftype
-        
+
         for k, v in self.file_type_map.iteritems():
             if k(self.obj):
                 return v
 
         return vfstypes.VFSTypeUnknown()
-    
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _set_attributes(self):
@@ -223,7 +279,7 @@ class TarVFSObject(vfsobj.VFSObject):
         self.mode = mode.Mode(self.either(self.parent.mode.raw,
                                           lambda: self.obj.mode), self.ftype)
         self.visual = "%s%s" % (self.vtype, self.name)
-                
+
         self.info = "%s %s" % (util.format_size(self.size), self.mode)
 
         if self.is_link():
@@ -246,7 +302,7 @@ class TarVFSObject(vfsobj.VFSObject):
             obj = tarobj.getmember(path)
         except KeyError:
             obj = tarobj.getmember(path + os.sep)
-        
+
         return obj
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -260,9 +316,9 @@ class TarVFSObject(vfsobj.VFSObject):
             elif self.driver == "bz2tar":
                 _mode = "r:bz2"
 
-            self.tarobj = tarfile.open(self.parent.path, mode=_mode)
-            self.xyz.vfs.set_cache(self.parent.path, {'tarobj': self.tarobj})
-    
+            self.tarobj = tarfile.open(fileobj=self.parent.open(), mode=_mode)
+            self.xyz.vfs.set_cache(self.parent.full_path, self.tarobj)
+
         return self.tarobj
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -318,7 +374,7 @@ class TarVFSObject(vfsobj.VFSObject):
                     raise XYZRuntimeError()
 
         return False
-    
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _copy_dir(self, src, dst, existcb, errorcb, save_attrs,
@@ -402,3 +458,12 @@ class TarVFSObject(vfsobj.VFSObject):
         except Exception, e:
             xyzlog.warning(_(u"Unable to chmod %s: %s") %
                            (ustring(dst), unicode(e)))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _find_tarobj(self):
+        """
+        Find tarobj in cache
+        """
+
+        return self.xyz.vfs.get_cache(self.parent.full_path) or None
