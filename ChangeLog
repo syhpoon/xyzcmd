@@ -6,10 +6,17 @@ Version 0.0.5
 
 Overview
 --------
-* Heavy VFS walker optimization: 36 to 42 times faster to enter the directory,
+* Nested VFS support
+* Heavy VFS walker optimization: 30 to 40 times faster to enter a directory,
   and a lot less memory intensive as well.
 * New Russian translation.
 * Development has moved to github (http://github.com/syhpoon/xyzcmd).
+
+VFS
+---
+* VFS subsystem now supports arbitrary nested VFS objects.
+* Local VFS objects walking optimization. Simple lazy instantiation allows
+  30 to 40 times faster to enter the directory.
 
 Plugins
 -------
