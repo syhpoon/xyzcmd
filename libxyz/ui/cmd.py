@@ -618,10 +618,12 @@ class Cmd(lowui.FlowWidget):
         if not self._data:
             return
 
-        self._save_history()
         _data = self.replace_aliases(bstring(u"".join(self._data)))
         _data = self.expand_user(_data)
         _cmd, _rest = _split_cmd(_data)
+
+        if _cmd:
+            self._save_history()
 
         # Do not run shell, execute internal command
         if _cmd in self.xyz.conf["commands"]:
@@ -635,7 +637,7 @@ class Cmd(lowui.FlowWidget):
             except Exception, e:
                 xyzlog.error(_("Error executing internal command %s: %s") %
                              (_cmd, unicode(e)))
-        else:
+        elif _cmd:
             if not hasattr(self, "_execf"):
                 self._execf = self.xyz.pm.from_load(":core:shell", "execute")
 
@@ -932,8 +934,11 @@ def _split_cmd(cmdline):
     """
 
     _r = split_cmd(cmdline)
+    _len = len(_r)
 
-    if len(_r) == 1:
+    if _len == 0:
+        return "", None
+    elif _len == 1:
         return _r[0], None
     else:
         return _r[0], _r[1]
