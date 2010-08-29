@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-08-29 05:11+EEST\n"
+"POT-Creation-Date: 2010-08-29 22:46+EEST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -252,31 +252,31 @@ msgstr ""
 msgid "Really quit %s?"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:1015
+#: ./libxyz/ui/panel.py:1016
 msgid "%s bytes (%d)"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:1369
+#: ./libxyz/ui/panel.py:1370
 msgid "Tag group"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:1371
+#: ./libxyz/ui/panel.py:1372
 msgid "Untag group"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:1374
+#: ./libxyz/ui/panel.py:1375
 msgid "Type FS Rule"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:1498
+#: ./libxyz/ui/panel.py:1499
 msgid "Action error: %s"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:1529 ./libxyz/ui/panel.py:1536
+#: ./libxyz/ui/panel.py:1530 ./libxyz/ui/panel.py:1537
 msgid "Unable to chdir to %s: %s"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:1614
+#: ./libxyz/ui/panel.py:1617
 msgid "TAGGED"
 msgstr ""
 
