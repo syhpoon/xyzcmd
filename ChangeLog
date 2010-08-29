@@ -10,8 +10,8 @@ Overview
 * Heavy VFS walker optimization: 30 to 40 times faster to enter a directory,
   and a lot less memory intensive as well.
 * New Russian translation.
-* Development has moved to github (http://github.com/syhpoon/xyzcmd).
 * XYZCommander manpage.
+* Development has moved to github (http://github.com/syhpoon/xyzcmd).
 
 VFS
 ---
@@ -43,6 +43,10 @@ I18N
 ----
 * Added infrastructure for i18n.
 * Added new Russian translation.
+
+Documentation
+-------------
+* Manpage added.
 
 Version 0.0.4
 =============
