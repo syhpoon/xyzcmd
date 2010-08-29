@@ -5,10 +5,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: XYZCommander VERSION\n"
-"POT-Creation-Date: 2010-07-28 00:46+EEST\n"
+"POT-Creation-Date: 2010-08-29 22:46+EEST\n"
 "PO-Revision-Date: 2010-07-28 00:48+ZONE\n"
 "Last-Translator: Max E. Kuznecov <mek@mek.uz.ua>\n"
 "Language-Team: ru <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: UTF-8\n"
@@ -39,115 +40,121 @@ msgstr "Невозможно связать клавиатурную комби�
 msgid "Unable to execute file: %s"
 msgstr "Невозможно выполнить файл: %s"
 
-#: libxyz/core/dsl.py:302
+#: libxyz/core/dsl.py:301
 msgid "Unable to register action: %s"
 msgstr "Невозможно зарегестрировать действие: %s"
 
-#: libxyz/core/dsl.py:329
+#: libxyz/core/dsl.py:328
 msgid "Unable to expand macro %s: %s"
 msgstr "Невозможно развернуть макрос %s: %s"
 
-#: libxyz/core/dsl.py:401
+#: libxyz/core/dsl.py:400
 msgid "Error in DSL shell execution: %s"
 msgstr "Ошибка при выполнении DSL оболочки: %s"
 
-#: libxyz/core/dsl.py:425
+#: libxyz/core/dsl.py:424
 msgid "Invalid object type: %s. Function expected"
 msgstr "Неверный тип объекта: %s. Ожидается функция"
 
-#: libxyz/core/dsl.py:467
+#: libxyz/core/dsl.py:466
 msgid "Invalid opts type: %s. Dict instance expected"
-msgstr ""
+msgstr "Неверный тип аргумента: %s. Ожидается словарь (dict)"
 
-#: libxyz/core/dsl.py:495
+#: libxyz/core/dsl.py:494
 msgid "Invalid function %s"
-msgstr ""
+msgstr "Неверная функция"
 
-#: libxyz/core/dsl.py:516
+#: libxyz/core/dsl.py:515
 msgid "Error setting VFS prefix: %s"
-msgstr ""
+msgstr "Ошибка установки VFS префикса: %s"
 
-#: libxyz/core/dsl.py:542
+#: libxyz/core/dsl.py:541
 msgid "Error registering new hook: %s"
-msgstr ""
+msgstr "Ошибка регистрации нового обработчика: %s"
 
-#: libxyz/core/dsl.py:567
+#: libxyz/core/dsl.py:566
 msgid "Error parsing FSRule: %s"
-msgstr ""
+msgstr "Ошибка разбора правила FSRule: %s"
 
-#: libxyz/core/dsl.py:591
+#: libxyz/core/dsl.py:590
 msgid "Error creating Palette instance: %s"
-msgstr ""
+msgstr "Ошибка создания экземпляра Palette: %s"
 
-#: libxyz/core/dsl.py:605
+#: libxyz/core/dsl.py:604
 msgid "Error creating Skin instance: %s"
-msgstr ""
+msgstr "Ошибка создания экземпляра Skin: %s"
 
-#: libxyz/core/dsl.py:620
+#: libxyz/core/dsl.py:619
 msgid "Error in DSL execution: %s"
-msgstr ""
+msgstr "Ошибка выполнения DSL: %s"
 
 #: libxyz/core/fsrule.py:125
 msgid "Error extending FSRule: token %s already registered"
-msgstr ""
+msgstr "Ошибка раширения FSRule: токен %s уже зарегестрирован"
 
 #: libxyz/core/fsrule.py:129
 msgid ""
 "Error extending FSRule: trans_func and match_func arguments must be "
 "functions."
-msgstr ""
+msgstr "Ошибка раширения FSRule: аргументы trans_func и match_func "
+"должны быть функциями."
 
 #: libxyz/core/fsrule.py:355
 msgid "Invalid argument type: %s, VFSObject expected"
-msgstr ""
+msgstr "Неверный тип аргумента: %s, ожидается VFSObject"
 
 #: libxyz/core/fsrule.py:513
 msgid "Error in calling extended transformation function: %s"
-msgstr ""
+msgstr "Ошибка вызова преобразующей функции: %s"
 
-#: libxyz/core/fsrule.py:640
+#: libxyz/core/fsrule.py:652
 msgid "Invalid size{} argument: %s"
-msgstr ""
+msgstr "Неверный аргумент выражения size{}: %s"
 
-#: libxyz/core/fsrule.py:811
+#: libxyz/core/fsrule.py:826
 msgid "Error in calling extended match function: %s"
-msgstr ""
+msgstr "Ошибка вызова расширенной сопоставляющей функции: %s"
 
-#: libxyz/core/fsrule.py:814
+#: libxyz/core/fsrule.py:829
 msgid "Unable to find match function for token: %s"
-msgstr ""
+msgstr "Невозможно найти сопоставляющую функцию для токена: %s"
 
 #: libxyz/core/hookmanager.py:41
 msgid "HookManager: Callable argument expected"
-msgstr ""
+msgstr "HookManager: ожидается вызываемый аргумент"
 
 #: libxyz/core/hookmanager.py:73
 msgid "Error running callback procedure for event %s"
-msgstr ""
+msgstr "Ошибка вызова обратной функции для события %s"
 
 #: libxyz/core/keymanager.py:80
 msgid "Invalid shortcut type: %s."
-msgstr ""
+msgstr "Неверный тип клавиши быстрого доступа: %s."
 
 #: libxyz/core/keymanager.py:149
 msgid "<Internal function object>"
-msgstr ""
+msgstr "<Внутренняя функция>"
 
 #: libxyz/core/keymanager.py:151
 msgid "Invalid method type: %s. Must be string or function"
-msgstr ""
+msgstr "Неверный тип метода: %s. Должна быть строка либо функция"
 
 #: libxyz/core/logger/logger.py:77
 msgid "Logger console"
-msgstr ""
+msgstr "Журнал"
 
 #: libxyz/core/queue.py:43
 msgid "Max-size must be a positive integer number"
-msgstr ""
+msgstr "Max-size должен быть положительным целым числом"
+
+#: libxyz/core/utils.py:185
+#, fuzzy
+msgid "Invalid argument type %s"
+msgstr "Неверный тип алиаса: %s"
 
 #: libxyz/launcher.py:243
 msgid "Skin %s is not usable with requested color settings. Using default."
-msgstr ""
+msgstr "Тему %s невозможно использовать с запрошенной цветомой схемой. Используется значения по-умолчанию."
 
 #: libxyz/launcher.py:304
 msgid "Error parsing system config %s: %s"
@@ -226,19 +233,19 @@ msgstr "Невозможно открыть файл-историю: %s"
 msgid "Unable to execute commands on non-local filesystems"
 msgstr "Невозможно выполнять команды на нелокальных файловых системах"
 
-#: libxyz/ui/cmd.py:636
+#: libxyz/ui/cmd.py:638
 msgid "Error executing internal command %s: %s"
 msgstr "Ошибка выполнения внутренней команды %s: %s"
 
-#: libxyz/ui/cmd.py:672
+#: libxyz/ui/cmd.py:674
 msgid "Invalid alias type: %s"
 msgstr "Неверный тип алиаса: %s"
 
-#: libxyz/ui/cmd.py:680
+#: libxyz/ui/cmd.py:682
 msgid "Unable to replace an alias %s: %s"
 msgstr "Невозможно заменить алиас %s: %s"
 
-#: libxyz/ui/cmd.py:785
+#: libxyz/ui/cmd.py:787
 msgid "History"
 msgstr "История"
 
@@ -250,31 +257,31 @@ msgstr "Ошибка выполнения (%s): %s"
 msgid "Really quit %s?"
 msgstr "Действительно выйти из %s?"
 
-#: libxyz/ui/panel.py:1015
+#: libxyz/ui/panel.py:1016
 msgid "%s bytes (%d)"
 msgstr "%s байт (%d)"
 
-#: libxyz/ui/panel.py:1369
+#: libxyz/ui/panel.py:1370
 msgid "Tag group"
 msgstr "Отметить группу"
 
-#: libxyz/ui/panel.py:1371
+#: libxyz/ui/panel.py:1372
 msgid "Untag group"
 msgstr "Снять отметку"
 
-#: libxyz/ui/panel.py:1374
+#: libxyz/ui/panel.py:1375
 msgid "Type FS Rule"
 msgstr "Введите FS Rule"
 
-#: libxyz/ui/panel.py:1498
+#: libxyz/ui/panel.py:1499
 msgid "Action error: %s"
 msgstr "Ошибка: %s"
 
-#: libxyz/ui/panel.py:1533 libxyz/ui/panel.py:1540
+#: libxyz/ui/panel.py:1530 libxyz/ui/panel.py:1537
 msgid "Unable to chdir to %s: %s"
 msgstr "Невозможно перейти в %s: %s"
 
-#: libxyz/ui/panel.py:1620
+#: libxyz/ui/panel.py:1617
 msgid "TAGGED"
 msgstr "ОТМЕТКА"
 
@@ -290,75 +297,79 @@ msgstr "Неверный класс: %s. Требуется дочерний о�
 msgid "Invalid path: %s."
 msgstr "Неверный путь: %s."
 
-#: libxyz/vfs/dispatcher.py:77
+#: libxyz/vfs/dispatcher.py:75
 msgid "Unable to find VFS handler for %s."
 msgstr "Невозможно найти обработчик для %s."
 
-#: libxyz/vfs/local.py:54
+#: libxyz/vfs/local.py:38
+msgid "Object must be opened before any operation"
+msgstr ""
+
+#: libxyz/vfs/local.py:63
 msgid "Unable to walk on %s"
 msgstr "Невозможно перейти в %s"
 
-#: libxyz/vfs/local.py:92
+#: libxyz/vfs/local.py:101
 msgid "Unable to create directory inside %s object type"
 msgstr "Невозможно создать каталог внутри объекта типа %s"
 
-#: libxyz/vfs/local.py:248 libxyz/vfs/tar.py:144 libxyz/vfs/zip.py:147
+#: libxyz/vfs/local.py:316 libxyz/vfs/tar.py:200
 msgid "Name"
 msgstr "Имя"
 
-#: libxyz/vfs/local.py:249 libxyz/vfs/tar.py:145 libxyz/vfs/zip.py:148
+#: libxyz/vfs/local.py:317 libxyz/vfs/tar.py:201
 msgid "Type"
 msgstr "Тип"
 
-#: libxyz/vfs/local.py:250
+#: libxyz/vfs/local.py:318
 msgid "Access time"
 msgstr "Дата доступа"
 
-#: libxyz/vfs/local.py:251 libxyz/vfs/tar.py:146 libxyz/vfs/zip.py:149
+#: libxyz/vfs/local.py:319 libxyz/vfs/tar.py:202
 msgid "Modification time"
 msgstr "Дата изменения данных (mtime)"
 
-#: libxyz/vfs/local.py:252
+#: libxyz/vfs/local.py:320
 msgid "Change time"
 msgstr "Дата изменения inode (ctime)"
 
-#: libxyz/vfs/local.py:253 libxyz/vfs/tar.py:147 libxyz/vfs/zip.py:150
+#: libxyz/vfs/local.py:321 libxyz/vfs/tar.py:203
 msgid "Size in bytes"
 msgstr "Размер в байтах"
 
-#: libxyz/vfs/local.py:254 libxyz/vfs/tar.py:148 libxyz/vfs/zip.py:151
+#: libxyz/vfs/local.py:322 libxyz/vfs/tar.py:204
 msgid "Owner"
 msgstr "Владелец"
 
-#: libxyz/vfs/local.py:255 libxyz/vfs/tar.py:149 libxyz/vfs/zip.py:152
+#: libxyz/vfs/local.py:323 libxyz/vfs/tar.py:205
 msgid "Group"
 msgstr "Группа"
 
-#: libxyz/vfs/local.py:256 libxyz/vfs/tar.py:150 libxyz/vfs/zip.py:153
+#: libxyz/vfs/local.py:324 libxyz/vfs/tar.py:206
 msgid "Access mode"
 msgstr "Режим доступа"
 
-#: libxyz/vfs/local.py:257
+#: libxyz/vfs/local.py:325
 msgid "Inode"
 msgstr "Inode"
 
-#: libxyz/vfs/local.py:258 libxyz/vfs/tar.py:151 libxyz/vfs/zip.py:154
+#: libxyz/vfs/local.py:326 libxyz/vfs/tar.py:207
 msgid "Type-specific data"
 msgstr "Дополнительные данные"
 
-#: libxyz/vfs/local.py:327
+#: libxyz/vfs/local.py:395
 msgid "Error creating VFS object: %s"
 msgstr "Ошибка создания VFS объекта: %s"
 
-#: libxyz/vfs/tar.py:397 libxyz/vfs/zip.py:400
+#: libxyz/vfs/tar.py:453
 msgid "Unable to chown %s: %s"
 msgstr "Невозможно изменить владельца %s: %s"
 
-#: libxyz/vfs/tar.py:403 libxyz/vfs/zip.py:406
+#: libxyz/vfs/tar.py:459
 msgid "Unable to chmod %s: %s"
 msgstr "Невозможно изменить права доступа %s: %s"
 
-#: libxyz/vfs/vfsobj.py:86
+#: libxyz/vfs/vfsobj.py:90
 msgid "Feature not implemented"
 msgstr "Данная функция не реализована"
 
@@ -414,7 +425,9 @@ msgstr "Запускается при показе диалоге. Аргуме�
 
 #: plugins/core/pluginlist/main.py:43
 msgid "Fires when showing detaild plugin info.Arguments: Plugin object"
-msgstr "Запускается при показе детальной информации о плагине. Аргументы: Объект плагина"
+msgstr ""
+"Запускается при показе детальной информации о плагине. Аргументы: Объект "
+"плагина"
 
 #: plugins/core/pluginlist/main.py:73
 msgid "Active plugins list"
