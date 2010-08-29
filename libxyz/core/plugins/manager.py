@@ -69,7 +69,7 @@ class PluginManager(object):
 
         self.xyz = xyz
 
-        self.enabled = self._enabled_list()
+        self._enabled = None
         # Do not load all the enabled plugin at once
         # Do it on demand
         self._loaded = {}
@@ -159,7 +159,7 @@ class PluginManager(object):
         """
 
         self.xyz.hm.dispatch(self.EVENT_FROM_LOAD, plugin, method)
-        
+
         if not self.is_loaded(plugin):
             _obj = self.load(plugin)
         else:
@@ -188,7 +188,7 @@ class PluginManager(object):
         """
 
         self.xyz.hm.dispatch(self.EVENT_FROM_LOAD_DATA, plugin, obj)
-        
+
         if not self.is_loaded(plugin):
             _obj = self.load(plugin)
         else:
@@ -311,7 +311,7 @@ class PluginManager(object):
             _plugins = self._loaded
         else:
             _plugins = [plugin]
-        
+
         for plugin_name in self._loaded:
             self.xyz.hm.dispatch(self.EVENT_FIN, self._loaded[plugin_name])
             _fin(plugin_name)
@@ -342,5 +342,12 @@ class PluginManager(object):
         Make list of enabled plugins
         """
 
-        _data = self.xyz.conf[u"xyz"][u"plugins"]
-        return [_pname for _pname in _data if _data[_pname]]
+        if self._enabled is None:
+            _data = self.xyz.conf[u"xyz"][u"plugins"]
+            self._enabled = [_pname for _pname in _data if _data[_pname]]
+
+        return self._enabled
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    enabled = property(_enabled_list)

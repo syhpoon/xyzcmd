@@ -58,6 +58,7 @@ class Launcher(object):
         self.cmdopts = "d:c:s:vh"
 
         self.allowed_colors = (1, 16, 88, 256)
+        self._path_sel = libxyz.PathSelector()
         self.xyz = core.XYZData()
         self.xyz.conf = {}
         self.xyz.hm = core.HookManager()
@@ -66,8 +67,9 @@ class Launcher(object):
         self.xyz.am = core.ActionManager(self.xyz)
         self.xyz.km = core.KeyManager(self.xyz)
         self.xyz.vfs = VFSDispatcher(self.xyz)
+        self.xyz.pm = PluginManager(self.xyz,
+                                    self._path_sel.get_plugins_dir())
 
-        self._path_sel = libxyz.PathSelector()
         self._conf = {}
         self._saved_term = None
         self._driver = None
@@ -91,8 +93,6 @@ class Launcher(object):
                                       self.xyz.conf["xyz"]["term_lib"])
         
         self.xyz.term = core.utils.setup_term()
-        self.xyz.pm = PluginManager(self.xyz,
-                                    self._path_sel.get_plugins_dir())
 
         self.init_logger()
         
@@ -286,9 +286,9 @@ class Launcher(object):
         """
         Parse configuration. Phase 2
         """
-        
-        self._parse_conf_file(const.ACTIONS_CONF_FILE)
+
         self._parse_conf_file(const.KEYS_CONF_FILE)
+        self._parse_conf_file(const.ACTIONS_CONF_FILE)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

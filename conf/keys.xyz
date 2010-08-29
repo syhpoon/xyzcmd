@@ -4,6 +4,11 @@
 # Default keybindings. Do not edit.
 #
 
+# FSRules aliases
+load(":fsrules:aliases")
+# FSRules plugins. Load to activate
+load(":fsrules:magic")
+
 # Necessary imports
 load(":sys:run:*")
 load(":sys:logger:*")
@@ -26,9 +31,6 @@ load(":vfs:fileinfo:fileinfo")
 load(":vfs:vfsutils:*")
 
 load(":misc:where")
-
-# FSRules plugins. Load to activate
-load(":fsrules:magic")
 
 # Prefix keys
 prefix(kbd("CTRL-x"))
