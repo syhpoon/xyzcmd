@@ -163,7 +163,7 @@ def split_cmd(cmd):
     Split command line
     """
 
-    lexer = Lexer(ustring(cmd), [])
+    lexer = Lexer(ustring(cmd), [], comment=None, macro=None)
     lexer.escaping_on()
 
     data = []

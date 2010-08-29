@@ -803,7 +803,7 @@ class Cmd(lowui.FlowWidget):
         Put currently selected VFS object full path in panel to cmd line
         """
 
-        return self._put_engine(self._panel.get_selected().path)
+        return self._put_engine(self._panel.get_selected().full_path)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -821,7 +821,7 @@ class Cmd(lowui.FlowWidget):
         Put selected VFS object full path in inactive panel to cmd line
         """
 
-        return self._put_engine(self._panel.get_selected(False).path)
+        return self._put_engine(self._panel.get_selected(False).full_path)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -896,7 +896,7 @@ class Cmd(lowui.FlowWidget):
         """
 
         result = []
-        toescape = [u" ", u"'", u'"', u"*", u"?", u"\\", u"&", u"#",
+        toescape = [u" ", u"'", u'"', u"*", u"?", u"\\", u"&",
                     u"(", ")",
                     u"[", "]",
                     u"{", "}",
