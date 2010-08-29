@@ -15,8 +15,8 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 import traceback
-import time
 
 import libxyz.ui
 import libxyz.core
@@ -899,6 +899,7 @@ class Block(lowui.FlowWidget):
         self._title = u""
         self._tagged = []
         self._tab_data = []
+        self._is_xterm = os.getenv("TERM", None) == "xterm"
 
         self._cursor_attr = None
         self._custom_info = None
@@ -1564,6 +1565,8 @@ class Block(lowui.FlowWidget):
         if isinstance(self._vfsobj, LocalVFSObject) and active:
             os.chdir(path)
 
+        self._update_xterm_title(path)
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @refresh
@@ -1776,6 +1779,16 @@ class Block(lowui.FlowWidget):
         """
 
         return self._tab_data
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _update_xterm_title(self, title):
+        """
+        Update xterm title string
+        """
+
+        if self._is_xterm:
+            sys.stdout.write("\33]2;%s\7" % title)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
 
