@@ -113,7 +113,8 @@ class KeyManager(object):
         """
         Bind a shortcut to a method.
         A method can be either a string, in that case it should denote the
-        plugin method or it can be a function.
+        plugin method or it can be a function or it can be a tuple with two
+        elements: first - function to bind and the second - string description
         
         @return: True on success, False otherwise, also raises exception
                  if method was not loaded
@@ -147,6 +148,9 @@ class KeyManager(object):
         elif is_func(method):
             _mobj = method
             _mobj.ns = _(u"<Internal function object>")
+        elif isinstance(method, tuple) and len(method) == 2:
+            _mobj = method[0]
+            _mobj.ns = method[1]
         else:
             raise KeyManagerError(_(u"Invalid method type: %s. "\
                                     u"Must be string or function") %

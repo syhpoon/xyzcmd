@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: XYZCommander VERSION\n"
-"POT-Creation-Date: 2010-08-29 22:46+EEST\n"
+"POT-Creation-Date: 2010-08-29 23:44+EEST\n"
 "PO-Revision-Date: 2010-07-28 00:48+ZONE\n"
 "Last-Translator: Max E. Kuznecov <mek@mek.uz.ua>\n"
 "Language-Team: ru <LL@li.org>\n"
@@ -14,6 +14,123 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: UTF-8\n"
 "Generated-By: pygettext.py 1.5\n"
+
+#: conf/keys.xyz:98
+msgid "Switch to tab 0"
+msgstr ""
+
+#: conf/keys.xyz:100
+msgid "Switch to tab 1"
+msgstr ""
+
+#: conf/keys.xyz:102
+msgid "Switch to tab 2"
+msgstr ""
+
+#: conf/keys.xyz:104
+msgid "Switch to tab 3"
+msgstr ""
+
+#: conf/keys.xyz:106
+msgid "Switch to tab 4"
+msgstr ""
+
+#: conf/keys.xyz:108
+msgid "Switch to tab 5"
+msgstr ""
+
+#: conf/keys.xyz:110
+msgid "Switch to tab 6"
+msgstr ""
+
+#: conf/keys.xyz:112
+msgid "Switch to tab 7"
+msgstr ""
+
+#: conf/keys.xyz:114
+msgid "Switch to tab 8"
+msgstr ""
+
+#: conf/keys.xyz:116
+msgid "Switch to tab 9"
+msgstr ""
+
+#: conf/keys.xyz:119
+msgid "New tab in inactive panel"
+msgstr ""
+
+#: conf/keys.xyz:121
+msgid "Remove tab in inactive panel"
+msgstr ""
+
+#: conf/keys.xyz:123
+msgid "Switch to next tab in"
+msgstr ""
+
+#: conf/keys.xyz:125
+msgid "Switch to previous tab in inactive panel"
+msgstr ""
+
+#: conf/keys.xyz:127
+msgid "Switch to tab 0 in inactive panel"
+msgstr ""
+
+#: conf/keys.xyz:129
+msgid "Switch to tab 1 in inactive panel"
+msgstr ""
+
+#: conf/keys.xyz:131
+msgid "Switch to tab 2 in inactive panel"
+msgstr ""
+
+#: conf/keys.xyz:133
+msgid "Switch to tab 3 in inactive panel"
+msgstr ""
+
+#: conf/keys.xyz:135
+msgid "Switch to tab 4 in inactive panel"
+msgstr ""
+
+#: conf/keys.xyz:137
+msgid "Switch to tab 5 in inactive panel"
+msgstr ""
+
+#: conf/keys.xyz:139
+msgid "Switch to tab 6 in inactive panel"
+msgstr ""
+
+#: conf/keys.xyz:141
+msgid "Switch to tab 7 in inactive panel"
+msgstr ""
+
+#: conf/keys.xyz:143
+msgid "Switch to tab 8 in inactive panel"
+msgstr ""
+
+#: conf/keys.xyz:145
+msgid "Switch to tab 9 in inactive panel"
+msgstr ""
+
+#: conf/keys.xyz:156
+msgid "Complete the command line"
+msgstr ""
+
+#: conf/keys.xyz:161
+#, fuzzy
+msgid "Add bookmark"
+msgstr "Закладки"
+
+#: conf/keys.xyz:172
+msgid "Run default pager"
+msgstr ""
+
+#: conf/keys.xyz:175
+msgid "Run default editor"
+msgstr ""
+
+#: conf/keys.xyz:178
+msgid "Chdir in active panel to the same dir as in inactive one"
+msgstr ""
 
 #: libxyz/core/actionmanager.py:44
 msgid "Unable to register action: invalid rule: %s"
@@ -96,8 +213,9 @@ msgstr "Ошибка раширения FSRule: токен %s уже зарег�
 msgid ""
 "Error extending FSRule: trans_func and match_func arguments must be "
 "functions."
-msgstr "Ошибка раширения FSRule: аргументы trans_func и match_func "
-"должны быть функциями."
+msgstr ""
+"Ошибка раширения FSRule: аргументы trans_func и match_func должны быть "
+"функциями."
 
 #: libxyz/core/fsrule.py:355
 msgid "Invalid argument type: %s, VFSObject expected"
@@ -131,11 +249,11 @@ msgstr "Ошибка вызова обратной функции для соб�
 msgid "Invalid shortcut type: %s."
 msgstr "Неверный тип клавиши быстрого доступа: %s."
 
-#: libxyz/core/keymanager.py:149
+#: libxyz/core/keymanager.py:150
 msgid "<Internal function object>"
 msgstr "<Внутренняя функция>"
 
-#: libxyz/core/keymanager.py:151
+#: libxyz/core/keymanager.py:155
 msgid "Invalid method type: %s. Must be string or function"
 msgstr "Неверный тип метода: %s. Должна быть строка либо функция"
 
@@ -154,7 +272,9 @@ msgstr "Неверный тип алиаса: %s"
 
 #: libxyz/launcher.py:243
 msgid "Skin %s is not usable with requested color settings. Using default."
-msgstr "Тему %s невозможно использовать с запрошенной цветомой схемой. Используется значения по-умолчанию."
+msgstr ""
+"Тему %s невозможно использовать с запрошенной цветомой схемой. Используется "
+"значения по-умолчанию."
 
 #: libxyz/launcher.py:304
 msgid "Error parsing system config %s: %s"

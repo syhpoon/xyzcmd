@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-08-29 22:46+EEST\n"
+"POT-Creation-Date: 2010-08-29 23:44+EEST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,6 +14,122 @@ msgstr ""
 "Content-Transfer-Encoding: ENCODING\n"
 "Generated-By: pygettext.py 1.5\n"
 
+
+#: ./conf/keys.xyz:98
+msgid "Switch to tab 0"
+msgstr ""
+
+#: ./conf/keys.xyz:100
+msgid "Switch to tab 1"
+msgstr ""
+
+#: ./conf/keys.xyz:102
+msgid "Switch to tab 2"
+msgstr ""
+
+#: ./conf/keys.xyz:104
+msgid "Switch to tab 3"
+msgstr ""
+
+#: ./conf/keys.xyz:106
+msgid "Switch to tab 4"
+msgstr ""
+
+#: ./conf/keys.xyz:108
+msgid "Switch to tab 5"
+msgstr ""
+
+#: ./conf/keys.xyz:110
+msgid "Switch to tab 6"
+msgstr ""
+
+#: ./conf/keys.xyz:112
+msgid "Switch to tab 7"
+msgstr ""
+
+#: ./conf/keys.xyz:114
+msgid "Switch to tab 8"
+msgstr ""
+
+#: ./conf/keys.xyz:116
+msgid "Switch to tab 9"
+msgstr ""
+
+#: ./conf/keys.xyz:119
+msgid "New tab in inactive panel"
+msgstr ""
+
+#: ./conf/keys.xyz:121
+msgid "Remove tab in inactive panel"
+msgstr ""
+
+#: ./conf/keys.xyz:123
+msgid "Switch to next tab in"
+msgstr ""
+
+#: ./conf/keys.xyz:125
+msgid "Switch to previous tab in inactive panel"
+msgstr ""
+
+#: ./conf/keys.xyz:127
+msgid "Switch to tab 0 in inactive panel"
+msgstr ""
+
+#: ./conf/keys.xyz:129
+msgid "Switch to tab 1 in inactive panel"
+msgstr ""
+
+#: ./conf/keys.xyz:131
+msgid "Switch to tab 2 in inactive panel"
+msgstr ""
+
+#: ./conf/keys.xyz:133
+msgid "Switch to tab 3 in inactive panel"
+msgstr ""
+
+#: ./conf/keys.xyz:135
+msgid "Switch to tab 4 in inactive panel"
+msgstr ""
+
+#: ./conf/keys.xyz:137
+msgid "Switch to tab 5 in inactive panel"
+msgstr ""
+
+#: ./conf/keys.xyz:139
+msgid "Switch to tab 6 in inactive panel"
+msgstr ""
+
+#: ./conf/keys.xyz:141
+msgid "Switch to tab 7 in inactive panel"
+msgstr ""
+
+#: ./conf/keys.xyz:143
+msgid "Switch to tab 8 in inactive panel"
+msgstr ""
+
+#: ./conf/keys.xyz:145
+msgid "Switch to tab 9 in inactive panel"
+msgstr ""
+
+#: ./conf/keys.xyz:156
+msgid "Complete the command line"
+msgstr ""
+
+#: ./conf/keys.xyz:161
+msgid "Add bookmark"
+msgstr ""
+
+#: ./conf/keys.xyz:172
+msgid "Run default pager"
+msgstr ""
+
+#: ./conf/keys.xyz:175
+msgid "Run default editor"
+msgstr ""
+
+#: ./conf/keys.xyz:178
+msgid "Chdir in active panel to the same dir as in inactive one"
+msgstr ""
 
 #: ./libxyz/core/actionmanager.py:44
 msgid "Unable to register action: invalid rule: %s"
@@ -127,11 +243,11 @@ msgstr ""
 msgid "Invalid shortcut type: %s."
 msgstr ""
 
-#: ./libxyz/core/keymanager.py:149
+#: ./libxyz/core/keymanager.py:150
 msgid "<Internal function object>"
 msgstr ""
 
-#: ./libxyz/core/keymanager.py:151
+#: ./libxyz/core/keymanager.py:155
 msgid "Invalid method type: %s. Must be string or function"
 msgstr ""
 

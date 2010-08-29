@@ -94,41 +94,55 @@ bind(":sys:panel:new_tab", kbd("CTRL-c", "c"))
 bind(":sys:panel:del_tab", kbd("CTRL-c", "d"))
 bind(":sys:panel:next_tab", kbd("CTRL-c", "n"))
 bind(":sys:panel:prev_tab", kbd("CTRL-c", "p"))
-bind(lambda: call(":sys:panel:switch_tab", 0), kbd("CTRL-c", "0"))
-bind(lambda: call(":sys:panel:switch_tab", 1), kbd("CTRL-c", "1"))
-bind(lambda: call(":sys:panel:switch_tab", 2), kbd("CTRL-c", "2"))
-bind(lambda: call(":sys:panel:switch_tab", 3), kbd("CTRL-c", "3"))
-bind(lambda: call(":sys:panel:switch_tab", 4), kbd("CTRL-c", "4"))
-bind(lambda: call(":sys:panel:switch_tab", 5), kbd("CTRL-c", "5"))
-bind(lambda: call(":sys:panel:switch_tab", 6), kbd("CTRL-c", "6"))
-bind(lambda: call(":sys:panel:switch_tab", 7), kbd("CTRL-c", "7"))
-bind(lambda: call(":sys:panel:switch_tab", 8), kbd("CTRL-c", "8"))
-bind(lambda: call(":sys:panel:switch_tab", 9), kbd("CTRL-c", "9"))
+bind((lambda: call(":sys:panel:switch_tab", 0),
+      _(u"Switch to tab 0")), kbd("CTRL-c", "0"))
+bind((lambda: call(":sys:panel:switch_tab", 1),
+      _(u"Switch to tab 1")), kbd("CTRL-c", "1"))
+bind((lambda: call(":sys:panel:switch_tab", 2),
+      _(u"Switch to tab 2")), kbd("CTRL-c", "2"))
+bind((lambda: call(":sys:panel:switch_tab", 3),
+      _(u"Switch to tab 3")), kbd("CTRL-c", "3"))
+bind((lambda: call(":sys:panel:switch_tab", 4),
+      _(u"Switch to tab 4")), kbd("CTRL-c", "4"))
+bind((lambda: call(":sys:panel:switch_tab", 5),
+      _(u"Switch to tab 5")), kbd("CTRL-c", "5"))
+bind((lambda: call(":sys:panel:switch_tab", 6),
+      _(u"Switch to tab 6")), kbd("CTRL-c", "6"))
+bind((lambda: call(":sys:panel:switch_tab", 7),
+      _(u"Switch to tab 7")), kbd("CTRL-c", "7"))
+bind((lambda: call(":sys:panel:switch_tab", 8),
+      _(u"Switch to tab 8")), kbd("CTRL-c", "8"))
+bind((lambda: call(":sys:panel:switch_tab", 9),
+      _(u"Switch to tab 9")), kbd("CTRL-c", "9"))
 
-bind(lambda: call(":sys:panel:new_tab", active=False), kbd("CTRL-c", "C"))
-bind(lambda: call(":sys:panel:del_tab", active=False), kbd("CTRL-c", "D"))
-bind(lambda: call(":sys:panel:next_tab", active=False), kbd("CTRL-c", "N"))
-bind(lambda: call(":sys:panel:prev_tab", active=False), kbd("CTRL-c", "P"))
-bind(lambda: call(":sys:panel:switch_tab", 0, active=False),
-     kbd("CTRL-c", ")"))
-bind(lambda: call(":sys:panel:switch_tab", 1, active=False),
-     kbd("CTRL-c", "!"))
-bind(lambda: call(":sys:panel:switch_tab", 2, active=False),
-     kbd("CTRL-c", "@"))
-bind(lambda: call(":sys:panel:switch_tab", 3, active=False),
-     kbd("CTRL-c", "#"))
-bind(lambda: call(":sys:panel:switch_tab", 4, active=False),
-     kbd("CTRL-c", "$"))
-bind(lambda: call(":sys:panel:switch_tab", 5, active=False),
-     kbd("CTRL-c", "%"))
-bind(lambda: call(":sys:panel:switch_tab", 6, active=False),
-     kbd("CTRL-c", "^"))
-bind(lambda: call(":sys:panel:switch_tab", 7, active=False),
-     kbd("CTRL-c", "&"))
-bind(lambda: call(":sys:panel:switch_tab", 8, active=False),
-     kbd("CTRL-c", "*"))
-bind(lambda: call(":sys:panel:switch_tab", 9, active=False),
-     kbd("CTRL-c", "("))
+bind((lambda: call(":sys:panel:new_tab", active=False),
+      _(u"New tab in inactive panel")), kbd("CTRL-c", "C"))
+bind((lambda: call(":sys:panel:del_tab", active=False),
+      _(u"Remove tab in inactive panel")), kbd("CTRL-c", "D"))
+bind((lambda: call(":sys:panel:next_tab", active=False),
+      _(u"Switch to next tab in")), kbd("CTRL-c", "N"))
+bind((lambda: call(":sys:panel:prev_tab", active=False),
+      _(u"Switch to previous tab in inactive panel")), kbd("CTRL-c", "P"))
+bind((lambda: call(":sys:panel:switch_tab", 0, active=False),
+      _(u"Switch to tab 0 in inactive panel")), kbd("CTRL-c", ")"))
+bind((lambda: call(":sys:panel:switch_tab", 1, active=False),
+      _(u"Switch to tab 1 in inactive panel")), kbd("CTRL-c", "!"))
+bind((lambda: call(":sys:panel:switch_tab", 2, active=False),
+      _(u"Switch to tab 2 in inactive panel")), kbd("CTRL-c", "@"))
+bind((lambda: call(":sys:panel:switch_tab", 3, active=False),
+      _(u"Switch to tab 3 in inactive panel")), kbd("CTRL-c", "#"))
+bind((lambda: call(":sys:panel:switch_tab", 4, active=False),
+      _(u"Switch to tab 4 in inactive panel")), kbd("CTRL-c", "$"))
+bind((lambda: call(":sys:panel:switch_tab", 5, active=False),
+      _(u"Switch to tab 5 in inactive panel")), kbd("CTRL-c", "%"))
+bind((lambda: call(":sys:panel:switch_tab", 6, active=False),
+      _(u"Switch to tab 6 in inactive panel")), kbd("CTRL-c", "^"))
+bind((lambda: call(":sys:panel:switch_tab", 7, active=False),
+      _(u"Switch to tab 7 in inactive panel")), kbd("CTRL-c", "&"))
+bind((lambda: call(":sys:panel:switch_tab", 8, active=False),
+      _(u"Switch to tab 8 in inactive panel")), kbd("CTRL-c", "*"))
+bind((lambda: call(":sys:panel:switch_tab", 9, active=False),
+      _(u"Switch to tab 9 in inactive panel")), kbd("CTRL-c", "("))
 
 bind(":sys:logger:show_console", kbd("META-l"))
 bind(":sys:run:shutdown", kbd("F10"))
@@ -138,13 +152,13 @@ bind(":core:pluginlist:show_list", kbd("META-t"))
 bind(":core:keycodes:learn_keys", kbd("META-y"))
 bind(":core:bindlist:show_binds", kbd("META-r"))
 bind(":core:console:show", kbd("META-c"))
-bind(lambda: call(":core:complete:smart_complete", call(":sys:cmd:get")),
-     kbd("META-TAB"))
+bind((lambda: call(":core:complete:smart_complete", call(":sys:cmd:get")),
+      _(u"Complete the command line")), kbd("META-TAB"))
 
 bind(":ui:testinput:show_box", kbd("META-e"))
 bind(":ui:bookmarks:show_bookmarks", kbd("META-\\"))
-bind(lambda: call(":ui:bookmarks:add_bookmark", macro("ACT_CWD")),
-     kbd("CTRL-x", "b"))
+bind((lambda: call(":ui:bookmarks:add_bookmark", macro("ACT_CWD")),
+      _(u"Add bookmark")), kbd("CTRL-x", "b"))
 
 bind(":vfs:fileinfo:fileinfo", kbd("F2"))
 bind(":vfs:vfsutils:copy", kbd("F5"))
@@ -154,8 +168,12 @@ bind(":vfs:vfsutils:remove", kbd("F8"))
 
 bind(":misc:about:about", kbd("META-o"))
 
-bind(lambda: shell(env("PAGER", "less"), macro("ACT_PATH"), wait=False),
-     kbd("F3"))
+bind((lambda: shell(env("PAGER", "less"), macro("ACT_PATH"), wait=False),
+      _(u"Run default pager")), kbd("F3"))
 
-bind(lambda: shell(env("EDITOR", "vi"), macro("ACT_PATH")), kbd("F4"))
-bind(lambda: call(":sys:panel:chdir", macro("INACT_CWD")), kbd("META-="))
+bind((lambda: shell(env("EDITOR", "vi"), macro("ACT_PATH")),
+      _(u"Run default editor")), kbd("F4"))
+
+bind((lambda: call(":sys:panel:chdir", macro("INACT_CWD")),
+      _(u"Chdir in active panel to the same dir as in inactive one")),
+     kbd("META-="))

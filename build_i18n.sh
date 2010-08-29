@@ -1,6 +1,6 @@
 #!/bin/sh
 
-find . -name \*.py | xargs pygettext -o ./po/xyzcmd.pot
+find . -name \*.py -or -name \*.xyz | xargs pygettext -o ./po/xyzcmd.pot
 
 for po in ./po/*.po; do
     b=$(basename $po)

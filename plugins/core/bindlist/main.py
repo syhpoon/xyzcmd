@@ -15,13 +15,14 @@ class XYZPlugin(BasePlugin):
     NAME = u"bindlist"
     AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
     VERSION = u"0.2"
-    BRIEF_DESCRIPTION = u"Show keybindings"
-    FULL_DESCRIPTION = u"Plugin is used to display all current keybindings "\
-                       u"along with corresponding contextes and methods"
+    BRIEF_DESCRIPTION = _(u"Show keybindings")
+    FULL_DESCRIPTION = _(u"Plugin is used to display all current keybindings "\
+                         u"along with corresponding contextes and methods")
     NAMESPACE = u"core"
     HOMEPAGE = u"xyzcmd.syhpoon.name"
     EVENTS = [("show_binds",
-               "Event is fired before showing dialog. Receives no arguments."),
+               _(u"Event is fired before showing dialog. "\
+                 u"Receives no arguments.")),
               ]
 
     def __init__(self, xyz):
@@ -47,7 +48,8 @@ class XYZPlugin(BasePlugin):
         _divattr = self.xyz.skin.attr(uilib.XYZListBox.resolution, u"border")
 
         _entries.append(lowui.Text(u"%-10s %-20s %s" %
-                        (_(u"Context"), _(u"Bind"), _(u"Method"))))
+                        (_(u"Context"), _(u"Bind"),
+                         _(u"Method / Description"))))
         _entries.append(uilib.Separator(div_attr=_divattr))
 
         for _context in sorted(_data.keys()):
