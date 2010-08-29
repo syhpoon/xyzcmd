@@ -4,8 +4,6 @@
 # Default keybindings. Do not edit.
 #
 
-# FSRules aliases
-load(":fsrules:aliases")
 # FSRules plugins. Load to activate
 load(":fsrules:magic")
 

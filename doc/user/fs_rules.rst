@@ -74,14 +74,26 @@ Available arguments:
 *file*
     Regular file
 
+*file_or_link2*
+    Regular file or symbolic link to one.
+
 *dir*
     Directory
+
+*dir_or_link2*
+    Directory or symbolic link to one.
 
 *block*
     Block device
 
+*block_or_link2*
+    Block device or symbolic link to one.
+
 *char*
     Char device
+
+*char_or_link2*
+    Char device or symbolic link to one.
 
 *link*
     Symbolic link
@@ -89,8 +101,14 @@ Available arguments:
 *fifo*
     FIFO
 
+*fifo_or_link2*
+    FIFO or symbolic link to one.
+
 *socket*
     Socket
+
+*socket_or_link2*
+    Socket or symbolic link to one.
 
 So, to match all regular files and directories use:
 ``"type{file} or type{dir}"``

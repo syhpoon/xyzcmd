@@ -21,11 +21,6 @@ VFS
 
 Plugins
 -------
-* New plugin - :fsrules:aliases
-  Plugins provides several useful FSRules:
-  * file_or_link: Matches file objects or links to file objects.
-  * dir_or_link: Matches directory objects or links to directory objects.
-
 * New method :sys:panel:get_all()
   Method returns list of all VFSObject instances in panel.
 
@@ -36,6 +31,13 @@ Plugins
 Configuration
 -------------
 * New icmd - exit.
+* New FSRules type{} argument:
+  * file_or_link2: Matches file objects or links to ones.
+  * dir_or_link2: Matches directory objects or links to ones.
+  * socket_or_link2: Matches socket objects or links to ones.
+  * fifo_or_link2: Matches fifo objects or links to ones.
+  * char_or_link2: Matches character device or links to ones.
+  * block_or_link2: Matches block device or links to ones.
 
 I18N
 ----

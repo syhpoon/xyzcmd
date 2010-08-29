@@ -26,7 +26,7 @@ from libxyz.exceptions import LexerError
 from libxyz.exceptions import FSRuleError
 from libxyz.vfs.vfsobj import  VFSObject
 from libxyz.vfs.types import *
-from libxyz.core.utils import ustring
+from libxyz.core.utils import ustring, is_func
 
 class FSRule(parser.BaseParser):
     """
@@ -549,14 +549,26 @@ class FSRule(parser.BaseParser):
 
     def _type(self, arg):
         _types ={
-                 u"file": VFSTypeFile,
-                 u"dir": VFSTypeDir,
-                 u"link": VFSTypeLink,
-                 u"socket": VFSTypeSocket,
-                 u"fifo": VFSTypeFifo,
-                 u"char": VFSTypeChar,
-                 u"block": VFSTypeBlock,
-                }
+            u"file": VFSTypeFile,
+            u"file_or_link2":
+            lambda x: x.is_file() or (x.is_link() and x.data.is_file()),
+            u"dir": VFSTypeDir,
+            u"dir_or_link2":
+            lambda x: x.is_dir() or (x.is_link() and x.data.is_dir()),
+            u"link": VFSTypeLink,
+            u"socket": VFSTypeSocket,
+            u"socket_or_link2":
+            lambda x: x.is_socket() or (x.is_link() and x.data.is_socket()),
+            u"fifo": VFSTypeFifo,
+            u"fifo_or_link2":
+            lambda x: x.is_fifo() or (x.is_link() and x.data.is_fifo()),
+            u"char": VFSTypeChar,
+            u"char_or_link2":
+            lambda x: x.is_char() or (x.is_link() and x.data.is_char()),
+            u"block": VFSTypeBlock,
+            u"block_or_link2":
+            lambda x: x.is_block() or (x.is_link() and x.data.is_block()),
+            }
 
         try:
             return _types[arg]
@@ -700,7 +712,10 @@ class Expression(object):
         """
 
         def _match_type(obj, arg):
-            return isinstance(obj.ftype, arg)
+            if is_func(arg):
+                return arg(obj)
+            else:
+                return isinstance(obj.ftype, arg)
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

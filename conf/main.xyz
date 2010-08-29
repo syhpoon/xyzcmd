@@ -26,7 +26,6 @@ plugins_on(":sys:run",
            ":vfs:fileinfo",
            ":vfs:vfsutils",
 
-           ":fsrules:aliases",
            ":fsrules:magic",
            )
 
