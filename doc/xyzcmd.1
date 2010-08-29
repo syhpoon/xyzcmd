@@ -1,0 +1,70 @@
+.TH xyzcmd 1 "29 August 2010" Linux "User manual"
+.SH NAME
+xyzcmd \- pure console visual file manager.
+.SH SYNOPSIS
+.B xyzcmd
+[\-d driver] [\-c colors] [\-s skin] [\-vh]
+.SH DESCRIPTION
+XYZCommander is a pure console visual file manager.
+
+Main features include:
+.TP
+.B *
+Tight integration with python run–time system — most of the settings can be
+changed "on the fly" using management console.
+.TP
+.B *
+Powerful configuration system - define own actions, aliases, internal
+commands, key bindings.
+.TP
+.B *
+Extensible plug-in system - even core functionality implemented mainly
+using plug–ins, keeping base system small and clean.
+.TP
+.B *
+Events & hooks subsystem - a flexible way of reacting on certain system events.
+.TP
+.B *
+Customizable look-n-feel - every widget component look can be changed
+using skins.
+.TP
+.B *
+Unicode support.
+.TP
+.B *
+VFS subsystem.
+.TP
+.B *
+Tabs in navigation panels.
+.SH OPTIONS
+.TP
+.B \-d driver
+Display driver to use:
+.I raw (default)
+|
+.I curses
+.TP
+.B \-c colors
+Number of colors terminal supports:
+.I 1
+|
+.I 16 (default)
+|
+.I 88
+|
+.I 256
+.TP
+.B \-s skin
+Skin name to use.
+.TP
+.B \-v
+Show program version.
+.TP
+.B \-h
+Show short usage help.
+
+.SH AUTHOR
+Max E. Kuznecov <mek@mek.uz.ua>
+.SH "SEE ALSO"
+.BR mc (1)
+
