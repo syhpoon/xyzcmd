@@ -44,11 +44,13 @@ class XYZPlugin(BasePlugin):
 
     def prepare(self):
         FSRule.extend("file_or_link", self._transform, self._file_or_link)
+        FSRule.extend("dir_or_link", self._transform, self._dir_obr_link)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def finalize(self):
-        FSRule.unextend("magic")
+        FSRule.unextend("file_or_link")
+        FSRule.unextend("dir_or_link")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
