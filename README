@@ -8,7 +8,7 @@ Main features:
     * Extensible plug-in system - even core functionality implemented mainly using plug–ins, keeping base
       system small and clean.
     * Events & hooks subsystem - a flexible way of reacting on certain system events.
-    * Customizable look-n-feel - every widget component look can be changed via skins.
+    * Customizable look-n-feel - every widget component look can be changed using skins.
     * Unicode support
     * VFS subsystem
     * Tabs in navigation panels 
