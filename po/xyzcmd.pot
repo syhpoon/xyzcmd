@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-08-17 23:32+EEST\n"
+"POT-Creation-Date: 2010-08-29 05:11+EEST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -103,15 +103,15 @@ msgstr ""
 msgid "Error in calling extended transformation function: %s"
 msgstr ""
 
-#: ./libxyz/core/fsrule.py:640
+#: ./libxyz/core/fsrule.py:652
 msgid "Invalid size{} argument: %s"
 msgstr ""
 
-#: ./libxyz/core/fsrule.py:811
+#: ./libxyz/core/fsrule.py:826
 msgid "Error in calling extended match function: %s"
 msgstr ""
 
-#: ./libxyz/core/fsrule.py:814
+#: ./libxyz/core/fsrule.py:829
 msgid "Unable to find match function for token: %s"
 msgstr ""
 
@@ -228,19 +228,19 @@ msgstr ""
 msgid "Unable to execute commands on non-local filesystems"
 msgstr ""
 
-#: ./libxyz/ui/cmd.py:636
+#: ./libxyz/ui/cmd.py:638
 msgid "Error executing internal command %s: %s"
 msgstr ""
 
-#: ./libxyz/ui/cmd.py:672
+#: ./libxyz/ui/cmd.py:674
 msgid "Invalid alias type: %s"
 msgstr ""
 
-#: ./libxyz/ui/cmd.py:680
+#: ./libxyz/ui/cmd.py:682
 msgid "Unable to replace an alias %s: %s"
 msgstr ""
 
-#: ./libxyz/ui/cmd.py:785
+#: ./libxyz/ui/cmd.py:787
 msgid "History"
 msgstr ""
 
@@ -272,11 +272,11 @@ msgstr ""
 msgid "Action error: %s"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:1533 ./libxyz/ui/panel.py:1540
+#: ./libxyz/ui/panel.py:1529 ./libxyz/ui/panel.py:1536
 msgid "Unable to chdir to %s: %s"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:1620
+#: ./libxyz/ui/panel.py:1614
 msgid "TAGGED"
 msgstr ""
 
@@ -292,75 +292,79 @@ msgstr ""
 msgid "Invalid path: %s."
 msgstr ""
 
-#: ./libxyz/vfs/dispatcher.py:77
+#: ./libxyz/vfs/dispatcher.py:75
 msgid "Unable to find VFS handler for %s."
 msgstr ""
 
-#: ./libxyz/vfs/local.py:54
+#: ./libxyz/vfs/local.py:38
+msgid "Object must be opened before any operation"
+msgstr ""
+
+#: ./libxyz/vfs/local.py:63
 msgid "Unable to walk on %s"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:92
+#: ./libxyz/vfs/local.py:101
 msgid "Unable to create directory inside %s object type"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:248 ./libxyz/vfs/tar.py:144 ./libxyz/vfs/zip.py:147
+#: ./libxyz/vfs/local.py:316 ./libxyz/vfs/tar.py:200
 msgid "Name"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:249 ./libxyz/vfs/tar.py:145 ./libxyz/vfs/zip.py:148
+#: ./libxyz/vfs/local.py:317 ./libxyz/vfs/tar.py:201
 msgid "Type"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:250
+#: ./libxyz/vfs/local.py:318
 msgid "Access time"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:251 ./libxyz/vfs/tar.py:146 ./libxyz/vfs/zip.py:149
+#: ./libxyz/vfs/local.py:319 ./libxyz/vfs/tar.py:202
 msgid "Modification time"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:252
+#: ./libxyz/vfs/local.py:320
 msgid "Change time"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:253 ./libxyz/vfs/tar.py:147 ./libxyz/vfs/zip.py:150
+#: ./libxyz/vfs/local.py:321 ./libxyz/vfs/tar.py:203
 msgid "Size in bytes"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:254 ./libxyz/vfs/tar.py:148 ./libxyz/vfs/zip.py:151
+#: ./libxyz/vfs/local.py:322 ./libxyz/vfs/tar.py:204
 msgid "Owner"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:255 ./libxyz/vfs/tar.py:149 ./libxyz/vfs/zip.py:152
+#: ./libxyz/vfs/local.py:323 ./libxyz/vfs/tar.py:205
 msgid "Group"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:256 ./libxyz/vfs/tar.py:150 ./libxyz/vfs/zip.py:153
+#: ./libxyz/vfs/local.py:324 ./libxyz/vfs/tar.py:206
 msgid "Access mode"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:257
+#: ./libxyz/vfs/local.py:325
 msgid "Inode"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:258 ./libxyz/vfs/tar.py:151 ./libxyz/vfs/zip.py:154
+#: ./libxyz/vfs/local.py:326 ./libxyz/vfs/tar.py:207
 msgid "Type-specific data"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:327
+#: ./libxyz/vfs/local.py:395
 msgid "Error creating VFS object: %s"
 msgstr ""
 
-#: ./libxyz/vfs/tar.py:397 ./libxyz/vfs/zip.py:400
+#: ./libxyz/vfs/tar.py:453
 msgid "Unable to chown %s: %s"
 msgstr ""
 
-#: ./libxyz/vfs/tar.py:403 ./libxyz/vfs/zip.py:406
+#: ./libxyz/vfs/tar.py:459
 msgid "Unable to chmod %s: %s"
 msgstr ""
 
-#: ./libxyz/vfs/vfsobj.py:86
+#: ./libxyz/vfs/vfsobj.py:90
 msgid "Feature not implemented"
 msgstr ""
 
