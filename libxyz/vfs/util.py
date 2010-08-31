@@ -16,6 +16,8 @@
 
 import stat
 import os
+import pwd
+import grp
 
 from libxyz.vfs import types as vfstypes
 
@@ -68,3 +70,43 @@ def format_size(size):
 
 def split_path(path):
     return [x for x in path.split(os.sep) if x]
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def get_user(uid=None):
+    """
+    Get user name by UID
+
+    @param uid: User ID
+    @return: username or None
+    """
+
+    if uid is None:
+        uid = os.getuid()
+
+    try:
+        name = pwd.getpwuid(uid).pw_name
+    except (KeyError, TypeError):
+        name = None
+
+    return name
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def get_group(gid=None):
+    """
+    Get group name by GID
+
+    @param gid: Group ID
+    @return: group name or None
+    """
+
+    if gid is None:
+        gid = os.getuid()
+
+    try:
+        name = grp.getgrgid(gid).gr_name
+    except (KeyError, TypeError):
+        name = None
+
+    return name

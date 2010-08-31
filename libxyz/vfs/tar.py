@@ -54,6 +54,9 @@ class TarVFSObject(vfsobj.VFSObject):
         }
 
     def __init__(self, *args, **kwargs):
+        self.tarobj = None
+        self.members = None
+
         super(TarVFSObject, self).__init__(*args, **kwargs)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -64,20 +67,22 @@ class TarVFSObject(vfsobj.VFSObject):
         @return: tuple (parent, dir, objects) where:
         parent - parent dir *VFSObject instance
         dir - current dir TarVFSObject instance
-        objects - BlockEntries of LocalVFSObject objects
+        objects - BlockEntries of TarVFSObject objects
         """
 
-        tarobj = self._open_archive()
-        entries = tarobj.getmembers()
+        dirs, files = [], []
+        self._open_archive()
 
-        _dirs = [x for x in entries if x.isdir() and
-                 self.in_dir(self.path, x.name)]
-        _files = [x for x in entries if not x.isdir() and
-                  self.in_dir(self.path, x.name)]
+        for x in self.members.values():
+            if self.in_dir(self.path, x.name):
+                if x.isdir():
+                    dirs.append(x)
+                else:
+                    files.append(x)
 
-        _dirs.sort(cmp=lambda x, y: cmp(self.get_name(x),
+        dirs.sort(cmp=lambda x, y: cmp(self.get_name(x),
                                         self.get_name(y)))
-        _files.sort(cmp=lambda x, y: cmp(self.get_name(x),
+        files.sort(cmp=lambda x, y: cmp(self.get_name(x),
                                          self.get_name(y)))
 
         if self.path == os.sep:
@@ -90,7 +95,7 @@ class TarVFSObject(vfsobj.VFSObject):
         return [
             _parent,
             self,
-            BlockEntries(self.xyz, _dirs + _files,
+            BlockEntries(self.xyz, dirs + files,
                          lambda x: self.get_path(x.name))]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -184,7 +189,7 @@ class TarVFSObject(vfsobj.VFSObject):
         else:
             self.root = False
 
-        self.tarobj = self._find_tarobj()
+        (self.tarobj, self.members) = self._find_cached()
 
         if self.root:
             self.obj = None
@@ -295,13 +300,13 @@ class TarVFSObject(vfsobj.VFSObject):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _init_obj(self, altpath=None):
-        tarobj = self._open_archive()
+        self._open_archive()
         path = (altpath or self.path).lstrip(os.sep)
 
         try:
-            obj = tarobj.getmember(path)
+            obj = self.members[path]
         except KeyError:
-            obj = tarobj.getmember(path + os.sep)
+             obj = self.members(path + os.sep)
 
         return obj
 
@@ -317,7 +322,10 @@ class TarVFSObject(vfsobj.VFSObject):
                 _mode = "r:bz2"
 
             self.tarobj = tarfile.open(fileobj=self.parent.open(), mode=_mode)
-            self.xyz.vfs.set_cache(self.parent.full_path, self.tarobj)
+            self.members = self._init_members(self.tarobj)
+
+            self.xyz.vfs.set_cache(self.parent.full_path, (self.tarobj,
+                                                           self.members))
 
         return self.tarobj
 
@@ -461,9 +469,62 @@ class TarVFSObject(vfsobj.VFSObject):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _find_tarobj(self):
+    def _find_cached(self):
         """
-        Find tarobj in cache
+        Find cached data
         """
 
-        return self.xyz.vfs.get_cache(self.parent.full_path) or None
+        return self.xyz.vfs.get_cache(self.parent.full_path) or (None, None)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _init_members(self, tarobj):
+        """
+        Init members from archive contents
+        """
+
+        members = {}
+
+        for name in tarobj.getnames():
+            data = util.split_path(name)
+            current = []
+
+            for obj in data:
+                current.append(obj)
+
+                path = os.path.join(*current)
+
+                if path not in members:
+                    try:
+                        item = tarobj.getmember(path)
+                    except KeyError:
+                        try:
+                            item = tarobj.getmember(path + os.sep)
+                        except KeyError:
+                            # Create dummy dir
+                            item = self._make_dummy_dir(path)
+
+                    members[path] = item
+
+        return members
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _make_dummy_dir(self, name):
+        """
+        Make dummy directory object
+        """
+
+        uid = os.getuid()
+        gid = os.getgid()
+
+        obj = tarfile.TarInfo(name)
+        obj.type = tarfile.DIRTYPE
+        obj.mode = 0755
+        obj.uid = uid
+        obj.gid = gid
+        obj.mtime = int(time.time())
+        obj.uname = util.get_user(uid)
+        obj.gname = util.get_group(gid)
+
+        return obj

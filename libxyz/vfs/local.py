@@ -17,8 +17,6 @@
 import os
 import stat
 import time
-import pwd
-import grp
 import shutil
 import errno
 
@@ -334,10 +332,7 @@ class LocalVFSObject(vfsobj.VFSObject):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _uid(self, uid):
-        try:
-            _name = pwd.getpwuid(uid).pw_name
-        except (KeyError, TypeError):
-            _name = None
+        _name = util.get_user(uid)
 
         if _name is not None:
             return "%s (%s)" % (bstring(uid), _name)
@@ -347,10 +342,7 @@ class LocalVFSObject(vfsobj.VFSObject):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def _gid(self, gid):
-        try:
-            _name = grp.getgrgid(gid).gr_name
-        except (KeyError, TypeError):
-            _name = None
+        _name = util.get_group(gid)
 
         if _name is not None:
             return "%s (%s)" % (bstring(gid), _name)
