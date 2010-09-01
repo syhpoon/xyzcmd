@@ -75,7 +75,7 @@ class XYZPlugin(BasePlugin):
         """
         
         self._load_panel()
-        objs = self._panel.get_active()
+        objs = [x for x in self._panel.get_active() if not x.name == ".."]
 
         if not objs:
             return
