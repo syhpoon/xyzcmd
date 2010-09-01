@@ -62,7 +62,156 @@ Show program version.
 .TP
 .B \-h
 Show short usage help.
-.SH Standard shortcuts
+.SH Keyboard shortcuts
+.I CTRL-x
+means pressing
+.I Control
+and
+.I x
+at the same time.
+
+.I META-x
+means pressing
+.I META (Alt)
+and
+.I x
+at the same time.
+
+.I META-X
+means pressing
+.I META (Alt)
+and
+.I SHIFT
+and
+.I x
+at the same time.
+
+.I Active panel
+is the focused panel, where selecting cursor appears.
+
+.I Inactive panel
+is the opposite of active panel.
+
+It is possible to extend a shortcuts namespace by defining a prefix key.
+When prefix key is defined and pressed later on, the system will wait for
+another key to complete the two-level shortcut.
+
+A list of pre-defined standard shortcuts.
+All of the standard shortcuts can be overriden (as well as new ones created)
+in
+.I ~/.xyzcmd/conf/keys.xyz
+file.
+
+.PP
+.I ENTER (RETURN)
+.IP
+If the command line is not empty \-
+execute the command in shell (:sys:cmd:execute), otherwise
+lookup up for the appropriate action and perform it (:sys:panel:action).
+.PP
+.I META-p
+.IP
+Insert into command line previously executed command (:sys:cmd:history_prev).
+.PP
+.I META-n
+.IP
+Insert into command line the next executed command from the
+history (if any) (:sys:cmd:history_next).
+.PP
+.I BACKSPACE
+.IP
+Delete one character in cmd to the left of the cursor (:sys:cmd:del_char_left).
+.PP
+.I CTRL-d
+.IP
+Delete one character in cmd under the cursor (:sys:cmd:del_char).
+.PP
+.I META-u
+.IP
+Delete one word in cmd to the left of the cursor (:sys:cmd:del_word_left).
+.PP
+.I META-k
+.IP
+Delete one word in cmd to the right of the cursor (:sys:cmd:del_word_right).
+.PP
+.I CTRL-p
+.IP
+Clear the command line (:sys:cmd:clear).
+.PP
+.I CTRL-u
+.IP
+Clear the command line to the left of the cursor (:sys:cmd:clear_left).
+.PP
+.I CTRL-k
+.IP
+Clear the command line to the right of the cursor (:sys:cmd:clear_right).
+.PP
+.I CTRL-a
+.IP
+Move cursor to the beginning of the command line (:sys:cmd:cursor_begin).
+.PP
+.I CTRL-e
+.IP
+Move cursor to the end of the command line (:sys:cmd:cursor_end).
+.PP
+.I CTRL-b
+.IP
+Move cursor one character left (:sys:cmd:cursor_left).
+.PP
+.I CTRL-f
+.IP
+Move cursor one character right (:sys:cmd:cursor_right).
+.PP
+.I META-b
+.IP
+Move cursor one word left (:sys:cmd:cursor_word_left).
+.PP
+.I META-f
+.IP
+Move cursor one word right (:sys:cmd:cursor_word_right).
+.PP
+.I CTRL-x u
+.IP
+Undo one destructive operation (:sys:cmd:undo).
+.PP
+.I META-h
+.IP
+Show history of typed commands window (:sys:cmd_show_history).
+.PP
+.I CTRL-x ENTER
+.IP
+Put the name of the selected object into command line
+(:sys:cmd:put_active_object).
+.PP
+.I META-q
+.IP
+Put the full path of the selected object into command line
+(:sys:cmd:put_active_object_path).
+.PP
+.I CTRL-n
+.IP
+Put the name of the selected object in inactive panel into command line
+(:sys:cmd:put_inactive_object).
+.PP
+.I CTRL-s
+.IP
+Put the full path of the selected object in inactive panel into command line
+(:sys:cmd:put_inactive_object_path).
+.PP
+.I CTRL-x p
+.IP
+Put the current working directory path in inactive panel into command line
+(:sys:cmd:put_inactive_cmd).
+.PP
+.I CTRL-x a
+.IP
+Put the current working directory path in into command line
+(:sys:cmd:put_active_cmd).
+
+.SH Standard actions
+.SH Standard icmd
+.SH Standard events
+.SH Standard plugins
 .SH FILES
 .PP
 .I ~/.xyzcmd/conf/actions.xyz
@@ -104,4 +253,4 @@ Arbitrary user data saved by plugins.
 Max E. Kuznecov <mek@mek.uz.ua>
 .SH "SEE ALSO"
 .BR mc (1)
-
+2
