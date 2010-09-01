@@ -359,7 +359,8 @@ class LocalVFSObject(vfsobj.VFSObject):
         try:
             self._stat = os.lstat(path)
         except OSError, e:
-            raise VFSError(_(u"Unable to stat file %s: %s" % (path, str(e))))
+            raise VFSError(_(u"Unable to stat file %s: %s" %
+                (ustring(path), unicode(e.strerror, xyzenc))))
 
         return util.get_file_type(self._stat.st_mode)
 

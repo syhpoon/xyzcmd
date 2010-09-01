@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
+import traceback
+
 from libxyz.core.utils import ustring
 from libxyz.ui import lowui
 from libxyz.vfs import VFSObject
