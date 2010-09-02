@@ -7,11 +7,11 @@ Version 0.0.5
 Overview
 --------
 * Nested VFS support
-* Heavy VFS walker optimization: 30 to 40 times faster to enter a directory,
-  and a lot less memory intensive as well.
-* New Russian translation.
-* XYZCommander manpage.
-* Development has moved to github (http://github.com/syhpoon/xyzcmd).
+* Heavy LocalVFS walker optimization: 30 to 40 times faster
+  to enter a directory, and a lot less memory intensive as well
+* New Russian translation
+* XYZCommander manpage
+* Development has moved to github (http://github.com/syhpoon/xyzcmd)
 
 VFS
 ---
