@@ -96,7 +96,9 @@ It is possible to extend a shortcuts namespace by defining a prefix key.
 When prefix key is defined and pressed later on, the system will wait for
 another key to complete the two-level shortcut.
 
-A list of pre-defined standard shortcuts.
+Default keyboard shortcuts are read from
+.I /usr/share/xyzcmd/conf/keys.xyz
+file.
 All of the standard shortcuts can be overriden (as well as new ones created)
 in
 .I ~/.xyzcmd/conf/keys.xyz
@@ -207,6 +209,86 @@ Put the current working directory path in inactive panel into command line
 .IP
 Put the current working directory path in into command line
 (:sys:cmd:put_active_cmd).
+.PP
+.I DOWN
+.IP
+Move the selecting cursor in panel down (:sys:panel:entry_next).
+.PP
+.I UP
+.IP
+Move the selecting cursor in panel up (:sys:panel:entry_prev).
+.PP
+.I HOME
+.IP
+Move to the topmost entry in the panel (:sys:panel:entry_top).
+.PP
+.I END
+.IP
+Move to the last entry in the panel (:sys:panel:entry_bottom).
+.PP
+.I TAB
+.IP
+Switch active panel (:sys:panel:switch_active).
+.PP
+.I PAGE_DOWN, RIGHT
+.IP
+Move the cursor one block down (:sys:panel:block_next).
+.PP
+.I PAGE_UP, LEFT
+.IP
+Move the cursor one block up (:sys:panel:block_prev).
+.PP
+.I INSERT
+.IP
+Toggle tag on selected object (:sys:panel:toggle_tag).
+.PP
+.I META-a
+.IP
+Tag all objects in panel (:sys:panel:tag_all).
+.PP
+.I META-A
+.IP
+Untag all objects in panel (:sys:panel:untag_all).
+.PP
+.I META-i
+.IP
+Invert tag on selected object in panel (:sys:panel:tag_invert).
+.PP
+.I META-+
+.IP
+Show dialog for tagging objects using FSRule (:sys:panel:tag_rule).
+.PP
+.I META-/
+.IP
+Show dialog for untagging objects using FSRule (:sys:panel:untag_rule).
+.PP
+.I CTRL-w
+.IP
+Swap active and inactive panels (:sys:panel:swap_blocks).
+.PP
+.I CTRL-r
+.IP
+Reload active panel contents (:sys:panel:reload).
+.PP
+.I META-s
+.IP
+Search for an object in cycle (:sys:panel:search_cycle).
+.PP
+.I META-w
+.IP
+Search for an object backwards (:sys:panel:search_backward).
+.PP
+.I META-g
+.IP
+Filter out untagged objects in panel (:sys:panel:show_tagged).
+Press
+.I CTRL-r
+to exit from this view.
+.PP
+.I CTRL-x d
+.IP
+Tag objects in active panel which are missing from the inactive one
+(:sys:panel:tag_diff).
 
 .SH Standard actions
 .SH Standard icmd
