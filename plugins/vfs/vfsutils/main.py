@@ -270,7 +270,7 @@ class XYZPlugin(BasePlugin):
             stopped.set()
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        
+
         for obj in objs:
             if cancel.isSet():
                 break
