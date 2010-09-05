@@ -40,7 +40,7 @@ class XYZPlugin(BasePlugin):
     EVENTS = [("show",
                _(u"Fires upon showing dialog. Arguments: No")),
               ("info",
-               _(u"Fires when showing detaild plugin info."\
+               _(u"Fires when showing detailed plugin info."\
                  u"Arguments: Plugin object")),
         ]
 

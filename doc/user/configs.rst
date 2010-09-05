@@ -120,7 +120,7 @@ Example - load `show_binds` method from ``:core:bindlist`` plugin::
 .. _bind:
 
 bind(method, shortcut, context="DEFAULT")
-+++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++
 Bind `method` to be executed upon pressing `shortcut`.
 Method can be either full plugin method pass or python
 function/method/lambda object.
