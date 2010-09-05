@@ -1,4 +1,4 @@
-.TH xyzcmd 1 "29 August 2010" Linux "User manual"
+.TH XYZCMD 1 "29 August 2010" Linux
 .SH NAME
 xyzcmd \- pure console visual file manager.
 .SH SYNOPSIS
@@ -95,6 +95,13 @@ is the opposite of active panel.
 It is possible to extend a shortcuts namespace by defining a prefix key.
 When prefix key is defined and pressed later on, the system will wait for
 another key to complete the two-level shortcut.
+
+The shortcuts
+.I META-r
+\- show list of all current keybindings and
+.I META-t
+\- show list of all active plugins and their methods
+can both be very useful when dealing with shortcuts.
 
 Default keyboard shortcuts are read from
 .I /usr/share/xyzcmd/conf/keys.xyz
@@ -434,7 +441,7 @@ Try to auto-complete current cmd contents.
 .IP
 Show input test dialog.
 .PP
-.I META-\
+.I META-\e
 .IP
 Show bookmarks window.
 .PP
@@ -474,11 +481,82 @@ Show exit confirmation window.
 .IP
 Show about dialog.
 
-.SH Standard actions
-.SH Standard icmd
-.SH Standard events
-.SH Standard plugins
+.SH Standard icmds
+icmds are internal commands, they do not get passed to the shell,
+instead appropriate function is being called by XYZCommander.
+
+Default icmds are read from
+.I /usr/share/xyzcmd/conf/icmd.xyz
+file.
+One can create custom icmds in
+.I ~/.xyzcmd/conf/icmd.xyz
+
+.PP
+.I cd [<path>]
+.IP
+Change directory to <path>. Note, that path is XYZCommander's 
+full VFS path, that is not only on local file system, but also
+all the supported VFS subsystems as well.
+
+For instance, executing command:
+.I cd /tmp/archive.tar#vfs-tar#/inside/dir-inside
+will enter the /inside/dir-inside directory inside the /tmp/archive.tar
+file (providing it does exist, of course).
+
+cd without path will bring you to user's home dir.
+
+.I ~
+character is replaced with user's home dir in the path.
+
+.PP
+.I alias
+.IP
+Show list of XYZCommander aliases as well as parent shell's ones
+(if setup_shell option of plugin :core:shell is set to True and
+the current shell is supported by alias-discovery subsystem).
+.PP
+.I exit
+.IP
+Just silently exit XYZCommander.
+
 .SH FILES
+.PP
+.I /usr/share/xyzcmd/conf/actions.xyz
+.IP
+System actions.
+.PP
+.I /usr/share/xyzcmd/conf/aliases.xyz
+.IP
+System aliases.
+.PP
+.I /usr/share/xyzcmd/conf/hooks.xyz
+.IP
+System events hooks.
+.PP
+.I /usr/share/xyzcmd/conf/icmd.xyz
+.IP
+System internal command definitions.
+.PP
+.I /usr/share/xyzcmd/conf/keys.xyz
+.IP
+System shortcuts.
+.PP
+.I /usr/share/xyzcmd/conf/main.xyz
+.IP
+System configuration file.
+.PP
+.I /usr/share/xyzcmd/conf/plugins.xyz
+.IP
+System plugins configuration.
+.PP
+.I /usr/share/xyzcmd/conf/vfs.xyz
+.IP
+System VFS susbsystem configuration.
+.PP
+.I /usr/share/xyzcmd/skins/*
+.IP
+Default system skins.
+
 .PP
 .I ~/.xyzcmd/conf/actions.xyz
 .IP
@@ -519,4 +597,3 @@ Arbitrary user data saved by plugins.
 Max E. Kuznecov <mek@mek.uz.ua>
 .SH "SEE ALSO"
 .BR mc (1)
-2
