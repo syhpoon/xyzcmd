@@ -18,7 +18,7 @@ Event is represented by a string. When fired from the plugins it has form:
 more arguments along with it.
 
 For example, before passing a typed command to shell, method
-`:sys:cmd:execute` fires an event `event:sys:cmd:execute` with typed
+`:core:shell:execute` fires an event `event:core:shell:execute` with typed
 command as an argument.
 
 Hooks manager
@@ -75,3 +75,86 @@ List of events fired by core system:
   Event is fired when configuration parameter is changed via let() function.
 
   Arguments: Variable, Value, Section
+
+Plugins events
+--------------
+List of events fired by standard plugins:
+
+:core:bindlist
+~~~~~~~~~~~~~~
+**event:core:bindlist:show_binds**
+  Event is fired before showing dialog.
+
+  Arguments: no
+
+:core:console
+~~~~~~~~~~~~~
+**event:core:console:show**
+  Fires upon showing console window.
+
+  Arguments: no
+
+**event:core:console:cmd_prev**
+  Fires when scrolling through history.
+
+  Arguments: Current command from history buffer
+
+**event:core:console:execute**
+  Fires when typed command is to be executed.
+
+  Arguments: Typed command
+
+:core:keycodes
+~~~~~~~~~~~~~~
+**event:core:keycodes:show**
+  Fires upon showing dialog.
+
+  Arguments: no
+
+:core:pluginlist:
+~~~~~~~~~~~~~~~~~
+**event:core:pluginlist:show**
+  Fires upon showing dialog.
+
+  Arguments: no
+
+**event:core:pluginlist:info**
+  Fires when showing detailed plugin info.
+
+  Arguments: Selected plugin object
+
+:sys:panel
+~~~~~~~~~~
+**event:sys:panel:before_switch_tab**
+  Fires before switching to another tab.
+
+  Arguments: Block instance, Old tab index
+
+**event:sys:panel:switch_tab**
+  Fires when switching to another tab.
+
+  Arguments: Block instance, New tab index
+
+**event:sys:panel:new_tab**
+  Fires when new tab is added.
+
+  Arguments: Block instance, New tab index
+
+**event:sys:panel:del_tab**
+  Fires when tab is delete.
+
+  Arguments: Block instance, Deleted tab index
+
+:core:shell
+~~~~~~~~~~~
+**event:core:shell:execute**
+  Fires before command execution.
+
+  Arguments: A command string to be executed
+
+:vfs:fileinfo
+~~~~~~~~~~~~~
+**event:vfs:fileinfo:fileinfo**
+  Fires upon showing file-info dialog.
+
+  Arguments: Currently selected VFSObject instance
