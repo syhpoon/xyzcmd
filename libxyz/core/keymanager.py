@@ -19,6 +19,7 @@ import libxyz
 from libxyz.core.plugins import Namespace
 from libxyz.core.utils import ustring
 from libxyz.core.utils import is_func
+from libxyz.core.utils import typer
 
 from libxyz.ui import Shortcut
 
@@ -82,9 +83,18 @@ class KeyManager(object):
 
         if shortcut not in self._prefixes:
             self._prefixes.append(shortcut)
-    
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
+    @typer(None, Shortcut)
+    def is_prefix(self, shortcut):
+        """
+        Check if provided shortcut is a prefix
+        """
+
+        return shortcut in self._prefixes
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def load(self, method):
         """
@@ -192,3 +202,13 @@ class KeyManager(object):
         """
 
         return self._bind_data
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @typer(None, Shortcut, basestring)
+    def get_method_by_key(self, sc, context=None):
+        """
+        Find a method that a provided shortcut is bound to
+        """
+
+        return self._bind_data[context or self.CONTEXT_DEFAULT].get(sc, None)

@@ -28,6 +28,10 @@ Plugins
   Tag all the objects in active panel which are missing from the inactive one.
   Bound to Ctrl-x d.
 
+* Version 0.2 of plugin :ui:testinput.
+  Added support for prefix keys and also allow plugin to show current
+  binding of pressed key.
+
 Configuration
 -------------
 * New icmd - exit.
@@ -47,6 +51,8 @@ I18N
 Documentation
 -------------
 * Manpage added.
+* Described all standard events.
+* Described all standard plugins.
 
 Version 0.0.4
 =============

@@ -182,7 +182,7 @@ def split_cmd(cmd):
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def typer(*types, **kw):
-    msg = kw.get('msg', _(u"Invalid argument type %s"))
+    msg = kw.get('msg', (u"Invalid argument type %s"))
     error = kw.get('error', XYZValueError)
 
     def _wrap1(fun):
