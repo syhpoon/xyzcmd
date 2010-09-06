@@ -9,7 +9,7 @@ with |XYZ|.
 ``:core: plugins``
 ------------------
 *:core:* plugins provide, well, core functionality. As it was stated before,
-main part of |XYZ| functionality provided via plugins, thus keeping
+main part of |XYZ| functionality provided in plugins, thus keeping
 a base |XYZ| part lightweight, simple and clean.
 
 Here is the list of standard *:core:* plugins:
@@ -35,6 +35,13 @@ Public methods:
    *Context* columns contains context which was used upon binding.
    *Bind* colums contains keybinding and *Method* columns contains full method 
    name.
+
+Events:
+
+**event:core:bindlist:show_binds**
+  Event is fired before showing dialog.
+
+  Arguments: no.
 
 .. _core-console:
 
@@ -153,7 +160,7 @@ Events:
   Fires before command execution.
   Arguments: a command to be executed
 
-.. _core-shell:
+.. _core-complete:
 
 ``:core:complete``
 ++++++++++++++++++
@@ -244,12 +251,156 @@ Public methods:
 
 ``:vfs:`` plugins
 -----------------
-**TODO**
+VFS plugins are used to extend and simplify things with VFS subsystem.
+
+List of standard *:vfs:* plugins:
+
+* :ref:`:vfs:fileinfo <vfs-fileinfo>`
+* :ref:`:vfs:vfsutils <vfs-vfsutils>`
+
+.. _vfs-fileinfo:
+
+``:vfs-fileinfo``
++++++++++++++++++
+Dialog showing detailed information provided by VFS layer.
+
+Public methods:
+
+**fileinfo()**
+  Show dialog with information on selected VFS object.
+
+.. _vfs-vfsutils:
+
+``:vfs:vfsutils``
++++++++++++++++++
+Plugins contains bunch of useful VFS utils.
+
+Public methods:
+
+**copy(move=False)**
+  Show copy dialog.
+  move: If move is True - move objects instead of just copying.
+
+**mkdir()**
+  Create new directory dialog.
+
+**move()**
+  Show move dialog (a shorthand for copy(move=True)).
+
+**remove()**
+  Show remove dialog.
 
 ``:misc:`` plugins
 ------------------
-**TODO**
+Misc plugins contains some other miscellaneous utilites that just
+don't fit into other plugin categories.
+
+``:misc:about``
++++++++++++++++
+About |XYZ| plugin.
+
+Public methods:
+
+**about()**
+  Show about panel.
+
+``:misc:where``
++++++++++++++++
+Plugin is used to save/restore navigation state of |XYZ|.
+It saves/restores all tabs opened on both panels as well selected files
+in each tab too.
+
+Public methods:
+
+**load()**
+  Restore navigation state. It is called by handler bound to
+  :ref:`:event:startup <system-events>`.
+
+**save()**
+  Save navigation state. It is called bu handler bound to
+  :ref:`:event:shutdown <system-events>`.
 
 ``:sys:`` plugins
 -----------------
-**TODO**
+*:sys:* plugins don't really exist as a separate entity in :file:`plugins`
+directory. Instead they are constructed inside running |XYZ| modules.
+They're kind of "virtual" plugins, but nevertheless they play a
+significant roles in overall system behaviour.
+
+
+``:sys:panel``
+++++++++++++++
+This plugin is a "face" of |XYZ|, it is responsible for drawing both navigation
+panels and interact with user.
+
+Public methods:
+
+**action(active=True)**
+  Perfrom a defined action (if any) on selected object.
+
+  active: If True performs on active panel, otherwise - on inactive one.
+
+**active_tab(active=True)**
+  Get active tab index.
+
+  active: If True performs on active panel, otherwise - on inactive one.
+
+**block_next()**
+  Jump to the next block of objects.
+
+**block_prev()**
+  Jump to the previous block of objects.
+
+**chdir(path,active=True)**
+  Change directory. The directory can be in a full |XYZ| VFS format.
+
+  path: VFS path.
+  active: If True performs on active panel, otherwise - on inactive one.
+
+**cwd(active=True)**
+  Get current working directory.
+
+  active: If True performs on active panel, otherwise - on inactive one.
+
+**del_tab(index=None,active=True)**
+  Delete tab. If index is None - delete current tab.
+
+  active: If True performs on active panel, otherwise - on inactive one.
+
+**entry_bottom()**
+  Jump to the bottom object.
+
+**entry_next()**
+  Jump to the next object.
+
+**entry_prev()**
+  Jump to the previous object.
+
+**entry_top()**
+  Jump to the topmost object.
+
+Events:
+
+**event:sys:panel:before_switch_tab**
+  Fires before switching to another tab.
+
+  Arguments: Block instance, Old tab index
+
+**event:sys:panel:switch_tab**
+  Fires when switching to another tab.
+
+  Arguments: Block instance, New tab index
+
+**event:sys:panel:new_tab**
+  Fires when new tab is added.
+
+  Arguments: Block instance, New tab index
+
+**event:sys:panel:del_tab**
+  Fires when tab is delete.
+
+  Arguments: Block instance, Deleted tab index
+
+``:sys:cmd``
+++++++++++++
+

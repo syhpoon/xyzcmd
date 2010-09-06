@@ -32,6 +32,8 @@ Hook is a user-defined action to be performed when an event occurs. A
 hook can be established by calling HookManager instance's (xyz.hm)
 :func:`register` method, or by using hook() function in configs.
 
+.. _system-events:
+
 System events
 -------------
 List of events fired by core system:
@@ -75,86 +77,3 @@ List of events fired by core system:
   Event is fired when configuration parameter is changed via let() function.
 
   Arguments: Variable, Value, Section
-
-Plugins events
---------------
-List of events fired by standard plugins:
-
-:core:bindlist
-~~~~~~~~~~~~~~
-**event:core:bindlist:show_binds**
-  Event is fired before showing dialog.
-
-  Arguments: no
-
-:core:console
-~~~~~~~~~~~~~
-**event:core:console:show**
-  Fires upon showing console window.
-
-  Arguments: no
-
-**event:core:console:cmd_prev**
-  Fires when scrolling through history.
-
-  Arguments: Current command from history buffer
-
-**event:core:console:execute**
-  Fires when typed command is to be executed.
-
-  Arguments: Typed command
-
-:core:keycodes
-~~~~~~~~~~~~~~
-**event:core:keycodes:show**
-  Fires upon showing dialog.
-
-  Arguments: no
-
-:core:pluginlist:
-~~~~~~~~~~~~~~~~~
-**event:core:pluginlist:show**
-  Fires upon showing dialog.
-
-  Arguments: no
-
-**event:core:pluginlist:info**
-  Fires when showing detailed plugin info.
-
-  Arguments: Selected plugin object
-
-:sys:panel
-~~~~~~~~~~
-**event:sys:panel:before_switch_tab**
-  Fires before switching to another tab.
-
-  Arguments: Block instance, Old tab index
-
-**event:sys:panel:switch_tab**
-  Fires when switching to another tab.
-
-  Arguments: Block instance, New tab index
-
-**event:sys:panel:new_tab**
-  Fires when new tab is added.
-
-  Arguments: Block instance, New tab index
-
-**event:sys:panel:del_tab**
-  Fires when tab is delete.
-
-  Arguments: Block instance, Deleted tab index
-
-:core:shell
-~~~~~~~~~~~
-**event:core:shell:execute**
-  Fires before command execution.
-
-  Arguments: A command string to be executed
-
-:vfs:fileinfo
-~~~~~~~~~~~~~
-**event:vfs:fileinfo:fileinfo**
-  Fires upon showing file-info dialog.
-
-  Arguments: Currently selected VFSObject instance
