@@ -425,7 +425,7 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
 
     def get_current(self, active=True):
         """
-        Return VFSObject instance of selected
+        Return VFSObject instance of selected entry
         """
 
         if active:
