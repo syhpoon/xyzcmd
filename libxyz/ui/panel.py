@@ -960,8 +960,8 @@ class Block(lowui.FlowWidget):
 
         self._dir = _dir
 
-        #_entries = self._filter(_entries)
-        #_entries = self._sort(_entries)
+        _entries = self._filter(_entries)
+        _entries = self._sort(_entries)
         _entries.insert(0, _parent)
 
         self._title = truncate(_dir.full_path, self.size.cols - 4,
