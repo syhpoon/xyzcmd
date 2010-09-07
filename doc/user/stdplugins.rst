@@ -327,7 +327,6 @@ directory. Instead they are constructed inside running |XYZ| modules.
 They're kind of "virtual" plugins, but nevertheless they play a
 significant roles in overall system behaviour.
 
-
 ``:sys:panel``
 ++++++++++++++
 This plugin is a "face" of |XYZ|, it is responsible for drawing both navigation
@@ -378,6 +377,99 @@ Public methods:
 
 **entry_top()**
   Jump to the topmost object.
+
+**filter(objects)**
+  Filter objects according to defined policy - :var:`filters_policy`
+  plugin parameter.
+
+**get_active()**
+  Return list of tagged VFSObject instances or list of single selected
+  object if none tagged.
+
+**get_all(active=True)**
+  Return list of VFSObject instances in panel.
+
+**get_current(active=True)**
+  Return VFSObject instance of selected entry.
+
+**get_selected(active=True)**
+  Get selected VFSObject instance.
+
+**get_tabs(active=True)**
+  Return list of tabs in format: [(path, selected_name)]
+
+**get_tagged(active=True)**
+  Return list of tagged VFSObject instances.
+
+**get_untagged(active=True)**
+  Return list of not tagged VFSObject instances.
+
+**new_tab(tabname=None,active=True)**
+  Create new tab.
+
+**next_tab(active=True)**
+  Switch to the next tab.
+
+**prev_tab(active=True)**
+  Switch to the previous tab.
+
+**reload(active=True)**
+  Reload panel contents.
+
+**reload_all()**
+  Reload both panels.
+
+**search_backward()**
+  Enable backward search-when-you-type mode.
+
+**search_cycle()**
+  Enable cyclic search-when-you-type mode.
+
+**search_forward()**
+  Enable forward search-when-you-type mode.
+
+**select(name,active=True)**
+  Select VFS object by given name in current directory.
+
+**show_tagged(active=True)**
+  Show only tagged entries.
+
+**sort(objects)**
+  Sort objects.
+
+**swap_blocks()**
+  Swap panel blocks.
+
+**switch_active()**
+  Switch active block.
+
+**switch_tab(index,active=True)**
+  Switch to tab *index*.
+
+**tag_all(active=True)**
+  Tag every single object in current dir.
+
+**tag_diff(active=True)**
+  Tag all the objects in active panel which are missing from the
+  inactive one.
+
+**tag_invert(active=True)**
+  Invert currently tagged files.
+
+**tag_rule(active=True)**
+  Tag files by combined rule.
+
+**toggle_tag(active=True)**
+  Tag selected file.
+
+**untag_all(active=True)**
+  Untag every single object in current dir.
+
+**untag_rule(active=True)**
+  Untag files by combined rules.
+
+**vfs_driver(active=True)**
+  Return vfs driver used by block. None stands for LocalVFS.
 
 Events:
 
