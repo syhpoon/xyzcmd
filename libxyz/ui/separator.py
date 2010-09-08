@@ -15,6 +15,7 @@
 # along with XYZCommander. If not, see <http://www.gnu.org/licenses/>.
 
 from libxyz.ui import lowui
+from libxyz.ui.utils import term_width
 
 class Separator(lowui.FlowWidget):
     """
@@ -52,7 +53,7 @@ class Separator(lowui.FlowWidget):
 
         if title is not None:
             _title = " %s " % title
-            self.title_len = len(_title)
+            self.title_len = term_width(_title)
 
             if title_attr is not None:
                 self.text = lowui.Text((title_attr, _title))

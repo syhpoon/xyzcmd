@@ -52,3 +52,10 @@ def truncate(text, cols, enc=None, backward=False):
             return u"~%s" % text[-(cols - 1):]
         else:
             return u"%s~" % text[:cols - 1]
+
+def term_width(text):
+    """
+    Return length of the string in terms of terminal columns
+    """
+
+    return lowui.util.calc_width(text, 0, len(text))
