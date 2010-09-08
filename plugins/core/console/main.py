@@ -28,22 +28,22 @@ class XYZPlugin(BasePlugin):
     NAME = u"console"
     AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
     VERSION = u"0.1"
-    BRIEF_DESCRIPTION = u"Interactive management console"
-    FULL_DESCRIPTION = u"Provides interactive management console"
+    BRIEF_DESCRIPTION = _(u"Interactive management console")
+    FULL_DESCRIPTION = _(u"Provides interactive management console")
     NAMESPACE = u"core"
-    DOC = u"Configuration variables:\n"\
-          u"history_depth - Specifies how many entered "\
-          u"commands to keep. Default - 50\n"\
-          u"prompt - Command line prompt. Default - '> '"
+    DOC = _(u"Configuration variables:\n"\
+            u"history_depth - Specifies how many entered "\
+            u"commands to keep. Default - 50\n"\
+            u"prompt - Command line prompt. Default - '> '")
 
-    EVENTS = [("show",
-               "Fires upon showing console. Arguments: No."),
-              ("cmd_prev",
-               "Fires when scrolling through history. "\
-               "Arguments: Current command from history buffer"),
-              ("execute",
-               "Fires when typed command is to be executed. "\
-               "Arguments: typed command"),
+    EVENTS = [(u"show",
+               _(u"Fires upon showing console. Arguments: No.")),
+              (u"cmd_prev",
+               _(u"Fires when scrolling through history. "\
+                 u"Arguments: Current command from history buffer")),
+              (u"execute",
+               _(u"Fires when typed command is to be executed. "\
+                 u"Arguments: typed command")),
         ]
 
     def __init__(self, xyz):

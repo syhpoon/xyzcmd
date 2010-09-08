@@ -120,7 +120,7 @@ bind((lambda: call(":sys:panel:new_tab", active=False),
 bind((lambda: call(":sys:panel:del_tab", active=False),
       _(u"Remove tab in inactive panel")), kbd("CTRL-c", "D"))
 bind((lambda: call(":sys:panel:next_tab", active=False),
-      _(u"Switch to next tab in")), kbd("CTRL-c", "N"))
+      _(u"Switch to next tab in inactive panel")), kbd("CTRL-c", "N"))
 bind((lambda: call(":sys:panel:prev_tab", active=False),
       _(u"Switch to previous tab in inactive panel")), kbd("CTRL-c", "P"))
 bind((lambda: call(":sys:panel:switch_tab", 0, active=False),

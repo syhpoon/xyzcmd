@@ -26,7 +26,7 @@ class XYZPlugin(BasePlugin):
     NAME = u"magic"
     AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
     VERSION = u"0.1"
-    BRIEF_DESCRIPTION = u"Magic database FSRule"
+    BRIEF_DESCRIPTION = _(u"Magic database FSRule")
     FULL_DESCRIPTION = _(u"Plugin extends FSRule functionality to match "\
                          u"objects based on magic database description")
     NAMESPACE = u"fsrules"

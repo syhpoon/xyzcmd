@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-08-29 23:44+EEST\n"
+"POT-Creation-Date: 2010-09-09 01:25+EEST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -64,7 +64,7 @@ msgid "Remove tab in inactive panel"
 msgstr ""
 
 #: ./conf/keys.xyz:123
-msgid "Switch to next tab in"
+msgid "Switch to next tab in inactive panel"
 msgstr ""
 
 #: ./conf/keys.xyz:125
@@ -239,15 +239,15 @@ msgstr ""
 msgid "Error running callback procedure for event %s"
 msgstr ""
 
-#: ./libxyz/core/keymanager.py:80
+#: ./libxyz/core/keymanager.py:81
 msgid "Invalid shortcut type: %s."
 msgstr ""
 
-#: ./libxyz/core/keymanager.py:150
+#: ./libxyz/core/keymanager.py:160
 msgid "<Internal function object>"
 msgstr ""
 
-#: ./libxyz/core/keymanager.py:155
+#: ./libxyz/core/keymanager.py:165
 msgid "Invalid method type: %s. Must be string or function"
 msgstr ""
 
@@ -255,12 +255,12 @@ msgstr ""
 msgid "Logger console"
 msgstr ""
 
-#: ./libxyz/core/queue.py:43
-msgid "Max-size must be a positive integer number"
+#: ./libxyz/core/logger/logger.py:160
+msgid "Logger plugin"
 msgstr ""
 
-#: ./libxyz/core/utils.py:185
-msgid "Invalid argument type %s"
+#: ./libxyz/core/queue.py:43
+msgid "Max-size must be a positive integer number"
 msgstr ""
 
 #: ./libxyz/launcher.py:243
@@ -340,6 +340,22 @@ msgstr ""
 msgid "Unable to open history data file: %s"
 msgstr ""
 
+#: ./libxyz/ui/cmd.py:161
+msgid "Command line plugin"
+msgstr ""
+
+#: ./libxyz/ui/cmd.py:162
+msgid "Command line plugin. It allows to enter, edit and execute commands."
+msgstr ""
+
+#: ./libxyz/ui/cmd.py:165
+msgid ""
+"Configuration variables:\n"
+"undo_depth - Specifies how many undo levels to keep. Default - 10\n"
+"history_depth - Specifies how many entered commands to keep. Default - 50\n"
+"prompt - Command line prompt. Default - '$ '"
+msgstr ""
+
 #: ./libxyz/ui/cmd.py:615
 msgid "Unable to execute commands on non-local filesystems"
 msgstr ""
@@ -362,6 +378,46 @@ msgstr ""
 
 #: ./libxyz/ui/panel.py:164
 msgid "Error executing bind (%s): %s"
+msgstr ""
+
+#: ./libxyz/ui/panel.py:198
+msgid "System runtime plugin"
+msgstr ""
+
+#: ./libxyz/ui/panel.py:247
+msgid "Panel plugin"
+msgstr ""
+
+#: ./libxyz/ui/panel.py:249
+msgid ""
+"Configuration variables:\n"
+"filters_enabled - Enable permanent filters. Default - False\n"
+"filters_policy - Filters policy.\n"
+" If True - filter out objects which matching the rule.\n"
+" If False - filter out objects which do not match the rule. Default - True\n"
+"filters - List of permanent filters.\n"
+" Filters applied in defined order sequentially. Default - []\n"
+"sorting_policy - Active sorting policy name or None. Default - None\n"
+"sorting - Defined sorting policies. Each key corresponds to a policy name\n"
+" and value is either a function with two arguments (VFSObject) behaving\n"
+" like cmp() or a list of those functions. If value is a list, each function\n"
+" applied sequentially. Default - []"
+msgstr ""
+
+#: ./libxyz/ui/panel.py:265
+msgid "Fires before switching to another tab. Arguments: Block instance and old tab index."
+msgstr ""
+
+#: ./libxyz/ui/panel.py:269
+msgid "Fires when switching to another tab. Arguments: Block instance and new tab index."
+msgstr ""
+
+#: ./libxyz/ui/panel.py:273
+msgid "Fires when new tab is added. Arguments: Block instance and new tab index."
+msgstr ""
+
+#: ./libxyz/ui/panel.py:277
+msgid "Fires when tab is delete. Arguments: Block instance and deleted tab index."
 msgstr ""
 
 #: ./libxyz/ui/panel.py:294
@@ -412,71 +468,71 @@ msgstr ""
 msgid "Unable to find VFS handler for %s."
 msgstr ""
 
-#: ./libxyz/vfs/local.py:38
+#: ./libxyz/vfs/local.py:36
 msgid "Object must be opened before any operation"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:63
+#: ./libxyz/vfs/local.py:61
 msgid "Unable to walk on %s"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:101
+#: ./libxyz/vfs/local.py:99
 msgid "Unable to create directory inside %s object type"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:316 ./libxyz/vfs/tar.py:200
+#: ./libxyz/vfs/local.py:314 ./libxyz/vfs/tar.py:205
 msgid "Name"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:317 ./libxyz/vfs/tar.py:201
+#: ./libxyz/vfs/local.py:315 ./libxyz/vfs/tar.py:206
 msgid "Type"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:318
+#: ./libxyz/vfs/local.py:316
 msgid "Access time"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:319 ./libxyz/vfs/tar.py:202
+#: ./libxyz/vfs/local.py:317 ./libxyz/vfs/tar.py:207
 msgid "Modification time"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:320
+#: ./libxyz/vfs/local.py:318
 msgid "Change time"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:321 ./libxyz/vfs/tar.py:203
+#: ./libxyz/vfs/local.py:319 ./libxyz/vfs/tar.py:208
 msgid "Size in bytes"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:322 ./libxyz/vfs/tar.py:204
+#: ./libxyz/vfs/local.py:320 ./libxyz/vfs/tar.py:209
 msgid "Owner"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:323 ./libxyz/vfs/tar.py:205
+#: ./libxyz/vfs/local.py:321 ./libxyz/vfs/tar.py:210
 msgid "Group"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:324 ./libxyz/vfs/tar.py:206
+#: ./libxyz/vfs/local.py:322 ./libxyz/vfs/tar.py:211
 msgid "Access mode"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:325
+#: ./libxyz/vfs/local.py:323
 msgid "Inode"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:326 ./libxyz/vfs/tar.py:207
+#: ./libxyz/vfs/local.py:324 ./libxyz/vfs/tar.py:212
 msgid "Type-specific data"
 msgstr ""
 
-#: ./libxyz/vfs/local.py:395
+#: ./libxyz/vfs/local.py:388
 msgid "Error creating VFS object: %s"
 msgstr ""
 
-#: ./libxyz/vfs/tar.py:453
+#: ./libxyz/vfs/tar.py:461
 msgid "Unable to chown %s: %s"
 msgstr ""
 
-#: ./libxyz/vfs/tar.py:459
+#: ./libxyz/vfs/tar.py:467
 msgid "Unable to chmod %s: %s"
 msgstr ""
 
@@ -484,19 +540,31 @@ msgstr ""
 msgid "Feature not implemented"
 msgstr ""
 
-#: ./plugins/core/bindlist/main.py:50
+#: ./plugins/core/bindlist/main.py:18
+msgid "Show keybindings"
+msgstr ""
+
+#: ./plugins/core/bindlist/main.py:19
+msgid "Plugin is used to display all current keybindings along with corresponding contextes and methods"
+msgstr ""
+
+#: ./plugins/core/bindlist/main.py:24
+msgid "Event is fired before showing dialog. Receives no arguments."
+msgstr ""
+
+#: ./plugins/core/bindlist/main.py:51
 msgid "Bind"
 msgstr ""
 
-#: ./plugins/core/bindlist/main.py:50
+#: ./plugins/core/bindlist/main.py:51
 msgid "Context"
 msgstr ""
 
-#: ./plugins/core/bindlist/main.py:50
-msgid "Method"
+#: ./plugins/core/bindlist/main.py:52
+msgid "Method / Description"
 msgstr ""
 
-#: ./plugins/core/bindlist/main.py:67
+#: ./plugins/core/bindlist/main.py:69
 msgid "Keybindings"
 msgstr ""
 
@@ -508,23 +576,72 @@ msgstr ""
 msgid "Complete"
 msgstr ""
 
+#: ./plugins/core/console/main.py:31
+msgid "Interactive management console"
+msgstr ""
+
+#: ./plugins/core/console/main.py:32
+msgid "Provides interactive management console"
+msgstr ""
+
+#: ./plugins/core/console/main.py:34
+msgid ""
+"Configuration variables:\n"
+"history_depth - Specifies how many entered commands to keep. Default - 50\n"
+"prompt - Command line prompt. Default - '> '"
+msgstr ""
+
+#: ./plugins/core/console/main.py:40
+msgid "Fires upon showing console. Arguments: No."
+msgstr ""
+
+#: ./plugins/core/console/main.py:42
+msgid "Fires when scrolling through history. Arguments: Current command from history buffer"
+msgstr ""
+
+#: ./plugins/core/console/main.py:45
+msgid "Fires when typed command is to be executed. Arguments: typed command"
+msgstr ""
+
 #: ./plugins/core/console/main.py:59
 msgid "Management console"
 msgstr ""
 
-#: ./plugins/core/keycodes/main.py:119
+#: ./plugins/core/keycodes/main.py:38
+msgid "Setup terminal keycodes"
+msgstr ""
+
+#: ./plugins/core/keycodes/main.py:40
+msgid ""
+"keycodes plugin is used to properly configure terminal keycodes.\n"
+"For each terminal type keycodes are stored independently. Terminal type determined by examining TERM environment variable."
+msgstr ""
+
+#: ./plugins/core/keycodes/main.py:49
+msgid "Fires upon showing dialog"
+msgstr ""
+
+#: ./plugins/core/keycodes/main.py:120
 msgid ""
 "Please press key %s\n"
 "Press ENTER to skip key\n"
 "Press ESCAPE to quit dialog"
 msgstr ""
 
-#: ./plugins/core/keycodes/main.py:138
+#: ./plugins/core/keycodes/main.py:139
 msgid "Save learned keys?"
 msgstr ""
 
-#: ./plugins/core/keycodes/main.py:204
+#: ./plugins/core/keycodes/main.py:205
 msgid "Unable to save learned data"
+msgstr ""
+
+#: ./plugins/core/pluginlist/main.py:35
+msgid "Show plugin list"
+msgstr ""
+
+#: ./plugins/core/pluginlist/main.py:36
+msgid "Show all currently loaded plugins and associated information"
 msgstr ""
 
 #: ./plugins/core/pluginlist/main.py:41
@@ -532,7 +649,7 @@ msgid "Fires upon showing dialog. Arguments: No"
 msgstr ""
 
 #: ./plugins/core/pluginlist/main.py:43
-msgid "Fires when showing detaild plugin info.Arguments: Plugin object"
+msgid "Fires when showing detailed plugin info.Arguments: Plugin object"
 msgstr ""
 
 #: ./plugins/core/pluginlist/main.py:73
@@ -579,8 +696,16 @@ msgstr ""
 msgid "Press ENTER to continue..."
 msgstr ""
 
+#: ./plugins/fsrules/magic/main.py:29
+msgid "Magic database FSRule"
+msgstr ""
+
 #: ./plugins/fsrules/magic/main.py:30
 msgid "Plugin extends FSRule functionality to match objects based on magic database description"
+msgstr ""
+
+#: ./plugins/misc/about/main.py:20
+msgid "About plugin"
 msgstr ""
 
 #: ./plugins/misc/where/main.py:19
@@ -595,6 +720,10 @@ msgstr ""
 msgid "Unable to open where data file: %s"
 msgstr ""
 
+#: ./plugins/ui/bookmarks/main.py:37
+msgid "Frequently used directories"
+msgstr ""
+
 #: ./plugins/ui/bookmarks/main.py:144
 msgid "Bookmarks"
 msgstr ""
@@ -607,12 +736,38 @@ msgstr ""
 msgid "Error parsing bookmarks file: %s"
 msgstr ""
 
-#: ./plugins/ui/testinput/main.py:45
+#: ./plugins/ui/testinput/main.py:19
+msgid "Test input"
+msgstr ""
+
+#: ./plugins/ui/testinput/main.py:20
+msgid ""
+"Simple dialog to show pressed keys.\n"
+"Shortcut is what XYZCommander expects to see in configuration files.\n"
+"Raw is what low-level library emits to focus widget.\n"
+"If any keybinding currently exists for key it is shown on the bottom line"
+msgstr ""
+
+#: ./plugins/ui/testinput/main.py:49
 msgid "Press any key. Escape twice to quit."
 msgstr ""
 
-#: ./plugins/ui/testinput/main.py:51
+#: ./plugins/ui/testinput/main.py:56
 msgid "Input test"
+msgstr ""
+
+#: ./plugins/vfs/fileinfo/main.py:18
+msgid "Show VFS object information"
+msgstr ""
+
+#: ./plugins/vfs/fileinfo/main.py:19
+msgid "Show detailed information provided by VFS layer"
+msgstr ""
+
+#: ./plugins/vfs/fileinfo/main.py:25
+msgid ""
+"Event is fired upon showing file-info dialog.\n"
+"Arguments: Currently selected VFSObject instance"
 msgstr ""
 
 #: ./plugins/vfs/fileinfo/main.py:59

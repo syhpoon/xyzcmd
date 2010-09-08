@@ -157,7 +157,7 @@ class Logger(object):
         _logger_plugin = VirtualPlugin(self.xyz, u"logger")
         _logger_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
         _logger_plugin.VERSION = u"0.1"
-        _logger_plugin.BRIEF_DESCRIPTION = u"Logger plugin"
+        _logger_plugin.BRIEF_DESCRIPTION = _(u"Logger plugin")
         _logger_plugin.FULL_DESCRIPTION = re.sub(r"\ {2,}",
                                                  r"", self.__doc__).strip()
         _logger_plugin.HOMEPAGE = u"xyzcmd.syhpoon.name"

@@ -53,6 +53,8 @@ def truncate(text, cols, enc=None, backward=False):
         else:
             return u"%s~" % text[:cols - 1]
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 def term_width(text):
     """
     Return length of the string in terms of terminal columns

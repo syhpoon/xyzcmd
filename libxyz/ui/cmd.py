@@ -158,16 +158,16 @@ class Cmd(lowui.FlowWidget):
         _cmd_plugin = libxyz.core.plugins.VirtualPlugin(self.xyz, u"cmd")
         _cmd_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
         _cmd_plugin.VERSION = u"0.1"
-        _cmd_plugin.BRIEF_DESCRIPTION = u"Command line plugin"
-        _cmd_plugin.FULL_DESCRIPTION = u"Command line plugin. "\
-                                       u"It allows to enter, edit and "\
-                                       u"execute commands."
-        _cmd_plugin.DOC = u"Configuration variables:\n"\
-                          u"undo_depth - Specifies how many undo levels to "\
-                          u"keep. Default - 10\n"\
-                          u"history_depth - Specifies how many entered "\
-                          u"commands to keep. Default - 50\n"\
-                          u"prompt - Command line prompt. Default - '$ '"
+        _cmd_plugin.BRIEF_DESCRIPTION = _(u"Command line plugin")
+        _cmd_plugin.FULL_DESCRIPTION = _(u"Command line plugin. "\
+                                         u"It allows to enter, edit and "\
+                                         u"execute commands.")
+        _cmd_plugin.DOC = _(u"Configuration variables:\n"\
+                            u"undo_depth - Specifies how many undo levels to "\
+                            u"keep. Default - 10\n"\
+                            u"history_depth - Specifies how many entered "\
+                            u"commands to keep. Default - 50\n"\
+                            u"prompt - Command line prompt. Default - '$ '")
 
         _cmd_plugin.export(self.del_char)
         _cmd_plugin.export(self.del_char_left)

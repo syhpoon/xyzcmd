@@ -195,7 +195,7 @@ class Panel(lowui.WidgetWrap):
 
         _run_plugin.VERSION = u"0.1"
         _run_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
-        _run_plugin.BRIEF_DESCRIPTION = u"Run plugin"
+        _run_plugin.BRIEF_DESCRIPTION = _(u"System runtime plugin")
         _run_plugin.HOMEPAGE = u"xyzcmd.syhpoon.name"
 
         # :sys:panel
@@ -244,9 +244,9 @@ class Panel(lowui.WidgetWrap):
 
         _panel_plugin.VERSION = u"0.1"
         _panel_plugin.AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
-        _panel_plugin.BRIEF_DESCRIPTION = u"Panel plugin"
+        _panel_plugin.BRIEF_DESCRIPTION = _(u"Panel plugin")
         _panel_plugin.HOMEPAGE = u"xyzcmd.syhpoon.name"
-        _panel_plugin.DOC = u"""\
+        _panel_plugin.DOC = _(u"""\
 Configuration variables:
 filters_enabled - Enable permanent filters. Default - False
 filters_policy - Filters policy.
@@ -258,24 +258,24 @@ sorting_policy - Active sorting policy name or None. Default - None
 sorting - Defined sorting policies. Each key corresponds to a policy name
  and value is either a function with two arguments (VFSObject) behaving
  like cmp() or a list of those functions. If value is a list, each function
- applied sequentially. Default - []"""
+ applied sequentially. Default - []""")
 
         _panel_plugin.EVENTS = [
-            ("before_switch_tab",
-             "Fires before switching to another tab. "\
-             "Arguments: Block instance and old tab index."),
+            (u"before_switch_tab",
+             _(u"Fires before switching to another tab. "\
+               u"Arguments: Block instance and old tab index.")),
 
-            ("switch_tab",
-             "Fires when switching to another tab. "\
-             "Arguments: Block instance and new tab index."),
+            (u"switch_tab",
+             _(u"Fires when switching to another tab. "\
+               u"Arguments: Block instance and new tab index.")),
 
-            ("new_tab",
-             "Fires when new tab is added. "\
-             "Arguments: Block instance and new tab index."),
+            (u"new_tab",
+             _(u"Fires when new tab is added. "\
+               u"Arguments: Block instance and new tab index.")),
 
-            ("del_tab",
-             "Fires when tab is delete. "\
-             "Arguments: Block instance and deleted tab index."),
+            (u"del_tab",
+             _(u"Fires when tab is delete. "\
+               u"Arguments: Block instance and deleted tab index.")),
             ]
 
         self.xyz.pm.register(_run_plugin)

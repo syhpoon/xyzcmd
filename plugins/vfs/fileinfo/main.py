@@ -15,15 +15,15 @@ class XYZPlugin(BasePlugin):
     NAME = u"fileinfo"
     AUTHOR = u"Max E. Kuznecov"
     VERSION = u"0.1"
-    BRIEF_DESCRIPTION = u"Show VFS object information"
-    FULL_DESCRIPTION = u"Show detailed information provided by VFS layer"
+    BRIEF_DESCRIPTION = _(u"Show VFS object information")
+    FULL_DESCRIPTION = _(u"Show detailed information provided by VFS layer")
     NAMESPACE = u"vfs"
     MIN_XYZ_VERSION = None
     DOC = None
     HOMEPAGE = u"xyzcmd.syhpoon.name"
-    EVENTS = [("fileinfo",
-               "Event is fired upon showing file-info dialog.\n"\
-               "Arguments: Currently selected VFSObject instance"),
+    EVENTS = [(u"fileinfo",
+               _(u"Event is fired upon showing file-info dialog.\n"\
+                 u"Arguments: Currently selected VFSObject instance")),
               ]
 
     def __init__(self, xyz):

@@ -35,17 +35,18 @@ class XYZPlugin(BasePlugin):
     VERSION = u"0.1"
     NAMESPACE = u"core"
 
-    BRIEF_DESCRIPTION = u"Setup terminal keycodes"
+    BRIEF_DESCRIPTION = _(u"Setup terminal keycodes")
 
-    FULL_DESCRIPTION = u"keycodes plugin is used to properly "\
-                       u"configure terminal keycodes.\n"\
-                       u"For each terminal type keycodes are stored "\
-                       u"independently. Terminal type determined by examining "\
-                       u"TERM environment variable."
+    FULL_DESCRIPTION = _(u"keycodes plugin is used to properly "\
+                         u"configure terminal keycodes.\n"\
+                         u"For each terminal type keycodes are stored "\
+                         u"independently. Terminal type determined "\
+                         u"by examining "\
+                         u"TERM environment variable.")
 
     HOMEPAGE = u"xyzcmd.syhpoon.name"
-    EVENTS = [("show",
-               "Fires upon showing dialog"),
+    EVENTS = [(u"show",
+               _(u"Fires upon showing dialog")),
               ]
 
     def __init__(self, xyz):

@@ -32,9 +32,9 @@ class XYZPlugin(BasePlugin):
     NAME = u"pluginlist"
     AUTHOR = u"Max E. Kuznecov ~syhpoon <syhpoon@syhpoon.name>"
     VERSION = u"0.2"
-    BRIEF_DESCRIPTION = u"Show plugin list"
-    FULL_DESCRIPTION = u"Show all currently loaded plugins and associated "\
-                       u"information"
+    BRIEF_DESCRIPTION = _(u"Show plugin list")
+    FULL_DESCRIPTION = _(u"Show all currently loaded plugins and associated "\
+                         u"information")
     NAMESPACE = u"core"
     HOMEPAGE = u"xyzcmd.syhpoon.name"
     EVENTS = [("show",

@@ -17,7 +17,7 @@ class XYZPlugin(BasePlugin):
     NAME = u"about"
     AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
     VERSION = u"0.1"
-    BRIEF_DESCRIPTION = u"About plugin"
+    BRIEF_DESCRIPTION = _(u"About plugin")
     FULL_DESCRIPTION = u""
     NAMESPACE = u"misc"
     MIN_XYZ_VERSION = None

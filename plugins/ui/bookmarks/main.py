@@ -34,7 +34,7 @@ class XYZPlugin(BasePlugin):
     NAME = u"bookmarks"
     AUTHOR = u"Max E. Kuznecov <syhpoon@syhpoon.name>"
     VERSION = u"0.1"
-    BRIEF_DESCRIPTION = u"Frequently used directories"
+    BRIEF_DESCRIPTION = _(u"Frequently used directories")
     FULL_DESCRIPTION = u""
     NAMESPACE = u"ui"
     MIN_XYZ_VERSION = None
