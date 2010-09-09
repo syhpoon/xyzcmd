@@ -226,11 +226,12 @@ Public methods:
 
 **show_bookmarks()**
   Show saved bookmarks in popup dialog. One can navigate through the list
-  by pressing *UP* and *DOWN* keys. Pressing *RETURN* on the entry causes
+  by pressing :kbd:`UP` and :kbd:`DOWN` keys.
+  Pressing :kbd:`RETURN` on the entry causes
   |XYZ| to chdir to specified path in active panel.
 
   Entry number can be used to quickly select particular entry, just type the
-  number and then press *RETURN*.
+  number and then press :kbd:`RETURN`.
 
 .. _ui-testinput:
 
@@ -379,7 +380,7 @@ Public methods:
   Jump to the topmost object.
 
 **filter(objects)**
-  Filter objects according to defined policy - :var:`filters_policy`
+  Filter objects according to defined policy - `filters_policy`
   plugin parameter.
 
 **get_active()**
@@ -471,6 +472,33 @@ Public methods:
 **vfs_driver(active=True)**
   Return vfs driver used by block. None stands for LocalVFS.
 
+Configuration options:
+
+**filters_enabled**
+  Enable permanent filters.
+  Default - False
+
+**filters_policy**
+  Filters policy. If True - filter out objects matching the rule.
+  If False - filter out objects which do not match the rule.
+  Default - True
+
+**filters**
+  List of permanent filters.
+  Filters applied in defined order sequentially.
+  Default - []
+
+**sorting_policy**
+  Active sorting policy name or None.
+  Default - None
+
+**sorting**
+  Defined sorting policies. Each key corresponds to a policy name
+  and value is either a function with two arguments (VFSObject) behaving
+  like cmp() or a list of those functions. If value is a list,
+  each function applied sequentially.
+  Default - []
+
 Events:
 
 **event:sys:panel:before_switch_tab**
@@ -495,4 +523,178 @@ Events:
 
 ``:sys:cmd``
 ++++++++++++
+The plugin allows to execute external commands using system shell.
 
+Public methods:
+
+**append(obj)**
+  Append arbitrary string at the end of cmd.
+
+**clear()**
+  Clear the whole cmd line.
+
+**clear_left()**
+  Clear the cmd line from the cursor to the left.
+
+**clear_right()**
+  Clear the cmd line from the cursor to the right.
+
+**cursor_begin()**
+  Move cursor to the beginning of the command line.
+
+**cursor_end()**
+  Move cursor to the end of the command line.
+
+**cursor_left()**
+  Move cursor left.
+
+**cursor_right()**
+  Move cursor right.
+
+**cursor_word_left()**
+  Move cursor one word left.
+
+**cursor_word_right()**
+  Move cursor one word right.
+
+**del_char()**
+  Delete single character under the cursor.
+
+**del_char_left()**
+  Delete single character left to the cursor.
+
+**del_word_left()**
+  Delete a word left to the cursor.
+
+**del_word_right()**
+  Delete a word right to the cursor.
+
+**escape(obj,join=False)**
+  Escape filename.
+
+  obj: String to escape
+  join: If False return list otherwise return joined string
+
+**execute()**
+  Execute cmd contents in shell.
+
+**get()**
+  Get cmd contents.
+
+**history_clear()**
+  Clear commands history.
+
+**history_next()**
+  Scroll through list of saved commands forward.
+
+**history_prev()**
+  Scroll through list of saved commands backward.
+
+**is_empty()**
+  Return True if cmd is empty, i.e. has no contents.
+
+**put(obj,space=True)**
+  Put arbitrary string to cmd line starting from the cursor position.
+
+  space: Flag indicating whether to append a space char after the object.
+
+**put_active_cwd()**
+  Put current working directory of active panel to cmd line.
+
+**put_active_object()**
+  Put currently selected VFS object name in panel to cmd line.
+
+**put_active_object_path()**
+  Put currently selected VFS object full path in panel to cmd line.
+
+**put_inactive_cwd()**
+  Put current working directory of inactive panel to cmd line.
+
+**put_inactive_object()**
+  Put selected VFS object name in inactive panel to cmd line.
+
+**put_inactive_object_path()**
+  Put selected VFS object full path in inactive panel to cmd line.
+
+**replace_aliases(data)**
+  Check if first word of the command line (which is supposed to be a
+  command to execute) is in our aliases table, if it is, replace it.
+
+  data: string
+
+**show_history()**
+  Show commands history list.
+
+**undo()**
+  Restore one level from undo buffer.
+
+**undo_clear()**
+  Clear undo buffer.
+
+Configuration options:
+
+**undo_depth**
+  Specifies how many undo levels to keep.
+  Default - 10 
+
+**history_depth**
+  Specifies how many entered commands to keep.
+  Default - 50
+
+**prompt**
+  Command line prompt.
+  Default - '$ '
+
+``:sys:logger``
++++++++++++++++
+Logger plugin is used to collect and display system messages occuring
+in runtime.
+
+Available message levels are:
+
+*PANIC*
+  Critical error.
+
+*ERROR*
+  Non-critical error.
+
+*WARNING*
+  Warning.
+
+*INFO*
+  Informational message.
+
+*DEBUG*
+  Debug messages.
+
+*ALL*
+   All of the above.
+
+Public methods:
+
+**clear()**
+  Clear log queue.
+
+**log(msg,level=None)**
+  Add new message to log.
+
+  msg: Message
+  level: Log level
+
+**show_console**
+  Show logger console.
+
+``:sys:run``
+++++++++++++
+
+This plugin allows to control |XYZ| runtime system.
+
+Public methods:
+
+**repaint()**
+  Repaint screen.
+
+**shutdown(confirm=True)**
+  Quit program.
+
+  confirm: If True - first show confirming dialog
