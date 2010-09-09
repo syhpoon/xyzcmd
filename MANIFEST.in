@@ -8,6 +8,7 @@ graft conf
 graft doc/api
 graft doc/user-manual
 include doc/overview.pdf
+include doc/xyzcmd.1
 graft plugins
 graft skins
 graft scripts

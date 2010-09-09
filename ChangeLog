@@ -35,7 +35,7 @@ Plugins
 Configuration
 -------------
 * New icmd - exit.
-* New FSRules type{} argument:
+* New FSRules type{} arguments:
   * file_or_link2: Matches file objects or links to ones.
   * dir_or_link2: Matches directory objects or links to ones.
   * socket_or_link2: Matches socket objects or links to ones.

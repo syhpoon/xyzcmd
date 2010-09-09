@@ -305,7 +305,7 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
 
     def repaint(self):
         """
-        Reparint screen
+        Repaint screen
         """
 
         self._resize = True
