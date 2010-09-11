@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-09-09 01:25+EEST\n"
+"POT-Creation-Date: 2010-09-12 02:14+EEST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -263,19 +263,19 @@ msgstr ""
 msgid "Max-size must be a positive integer number"
 msgstr ""
 
-#: ./libxyz/launcher.py:243
+#: ./libxyz/launcher.py:250
 msgid "Skin %s is not usable with requested color settings. Using default."
 msgstr ""
 
-#: ./libxyz/launcher.py:304
+#: ./libxyz/launcher.py:311
 msgid "Error parsing system config %s: %s"
 msgstr ""
 
-#: ./libxyz/launcher.py:308
+#: ./libxyz/launcher.py:315
 msgid "Error parsing user config %s: %s"
 msgstr ""
 
-#: ./libxyz/launcher.py:341
+#: ./libxyz/launcher.py:348
 msgid "Error parsing config %s: %s"
 msgstr ""
 
@@ -393,7 +393,7 @@ msgid ""
 "Configuration variables:\n"
 "filters_enabled - Enable permanent filters. Default - False\n"
 "filters_policy - Filters policy.\n"
-" If True - filter out objects which matching the rule.\n"
+" If True - filter out objects matching the rule.\n"
 " If False - filter out objects which do not match the rule. Default - True\n"
 "filters - List of permanent filters.\n"
 " Filters applied in defined order sequentially. Default - []\n"

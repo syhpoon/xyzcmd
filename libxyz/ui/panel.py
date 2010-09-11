@@ -250,7 +250,7 @@ class Panel(lowui.WidgetWrap):
 Configuration variables:
 filters_enabled - Enable permanent filters. Default - False
 filters_policy - Filters policy.
- If True - filter out objects which matching the rule.
+ If True - filter out objects matching the rule.
  If False - filter out objects which do not match the rule. Default - True
 filters - List of permanent filters.
  Filters applied in defined order sequentially. Default - []

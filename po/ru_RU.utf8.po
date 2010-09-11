@@ -73,47 +73,47 @@ msgstr "Переключиться на предыдущую вкладку в �
 
 #: conf/keys.xyz:127
 msgid "Switch to tab 0 in inactive panel"
-msgstr ""
+msgstr "Переключиться на вкладку 0 в неактивной панели"
 
 #: conf/keys.xyz:129
 msgid "Switch to tab 1 in inactive panel"
-msgstr ""
+msgstr "Переключиться на вкладку 1 в неактивной панели"
 
 #: conf/keys.xyz:131
 msgid "Switch to tab 2 in inactive panel"
-msgstr ""
+msgstr "Переключиться на вкладку 2 в неактивной панели"
 
 #: conf/keys.xyz:133
 msgid "Switch to tab 3 in inactive panel"
-msgstr ""
+msgstr "Переключиться на вкладку 3 в неактивной панели"
 
 #: conf/keys.xyz:135
 msgid "Switch to tab 4 in inactive panel"
-msgstr ""
+msgstr "Переключиться на вкладку 4 в неактивной панели"
 
 #: conf/keys.xyz:137
 msgid "Switch to tab 5 in inactive panel"
-msgstr ""
+msgstr "Переключиться на вкладку 5 в неактивной панели"
 
 #: conf/keys.xyz:139
 msgid "Switch to tab 6 in inactive panel"
-msgstr ""
+msgstr "Переключиться на вкладку 6 в неактивной панели"
 
 #: conf/keys.xyz:141
 msgid "Switch to tab 7 in inactive panel"
-msgstr ""
+msgstr "Переключиться на вкладку 7 в неактивной панели"
 
 #: conf/keys.xyz:143
 msgid "Switch to tab 8 in inactive panel"
-msgstr ""
+msgstr "Переключиться на вкладку 8 в неактивной панели"
 
 #: conf/keys.xyz:145
 msgid "Switch to tab 9 in inactive panel"
-msgstr ""
+msgstr "Переключиться на вкладку 9 в неактивной панели"
 
 #: conf/keys.xyz:156
 msgid "Complete the command line"
-msgstr ""
+msgstr "Дополнить содержимое коммандой строки"
 
 #: conf/keys.xyz:161
 #, fuzzy
@@ -130,7 +130,7 @@ msgstr "Запустить стандартный редактор"
 
 #: conf/keys.xyz:178
 msgid "Chdir in active panel to the same dir as in inactive one"
-msgstr ""
+msgstr "В активной панели перейти в тот же каталог, что и в неактивной"
 
 #: libxyz/core/actionmanager.py:44
 msgid "Unable to register action: invalid rule: %s"
@@ -354,7 +354,8 @@ msgstr "Коммандная строка"
 
 #: libxyz/ui/cmd.py:162
 msgid "Command line plugin. It allows to enter, edit and execute commands."
-msgstr ""
+msgstr "Модуль коммандной строки. Позволяет вводить, редактировать "
+"и выполнять команды посредством системной оболочки."
 
 #: libxyz/ui/cmd.py:165
 msgid ""
@@ -362,7 +363,10 @@ msgid ""
 "undo_depth - Specifies how many undo levels to keep. Default - 10\n"
 "history_depth - Specifies how many entered commands to keep. Default - 50\n"
 "prompt - Command line prompt. Default - '$ '"
-msgstr ""
+msgstr "Параметры конфигурации:\n"
+"undo_depth - Размер буфера отмены. По-умолчанию - 10\n"
+"history_depth - Размер буфера введённых команд. По-умолчанию - 50\n"
+"prompt - Приглашение коммандной строки. По-умолчанию - '$ '"
 
 #: libxyz/ui/cmd.py:615
 msgid "Unable to execute commands on non-local filesystems"
@@ -401,7 +405,7 @@ msgid ""
 "Configuration variables:\n"
 "filters_enabled - Enable permanent filters. Default - False\n"
 "filters_policy - Filters policy.\n"
-" If True - filter out objects which matching the rule.\n"
+" If True - filter out objects matching the rule.\n"
 " If False - filter out objects which do not match the rule. Default - True\n"
 "filters - List of permanent filters.\n"
 " Filters applied in defined order sequentially. Default - []\n"
@@ -410,7 +414,20 @@ msgid ""
 " and value is either a function with two arguments (VFSObject) behaving\n"
 " like cmp() or a list of those functions. If value is a list, each function\n"
 " applied sequentially. Default - []"
-msgstr ""
+msgstr "Параметры конфигурации:\n"
+"filters_enabled - Включить фильтры. По-умолчанию - False\n"
+"filters_policy - Политика фильтрации.\n"
+" Если True - отфильтровывать объекты, совпадающие с правилом.\n"
+" Если False - отфильтровывать объекты, не совпадающие с правилом.\n"
+" По-умолчанию - True.\n"
+"filters - Список фильтров.\n"
+" Фильтры последовательно применяются в указанном порядке. По-умолчанию - []\n"
+"sorting_policy - Название активного метода сортировки или None."
+" По-умолчанию - None.\n"
+"sorting - Методы сортировки. Ключ - название метода\n"
+" а значение - либо функция от двух аргументов (VFSObject) работающая\n"
+" как cmp() либо список таких функций. Если значение список - \n"
+" каждая функция применяется последовательно. По-умолчанию - []."
 
 #: libxyz/ui/panel.py:265
 msgid ""
