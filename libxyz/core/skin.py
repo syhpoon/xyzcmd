@@ -58,6 +58,17 @@ class SkinManager(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def get_all(self):
+        """
+        Get all stored skins
+
+        @return: [Skin()]
+        """
+
+        return self._skins.values()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     def clear(self):
         """
         Clear storage
@@ -100,6 +111,11 @@ class Skin(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def __cmp__(self, other):
+        return cmp(self.name, other.name)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     def __getitem__(self, key):
         return self.rules[key]
 

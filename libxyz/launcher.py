@@ -55,7 +55,8 @@ class Launcher(object):
 
         gettext.install(u"xyzcmd", unicode=True)
 
-        self.cmdopts = "d:c:s:vh"
+        self.cmdopts = "d:c:s:lvh"
+        self._list_skins = False
 
         self.allowed_colors = (1, 16, 88, 256)
         self._path_sel = libxyz.PathSelector()
@@ -88,6 +89,10 @@ class Launcher(object):
 
         self.parse_args()
         self.parse_configs_1()
+
+        if self._list_skins:
+            self._show_skins()
+            self.quit()
 
         self._driver = self._conf.get("driver",
                                       self.xyz.conf["xyz"]["term_lib"])
@@ -172,6 +177,8 @@ class Launcher(object):
                 self._conf["colors"] = _colors
             elif _o == "-s":
                 self._conf["skin"] = _a
+            elif _o == "-l":
+                self._list_skins = True
             elif _o == "-v":
                 self.version()
                 self.quit()
@@ -359,10 +366,11 @@ class Launcher(object):
 
         print _(u"""\
 %s version %s
-Usage: %s [-d driver][-c colors][-s skin][-vh]
+Usage: %s [-d driver][-c colors][-s skin][-lvh]
     -d  -- Display driver (raw (default) or curses)
     -c  -- Number of colors terminal supports (1, 16 (default), 88, 256)
     -s  -- Skin name
+    -l  -- Show available skins
     -v  -- Show version
     -h  -- Show this help message\
 """ % (const.PROG, Version.version, os.path.basename(sys.argv[0])))
@@ -410,3 +418,13 @@ Usage: %s [-d driver][-c colors][-s skin][-vh]
 
         if self.xyz.term is not None:
             core.utils.restore_term(self.xyz.term)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _show_skins(self):
+        """
+        Show installed skins
+        """
+
+        for skin in self.xyz.sm.get_all():
+            print "%s\t-- %s" % (skin.name, skin.version)

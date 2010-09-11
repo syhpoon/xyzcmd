@@ -42,6 +42,7 @@ Configuration
   * fifo_or_link2: Matches fifo objects or links to ones.
   * char_or_link2: Matches character device or links to ones.
   * block_or_link2: Matches block device or links to ones.
+* New command line flag -l showing list of available skins.
 
 I18N
 ----
