@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-09-14 00:10+EEST\n"
+"POT-Creation-Date: 2010-09-14 00:32+EEST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -343,37 +343,37 @@ msgstr ""
 msgid "Attribute %s is a constant"
 msgstr ""
 
-#: ./libxyz/launcher.py:213
+#: ./libxyz/launcher.py:210
 msgid ""
 "Invalid value %s.\n"
 "A list of valid log levels expected"
 msgstr ""
 
-#: ./libxyz/launcher.py:226
+#: ./libxyz/launcher.py:223
 msgid "Invalid value %s. A positive integer expected"
 msgstr ""
 
-#: ./libxyz/launcher.py:253
+#: ./libxyz/launcher.py:250
 msgid "Skin %s is not usable with requested color settings. Using default."
 msgstr ""
 
-#: ./libxyz/launcher.py:314
+#: ./libxyz/launcher.py:311
 msgid "Error parsing system config %s: %s"
 msgstr ""
 
-#: ./libxyz/launcher.py:318
+#: ./libxyz/launcher.py:315
 msgid "Error parsing user config %s: %s"
 msgstr ""
 
-#: ./libxyz/launcher.py:340
+#: ./libxyz/launcher.py:337
 msgid "Skipping skin %s due to parsing error: %s"
 msgstr ""
 
-#: ./libxyz/launcher.py:351
+#: ./libxyz/launcher.py:348
 msgid "Error parsing config %s: %s"
 msgstr ""
 
-#: ./libxyz/launcher.py:370
+#: ./libxyz/launcher.py:367
 msgid ""
 "%s version %s\n"
 "Usage: %s [-d driver][-c colors][-s skin][-lvh]\n"
@@ -385,7 +385,7 @@ msgid ""
 "    -h  -- Show this help message"
 msgstr ""
 
-#: ./libxyz/launcher.py:388
+#: ./libxyz/launcher.py:385
 msgid "%s version %s"
 msgstr ""
 
