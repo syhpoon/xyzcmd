@@ -318,7 +318,7 @@ class Cmd(lowui.FlowWidget):
                 try:
                     map(lambda x: self._put_object(x), _good)
                 except Exception, e:
-                    xyzlog.error(_(unicode(e)))
+                    xyzlog.error(unicode(e))
                     xyzlog.debug(ustring(traceback.format_exc()))
                 else:
                     self._invalidate()

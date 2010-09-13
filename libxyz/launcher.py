@@ -208,8 +208,8 @@ class Launcher(object):
             _levels = [getattr(_log, x) for x in _levels]
         except Exception:
             raise XYZValueError(_(u"Invalid value %s.\n"\
-                                  u"A list of valid log levels expected"
-                                  % ustring(_levels)))
+                                  u"A list of valid log levels expected")
+                                  % ustring(_levels))
 
         try:
             _lines = self.xyz.conf[u"plugins"][u":sys:logger"][u"lines"]
@@ -221,8 +221,8 @@ class Launcher(object):
             _lines = abs(int(_lines))
         except ValueError:
             raise XYZValueError(_(u"Invalid value %s. "\
-                                  u"A positive integer expected" %
-                                  ustring(_lines)))
+                                  u"A positive integer expected") %
+                                  ustring(_lines))
 
         _logger = core.logger.Logger(self.xyz, _levels, _lines)
 
@@ -334,8 +334,8 @@ class Launcher(object):
             res = self._parse_file(skin, error=False)
 
             if res != True:
-                self.error(_(u"Skipping skin %s due to parsing error: %s" %
-                              (skin, res)), False)
+                self.error(_(u"Skipping skin %s due to parsing error: %s") %
+                           (skin, res), False)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -373,7 +373,7 @@ Usage: %s [-d driver][-c colors][-s skin][-lvh]
     -l  -- Show available skins
     -v  -- Show version
     -h  -- Show this help message\
-""" % (const.PROG, Version.version, os.path.basename(sys.argv[0])))
+""") % (const.PROG, Version.version, os.path.basename(sys.argv[0]))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -382,7 +382,7 @@ Usage: %s [-d driver][-c colors][-s skin][-lvh]
         Show version
         """
 
-        print _(u"%s version %s" % (const.PROG, Version.version))
+        print _(u"%s version %s") % (const.PROG, Version.version)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

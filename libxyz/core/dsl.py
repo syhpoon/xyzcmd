@@ -344,8 +344,8 @@ class XYZ(object):
             m = cls.xyz.pm.from_load(p.pfull, p.method)
             return m(*args, **kwargs)
         except Exception, e:
-            error(_(u"Unable to execute method %s: %s" %
-                    (method, unicode(e))))
+            error(_(u"Unable to execute method %s: %s") %
+                  (method, unicode(e)))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

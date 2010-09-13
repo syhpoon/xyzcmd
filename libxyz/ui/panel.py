@@ -113,8 +113,7 @@ class Panel(lowui.WidgetWrap):
             try:
                 rule = libxyz.core.FSRule(ustring(f))
             except libxyz.exceptions.ParseError, e:
-                xyzlog.error(_(u"Error compiling filter: %s" %
-                               unicode(e)))
+                xyzlog.error(_(u"Error compiling filter: %s") % unicode(e))
                 continue
             else:
                 filters.append(rule)
@@ -746,8 +745,8 @@ sorting - Defined sorting policies. Each key corresponds to a policy name
             return objects
 
         if policy not in self.conf["sorting"]:
-            xyzlog.warning(_(u"Unable to find `%s` sorting policy" %
-                             ustring(policy)))
+            xyzlog.warning(_(u"Unable to find `%s` sorting policy") %
+                           ustring(policy))
             return objects
 
         policy_data = self.conf["sorting"][policy]

@@ -573,7 +573,7 @@ class FSRule(parser.BaseParser):
         try:
             return _types[arg]
         except KeyError:
-            self.error(_(u"Invalid type{} argument: %s" % arg))
+            self.error(_(u"Invalid type{} argument: %s") % arg)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -589,7 +589,7 @@ class FSRule(parser.BaseParser):
 
     def _owner(self, arg):
         if not re.match(r"^(\w+)?(:(\w+))?$", arg):
-            self.error(_(u"Invalid owner{} argument: %s" % arg))
+            self.error(_(u"Invalid owner{} argument: %s") % arg)
 
         _tmp = arg.split(":")
         _uid = _tmp[0]
@@ -600,7 +600,7 @@ class FSRule(parser.BaseParser):
             try:
                 _uid = pwd.getpwnam(_uid).pw_uid
             except (KeyError, TypeError):
-                self.error(_(u"Invalid uid: %s" % _uid))
+                self.error(_(u"Invalid uid: %s") % _uid)
         else:
             _uid = int(_uid)
 
@@ -611,7 +611,7 @@ class FSRule(parser.BaseParser):
                 try:
                     _gid = grp.getgrnam(_gid).gr_gid
                 except (KeyError, TypeError):
-                    self.error(_(u"Invalid gid: %s" % _gid))
+                    self.error(_(u"Invalid gid: %s") % _gid)
             else:
                 _gid = int(_gid)
         else:
@@ -625,7 +625,7 @@ class FSRule(parser.BaseParser):
         _any = False
 
         if not re.match(r"^\+?\d{4}$", arg):
-            self.error(_(u"Invalid perm{} argument: %s" % arg))
+            self.error(_(u"Invalid perm{} argument: %s") % arg)
 
         if arg.startswith(u"+"):
             _any = True

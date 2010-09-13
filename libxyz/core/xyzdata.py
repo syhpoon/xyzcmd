@@ -43,6 +43,6 @@ class XYZData(object):
         # Assure attributes get assigned only once
 
         if object.__getattribute__(self, attr) is not None:
-            raise AttributeError(_(u"Attribute %s is a constant" % attr))
+            raise AttributeError(_(u"Attribute %s is a constant") % attr)
         else:
             object.__setattr__(self, attr, val)

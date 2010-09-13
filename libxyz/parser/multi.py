@@ -62,7 +62,7 @@ class MultiParser(BaseParser):
         if parsers:
             if not isinstance(parsers, dict):
                 raise XYZValueError(_(u"Invalid argument type %s. "\
-                                      u"Dictionary expected" % str(parsers)))
+                                      u"Dictionary expected") % str(parsers))
             else:
                 self.parsers = parsers
         else:
@@ -124,7 +124,7 @@ class MultiParser(BaseParser):
                     _data = _parser.parse(self._lexer.sdata, _data)
                     self._result.update(_data)
                 else:
-                    self.error(_(u"Unknown keyword: %s" % _val))
+                    self.error(_(u"Unknown keyword: %s") % _val)
         except LexerError, e:
             self.error(str(e))
 
@@ -146,8 +146,8 @@ class MultiParser(BaseParser):
 
         if not isinstance(parser, BaseParser):
             raise XYZValueError(_(u"Invalid argument type %s. "\
-                                  u"BaseParser or subclassed expected" % \
-                                  str(parsers)))
+                                  u"BaseParser or subclassed expected") % \
+                                  str(parsers))
 
         self.parsers[keyword] = parser
 

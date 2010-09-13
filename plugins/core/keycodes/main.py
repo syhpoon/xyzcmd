@@ -110,7 +110,7 @@ class XYZPlugin(BasePlugin):
         """
 
         self.fire_event("show")
-        _title = _(u"%s - %s" % (self.NAME, self.VERSION))
+        _title = u"%s - %s" % (self.NAME, self.VERSION)
 
         _pressed = self._load_data()
 
@@ -196,7 +196,7 @@ class XYZPlugin(BasePlugin):
         try:
             _file = self._ud.openfile(self._keysfile, "wb", self._keyssubdir)
         except XYZRuntimeError, e:
-            raise PluginError(_(u"Unable to open file: %s" % unicode(e)))
+            raise PluginError(_(u"Unable to open file: %s") % unicode(e))
 
         try:
             cPickle.dump(data, _file)

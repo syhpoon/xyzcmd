@@ -149,7 +149,7 @@ class FlatParser(BaseParser):
             return
 
         if self.validvars and word not in self.validvars:
-                self.error(_(u"Unknown variable %s" % word))
+            self.error(_(u"Unknown variable %s") % word)
         else:
             self._varname = word
             self._state = self.STATE_ASSIGN
@@ -186,7 +186,7 @@ class FlatParser(BaseParser):
             try:
                 _value = self.value_validator(self._varname, _value)
             except XYZValueError, e:
-                self.error(_(u"Invalid value: %s" % str(e)))
+                self.error(_(u"Invalid value: %s") % unicode(e))
 
         self._result[self._varname] = _value
         self._parsed += 1

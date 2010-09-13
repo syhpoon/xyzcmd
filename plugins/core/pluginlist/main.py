@@ -81,17 +81,17 @@ class XYZPlugin(BasePlugin):
 
         def _add_info():
             if _plugin.AUTHOR is not None:
-                _data.append(lowui.Text(_(u"Author: %s" % _plugin.AUTHOR)))
+                _data.append(lowui.Text(_(u"Author: %s") % _plugin.AUTHOR))
 
             if _plugin.VERSION is not None:
-                _data.append(lowui.Text(_(u"Version: %s" % _plugin.VERSION)))
+                _data.append(lowui.Text(_(u"Version: %s") % _plugin.VERSION))
 
             if _plugin.MIN_XYZ_VERSION is not None:
-                _data.append(lowui.Text(_(u"Minimal compatible version: %s"
-                                          % _plugin.MIN_XYZ_VERSION)))
+                _data.append(lowui.Text(_(u"Minimal compatible version: %s")
+                                          % _plugin.MIN_XYZ_VERSION))
 
             if _plugin.HOMEPAGE is not None:
-                _data.append(lowui.Text(_(u"Homepage: %s" % _plugin.HOMEPAGE)))
+                _data.append(lowui.Text(_(u"Homepage: %s") % _plugin.HOMEPAGE))
 
             _data.append(_div)
 
@@ -218,4 +218,4 @@ class XYZPlugin(BasePlugin):
         _dim = tuple([x - 2 for x in self.xyz.screen.get_cols_rows()])
 
         uilib.XYZListBox(self.xyz, self.xyz.top, _method_walker,
-                         _(u"Plugin info %s" % _plugin.ns), _dim).show()
+                         _(u"Plugin info %s") % _plugin.ns, _dim).show()

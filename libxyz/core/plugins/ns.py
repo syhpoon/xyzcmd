@@ -28,7 +28,7 @@ class Namespace(object):
         _path = path
 
         if not path.startswith(u":"):
-            raise XYZValueError(_(u"Invalid plugin path: %s" % path))
+            raise XYZValueError(_(u"Invalid plugin path: %s") % path)
         else:
             _path = path[1:]
 
@@ -36,7 +36,7 @@ class Namespace(object):
         _len = len(_raw)
 
         if _len < 2 or _len > 3:
-            raise XYZValueError(_(u"Invalid plugin path: %s" % path))
+            raise XYZValueError(_(u"Invalid plugin path: %s") % path)
 
         # Full namespace path
         self.full = path

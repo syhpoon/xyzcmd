@@ -20,7 +20,7 @@ from libxyz.exceptions import PluginError
 from libxyz.exceptions import XYZValueError
 from libxyz.core.plugins import BasePlugin
 from libxyz.core.plugins import Namespace
-from libxyz.core.utils import ustring
+from libxyz.core.utils import ustring, typer
 
 def ns_transform(func):
     """
@@ -54,6 +54,7 @@ class PluginManager(object):
     EVENT_PREPARE = u"event:plugin_prepare"
     EVENT_FIN = u"event:plugin_fin"
 
+    @typer(None, None, list)
     def __init__(self, xyz, dirs):
         """
         @param xyz: XYZ data
@@ -61,12 +62,7 @@ class PluginManager(object):
         @type dirs: list
         """
 
-        if not isinstance(dirs, list):
-            raise XYZValueError(_(u"Invalid argument type %s. List expected" %
-                                  type(dirs)))
-        else:
-            sys.path = dirs + sys.path
-
+        sys.path = dirs + sys.path
         self.xyz = xyz
 
         self._enabled = None
@@ -89,8 +85,8 @@ class PluginManager(object):
         virtual = self.is_virtual(plugin)
 
         if plugin.pfull not in self.enabled:
-            raise PluginError(_(u"Plugin %s is disabled or does not exist" %
-                                plugin))
+            raise PluginError(_(u"Plugin %s is disabled or does not exist") %
+                                plugin)
 
         if self.is_loaded(plugin):
             return self.get_loaded(plugin)
@@ -110,13 +106,14 @@ class PluginManager(object):
             _loaded = __import__(plugin.internal, globals(), locals(),
                                 [self.PLUGIN_CLASS])
         except ImportError, e:
-            raise PluginError(_(u"Unable to load plugin %s: %s" % (plugin, e)))
+            raise PluginError(_(u"Unable to load plugin %s: %s") %
+                              (plugin, unicode(e)))
 
         try:
             _loaded = getattr(_loaded, self.PLUGIN_CLASS)
         except AttributeError, e:
-            raise PluginError(_(u"Unable to find required %s class" % \
-                              self.PLUGIN_CLASS))
+            raise PluginError(_(u"Unable to find required %s class") % \
+                              self.PLUGIN_CLASS)
 
         # Initiate plugin
         _obj = _loaded(self.xyz, *initargs, **initkwargs)
@@ -171,7 +168,7 @@ class PluginManager(object):
 
         if method not in _obj.public:
             raise PluginError(_(u"%s plugin instance does not export "\
-                                u"method %s" % (plugin, method)))
+                                u"method %s") % (plugin, method))
         else:
             return _obj.public[method]
 
@@ -196,7 +193,7 @@ class PluginManager(object):
 
         if obj not in _obj.public_data:
             raise PluginError(_(u"%s plugin instance does not export "\
-                                u"data object %s" % (plugin, obj)))
+                                u"data object %s") % (plugin, obj))
         else:
             return _obj.public_data[obj]
 
@@ -249,8 +246,8 @@ class PluginManager(object):
                 try:
                     _cb(inst, *_args)
                 except Exception, e:
-                    xyzlog.warning(_(u"Error in wait_for() callback: %s" %
-                               unicode(e)))
+                    xyzlog.warning(_(u"Error in wait_for() callback: %s") %
+                               unicode(e))
             del(self._waiting[plugin.pfull])
 
         self._loaded[plugin.pfull] = inst
@@ -325,8 +322,8 @@ class PluginManager(object):
         """
 
         if not isinstance(obj, BasePlugin):
-            raise XYZValueError(_(u"BasePlugin instance expected, got: %s" %
-                                  type(obj)))
+            raise XYZValueError(_(u"BasePlugin instance expected, got: %s") %
+                                  type(obj))
 
         self.set_loaded(obj.ns, obj)
 

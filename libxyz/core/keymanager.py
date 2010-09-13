@@ -140,13 +140,13 @@ class KeyManager(object):
             # First check if methods were loaded by wildcard ALL
             if _p.full not in self._loaded_methods:
                 if "%s:%s" % (_p.pfull, _p.ALL) not in self._loaded_methods:
-                    raise KeyManagerError(_(u"Method %s not loaded" % _p))
+                    raise KeyManagerError(_(u"Method %s not loaded") % _p)
 
                 # Else try to load specified method
                 try:
                     _mobj = self.xyz.pm.from_load(_p.pfull, _p.method)
                 except PluginError, e:
-                    raise KeyManagerError(_(u"Load error: %s" % e))
+                    raise KeyManagerError(_(u"Load error: %s") % e)
             else:
                 _mobj = self._loaded_methods[_p.full]
 
@@ -173,8 +173,8 @@ class KeyManager(object):
     def _bind_wait_cb(self, plugin_obj, method, shortcut, context):
         if method not in plugin_obj.public:
             xyzlog.error(_(u"Unable to bind method %s. "\
-                         u"Plugin %s doesn't export it." %
-                         (method, plugin_obj.ns.pfull)))
+                         u"Plugin %s doesn't export it.") %
+                         (method, plugin_obj.ns.pfull))
             return
 
         self._bind(plugin_obj.public[method], shortcut, context, force=False)

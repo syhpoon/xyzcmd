@@ -104,7 +104,7 @@ class BlockParser(BaseParser):
 
         if opt and not isinstance(opt, dict):
             raise XYZValueError(_(u"Invalid opt type: %s. "\
-                                  u"Dictionary expected." % type(opt)))
+                                  u"Dictionary expected.") % type(opt))
 
         self.opt = opt or self.DEFAULT_OPT
         self.set_opt(self.DEFAULT_OPT, self.opt)
@@ -264,7 +264,7 @@ class BlockParser(BaseParser):
                     _value = self.value_validator(self._parsed_obj.name,
                                                   self._varname, _value)
                 except XYZValueError, e:
-                    self.error(_(u"Invalid value: %s" % str(e)))
+                    self.error(_(u"Invalid value: %s") % str(e))
 
             self._parsed_obj[self._varname] = _value
             self._varname = None
@@ -281,7 +281,7 @@ class BlockParser(BaseParser):
             try:
                 self._current_list.append(self._macros[word])
             except KeyError:
-                self.error(_(u"Undefined macro %s" % word))
+                self.error(_(u"Undefined macro %s") % word)
         else:
             self._current_list.append(word)
 

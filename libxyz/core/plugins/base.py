@@ -86,7 +86,7 @@ class BasePlugin(object):
         try:
             return self.public[method]
         except KeyError:
-            raise AttributeError(_(u"%s is not a public method" % method))
+            raise AttributeError(_(u"%s is not a public method") % method)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -98,7 +98,7 @@ class BasePlugin(object):
         try:
             return self.public_data[obj]
         except KeyError:
-            raise AttributeError(_(u"%s is not a public data object " % obj))
+            raise AttributeError(_(u"%s is not a public data object") % obj)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

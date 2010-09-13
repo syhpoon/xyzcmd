@@ -36,14 +36,14 @@ class BaseParser(object):
         _emsg = ""
         if self._lexer:
             _lineno = self._lexer.sdata.lineno
-            _pre = _(u"Parse error on line %d" % _lineno)
+            _pre = _(u"Parse error on line %d") % _lineno
         else:
             _pre = _(u"Parse error")
 
         if etype == self.error_unexpected and msg and len(msg) == 2:
-            _emsg = _(u"Unexpected token '%s'. Waiting for '%s'" % \
+            _emsg = _(u"Unexpected token '%s'. Waiting for '%s'") % \
                     (msg[0].encode("unicode-escape"),
-                     msg[1].encode("unicode-escape")))
+                     msg[1].encode("unicode-escape"))
         elif msg:
             _emsg = msg
         else:

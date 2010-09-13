@@ -40,8 +40,8 @@ class SkinManager(object):
 
         if not isinstance(skin, Skin):
             raise SkinError(_(u"Invalid skin argument: %s. "\
-                              u"libxyz.core.Skin instance expected!"
-                              % type(skin)))
+                              u"libxyz.core.Skin instance expected!")
+                              % type(skin))
         else:
             self._skins[skin.name] = skin
 

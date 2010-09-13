@@ -31,8 +31,8 @@ class Color(object):
 
     def __init__(self, color):
         if not self.is_color_valid(color):
-            raise XYZValueError(_(u"Invalid %s color: %s" % \
-                                  (self.ctype, str(color))))
+            raise XYZValueError(_(u"Invalid %s color: %s") % \
+                                (self.ctype, str(color)))
 
         self.color = None
         self._set_color(color)
@@ -255,7 +255,7 @@ class Palette(object):
         if fg is not None and not isinstance(fg, Foreground):
             raise XYZValueError(_(u"Invalid argument type %s, "\
                                   u"libxyz.ui.color.Foreground instance "\
-                                  u"expected." % type(fg)))
+                                  u"expected.") % type(fg))
         else:
             self._fg = fg
 
@@ -270,7 +270,7 @@ class Palette(object):
         if bg is not None and not isinstance(bg, Background):
             raise XYZValueError(_(u"Invalid argument type %s, "\
                                   u"libxyz.ui.color.Background or instance "\
-                                  u"expected." % type(bg)))
+                                  u"expected.") % type(bg))
 
         self._bg = bg
 
@@ -287,7 +287,7 @@ class Palette(object):
                 if not isinstance(attr, Attribute):
                     raise XYZValueError(_(u"Invalid argument type %s, "\
                                           u"libxyz.ui.color.Attribute "\
-                                          u"instance expected." % type(attr)))
+                                          u"instance expected.") % type(attr))
 
         self._fg_attrs = attrs
 
@@ -304,7 +304,7 @@ class Palette(object):
                 if not isinstance(attr, Attribute):
                     raise XYZValueError(_(u"Invalid argument type %s, "\
                                           u"libxyz.ui.color.Attribute "\
-                                          u"instance expected." % type(mono)))
+                                          u"instance expected.") % type(mono))
 
         self._mono = mono
 
@@ -319,7 +319,7 @@ class Palette(object):
         if fg_high is not None and not isinstance(fg_high, ForegroundHigh):
             raise XYZValueError(_(u"Invalid argument type %s, "\
                                   u"libxyz.ui.color.ForegroundHigh instance "\
-                                  u"expected." % type(fg_high)))
+                                  u"expected.") % type(fg_high))
         else:
             self._fg_high = fg_high
 
@@ -334,7 +334,7 @@ class Palette(object):
         if bg_high is not None and not isinstance(bg_high, BackgroundHigh):
             raise XYZValueError(_(u"Invalid argument type %s, "\
                                   u"libxyz.ui.color.BackgroundHigh instance "\
-                                  u"expected." % type(bg_high)))
+                                  u"expected.") % type(bg_high))
         else:
             self._bg_high = bg_high
 

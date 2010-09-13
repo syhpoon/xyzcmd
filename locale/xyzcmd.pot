@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-09-12 02:14+EEST\n"
+"POT-Creation-Date: 2010-09-13 23:48+EEST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -143,7 +143,7 @@ msgstr ""
 msgid "DSL Error: %s"
 msgstr ""
 
-#: ./libxyz/core/dsl.py:240
+#: ./libxyz/core/dsl.py:240 ./libxyz/core/plugins/manager.py:109
 msgid "Unable to load plugin %s: %s"
 msgstr ""
 
@@ -161,6 +161,10 @@ msgstr ""
 
 #: ./libxyz/core/dsl.py:328
 msgid "Unable to expand macro %s: %s"
+msgstr ""
+
+#: ./libxyz/core/dsl.py:347
+msgid "Unable to execute method %s: %s"
 msgstr ""
 
 #: ./libxyz/core/dsl.py:400
@@ -219,6 +223,26 @@ msgstr ""
 msgid "Error in calling extended transformation function: %s"
 msgstr ""
 
+#: ./libxyz/core/fsrule.py:576
+msgid "Invalid type{} argument: %s"
+msgstr ""
+
+#: ./libxyz/core/fsrule.py:592
+msgid "Invalid owner{} argument: %s"
+msgstr ""
+
+#: ./libxyz/core/fsrule.py:603
+msgid "Invalid uid: %s"
+msgstr ""
+
+#: ./libxyz/core/fsrule.py:614
+msgid "Invalid gid: %s"
+msgstr ""
+
+#: ./libxyz/core/fsrule.py:628
+msgid "Invalid perm{} argument: %s"
+msgstr ""
+
 #: ./libxyz/core/fsrule.py:652
 msgid "Invalid size{} argument: %s"
 msgstr ""
@@ -243,12 +267,24 @@ msgstr ""
 msgid "Invalid shortcut type: %s."
 msgstr ""
 
+#: ./libxyz/core/keymanager.py:143
+msgid "Method %s not loaded"
+msgstr ""
+
+#: ./libxyz/core/keymanager.py:149
+msgid "Load error: %s"
+msgstr ""
+
 #: ./libxyz/core/keymanager.py:160
 msgid "<Internal function object>"
 msgstr ""
 
 #: ./libxyz/core/keymanager.py:165
 msgid "Invalid method type: %s. Must be string or function"
+msgstr ""
+
+#: ./libxyz/core/keymanager.py:175
+msgid "Unable to bind method %s. Plugin %s doesn't export it."
 msgstr ""
 
 #: ./libxyz/core/logger/logger.py:77
@@ -259,8 +295,62 @@ msgstr ""
 msgid "Logger plugin"
 msgstr ""
 
+#: ./libxyz/core/plugins/base.py:89
+msgid "%s is not a public method"
+msgstr ""
+
+#: ./libxyz/core/plugins/base.py:101
+msgid "%s is not a public data object"
+msgstr ""
+
+#: ./libxyz/core/plugins/manager.py:88
+msgid "Plugin %s is disabled or does not exist"
+msgstr ""
+
+#: ./libxyz/core/plugins/manager.py:115
+msgid "Unable to find required %s class"
+msgstr ""
+
+#: ./libxyz/core/plugins/manager.py:170
+msgid "%s plugin instance does not export method %s"
+msgstr ""
+
+#: ./libxyz/core/plugins/manager.py:195
+msgid "%s plugin instance does not export data object %s"
+msgstr ""
+
+#: ./libxyz/core/plugins/manager.py:249
+msgid "Error in wait_for() callback: %s"
+msgstr ""
+
+#: ./libxyz/core/plugins/manager.py:325
+msgid "BasePlugin instance expected, got: %s"
+msgstr ""
+
+#: ./libxyz/core/plugins/ns.py:31 ./libxyz/core/plugins/ns.py:39
+msgid "Invalid plugin path: %s"
+msgstr ""
+
 #: ./libxyz/core/queue.py:43
 msgid "Max-size must be a positive integer number"
+msgstr ""
+
+#: ./libxyz/core/skin.py:42
+msgid "Invalid skin argument: %s. libxyz.core.Skin instance expected!"
+msgstr ""
+
+#: ./libxyz/core/xyzdata.py:46
+msgid "Attribute %s is a constant"
+msgstr ""
+
+#: ./libxyz/launcher.py:210
+msgid ""
+"Invalid value %s.\n"
+"A list of valid log levels expected"
+msgstr ""
+
+#: ./libxyz/launcher.py:223
+msgid "Invalid value %s. A positive integer expected"
 msgstr ""
 
 #: ./libxyz/launcher.py:250
@@ -275,23 +365,55 @@ msgstr ""
 msgid "Error parsing user config %s: %s"
 msgstr ""
 
+#: ./libxyz/launcher.py:337
+msgid "Skipping skin %s due to parsing error: %s"
+msgstr ""
+
 #: ./libxyz/launcher.py:348
 msgid "Error parsing config %s: %s"
+msgstr ""
+
+#: ./libxyz/launcher.py:367
+msgid ""
+"%s version %s\n"
+"Usage: %s [-d driver][-c colors][-s skin][-lvh]\n"
+"    -d  -- Display driver (raw (default) or curses)\n"
+"    -c  -- Number of colors terminal supports (1, 16 (default), 88, 256)\n"
+"    -s  -- Skin name\n"
+"    -l  -- Show available skins\n"
+"    -v  -- Show version\n"
+"    -h  -- Show this help message"
+msgstr ""
+
+#: ./libxyz/launcher.py:385
+msgid "%s version %s"
 msgstr ""
 
 #: ./libxyz/parser/base.py:27
 msgid "Must be implemented in child class"
 msgstr ""
 
+#: ./libxyz/parser/base.py:39
+msgid "Parse error on line %d"
+msgstr ""
+
 #: ./libxyz/parser/base.py:41
 msgid "Parse error"
+msgstr ""
+
+#: ./libxyz/parser/base.py:44
+msgid "Unexpected token '%s'. Waiting for '%s'"
 msgstr ""
 
 #: ./libxyz/parser/base.py:50
 msgid "Syntax error"
 msgstr ""
 
-#: ./libxyz/parser/block.py:219
+#: ./libxyz/parser/block.py:106
+msgid "Invalid opt type: %s. Dictionary expected."
+msgstr ""
+
+#: ./libxyz/parser/block.py:219 ./libxyz/parser/flat.py:152
 msgid "Unknown variable %s"
 msgstr ""
 
@@ -301,6 +423,14 @@ msgstr ""
 
 #: ./libxyz/parser/block.py:227
 msgid "Variable transformation error: %s"
+msgstr ""
+
+#: ./libxyz/parser/block.py:267 ./libxyz/parser/flat.py:189
+msgid "Invalid value: %s"
+msgstr ""
+
+#: ./libxyz/parser/block.py:284
+msgid "Undefined macro %s"
 msgstr ""
 
 #: ./libxyz/parser/block.py:342 ./libxyz/parser/lexer.py:170
@@ -313,6 +443,26 @@ msgstr ""
 
 #: ./libxyz/parser/flat.py:227
 msgid "Unterminated expression"
+msgstr ""
+
+#: ./libxyz/parser/multi.py:64
+msgid "Invalid argument type %s. Dictionary expected"
+msgstr ""
+
+#: ./libxyz/parser/multi.py:127
+msgid "Unknown keyword: %s"
+msgstr ""
+
+#: ./libxyz/parser/multi.py:148
+msgid "Invalid argument type %s. BaseParser or subclassed expected"
+msgstr ""
+
+#: ./libxyz/parser/regexp.py:70
+msgid "%s: parse error on line %d: %s"
+msgstr ""
+
+#: ./libxyz/parser/regexp.py:76
+msgid "Unmatched line %d: %s"
 msgstr ""
 
 #: ./libxyz/parser/sourcedata.py:48
@@ -376,19 +526,51 @@ msgstr ""
 msgid "History"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:164
+#: ./libxyz/ui/colors.py:34
+msgid "Invalid %s color: %s"
+msgstr ""
+
+#: ./libxyz/ui/colors.py:256
+msgid "Invalid argument type %s, libxyz.ui.color.Foreground instance expected."
+msgstr ""
+
+#: ./libxyz/ui/colors.py:271
+msgid "Invalid argument type %s, libxyz.ui.color.Background or instance expected."
+msgstr ""
+
+#: ./libxyz/ui/colors.py:288 ./libxyz/ui/colors.py:305
+msgid "Invalid argument type %s, libxyz.ui.color.Attribute instance expected."
+msgstr ""
+
+#: ./libxyz/ui/colors.py:320
+msgid "Invalid argument type %s, libxyz.ui.color.ForegroundHigh instance expected."
+msgstr ""
+
+#: ./libxyz/ui/colors.py:335
+msgid "Invalid argument type %s, libxyz.ui.color.BackgroundHigh instance expected."
+msgstr ""
+
+#: ./libxyz/ui/entry.py:118 ./plugins/core/pluginlist/entry.py:81
+msgid "Error in entry callback: %s"
+msgstr ""
+
+#: ./libxyz/ui/panel.py:116
+msgid "Error compiling filter: %s"
+msgstr ""
+
+#: ./libxyz/ui/panel.py:163
 msgid "Error executing bind (%s): %s"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:198
+#: ./libxyz/ui/panel.py:197
 msgid "System runtime plugin"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:247
+#: ./libxyz/ui/panel.py:246
 msgid "Panel plugin"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:249
+#: ./libxyz/ui/panel.py:248
 msgid ""
 "Configuration variables:\n"
 "filters_enabled - Enable permanent filters. Default - False\n"
@@ -404,51 +586,55 @@ msgid ""
 " applied sequentially. Default - []"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:265
+#: ./libxyz/ui/panel.py:264
 msgid "Fires before switching to another tab. Arguments: Block instance and old tab index."
 msgstr ""
 
-#: ./libxyz/ui/panel.py:269
+#: ./libxyz/ui/panel.py:268
 msgid "Fires when switching to another tab. Arguments: Block instance and new tab index."
 msgstr ""
 
-#: ./libxyz/ui/panel.py:273
+#: ./libxyz/ui/panel.py:272
 msgid "Fires when new tab is added. Arguments: Block instance and new tab index."
 msgstr ""
 
-#: ./libxyz/ui/panel.py:277
+#: ./libxyz/ui/panel.py:276
 msgid "Fires when tab is delete. Arguments: Block instance and deleted tab index."
 msgstr ""
 
-#: ./libxyz/ui/panel.py:294
+#: ./libxyz/ui/panel.py:293
 msgid "Really quit %s?"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:1016
+#: ./libxyz/ui/panel.py:748
+msgid "Unable to find `%s` sorting policy"
+msgstr ""
+
+#: ./libxyz/ui/panel.py:1015
 msgid "%s bytes (%d)"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:1370
+#: ./libxyz/ui/panel.py:1369
 msgid "Tag group"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:1372
+#: ./libxyz/ui/panel.py:1371
 msgid "Untag group"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:1375
+#: ./libxyz/ui/panel.py:1374
 msgid "Type FS Rule"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:1499
+#: ./libxyz/ui/panel.py:1498
 msgid "Action error: %s"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:1530 ./libxyz/ui/panel.py:1537
+#: ./libxyz/ui/panel.py:1529 ./libxyz/ui/panel.py:1536
 msgid "Unable to chdir to %s: %s"
 msgstr ""
 
-#: ./libxyz/ui/panel.py:1617
+#: ./libxyz/ui/panel.py:1616
 msgid "TAGGED"
 msgstr ""
 
@@ -522,6 +708,10 @@ msgstr ""
 
 #: ./libxyz/vfs/local.py:324 ./libxyz/vfs/tar.py:212
 msgid "Type-specific data"
+msgstr ""
+
+#: ./libxyz/vfs/local.py:362
+msgid "Unable to stat file %s: %s"
 msgstr ""
 
 #: ./libxyz/vfs/local.py:388
@@ -632,6 +822,10 @@ msgstr ""
 msgid "Save learned keys?"
 msgstr ""
 
+#: ./plugins/core/keycodes/main.py:199
+msgid "Unable to open file: %s"
+msgstr ""
+
 #: ./plugins/core/keycodes/main.py:205
 msgid "Unable to save learned data"
 msgstr ""
@@ -656,6 +850,22 @@ msgstr ""
 msgid "Active plugins list"
 msgstr ""
 
+#: ./plugins/core/pluginlist/main.py:84
+msgid "Author: %s"
+msgstr ""
+
+#: ./plugins/core/pluginlist/main.py:87
+msgid "Version: %s"
+msgstr ""
+
+#: ./plugins/core/pluginlist/main.py:90
+msgid "Minimal compatible version: %s"
+msgstr ""
+
+#: ./plugins/core/pluginlist/main.py:94
+msgid "Homepage: %s"
+msgstr ""
+
 #: ./plugins/core/pluginlist/main.py:132
 msgid "Public data"
 msgstr ""
@@ -674,6 +884,10 @@ msgstr ""
 
 #: ./plugins/core/pluginlist/main.py:205
 msgid "Plugin events"
+msgstr ""
+
+#: ./plugins/core/pluginlist/main.py:221
+msgid "Plugin info %s"
 msgstr ""
 
 #: ./plugins/core/shell/bash.py:45

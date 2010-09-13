@@ -67,10 +67,11 @@ class RegexpParser(BaseParser):
                     try:
                         self.cbpool[_regexp](_res)
                     except XYZValueError, e:
-                        raise ParseError(_(u"%s: parse error on line %d: %s"\
-                                         % (_source.desc(), _lineno, e)))
+                        raise ParseError(_(u"%s: parse error on line %d: %s")\
+                                         % (_source.desc(), _lineno, e))
                     else:
                         break
 
             if not _matched:
-                raise ParseError(_(u"Unmatched line %d: %s" % (_lineno, _line)))
+                raise ParseError(_(u"Unmatched line %d: %s") %
+                                 (_lineno, _line))
