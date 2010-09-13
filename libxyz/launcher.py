@@ -47,19 +47,19 @@ class Launcher(object):
     """
 
     EVENT_STARTUP = u"event:startup"
-    
+
     def __init__(self):
         """
         Initialization
         """
-
-        gettext.install(u"xyzcmd", unicode=True)
+        self._path_sel = libxyz.PathSelector()
+        gettext.install(u"xyzcmd", localedir=self._path_sel.get_locale_dir(),
+                        unicode=True)
 
         self.cmdopts = "d:c:s:lvh"
         self._list_skins = False
-
         self.allowed_colors = (1, 16, 88, 256)
-        self._path_sel = libxyz.PathSelector()
+
         self.xyz = core.XYZData()
         self.xyz.conf = {}
         self.xyz.hm = core.HookManager()
@@ -96,11 +96,11 @@ class Launcher(object):
 
         self._driver = self._conf.get("driver",
                                       self.xyz.conf["xyz"]["term_lib"])
-        
+
         self.xyz.term = core.utils.setup_term()
 
         self.init_logger()
-        
+
         self.xyz.input = core.InputWrapper(self.xyz)
         self.xyz.screen = uilib.display.init_display(self._driver)
 
@@ -154,7 +154,7 @@ class Launcher(object):
                 os.mkdir(os.path.join(self._path_sel.user_dir, d))
         except Exception:
             return
-        
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def parse_args(self):
@@ -358,7 +358,7 @@ class Launcher(object):
         return True
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def usage(self):
         """
         Show usage

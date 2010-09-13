@@ -35,6 +35,7 @@ class PathSelector(object):
         self.conf_dir = const.CONF_DIR
         self.skins_dir = const.SKINS_DIR
         self.plugins_dir = const.PLUGINS_DIR
+        self.locale_dir = const.LOCALE_DIR
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -46,7 +47,7 @@ class PathSelector(object):
         return self._get(self.conf_dir, conf)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def get_skin(self, skin):
         """
         Return tuple of (system_skin_path, user_skin_path)
@@ -90,3 +91,8 @@ class PathSelector(object):
         _systempath = os.path.join(self.system_dir, self.skins_dir)
 
         return [_userpath, _systempath]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_locale_dir(self):
+        return os.path.join(self.system_dir, self.locale_dir)

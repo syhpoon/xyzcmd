@@ -39,11 +39,14 @@ SYSTEM_DIR = os.path.join(SYSTEM_PREFIX, "share/xyzcmd")
 # Subdirectory with configuration files
 CONF_DIR = u"conf"
 
-# Plugins sudbirectory
+# Plugins subdirectory
 PLUGINS_DIR = u"plugins"
 
-# Skins sudbirectory
+# Skins subdirectory
 SKINS_DIR = u"skins"
+
+# Locale subdirectory
+LOCALE_DIR = u"locale"
 
 # Main configuration file name
 XYZ_CONF_FILE = u"main.xyz"

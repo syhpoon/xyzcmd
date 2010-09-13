@@ -49,8 +49,9 @@ setup(
                 ],
     data_files = [
         ("share/xyzcmd/conf", glob.glob("conf/*")),
-        ("share/doc/xyzcmd/api", glob.glob("doc/api/*")),
         ("share/xyzcmd/skins", glob.glob("skins/*")),
+        ("share/xyzcmd/locale", glob.glob("locale/*")),
+        ("share/doc/xyzcmd/api", glob.glob("doc/api/*")),
         ("share/doc/xyzcmd", ["ChangeLog", "doc/overview.pdf"]),
         ("share/man/man1", ["doc/xyzcmd.1"])
         ] +

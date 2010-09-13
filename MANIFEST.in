@@ -12,3 +12,4 @@ include doc/xyzcmd.1
 graft plugins
 graft skins
 graft scripts
+graft locale
