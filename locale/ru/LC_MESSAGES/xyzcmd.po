@@ -113,7 +113,7 @@ msgstr "Переключиться на вкладку 9 в неактивной
 
 #: conf/keys.xyz:156
 msgid "Complete the command line"
-msgstr "Дополнить содержимое коммандой строки"
+msgstr "Дополнить содержимое командой строки"
 
 #: conf/keys.xyz:161
 #, fuzzy
@@ -519,12 +519,12 @@ msgstr "Невозможно открыть файл-историю: %s"
 
 #: libxyz/ui/cmd.py:161
 msgid "Command line plugin"
-msgstr "Коммандная строка"
+msgstr "Командная строка"
 
 #: libxyz/ui/cmd.py:162
 msgid "Command line plugin. It allows to enter, edit and execute commands."
 msgstr ""
-"Модуль коммандной строки. Позволяет вводить, редактировать и выполнять "
+"Модуль командной строки. Позволяет вводить, редактировать и выполнять "
 "команды посредством системной оболочки."
 
 #: libxyz/ui/cmd.py:165
@@ -537,7 +537,7 @@ msgstr ""
 "Параметры конфигурации:\n"
 "undo_depth - Размер буфера отмены. По-умолчанию - 10\n"
 "history_depth - Размер буфера введённых команд. По-умолчанию - 50\n"
-"prompt - Приглашение коммандной строки. По-умолчанию - '$ '"
+"prompt - Приглашение командной строки. По-умолчанию - '$ '"
 
 #: libxyz/ui/cmd.py:615
 msgid "Unable to execute commands on non-local filesystems"

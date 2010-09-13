@@ -1,3 +1,13 @@
+xyzcmd (0.0.5-0ubuntu1) lucid; urgency=low
+
+  * Nested VFS support
+  * Heavy LocalVFS walker optimization: 30 to 40 times faster to enter a directory, and a lot less memory intensive as well
+  * New Russian translation
+  * XYZCommander manpage
+  * Development has moved to github (http://github.com/syhpoon/xyzcmd)
+
+ -- Max E. Kuznecov <syhpoon@syhpoon-hq>  Tue, 14 Sep 2010 00:48:01 +0300
+
 xyzcmd (0.0.4-0ubuntu1) lucid; urgency=low
 
   * New release
