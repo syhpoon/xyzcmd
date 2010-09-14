@@ -1,5 +1,8 @@
 include ChangeLog
 include README
+include INSTALL
+include COPYING
+include COPYING.LESSER
 include setup.py
 include xyzcmd
 
