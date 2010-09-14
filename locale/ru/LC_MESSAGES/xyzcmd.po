@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: XYZCommander VERSION\n"
-"POT-Creation-Date: 2010-09-13 23:48+EEST\n"
+"POT-Creation-Date: 2010-09-14 23:38+EEST\n"
 "PO-Revision-Date: 2010-07-28 00:48+ZONE\n"
 "Last-Translator: Max E. Kuznecov <mek@mek.uz.ua>\n"
 "Language-Team: ru <LL@li.org>\n"
@@ -116,9 +116,8 @@ msgid "Complete the command line"
 msgstr "Дополнить содержимое командой строки"
 
 #: conf/keys.xyz:161
-#, fuzzy
 msgid "Add bookmark"
-msgstr "Закладки"
+msgstr "Добавить закладку"
 
 #: conf/keys.xyz:172
 msgid "Run default pager"
@@ -153,7 +152,6 @@ msgid "Unable to bind shortcut %s: %s"
 msgstr "Невозможно связать клавиатурную комбинацию %s: %s"
 
 #: libxyz/core/dsl.py:284
-#, fuzzy
 msgid "Unable to execute file: %s"
 msgstr "Невозможно выполнить файл: %s"
 
@@ -166,9 +164,8 @@ msgid "Unable to expand macro %s: %s"
 msgstr "Невозможно развернуть макрос %s: %s"
 
 #: libxyz/core/dsl.py:347
-#, fuzzy
 msgid "Unable to execute method %s: %s"
-msgstr "Невозможно выполнить файл: %s"
+msgstr "Невозможно выполнить метод: %s"
 
 #: libxyz/core/dsl.py:400
 msgid "Error in DSL shell execution: %s"
@@ -219,7 +216,7 @@ msgid ""
 "Error extending FSRule: trans_func and match_func arguments must be "
 "functions."
 msgstr ""
-"Ошибка раширения FSRule: аргументы trans_func и match_func должны быть "
+"Ошибка расширения FSRule: аргументы trans_func и match_func должны быть "
 "функциями."
 
 #: libxyz/core/fsrule.py:355
@@ -231,29 +228,24 @@ msgid "Error in calling extended transformation function: %s"
 msgstr "Ошибка вызова преобразующей функции: %s"
 
 #: libxyz/core/fsrule.py:576
-#, fuzzy
 msgid "Invalid type{} argument: %s"
-msgstr "Неверный аргумент выражения size{}: %s"
+msgstr "Неверный аргумент выражения type{}: %s"
 
 #: libxyz/core/fsrule.py:592
-#, fuzzy
 msgid "Invalid owner{} argument: %s"
-msgstr "Неверный аргумент выражения size{}: %s"
+msgstr "Неверный аргумент выражения owner{}: %s"
 
 #: libxyz/core/fsrule.py:603
-#, fuzzy
 msgid "Invalid uid: %s"
-msgstr "Неверная функция"
+msgstr "Неверный uid: %s"
 
 #: libxyz/core/fsrule.py:614
-#, fuzzy
 msgid "Invalid gid: %s"
-msgstr "Неверный путь: %s."
+msgstr "Неверный gid: %s."
 
 #: libxyz/core/fsrule.py:628
-#, fuzzy
 msgid "Invalid perm{} argument: %s"
-msgstr "Неверный аргумент выражения size{}: %s"
+msgstr "Неверный аргумент выражения perm{}: %s"
 
 #: libxyz/core/fsrule.py:652
 msgid "Invalid size{} argument: %s"
@@ -281,12 +273,11 @@ msgstr "Неверный тип клавиши быстрого доступа: 
 
 #: libxyz/core/keymanager.py:143
 msgid "Method %s not loaded"
-msgstr ""
+msgstr "Метод %s не загружен"
 
 #: libxyz/core/keymanager.py:149
-#, fuzzy
 msgid "Load error: %s"
-msgstr "Ошибка DSL: %s"
+msgstr "Ошибка загрузки: %s"
 
 #: libxyz/core/keymanager.py:160
 msgid "<Internal function object>"
@@ -298,7 +289,7 @@ msgstr "Неверный тип метода: %s. Должна быть стро
 
 #: libxyz/core/keymanager.py:175
 msgid "Unable to bind method %s. Plugin %s doesn't export it."
-msgstr ""
+msgstr "Невозможно назначить метод %s. Плагин %s не экспортирует его."
 
 #: libxyz/core/logger/logger.py:77
 msgid "Logger console"
@@ -309,41 +300,38 @@ msgid "Logger plugin"
 msgstr "Журнал"
 
 #: libxyz/core/plugins/base.py:89
-#, fuzzy
 msgid "%s is not a public method"
-msgstr "Методы"
+msgstr "%s не является общедоступным методом"
 
 #: libxyz/core/plugins/base.py:101
 msgid "%s is not a public data object"
-msgstr ""
+msgstr "%s не является общедоступным объектом"
 
 #: libxyz/core/plugins/manager.py:88
 msgid "Plugin %s is disabled or does not exist"
-msgstr ""
+msgstr "Плагин %s отключен или не существует"
 
 #: libxyz/core/plugins/manager.py:115
-#, fuzzy
 msgid "Unable to find required %s class"
-msgstr "Невозможно связать клавиатурную комбинацию %s: %s"
+msgstr "Невозможно найти требуемый класс %s"
 
 #: libxyz/core/plugins/manager.py:170
 msgid "%s plugin instance does not export method %s"
-msgstr ""
+msgstr "Плагин %s не экспортирует метод %s"
 
 #: libxyz/core/plugins/manager.py:195
 msgid "%s plugin instance does not export data object %s"
-msgstr ""
+msgstr "Плагин %s не экспортирует объект %s"
 
 #: libxyz/core/plugins/manager.py:249
 msgid "Error in wait_for() callback: %s"
-msgstr ""
+msgstr "Ошибка в функции wait_for(): %s"
 
 #: libxyz/core/plugins/manager.py:325
 msgid "BasePlugin instance expected, got: %s"
-msgstr ""
+msgstr "Ожидается объект класса BasePlugin, получено: %s"
 
 #: libxyz/core/plugins/ns.py:31 libxyz/core/plugins/ns.py:39
-#, fuzzy
 msgid "Invalid plugin path: %s"
 msgstr "Неверный путь: %s."
 
@@ -352,24 +340,24 @@ msgid "Max-size must be a positive integer number"
 msgstr "Max-size должен быть положительным целым числом"
 
 #: libxyz/core/skin.py:42
-#, fuzzy
 msgid "Invalid skin argument: %s. libxyz.core.Skin instance expected!"
-msgstr "Неверный тип аргумента: %s. Ожидается словарь (dict)"
+msgstr "Неверный тип аргумента: %s. Ожидается libxyz.core.Skin!"
 
 #: libxyz/core/xyzdata.py:46
 msgid "Attribute %s is a constant"
-msgstr ""
+msgstr "Аттрибут %s является константой"
 
 #: libxyz/launcher.py:210
 msgid ""
 "Invalid value %s.\n"
 "A list of valid log levels expected"
 msgstr ""
+"Неверное значение %s.\n"
+"Ожидается список корректныъ уровней отладки"
 
 #: libxyz/launcher.py:223
-#, fuzzy
 msgid "Invalid value %s. A positive integer expected"
-msgstr "Неверный тип аргумента: %s. Ожидается словарь (dict)"
+msgstr "Неверное значение %s. Ожидается положительное число"
 
 #: libxyz/launcher.py:250
 msgid "Skin %s is not usable with requested color settings. Using default."
@@ -387,7 +375,7 @@ msgstr "Ошибка разбора пользовательского конф�
 
 #: libxyz/launcher.py:337
 msgid "Skipping skin %s due to parsing error: %s"
-msgstr ""
+msgstr "Пропускаю тему %s из-за ошибок разбора: %s"
 
 #: libxyz/launcher.py:348
 msgid "Error parsing config %s: %s"
@@ -404,19 +392,27 @@ msgid ""
 "    -v  -- Show version\n"
 "    -h  -- Show this help message"
 msgstr ""
+"%s версия %s\n"
+"Использование: %s [-d driver][-c colors][-s skin][-lvh]\n"
+"    -d  -- Драйвер отрисовки (raw (по-умолчанию) или curses)\n"
+"    -c  -- Количество поддерживаемых терминалом цветов (1, 16 (по-"
+"умолчанию), 88, 256)\n"
+"    -s  -- Название темы\n"
+"    -l  -- Показать спиоск доступных тем\n"
+"    -v  -- Показать версию\n"
+"    -h  -- Показать это справочное сообщение"
 
 #: libxyz/launcher.py:385
 msgid "%s version %s"
-msgstr ""
+msgstr "%s версия %s"
 
 #: libxyz/parser/base.py:27
 msgid "Must be implemented in child class"
 msgstr "Должно быть реализовано в дочернем классе"
 
 #: libxyz/parser/base.py:39
-#, fuzzy
 msgid "Parse error on line %d"
-msgstr "Ошибка разбора"
+msgstr "Ошибка разбора на строке %d"
 
 #: libxyz/parser/base.py:41
 msgid "Parse error"
@@ -424,14 +420,13 @@ msgstr "Ошибка разбора"
 
 #: libxyz/parser/base.py:44
 msgid "Unexpected token '%s'. Waiting for '%s'"
-msgstr ""
+msgstr "Неверный токен '%s'. Ожидается '%s'"
 
 #: libxyz/parser/base.py:50
 msgid "Syntax error"
 msgstr "Синтаксическая ошибка"
 
 #: libxyz/parser/block.py:106
-#, fuzzy
 msgid "Invalid opt type: %s. Dictionary expected."
 msgstr "Неверный тип аргумента: %s. Ожидается словарь (dict)"
 
@@ -448,13 +443,12 @@ msgid "Variable transformation error: %s"
 msgstr "Ошибка преобразования переменной: %s"
 
 #: libxyz/parser/block.py:267 libxyz/parser/flat.py:189
-#, fuzzy
 msgid "Invalid value: %s"
-msgstr "Неверный тип алиаса: %s"
+msgstr "Неверное значение: %s"
 
 #: libxyz/parser/block.py:284
 msgid "Undefined macro %s"
-msgstr ""
+msgstr "Неопределённый макрос %s"
 
 #: libxyz/parser/block.py:342 libxyz/parser/lexer.py:170
 msgid "Unterminated quote"
@@ -469,28 +463,24 @@ msgid "Unterminated expression"
 msgstr "Незавершенное выражение"
 
 #: libxyz/parser/multi.py:64
-#, fuzzy
 msgid "Invalid argument type %s. Dictionary expected"
-msgstr "Неверный тип аргумента: %s, ожидается VFSObject"
+msgstr "Неверный тип аргумента: %s, ожидается словарь (dict)"
 
 #: libxyz/parser/multi.py:127
-#, fuzzy
 msgid "Unknown keyword: %s"
-msgstr "Неизвестная переменная %s"
+msgstr "Неизвестное ключевое слово: %s"
 
 #: libxyz/parser/multi.py:148
-#, fuzzy
 msgid "Invalid argument type %s. BaseParser or subclassed expected"
-msgstr "Неверный тип аргумента: %s, ожидается VFSObject"
+msgstr "Неверный тип аргумента: %s, ожидается BaseParser или производные"
 
 #: libxyz/parser/regexp.py:70
 msgid "%s: parse error on line %d: %s"
-msgstr ""
+msgstr "%s: ошибка разбора на строке %d: %s"
 
 #: libxyz/parser/regexp.py:76
-#, fuzzy
 msgid "Unmatched line %d: %s"
-msgstr "Невозможно загрузить плагин %s: %s"
+msgstr "Строка несоответствия %d: %s"
 
 #: libxyz/parser/sourcedata.py:48
 msgid "Source string"
@@ -560,47 +550,39 @@ msgid "History"
 msgstr "История"
 
 #: libxyz/ui/colors.py:34
-#, fuzzy
 msgid "Invalid %s color: %s"
-msgstr "Неверный тип алиаса: %s"
+msgstr "Неверный цвет %s: %s"
 
 #: libxyz/ui/colors.py:256
-#, fuzzy
 msgid "Invalid argument type %s, libxyz.ui.color.Foreground instance expected."
-msgstr "Неверный тип аргумента: %s, ожидается VFSObject"
+msgstr "Неверный тип аргумента: %s, ожидается libxyz.color.Foreground"
 
 #: libxyz/ui/colors.py:271
-#, fuzzy
 msgid ""
 "Invalid argument type %s, libxyz.ui.color.Background or instance expected."
-msgstr "Неверный тип аргумента: %s, ожидается VFSObject"
+msgstr "Неверный тип аргумента: %s, ожидается libxyz.ui.color.Background"
 
 #: libxyz/ui/colors.py:288 libxyz/ui/colors.py:305
-#, fuzzy
 msgid "Invalid argument type %s, libxyz.ui.color.Attribute instance expected."
-msgstr "Неверный тип аргумента: %s. Ожидается словарь (dict)"
+msgstr "Неверный тип аргумента: %s. Ожидается libxyz.ui.color.Attribute"
 
 #: libxyz/ui/colors.py:320
-#, fuzzy
 msgid ""
 "Invalid argument type %s, libxyz.ui.color.ForegroundHigh instance expected."
-msgstr "Неверный тип аргумента: %s, ожидается VFSObject"
+msgstr "Неверный тип аргумента: %s, ожидается libxyz.ui.color.ForegroundHigh"
 
 #: libxyz/ui/colors.py:335
-#, fuzzy
 msgid ""
 "Invalid argument type %s, libxyz.ui.color.BackgroundHigh instance expected."
-msgstr "Неверный тип аргумента: %s, ожидается VFSObject"
+msgstr "Неверный тип аргумента: %s, ожидается libxyz.ui.color.BackgroundHigh"
 
 #: libxyz/ui/entry.py:118 plugins/core/pluginlist/entry.py:81
-#, fuzzy
 msgid "Error in entry callback: %s"
-msgstr "Ошибка настройки bash: %s"
+msgstr "Ошибка в вызове функции: %s"
 
 #: libxyz/ui/panel.py:116
-#, fuzzy
 msgid "Error compiling filter: %s"
-msgstr "Ошибка разбора правила FSRule: %s"
+msgstr "Ошибка компиляции фильтра: %s"
 
 #: libxyz/ui/panel.py:163
 msgid "Error executing bind (%s): %s"
@@ -649,22 +631,30 @@ msgid ""
 "Fires before switching to another tab. Arguments: Block instance and old tab "
 "index."
 msgstr ""
+"Запускается перед переключением на другую вкладку. Аргументы: Объект Block и "
+"индекс предыдущей вкладки."
 
 #: libxyz/ui/panel.py:268
 msgid ""
 "Fires when switching to another tab. Arguments: Block instance and new tab "
 "index."
 msgstr ""
+"Запускается после переключения на другую вкладку. Аргументы: Объект Block и "
+"индекс новой вкладки."
 
 #: libxyz/ui/panel.py:272
 msgid ""
 "Fires when new tab is added. Arguments: Block instance and new tab index."
 msgstr ""
+"Запускает при добавлении новой вкладки. Аргументы: Объект Block и индекс "
+"новой вкладки."
 
 #: libxyz/ui/panel.py:276
 msgid ""
 "Fires when tab is delete. Arguments: Block instance and deleted tab index."
 msgstr ""
+"Запускается когда вкладка удаляется. Аргументы: Объект Block и индекс "
+"удалённой вкладки."
 
 #: libxyz/ui/panel.py:293
 msgid "Really quit %s?"
@@ -672,7 +662,7 @@ msgstr "Действительно выйти из %s?"
 
 #: libxyz/ui/panel.py:748
 msgid "Unable to find `%s` sorting policy"
-msgstr ""
+msgstr "Невозможно найти метод сортировки `%s`"
 
 #: libxyz/ui/panel.py:1015
 msgid "%s bytes (%d)"
@@ -720,7 +710,7 @@ msgstr "Невозможно найти обработчик для %s."
 
 #: libxyz/vfs/local.py:36
 msgid "Object must be opened before any operation"
-msgstr ""
+msgstr "Объект должен быть открыт до начала работы с ним"
 
 #: libxyz/vfs/local.py:61
 msgid "Unable to walk on %s"
@@ -775,9 +765,8 @@ msgid "Type-specific data"
 msgstr "Дополнительные данные"
 
 #: libxyz/vfs/local.py:362
-#, fuzzy
 msgid "Unable to stat file %s: %s"
-msgstr "Невозможно выполнить файл: %s"
+msgstr "Невозможно получить информацию о файле %s: %s"
 
 #: libxyz/vfs/local.py:388
 msgid "Error creating VFS object: %s"
@@ -796,7 +785,6 @@ msgid "Feature not implemented"
 msgstr "Данная функция не реализована"
 
 #: plugins/core/bindlist/main.py:18
-#, fuzzy
 msgid "Show keybindings"
 msgstr "Комбинации клавиш"
 
@@ -805,9 +793,10 @@ msgid ""
 "Plugin is used to display all current keybindings along with corresponding "
 "contextes and methods"
 msgstr ""
+"Плагин предназначен для показа всех текущих привязок клавиш и "
+"соответствующих контекстов и методов"
 
 #: plugins/core/bindlist/main.py:24
-#, fuzzy
 msgid "Event is fired before showing dialog. Receives no arguments."
 msgstr "Запускается при показе диалоге. Аргументы: Нет"
 
@@ -836,13 +825,12 @@ msgid "Complete"
 msgstr "Дополнения"
 
 #: plugins/core/console/main.py:31
-#, fuzzy
 msgid "Interactive management console"
 msgstr "Консоль управления"
 
 #: plugins/core/console/main.py:32
 msgid "Provides interactive management console"
-msgstr ""
+msgstr "Интерактивная консоль управления"
 
 #: plugins/core/console/main.py:34
 msgid ""
@@ -850,20 +838,22 @@ msgid ""
 "history_depth - Specifies how many entered commands to keep. Default - 50\n"
 "prompt - Command line prompt. Default - '> '"
 msgstr ""
+"Параметры конфигурации:\n"
+"history_depth - Размер буфера введёных команд. По-умолчанию - 50\n"
+"prompt - Приглашение командной строки. По-умолчанию - '> '"
 
 #: plugins/core/console/main.py:40
-#, fuzzy
 msgid "Fires upon showing console. Arguments: No."
-msgstr "Запускается при показе диалоге. Аргументы: Нет"
+msgstr "Запускается при показе консоли. Аргументы: Нет"
 
 #: plugins/core/console/main.py:42
 msgid ""
 "Fires when scrolling through history. Arguments: Current command from "
 "history buffer"
 msgstr ""
+"Запускается при переборе буфера команд. Аргументы: текущая команда из буфера"
 
 #: plugins/core/console/main.py:45
-#, fuzzy
 msgid "Fires when typed command is to be executed. Arguments: typed command"
 msgstr "Запускается перед выполнением команды. Аргументы: команда"
 
@@ -881,11 +871,13 @@ msgid ""
 "For each terminal type keycodes are stored independently. Terminal type "
 "determined by examining TERM environment variable."
 msgstr ""
+"Плагин предназначен для настройки терминальных кодов клавиатуры.\n"
+"Для каждого типа терминала коды сохраняются отдельно. Тип терминала "
+"определяется путём чтения переменной окружения TERM."
 
 #: plugins/core/keycodes/main.py:49
-#, fuzzy
 msgid "Fires upon showing dialog"
-msgstr "Запускается при показе диалоге. Аргументы: Нет"
+msgstr "Запускается при показе диалоге"
 
 #: plugins/core/keycodes/main.py:120
 msgid ""
@@ -902,29 +894,26 @@ msgid "Save learned keys?"
 msgstr "Сохранить данные?"
 
 #: plugins/core/keycodes/main.py:199
-#, fuzzy
 msgid "Unable to open file: %s"
-msgstr "Невозможно открыть файл закладок: %s"
+msgstr "Невозможно открыть файл: %s"
 
 #: plugins/core/keycodes/main.py:205
 msgid "Unable to save learned data"
 msgstr "Невозможно сохранить данные"
 
 #: plugins/core/pluginlist/main.py:35
-#, fuzzy
 msgid "Show plugin list"
 msgstr "Список активных плагинов"
 
 #: plugins/core/pluginlist/main.py:36
 msgid "Show all currently loaded plugins and associated information"
-msgstr ""
+msgstr "Показать все текущие загруженные плагины"
 
 #: plugins/core/pluginlist/main.py:41
 msgid "Fires upon showing dialog. Arguments: No"
 msgstr "Запускается при показе диалоге. Аргументы: Нет"
 
 #: plugins/core/pluginlist/main.py:43
-#, fuzzy
 msgid "Fires when showing detailed plugin info.Arguments: Plugin object"
 msgstr ""
 "Запускается при показе детальной информации о плагине. Аргументы: Объект "
@@ -935,21 +924,20 @@ msgid "Active plugins list"
 msgstr "Список активных плагинов"
 
 #: plugins/core/pluginlist/main.py:84
-#, fuzzy
 msgid "Author: %s"
-msgstr "Ошибка: %s"
+msgstr "Автор: %s"
 
 #: plugins/core/pluginlist/main.py:87
 msgid "Version: %s"
-msgstr ""
+msgstr "Версия: %s"
 
 #: plugins/core/pluginlist/main.py:90
 msgid "Minimal compatible version: %s"
-msgstr ""
+msgstr "Минимальная совместимая версия: %s"
 
 #: plugins/core/pluginlist/main.py:94
 msgid "Homepage: %s"
-msgstr ""
+msgstr "Домашняя страничка: %s"
 
 #: plugins/core/pluginlist/main.py:132
 msgid "Public data"
@@ -972,9 +960,8 @@ msgid "Plugin events"
 msgstr "События"
 
 #: plugins/core/pluginlist/main.py:221
-#, fuzzy
 msgid "Plugin info %s"
-msgstr "Документация"
+msgstr "Информация о плагине %s"
 
 #: plugins/core/shell/bash.py:45
 msgid "Error setting up bash: %s"
@@ -998,7 +985,7 @@ msgstr "Нажмите ENTER для продолжения..."
 
 #: plugins/fsrules/magic/main.py:29
 msgid "Magic database FSRule"
-msgstr ""
+msgstr "FSRule для базы данных magic"
 
 #: plugins/fsrules/magic/main.py:30
 msgid ""
@@ -1010,7 +997,7 @@ msgstr ""
 
 #: plugins/misc/about/main.py:20
 msgid "About plugin"
-msgstr ""
+msgstr "Плагин - 'О программе'"
 
 #: plugins/misc/where/main.py:19
 msgid "Save panels locations"
@@ -1025,9 +1012,8 @@ msgid "Unable to open where data file: %s"
 msgstr "Невозможно открыть файл с данными: %s"
 
 #: plugins/ui/bookmarks/main.py:37
-#, fuzzy
 msgid "Frequently used directories"
-msgstr "Создать каталог"
+msgstr "Часто используемые каталоги"
 
 #: plugins/ui/bookmarks/main.py:144
 msgid "Bookmarks"
@@ -1043,7 +1029,7 @@ msgstr "Ошибка разбора файла закладок: %s"
 
 #: plugins/ui/testinput/main.py:19
 msgid "Test input"
-msgstr ""
+msgstr "Тест ввода"
 
 #: plugins/ui/testinput/main.py:20
 msgid ""
@@ -1052,6 +1038,11 @@ msgid ""
 "Raw is what low-level library emits to focus widget.\n"
 "If any keybinding currently exists for key it is shown on the bottom line"
 msgstr ""
+"Диалог показа нажатых клавиш.\n"
+"Shortcut - то, что XYZCommander ожидает увидеть в конфигурационных файлах.\n"
+"Raw - значение, передающееся драйвером отрисовки.\n"
+"Если к введённой комбинацией клавиш привязана какая-либо функция, она "
+"отображается в нижней части окна"
 
 #: plugins/ui/testinput/main.py:49
 msgid "Press any key. Escape twice to quit."
@@ -1062,19 +1053,20 @@ msgid "Input test"
 msgstr "Тест вводимых значений"
 
 #: plugins/vfs/fileinfo/main.py:18
-#, fuzzy
 msgid "Show VFS object information"
 msgstr "Информация о VFS объекте"
 
 #: plugins/vfs/fileinfo/main.py:19
 msgid "Show detailed information provided by VFS layer"
-msgstr ""
+msgstr "Показать дополнительную информацию доступную через подсистему VFS"
 
 #: plugins/vfs/fileinfo/main.py:25
 msgid ""
 "Event is fired upon showing file-info dialog.\n"
 "Arguments: Currently selected VFSObject instance"
 msgstr ""
+"Событие запускается при показе информации о файле.\n"
+"Аргументы: Выбранный объект VFSObject"
 
 #: plugins/vfs/fileinfo/main.py:59
 msgid "VFS Object Info"
@@ -1240,10 +1232,3 @@ msgstr "Перезаписать %s"
 #: plugins/vfs/vfsutils/main.py:231
 msgid "An error occured %s: %s"
 msgstr "Произошла ошибка %s: %s"
-
-#, fuzzy
-#~ msgid "Invalid argument type %s"
-#~ msgstr "Неверный тип алиаса: %s"
-
-#~ msgid "Method"
-#~ msgstr "Метод"
