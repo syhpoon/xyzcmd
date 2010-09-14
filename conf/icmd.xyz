@@ -4,10 +4,12 @@
 # Default internal commands. Do not edit.
 #
 
+import os
+
 # Internal chdir
 def _cd(arg):
     if arg:
-        call(":sys:panel:chdir", arg.rstrip())
+        call(":sys:panel:chdir", os.path.expanduser(arg.rstrip()))
     else:
         call(":sys:panel:chdir", env("HOME", "/"))
 icmd("cd", _cd)
