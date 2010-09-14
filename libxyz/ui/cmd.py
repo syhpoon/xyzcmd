@@ -619,7 +619,6 @@ class Cmd(lowui.FlowWidget):
             return
 
         _data = self.replace_aliases(bstring(u"".join(self._data)))
-        _data = self.expand_user(_data)
         _cmd, _rest = _split_cmd(_data)
 
         if _cmd:
@@ -682,12 +681,6 @@ class Cmd(lowui.FlowWidget):
             xyzlog.error(_(u"Unable to replace an alias %s: %s") %
                          (ustring(cmd), unicode(e)))
             return data
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def expand_user(self, data):
-        # TODO
-        return data
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
