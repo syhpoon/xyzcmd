@@ -189,4 +189,5 @@ class BlockEntries(list):
         for _exp, _attr in self._rules.iteritems():
             if _exp.match(item):
                 self.palettes[idx] = _attr.name
+                break
 
