@@ -1,4 +1,4 @@
-xyzcmd (0.0.5-0ubuntu1) lucid; urgency=low
+xyzcmd (0.0.5-1ubuntu1) lucid; urgency=low
 
   * Nested VFS support
   * Heavy LocalVFS walker optimization: 30 to 40 times faster to enter a directory, and a lot less memory intensive as well
