@@ -71,6 +71,9 @@ class BasePlugin(object):
 
         self.ns = Namespace(u":".join(("", self.NAMESPACE, self.NAME)))
 
+        # Register plugin's constructor to be run upon startup
+        self.xyz.hm.register("event:startup", self.prepare)
+
         try:
             self.conf = self.xyz.conf[u"plugins"][self.ns.pfull]
         except KeyError:

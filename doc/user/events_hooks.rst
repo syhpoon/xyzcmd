@@ -53,11 +53,6 @@ List of events fired by core system:
 
   Arguments: Namespace instance
 
-**event:plugin_prepare**
-  Event is fired before calling plugin prepare() method.
-
-  Arguments: Plugin instance
-
 **event:plugin_from_load**
   Event is fired when a plugin method is about to be loaded.
 

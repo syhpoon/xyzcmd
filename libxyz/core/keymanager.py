@@ -38,6 +38,7 @@ class KeyManager(object):
         self.xyz = xyz
         self.keys = libxyz.ui.Keys()
 
+        self._reader = self.default_reader
         self._loaded_methods = {}
         self._bind_data = {}
         self._prefixes = []
@@ -51,6 +52,19 @@ class KeyManager(object):
         @return: Tuple (method, arguments)
         """
 
+        return self.reader(pressed, context)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def default_reader(self, pressed, context=None):
+        """
+        Default reader.
+        Reader takes a raw pressed key as input and returns a bound method or
+        None.
+
+        @return: method
+        """
+
         context = context or self.CONTEXT_DEFAULT
         _p = Shortcut(raw=pressed)
 
@@ -61,7 +75,7 @@ class KeyManager(object):
 
         _method = None
 
-        # Look for binded shortcut
+        # Look for bound shortcut
         try:
             _method = self._bind_data[context][_p]
         except KeyError:
@@ -212,3 +226,26 @@ class KeyManager(object):
         """
 
         return self._bind_data[context or self.CONTEXT_DEFAULT].get(sc, None)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _get_reader(self):
+        return self._reader
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _set_reader(self, reader):
+        self._reader = reader
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def reset_reader(self):
+        """
+        Reset reader to default
+        """
+
+        self.reader = self.default_reader
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    reader = property(_get_reader, _set_reader)

@@ -22,6 +22,7 @@ plugins_on(":sys:run",
 
            ":ui:testinput",
            ":ui:bookmarks",
+           ":ui:vixyz",
 
            ":vfs:fileinfo",
            ":vfs:vfsutils",

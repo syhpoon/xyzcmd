@@ -49,9 +49,9 @@ class PluginManager(object):
     PLUGIN_FILE = u"main"
     VIRTUAL_NAMESPACE = u"sys"
     EVENT_INIT = u"event:plugin_init"
+    EVENT_PREPARE = u"event:plugin_prepare"
     EVENT_FROM_LOAD = u"event:plugin_from_load"
     EVENT_FROM_LOAD_DATA = u"event:plugin_from_load_data"
-    EVENT_PREPARE = u"event:plugin_prepare"
     EVENT_FIN = u"event:plugin_fin"
 
     @typer(None, None, list)
@@ -70,6 +70,12 @@ class PluginManager(object):
         # Do it on demand
         self._loaded = {}
         self._waiting = {}
+        self._started = False
+
+        def _init():
+            self._started = True
+
+        self.xyz.hm.register("event:startup", _init)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -118,9 +124,10 @@ class PluginManager(object):
         # Initiate plugin
         _obj = _loaded(self.xyz, *initargs, **initkwargs)
 
-        # Run prepare (constructor)
-        self.xyz.hm.dispatch(self.EVENT_PREPARE, _obj)
-        _obj.prepare()
+        # Run prepare (constructor) if already started only
+        if self._started:
+            self.xyz.hm.dispatch(self.EVENT_PREPARE, _obj)
+            _obj.prepare()
 
         self.set_loaded(plugin, _obj)
 
@@ -299,17 +306,17 @@ class PluginManager(object):
         def _fin(p):
             try:
                 self._loaded[p].finalize()
-            except Exception:
+            except Exceptioni:
                 pass
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        if self._loaded:
+        if plugin is None:
             _plugins = self._loaded
         else:
             _plugins = [plugin]
 
-        for plugin_name in self._loaded:
+        for plugin_name in _plugins:
             self.xyz.hm.dispatch(self.EVENT_FIN, self._loaded[plugin_name])
             _fin(plugin_name)
 

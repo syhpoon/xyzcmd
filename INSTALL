@@ -9,3 +9,11 @@ available at http://code.google.com/p/xyzcmd/downloads/list or
 provide an additional flag to setup.py:
 
 # ./setup.py install --install-layout=deb
+
+For Ubuntu it is also possible to use PPA repo
+ (currently for lucid and maverick):
+
+1) sudo add-apt-repository ppa:syhpoon/xyzcmd
+2) sudo aptitude update && sudo aptitude install xyzcmd
+
+

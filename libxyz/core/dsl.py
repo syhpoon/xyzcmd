@@ -43,7 +43,7 @@ def instantiated(func):
             return func(cls, *args, **kwargs)
 
     wrap.__doc__ = func.__doc__
-    
+
     return wrap
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -65,6 +65,7 @@ class XYZ(object):
            "section",
            "unlet",
            "load",
+           "unload",
            "bind",
            "exec_file",
            "kbd",
@@ -90,12 +91,12 @@ class XYZ(object):
            ]
 
     EVENT_CONF_UPDATE = u"event:conf_update"
-    
+
     macros = {}
-    
+
     _instance = None
     _env = {}
-    
+
     def __new__(cls, xyz):
         if cls._instance is not None:
             return cls._instance
@@ -154,7 +155,7 @@ class XYZ(object):
                                                     "get_untagged")(False)]
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     @classmethod
     def _clear(cls):
         cls._instance = None
@@ -199,7 +200,7 @@ class XYZ(object):
             return None
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     @classmethod
     @instantiated
     def section(cls, sect=u"local"):
@@ -212,7 +213,7 @@ class XYZ(object):
             return cls.xyz.conf[sect]
         except Exception:
             return None
-        
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @classmethod
@@ -244,11 +245,27 @@ class XYZ(object):
 
     @classmethod
     @instantiated
+    def unload(cls, plugin):
+        """
+        Unload method[s] from plugin
+        """
+
+        try:
+            if cls.xyz.pm.is_loaded(plugin):
+                cls.xyz.pm.del_loaded(plugin)
+        except Exception, e:
+            error(_(u"Unable to unload plugin %s: %s") %
+                  (plugin, unicode(e)))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
     def bind(cls, method, shortcut, context="DEFAULT"):
         """
         Bind method to shortcut
         """
-        
+
         try:
             cls.xyz.km.bind(method, shortcut, context=context)
         except Exception, e:
@@ -263,9 +280,9 @@ class XYZ(object):
         """
         Create keyboard shortcut
         """
-        
+
         return Shortcut(sc=list(args))
-    
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @classmethod
@@ -423,7 +440,7 @@ class XYZ(object):
         if not is_func(obj):
             error(_(u"Invalid object type: %s. Function expected") %
                   type(obj), trace=False)
-        
+
         return cls.let(command, obj, sect="commands")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -439,7 +456,7 @@ class XYZ(object):
             cls.let("plugins", {plugin: "ENABLE"}, sect="xyz")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     @classmethod
     @instantiated
     def plugins_off(cls, *plugins):
@@ -465,9 +482,9 @@ class XYZ(object):
         if not isinstance(opts, dict):
             error(_(u"Invalid opts type: %s. Dict instance expected")
                   % type(opts))
-            
+
         return cls.let(plugin, opts, sect="plugins")
-    
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @classmethod
@@ -476,7 +493,7 @@ class XYZ(object):
         """
         Set new prefix key
         """
-        
+
         cls.xyz.km.set_prefix(shortcut)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -489,7 +506,7 @@ class XYZ(object):
         """
 
         fmt = lambda o: "%s\t%s" % (o, getattr(cls, o).__doc__)
-        
+
         if obj is not None and obj not in cls.api:
             error(_(u"Invalid function %s") % obj)
 
@@ -497,9 +514,9 @@ class XYZ(object):
             objs = [obj]
         else:
             objs = cls.api
-            
+
         return "\n".join([fmt(x) for x in objs]).replace("\t", " ")
-            
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @classmethod
@@ -524,7 +541,7 @@ class XYZ(object):
         """
 
         return path + "#vfs-%s#" % driver
-    
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @classmethod
@@ -534,7 +551,7 @@ class XYZ(object):
         Register a new hook.
         Event is an event string and proc is a procedure to be called
         """
-        
+
         try:
             return cls.xyz.hm.register(event, proc)
         except Exception, e:
@@ -626,7 +643,7 @@ class XYZ(object):
         """
         Return copy of global dsl environment
         """
-        
+
         return cls._env.copy()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++
