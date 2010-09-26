@@ -20,6 +20,7 @@ class XYZData(object):
     """
 
     __slots__ = ["screen",
+                 "driver",
                  "top",
                  "skin",
                  "pm",

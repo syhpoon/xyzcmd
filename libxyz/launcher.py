@@ -103,6 +103,7 @@ class Launcher(object):
 
         self.xyz.input = core.InputWrapper(self.xyz)
         self.xyz.screen = uilib.display.init_display(self._driver)
+        self.xyz.driver = self._driver
 
         self.init_skin()
         self.parse_configs_2()

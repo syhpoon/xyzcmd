@@ -72,6 +72,9 @@ class XYZPlugin(BasePlugin):
     # List of (event_name, event_desc) tuples
     EVENTS = None
 
+    # Custom plugin palettes
+    PALETTES = None
+
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
 

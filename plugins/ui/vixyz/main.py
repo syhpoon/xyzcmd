@@ -21,6 +21,36 @@ class XYZPlugin(BasePlugin):
     DOC = None
     HOMEPAGE = u"http://xyzcmd.syhpoon.name/"
     EVENTS = None
+    PALETTES = {
+        'command_mode': {
+            'monochrome': {
+                'foreground': 'BLACK',
+                'background': 'LIGHT_GRAY'
+                },
+            'seablue': {
+                'foreground': 'DARK_BLUE',
+                'background': 'LIGHT_GRAY'
+                },
+            'grass': {
+                'foreground': 'DARK_GREEN',
+                'background': 'LIGHT_GRAY'
+                },
+            'glamour': {
+                'foreground': 'DARK_MAGENTA',
+                'background': 'LIGHT_GRAY'
+                },
+            'lighty': {
+                "foreground": "DEFAULT",
+                "background": "DEFAULT",
+                'foreground_high': '#ffd',
+                "background_high": '#008'
+                },
+            None: {
+                'foreground': 'DEFAULT',
+                'background': 'DEFAULT'
+                }
+            }
+        }
 
     def __init__(self, xyz):
         super(XYZPlugin, self).__init__(xyz)
@@ -35,12 +65,25 @@ class XYZPlugin(BasePlugin):
     def prepare(self):
         self.panel = self.xyz.pm.load(":sys:panel")
         self.vfs = self.xyz.pm.load(":vfs:vfsutils")
+        self.cmd = self.xyz.pm.load(":sys:cmd")
+
+        cmd_mode_attr = self.xyz.skin.attr((self.ns.pfull,), "command_mode")
+
+        self.insert_mode_attrf = self.cmd.get_attr_f()
+        self.cmd_mode_attrf = lambda _: cmd_mode_attr
+
+        self.toggle_insert_mode(False)
+
+        def cd_parent():
+            self.panel.chdir(XYZ.macro("ACT_BASE"))
+
+            return lambda: None
 
         self.keys = [
             (XYZ.kbd("i"), lambda _: self.toggle_insert_mode),
             (XYZ.kbd("j"), lambda _: self.panel.entry_next),
             (XYZ.kbd("l"), lambda _: self.panel.action),
-            (XYZ.kbd("h"), lambda _: self.panel.chdir(XYZ.macro("ACT_BASE"))),
+            (XYZ.kbd("h"), lambda _: cd_parent),
             (XYZ.kbd("k"), lambda _: self.panel.entry_prev),
             (XYZ.kbd("/"), lambda _: self.panel.search_cycle),
             (XYZ.kbd("?"), lambda _: self.panel.search_backward),
@@ -63,6 +106,7 @@ class XYZPlugin(BasePlugin):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def finalize(self):
+        self.cmd.set_attr_f(self.cmd_mode_attrf)
         self.xyz.km.reset_reader()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -77,7 +121,7 @@ class XYZPlugin(BasePlugin):
 
         # Break insert mode if any
         if key == self._esc and self._insert:
-            self._insert = False
+            self.toggle_insert_mode(False)
 
             return self.reader(self.xyz.input.get(), context)
         # In non-insert treat keys as commands
@@ -104,6 +148,11 @@ class XYZPlugin(BasePlugin):
             self._insert = not self._insert
         else:
             self._insert = value
+
+        if self._insert:
+            self.cmd.set_attr_f(self.insert_mode_attrf)
+        else:
+            self.cmd.set_attr_f(self.cmd_mode_attrf)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

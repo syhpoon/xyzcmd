@@ -35,7 +35,7 @@ class SkinManager(object):
 
     def add(self, skin):
         """
-        Add new sking to storage
+        Add new skin to storage
         """
 
         if not isinstance(skin, Skin):
@@ -123,6 +123,20 @@ class Skin(object):
 
     def set_screen(self, screen):
         self.screen = screen
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def add_custom_palette(self, block, res, palette):
+        """
+        Register custom palette
+        """
+
+        if block not in self.rules:
+            self.rules[block] = ODict()
+
+        palette.name = self._make_name(block, res)
+
+        self.rules[block][res] = palette
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

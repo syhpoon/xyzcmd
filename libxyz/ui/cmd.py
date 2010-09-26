@@ -52,11 +52,11 @@ class Cmd(lowui.FlowWidget):
         super(Cmd, self).__init__()
 
         self.xyz = xyz
-        self._attr = lambda x: xyz.skin.attr(self.resolution, x)
+        self._default_attr = lambda x: xyz.skin.attr(self.resolution, x)
+        self._attr = self._default_attr
 
         self._keys = Keys()
 
-        self._text_attr = self._attr(u"text")
         self._data = []
         # Internal cursor index. Value is in range(0,len(self._data))
         self._index = 0
@@ -201,6 +201,8 @@ class Cmd(lowui.FlowWidget):
         _cmd_plugin.export(self.append)
         _cmd_plugin.export(self.escape)
         _cmd_plugin.export(self.replace_aliases)
+        _cmd_plugin.export(self.get_attr_f)
+        _cmd_plugin.export(self.set_attr_f)
 
         self.xyz.pm.register(_cmd_plugin)
 
@@ -229,6 +231,8 @@ class Cmd(lowui.FlowWidget):
         Render the command line
         """
 
+        text_attr = self._attr("text")
+
         if self.prompt is not None:
             _canv_prompt = self.prompt.render((maxcol,))
             _prompt_len = len(self.prompt)
@@ -240,7 +244,7 @@ class Cmd(lowui.FlowWidget):
         _text_len = abs(maxcol - _prompt_len)
 
         _canv_text = lowui.AttrWrap(lowui.Text("".join(_data)),
-                                    self._text_attr).render((maxcol,))
+                                    text_attr).render((maxcol,))
 
         _canvases = []
 
@@ -917,6 +921,25 @@ class Cmd(lowui.FlowWidget):
         """
 
         self.prompt = Prompt(new, self._attr(u"prompt"))
+        self._invalidate()
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_attr_f(self):
+        """
+        Return current attributes function
+        """
+
+        return self._attr
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def set_attr_f(self, f):
+        """
+        Set attributes function
+        """
+
+        self._attr = f
         self._invalidate()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++

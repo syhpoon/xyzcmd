@@ -16,6 +16,7 @@
 
 from libxyz.exceptions import PluginError
 from libxyz.core.plugins import Namespace
+from libxyz.ui.colors import Palette
 
 class BasePlugin(object):
     """
@@ -55,6 +56,9 @@ class BasePlugin(object):
     # List of (event_name, event_desc) tuples
     EVENTS = None
 
+    # Custom plugin palettes
+    PALETTES = None
+
     def __init__(self, xyz, *args, **kwargs):
         self.xyz = xyz
 
@@ -70,6 +74,9 @@ class BasePlugin(object):
         self.public_data = {}
 
         self.ns = Namespace(u":".join(("", self.NAMESPACE, self.NAME)))
+
+        # Register custom palettes
+        self._register_palettes(self.PALETTES)
 
         # Register plugin's constructor to be run upon startup
         self.xyz.hm.register("event:startup", self.prepare)
@@ -160,3 +167,40 @@ class BasePlugin(object):
         """
 
         return "event%s:%s" % (self.ns.pfull, short)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _register_palettes(self, palettes):
+        """
+        Register custom plugin palettes in current skin
+        """
+
+        if palettes is None:
+            return
+
+        current_skin = self.xyz.skin.name
+
+        for pname, p in palettes.iteritems():
+            # Try current skin
+            config = p.get(current_skin, None)
+
+            # No entry for current skin, try default (None)
+            if config is None:
+                config = p.get(None, None)
+
+                # No default entry - warn and continue
+                if config is None:
+                    xyzlog.error(_(u"Unable to register palette %s: "\
+                                   u"neither entry for current skin (%s) "
+                                   u"nor default one found") %
+                                 (pname, current_skin))
+                    continue
+
+            palette = Palette(None, *Palette.convert(config))
+
+            self.xyz.skin.add_custom_palette(u"ui."+self.ns.pfull,
+                                             pname, palette)
+
+            # Register new palette
+            self.xyz.screen.register_palette(
+                [palette.get_palette(self.xyz.driver)])
