@@ -18,7 +18,24 @@ class XYZPlugin(BasePlugin):
     FULL_DESCRIPTION = _(u"")
     NAMESPACE = u"ui"
     MIN_XYZ_VERSION = 6
-    DOC = None
+    DOC = _(u"Available commands:\n"\
+            u"j - move cursor one entry down\n"\
+            u"k - move cursor one entry up\n"\
+            u"l - perform an action on selected object\n"\
+            u"h - step to the parent directory\n"\
+            u"gg - move to the first entry\n"\
+            u"G - move to the last entry\n"\
+            u"Ctrl-G - show VFS object information\n"\
+            u"m[a-z][A-Z][0-9] - set a mark to the current file\n"\
+            u"'[a-z][A-Z][0-9] - jump to the marked file\n"\
+            u"/ - search for object\n"\
+            u"? - search for object backwards\n"\
+            u"dd - remove object\n"\
+            u"yy - copy object\n"\
+            u"t - toggle tag\n"\
+            u"i, I - switch to insert mode\n"\
+            u"ESC - switch to command command mode")
+
     HOMEPAGE = u"http://xyzcmd.syhpoon.name/"
     EVENTS = None
     PALETTES = {
@@ -59,9 +76,10 @@ class XYZPlugin(BasePlugin):
         self._insert = False
         self._esc = Shortcut(sc=['ESCAPE'])
         self._marks = {}
+        self._empty = lambda: None
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+
     def prepare(self):
         self.panel = self.xyz.pm.load(":sys:panel")
         self.vfs = self.xyz.pm.load(":vfs:vfsutils")
@@ -77,10 +95,11 @@ class XYZPlugin(BasePlugin):
         def cd_parent():
             self.panel.chdir(XYZ.macro("ACT_BASE"))
 
-            return lambda: None
+            return self._empty
 
         self.keys = [
             (XYZ.kbd("i"), lambda _: self.toggle_insert_mode),
+            (XYZ.kbd("I"), lambda _: self.toggle_insert_mode),
             (XYZ.kbd("j"), lambda _: self.panel.entry_next),
             (XYZ.kbd("l"), lambda _: self.panel.action),
             (XYZ.kbd("h"), lambda _: cd_parent),
@@ -106,7 +125,7 @@ class XYZPlugin(BasePlugin):
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def finalize(self):
-        self.cmd.set_attr_f(self.cmd_mode_attrf)
+        self.cmd.set_attr_f(self.insert_mode_attrf)
         self.xyz.km.reset_reader()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -133,6 +152,9 @@ class XYZPlugin(BasePlugin):
                                            context, keys=v)
                     else:
                         return v(key)
+
+            if not key.composite:
+                return self._empty
 
         return self.xyz.km.default_reader(raw, context)
 
@@ -162,7 +184,7 @@ class XYZPlugin(BasePlugin):
         """
 
         self._marks[sc] = (XYZ.macro("ACT_CWD"), selected.name)
-        return lambda: None
+        return self._empty
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -182,4 +204,4 @@ class XYZPlugin(BasePlugin):
             except Exception:
                 pass
 
-        return lambda: None
+        return self._empty

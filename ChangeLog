@@ -5,7 +5,7 @@ Version 0.0.6
 =============
 
 Overview
--------
+--------
 * New plugin :ui:vixyz provides an ability to navigate using vi-like
   keybindings.
 
@@ -13,6 +13,10 @@ Plugins
 -------
 * New plugin - :ui:vixyz.
   Plugin allows to navigate through filesystem using vi-like keybindings.
+* New method :sys:cmd:get_attr_f
+  Method returns current attibute function.
+* New method :sys:cmd:set_attr_f
+  Method sets attibute function.
 
 Configuration
 -------------

@@ -38,6 +38,8 @@ class Shortcut(object):
             self.raw = raw
             self.sc = self._parse_raw(raw)
 
+        self.composite = len(self.sc[0]) > 1
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __hash__(self):
