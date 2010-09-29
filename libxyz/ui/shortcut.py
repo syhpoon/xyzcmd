@@ -106,7 +106,7 @@ class Shortcut(object):
             _data = el
             
             if el in (u"page up", u"page down"):
-                _data = self._keys.get_key(raw)
+                _data = self._keys.get_key(el)
             elif len(el) > 1: # Shortcut
                 _data = u"-".join([self._keys.get_key(x) or x
                                    for x in el.split(u" ")])
