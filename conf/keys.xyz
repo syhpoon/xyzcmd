@@ -6,7 +6,6 @@
 
 # FSRules plugins. Load to activate
 load(":fsrules:magic")
-load(":ui:vixyz")
 
 # Necessary imports
 load(":sys:run:*")
