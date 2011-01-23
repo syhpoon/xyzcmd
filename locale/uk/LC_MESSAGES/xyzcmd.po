@@ -1,295 +1,294 @@
-# XYZcmd Russian Translation
+# XYZcmd Ukrainian Translation
 # Copyright (C) 2010-2011 Max E. Kuznecov
 # Max E. Kuznecov <mek@mek.uz.ua>, 2010.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: XYZCommander VERSION\n"
+"Project-Id-Version: XYZCommander 0.0.5\n"
 "POT-Creation-Date: 2010-09-14 23:38+EEST\n"
-"PO-Revision-Date: 2010-07-28 00:48+ZONE\n"
-"Last-Translator: Max E. Kuznecov <mek@mek.uz.ua>\n"
-"Language-Team: ru\n"
-"Language: ru\n"
+"PO-Revision-Date: 2011-01-22 21:43+EEST\n"
+"Last-Translator: Vlad V Teterya <vlad@vlad.uz.ua>\n"
+"Language-Team: uk\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: UTF-8\n"
-"Generated-By: pygettext.py 1.5\n"
 
 #: conf/keys.xyz:98
 msgid "Switch to tab 0"
-msgstr "Переключиться на вкладку 0"
+msgstr "Переключитись на вкладку 0"
 
 #: conf/keys.xyz:100
 msgid "Switch to tab 1"
-msgstr "Переключиться на вкладку 1"
+msgstr "Переключитись на вкладку 1"
 
 #: conf/keys.xyz:102
 msgid "Switch to tab 2"
-msgstr "Переключиться на вкладку 2"
+msgstr "Переключитись на вкладку 2"
 
 #: conf/keys.xyz:104
 msgid "Switch to tab 3"
-msgstr "Переключиться на вкладку 3"
+msgstr "Переключитись на вкладку 3"
 
 #: conf/keys.xyz:106
 msgid "Switch to tab 4"
-msgstr "Переключиться на вкладку 4"
+msgstr "Переключитись на вкладку 4"
 
 #: conf/keys.xyz:108
 msgid "Switch to tab 5"
-msgstr "Переключиться на вкладку 5"
+msgstr "Переключитись на вкладку 5"
 
 #: conf/keys.xyz:110
 msgid "Switch to tab 6"
-msgstr "Переключиться на вкладку 6"
+msgstr "Переключитись на вкладку 6"
 
 #: conf/keys.xyz:112
 msgid "Switch to tab 7"
-msgstr "Переключиться на вкладку 7"
+msgstr "Переключитись на вкладку 7"
 
 #: conf/keys.xyz:114
 msgid "Switch to tab 8"
-msgstr "Переключиться на вкладку 8"
+msgstr "Переключитись на вкладку 8"
 
 #: conf/keys.xyz:116
 msgid "Switch to tab 9"
-msgstr "Переключиться на вкладку 9"
+msgstr "Переключитись на вкладку 9"
 
 #: conf/keys.xyz:119
 msgid "New tab in inactive panel"
-msgstr "Создать новую вкладку в неактивной панели"
+msgstr "Створити нову вкладку в неактивній панелі"
 
 #: conf/keys.xyz:121
 msgid "Remove tab in inactive panel"
-msgstr "Удалить вкладку в неактивной панели"
+msgstr "Видалити вкладку в неактивній панелі"
 
 #: conf/keys.xyz:123
 msgid "Switch to next tab in inactive panel"
-msgstr "Переключиться на следующую вкладку в неактивной панели"
+msgstr "Переключитись на наступну вкладку в неактивній панелі"
 
 #: conf/keys.xyz:125
 msgid "Switch to previous tab in inactive panel"
-msgstr "Переключиться на предыдущую вкладку в неактивной панели"
+msgstr "Переключитись на попередню вкладку в неактивній панелі"
 
 #: conf/keys.xyz:127
 msgid "Switch to tab 0 in inactive panel"
-msgstr "Переключиться на вкладку 0 в неактивной панели"
+msgstr "Переключитись на вкладку 0 в неактивній панелі"
 
 #: conf/keys.xyz:129
 msgid "Switch to tab 1 in inactive panel"
-msgstr "Переключиться на вкладку 1 в неактивной панели"
+msgstr "Переключитись на вкладку 1 в неактивній панелі"
 
 #: conf/keys.xyz:131
 msgid "Switch to tab 2 in inactive panel"
-msgstr "Переключиться на вкладку 2 в неактивной панели"
+msgstr "Переключитись на вкладку 2 в неактивній панелі"
 
 #: conf/keys.xyz:133
 msgid "Switch to tab 3 in inactive panel"
-msgstr "Переключиться на вкладку 3 в неактивной панели"
+msgstr "Переключитись на вкладку 3 в неактивній панелі"
 
 #: conf/keys.xyz:135
 msgid "Switch to tab 4 in inactive panel"
-msgstr "Переключиться на вкладку 4 в неактивной панели"
+msgstr "Переключитись на вкладку 4 в неактивній панелі"
 
 #: conf/keys.xyz:137
 msgid "Switch to tab 5 in inactive panel"
-msgstr "Переключиться на вкладку 5 в неактивной панели"
+msgstr "Переключитись на вкладку 5 в неактивній панелі"
 
 #: conf/keys.xyz:139
 msgid "Switch to tab 6 in inactive panel"
-msgstr "Переключиться на вкладку 6 в неактивной панели"
+msgstr "Переключитись на вкладку 6 в неактивній панелі"
 
 #: conf/keys.xyz:141
 msgid "Switch to tab 7 in inactive panel"
-msgstr "Переключиться на вкладку 7 в неактивной панели"
+msgstr "Переключитись на вкладку 7 в неактивній панелі"
 
 #: conf/keys.xyz:143
 msgid "Switch to tab 8 in inactive panel"
-msgstr "Переключиться на вкладку 8 в неактивной панели"
+msgstr "Переключитись на вкладку 8 в неактивній панелі"
 
 #: conf/keys.xyz:145
 msgid "Switch to tab 9 in inactive panel"
-msgstr "Переключиться на вкладку 9 в неактивной панели"
+msgstr "Переключитись на вкладку 9 в неактивній панелі"
 
 #: conf/keys.xyz:156
 msgid "Complete the command line"
-msgstr "Дополнить содержимое командой строки"
+msgstr "Доповнити вміст командного рядка"
 
 #: conf/keys.xyz:161
 msgid "Add bookmark"
-msgstr "Добавить закладку"
+msgstr "Додати закладку"
 
 #: conf/keys.xyz:172
 msgid "Run default pager"
-msgstr "Запустить стандартный пейджер"
+msgstr "Запустити стандартний пейджер"
 
 #: conf/keys.xyz:175
 msgid "Run default editor"
-msgstr "Запустить стандартный редактор"
+msgstr "Запустити стандартний редактор"
 
 #: conf/keys.xyz:178
 msgid "Chdir in active panel to the same dir as in inactive one"
-msgstr "В активной панели перейти в тот же каталог, что и в неактивной"
+msgstr "В активній панелі перейти в той самий каталог, що в неактивній"
 
 #: libxyz/core/actionmanager.py:44
 msgid "Unable to register action: invalid rule: %s"
-msgstr "Невозможно зарегистрировать действие: неверное правило: %s"
+msgstr "Неможливо зареєструвати дію: неправильне правило: %s"
 
 #: libxyz/core/dsl.py:41
 msgid "Class must be instantiated first!"
-msgstr "Класс должен быть сначала инициализирован!"
+msgstr "Клас має бути спочатку ініційованим!"
 
 #: libxyz/core/dsl.py:54
 msgid "DSL Error: %s"
-msgstr "Ошибка DSL: %s"
+msgstr "Помилка DSL: %s"
 
 #: libxyz/core/dsl.py:240 libxyz/core/plugins/manager.py:109
 msgid "Unable to load plugin %s: %s"
-msgstr "Невозможно загрузить плагин %s: %s"
+msgstr "Неможливо загрузить плагін %s: %s"
 
 #: libxyz/core/dsl.py:255
 msgid "Unable to bind shortcut %s: %s"
-msgstr "Невозможно связать клавиатурную комбинацию %s: %s"
+msgstr "Неможливо зв'язати клавіатурну комбінацію %s: %s"
 
 #: libxyz/core/dsl.py:284
 msgid "Unable to execute file: %s"
-msgstr "Невозможно выполнить файл: %s"
+msgstr "Неможливо виконати файл: %s"
 
 #: libxyz/core/dsl.py:301
 msgid "Unable to register action: %s"
-msgstr "Невозможно зарегистрировать действие: %s"
+msgstr "Неможливо зареєструвати дію: %s"
 
 #: libxyz/core/dsl.py:328
 msgid "Unable to expand macro %s: %s"
-msgstr "Невозможно развернуть макрос %s: %s"
+msgstr "Неможливо розгорнути макрос %s: %s"
 
 #: libxyz/core/dsl.py:347
 msgid "Unable to execute method %s: %s"
-msgstr "Невозможно выполнить метод: %s"
+msgstr "Неможливо виконати метод: %s"
 
 #: libxyz/core/dsl.py:400
 msgid "Error in DSL shell execution: %s"
-msgstr "Ошибка при выполнении DSL оболочки: %s"
+msgstr "Помилка під час виконання DSL оболонки: %s"
 
 #: libxyz/core/dsl.py:424
 msgid "Invalid object type: %s. Function expected"
-msgstr "Неверный тип объекта: %s. Ожидается функция"
+msgstr "Неправильний тип об'єкту: %s. Очікується функція"
 
 #: libxyz/core/dsl.py:466
 msgid "Invalid opts type: %s. Dict instance expected"
-msgstr "Неверный тип аргумента: %s. Ожидается словарь (dict)"
+msgstr "Неправильний тип аргументу: %s. Очікується словник (dict)"
 
 #: libxyz/core/dsl.py:494
 msgid "Invalid function %s"
-msgstr "Неверная функция"
+msgstr "Неправильна функція"
 
 #: libxyz/core/dsl.py:515
 msgid "Error setting VFS prefix: %s"
-msgstr "Ошибка установки VFS префикса: %s"
+msgstr "Помилка установки VFS префіксу: %s"
 
 #: libxyz/core/dsl.py:541
 msgid "Error registering new hook: %s"
-msgstr "Ошибка регистрации нового обработчика: %s"
+msgstr "Помилка реєстрації нового обробника: %s"
 
 #: libxyz/core/dsl.py:566
 msgid "Error parsing FSRule: %s"
-msgstr "Ошибка разбора правила FSRule: %s"
+msgstr "Помилка розбору правила FSRule: %s"
 
 #: libxyz/core/dsl.py:590
 msgid "Error creating Palette instance: %s"
-msgstr "Ошибка создания экземпляра Palette: %s"
+msgstr "Помилка створення екземпляру Palette: %s"
 
 #: libxyz/core/dsl.py:604
 msgid "Error creating Skin instance: %s"
-msgstr "Ошибка создания экземпляра Skin: %s"
+msgstr "Помилка створення екземпляру Skin: %s"
 
 #: libxyz/core/dsl.py:619
 msgid "Error in DSL execution: %s"
-msgstr "Ошибка выполнения DSL: %s"
+msgstr "Помилка виконання DSL: %s"
 
 #: libxyz/core/fsrule.py:125
 msgid "Error extending FSRule: token %s already registered"
-msgstr "Ошибка расширения FSRule: токен %s уже зарегистрирован"
+msgstr "Помилка розширення FSRule: токен %s вже зареєстровано"
 
 #: libxyz/core/fsrule.py:129
 msgid ""
 "Error extending FSRule: trans_func and match_func arguments must be "
 "functions."
 msgstr ""
-"Ошибка расширения FSRule: аргументы trans_func и match_func должны быть "
-"функциями."
+"Помилка розширення FSRule: аргументи trans_func та match_func мають бути "
+"функціями."
 
 #: libxyz/core/fsrule.py:355
 msgid "Invalid argument type: %s, VFSObject expected"
-msgstr "Неверный тип аргумента: %s, ожидается VFSObject"
+msgstr "Неправильний тип аргументу: %s, очікується VFSObject"
 
 #: libxyz/core/fsrule.py:513
 msgid "Error in calling extended transformation function: %s"
-msgstr "Ошибка вызова преобразующей функции: %s"
+msgstr "Помилка виклику перетворюючої функції: %s"
 
 #: libxyz/core/fsrule.py:576
 msgid "Invalid type{} argument: %s"
-msgstr "Неверный аргумент выражения type{}: %s"
+msgstr "Неправильний аргумент виразу type{}: %s"
 
 #: libxyz/core/fsrule.py:592
 msgid "Invalid owner{} argument: %s"
-msgstr "Неверный аргумент выражения owner{}: %s"
+msgstr "Неправильний аргумент виразу owner{}: %s"
 
 #: libxyz/core/fsrule.py:603
 msgid "Invalid uid: %s"
-msgstr "Неверный uid: %s"
+msgstr "Неправильний uid: %s"
 
 #: libxyz/core/fsrule.py:614
 msgid "Invalid gid: %s"
-msgstr "Неверный gid: %s."
+msgstr "Неправильний gid: %s."
 
 #: libxyz/core/fsrule.py:628
 msgid "Invalid perm{} argument: %s"
-msgstr "Неверный аргумент выражения perm{}: %s"
+msgstr "Неправильний аргумент виразу perm{}: %s"
 
 #: libxyz/core/fsrule.py:652
 msgid "Invalid size{} argument: %s"
-msgstr "Неверный аргумент выражения size{}: %s"
+msgstr "Неправильний аргумент виразу size{}: %s"
 
 #: libxyz/core/fsrule.py:826
 msgid "Error in calling extended match function: %s"
-msgstr "Ошибка вызова расширенной сопоставляющей функции: %s"
+msgstr "Помилка виклику розширеної співставляючої функції: %s"
 
 #: libxyz/core/fsrule.py:829
 msgid "Unable to find match function for token: %s"
-msgstr "Невозможно найти сопоставляющую функцию для токена: %s"
+msgstr "Неможливо знайти співставляючу функцію для токена: %s"
 
 #: libxyz/core/hookmanager.py:41
 msgid "HookManager: Callable argument expected"
-msgstr "HookManager: ожидается вызываемый аргумент"
+msgstr "HookManager: очікується аргумент, що викликається"
 
 #: libxyz/core/hookmanager.py:73
 msgid "Error running callback procedure for event %s"
-msgstr "Ошибка вызова обратной функции для события %s"
+msgstr "Помилка виклику зворотньої функції для події %s"
 
 #: libxyz/core/keymanager.py:81
 msgid "Invalid shortcut type: %s."
-msgstr "Неверный тип клавиши быстрого доступа: %s."
+msgstr "Неправильний тип клавіші швидкого доступу: %s."
 
 #: libxyz/core/keymanager.py:143
 msgid "Method %s not loaded"
-msgstr "Метод %s не загружен"
+msgstr "Метод %s не завантажено"
 
 #: libxyz/core/keymanager.py:149
 msgid "Load error: %s"
-msgstr "Ошибка загрузки: %s"
+msgstr "Помилка завантаження: %s"
 
 #: libxyz/core/keymanager.py:160
 msgid "<Internal function object>"
-msgstr "<Внутренняя функция>"
+msgstr "<Внутрішня функція>"
 
 #: libxyz/core/keymanager.py:165
 msgid "Invalid method type: %s. Must be string or function"
-msgstr "Неверный тип метода: %s. Должна быть строка либо функция"
+msgstr "Неправильний тип методу: %s. Має бути рядок або функція"
 
 #: libxyz/core/keymanager.py:175
 msgid "Unable to bind method %s. Plugin %s doesn't export it."
-msgstr "Невозможно назначить метод %s. Плагин %s не экспортирует его."
+msgstr "Неможливо призначити метод %s. Плагін %s не експортує його."
 
 #: libxyz/core/logger/logger.py:77
 msgid "Logger console"
@@ -301,85 +300,85 @@ msgstr "Журнал"
 
 #: libxyz/core/plugins/base.py:89
 msgid "%s is not a public method"
-msgstr "%s не является общедоступным методом"
+msgstr "%s не є загальнодоступним методом"
 
 #: libxyz/core/plugins/base.py:101
 msgid "%s is not a public data object"
-msgstr "%s не является общедоступным объектом"
+msgstr "%s не є загальнодоступним об'єктом"
 
 #: libxyz/core/plugins/manager.py:88
 msgid "Plugin %s is disabled or does not exist"
-msgstr "Плагин %s отключен или не существует"
+msgstr "Плагін %s відключений або не існує"
 
 #: libxyz/core/plugins/manager.py:115
 msgid "Unable to find required %s class"
-msgstr "Невозможно найти требуемый класс %s"
+msgstr "Неможливо знайти потрібний крас %s"
 
 #: libxyz/core/plugins/manager.py:170
 msgid "%s plugin instance does not export method %s"
-msgstr "Плагин %s не экспортирует метод %s"
+msgstr "Плагін %s не експортує метод %s"
 
 #: libxyz/core/plugins/manager.py:195
 msgid "%s plugin instance does not export data object %s"
-msgstr "Плагин %s не экспортирует объект %s"
+msgstr "Плагін %s не експортує об'єкт %s"
 
 #: libxyz/core/plugins/manager.py:249
 msgid "Error in wait_for() callback: %s"
-msgstr "Ошибка в функции wait_for(): %s"
+msgstr "Помилка в функції wait_for(): %s"
 
 #: libxyz/core/plugins/manager.py:325
 msgid "BasePlugin instance expected, got: %s"
-msgstr "Ожидается объект класса BasePlugin, получено: %s"
+msgstr "Очікується об'єкт класу BasePlugin, отримано: %s"
 
 #: libxyz/core/plugins/ns.py:31 libxyz/core/plugins/ns.py:39
 msgid "Invalid plugin path: %s"
-msgstr "Неверный путь: %s."
+msgstr "Неправильний шлях: %s."
 
 #: libxyz/core/queue.py:43
 msgid "Max-size must be a positive integer number"
-msgstr "Max-size должен быть положительным целым числом"
+msgstr "Max-size має бути додатнім цілим числом"
 
 #: libxyz/core/skin.py:42
 msgid "Invalid skin argument: %s. libxyz.core.Skin instance expected!"
-msgstr "Неверный тип аргумента: %s. Ожидается libxyz.core.Skin!"
+msgstr "Неправильний тип аргументу: %s. Очікується libxyz.core.Skin!"
 
 #: libxyz/core/xyzdata.py:46
 msgid "Attribute %s is a constant"
-msgstr "Атрибут %s является константой"
+msgstr "Атрибут %s є константою"
 
 #: libxyz/launcher.py:210
 msgid ""
 "Invalid value %s.\n"
 "A list of valid log levels expected"
 msgstr ""
-"Неверное значение %s.\n"
-"Ожидается список корректных уровней отладки"
+"Неправильне значення %s.\n"
+"Очікується список коректних рівнів відлагодження"
 
 #: libxyz/launcher.py:223
 msgid "Invalid value %s. A positive integer expected"
-msgstr "Неверное значение %s. Ожидается положительное число"
+msgstr "Неправильне значення %s. Очікується додатнє число"
 
 #: libxyz/launcher.py:250
 msgid "Skin %s is not usable with requested color settings. Using default."
 msgstr ""
-"Тему %s невозможно использовать с запрошенной цветовой схемой. Используется "
-"значения по-умолчанию."
+"Тему %s неможливо використати із запитаною кольоровою схемою. Використовується "
+"значення по замовчуванню."
 
 #: libxyz/launcher.py:311
 msgid "Error parsing system config %s: %s"
-msgstr "Ошибка разбора системного конфигурационного файла %s: %s"
+msgstr "Помилка розбору системного конфігураційного файлу %s: %s"
 
 #: libxyz/launcher.py:315
 msgid "Error parsing user config %s: %s"
-msgstr "Ошибка разбора пользовательского конфигурационного файла %s: %s"
+msgstr "Помилка розбору користувацького конфігураційного файла %s: %s"
 
 #: libxyz/launcher.py:337
 msgid "Skipping skin %s due to parsing error: %s"
-msgstr "Пропускаю тему %s из-за ошибок разбора: %s"
+msgstr "Пропускаю тему %s через помилки розбору: %s"
 
 #: libxyz/launcher.py:348
 msgid "Error parsing config %s: %s"
-msgstr "Ошибка разбора конфигурационного файла %s: %s"
+msgstr "Помилка розбору конфігураційного файлу %s: %s"
 
 #: libxyz/launcher.py:367
 msgid ""
@@ -392,130 +391,130 @@ msgid ""
 "    -v  -- Show version\n"
 "    -h  -- Show this help message"
 msgstr ""
-"%s версия %s\n"
-"Использование: %s [-d driver][-c colors][-s skin][-lvh]\n"
-"    -d  -- Драйвер отрисовки (raw (по-умолчанию) или curses)\n"
-"    -c  -- Количество поддерживаемых терминалом цветов (1, 16 (по-"
-"умолчанию), 88, 256)\n"
-"    -s  -- Название темы\n"
-"    -l  -- Показать список доступных тем\n"
-"    -v  -- Показать версию\n"
-"    -h  -- Показать это справочное сообщение"
+"%s версія %s\n"
+"Використання: %s [-d driver][-c colors][-s skin][-lvh]\n"
+"    -d  -- Драйвер відображення (raw (по замовчуванню) чи curses)\n"
+"    -c  -- Кількість кольорів, що підтримується терміналом (1, 16 (по "
+"замовчуванню), 88, 256)\n"
+"    -s  -- Назва теми\n"
+"    -l  -- Показати список доступних тем\n"
+"    -v  -- Показати версію\n"
+"    -h  -- Показати це довідкове повідомлення"
 
 #: libxyz/launcher.py:385
 msgid "%s version %s"
-msgstr "%s версия %s"
+msgstr "%s версія %s"
 
 #: libxyz/parser/base.py:27
 msgid "Must be implemented in child class"
-msgstr "Должно быть реализовано в дочернем классе"
+msgstr "Має бути реалізовано в дочірньому класі"
 
 #: libxyz/parser/base.py:39
 msgid "Parse error on line %d"
-msgstr "Ошибка разбора на строке %d"
+msgstr "Помилка розбору на рядку %d"
 
 #: libxyz/parser/base.py:41
 msgid "Parse error"
-msgstr "Ошибка разбора"
+msgstr "Помилка розбору"
 
 #: libxyz/parser/base.py:44
 msgid "Unexpected token '%s'. Waiting for '%s'"
-msgstr "Неверный токен '%s'. Ожидается '%s'"
+msgstr "Неправильний токен '%s'. Очікується '%s'"
 
 #: libxyz/parser/base.py:50
 msgid "Syntax error"
-msgstr "Синтаксическая ошибка"
+msgstr "Синтаксична помилка"
 
 #: libxyz/parser/block.py:106
 msgid "Invalid opt type: %s. Dictionary expected."
-msgstr "Неверный тип аргумента: %s. Ожидается словарь (dict)"
+msgstr "Неправильний тип аргументу: %s. Очікується словник (dict)"
 
 #: libxyz/parser/block.py:219 libxyz/parser/flat.py:152
 msgid "Unknown variable %s"
-msgstr "Неизвестная переменная %s"
+msgstr "Невідома змінна %s"
 
 #: libxyz/parser/block.py:221
 msgid "Invalid variable name: %s"
-msgstr "Неверное имя переменной: %s"
+msgstr "Неправильна назва змінної: %s"
 
 #: libxyz/parser/block.py:227
 msgid "Variable transformation error: %s"
-msgstr "Ошибка преобразования переменной: %s"
+msgstr "Помилка перетворення змінної: %s"
 
 #: libxyz/parser/block.py:267 libxyz/parser/flat.py:189
 msgid "Invalid value: %s"
-msgstr "Неверное значение: %s"
+msgstr "Неправильне значення: %s"
 
 #: libxyz/parser/block.py:284
 msgid "Undefined macro %s"
-msgstr "Неопределённый макрос %s"
+msgstr "Невизначений макрос %s"
 
 #: libxyz/parser/block.py:342 libxyz/parser/lexer.py:170
 msgid "Unterminated quote"
-msgstr "Незакрытая кавычка"
+msgstr "Незакриті лапки"
 
 #: libxyz/parser/block.py:346
 msgid "Unclosed block"
-msgstr "Незакрытый блок"
+msgstr "Незакритий блок"
 
 #: libxyz/parser/flat.py:227
 msgid "Unterminated expression"
-msgstr "Незавершённое выражение"
+msgstr "Незавершений вираз"
 
 #: libxyz/parser/multi.py:64
 msgid "Invalid argument type %s. Dictionary expected"
-msgstr "Неверный тип аргумента: %s, ожидается словарь (dict)"
+msgstr "Неправильний тип аргументу: %s, очікується словник (dict)"
 
 #: libxyz/parser/multi.py:127
 msgid "Unknown keyword: %s"
-msgstr "Неизвестное ключевое слово: %s"
+msgstr "Невідоме ключове слово: %s"
 
 #: libxyz/parser/multi.py:148
 msgid "Invalid argument type %s. BaseParser or subclassed expected"
-msgstr "Неверный тип аргумента: %s, ожидается BaseParser или производные"
+msgstr "Неправильний тип аргументу: %s, очікується BaseParser чи похідні"
 
 #: libxyz/parser/regexp.py:70
 msgid "%s: parse error on line %d: %s"
-msgstr "%s: ошибка разбора на строке %d: %s"
+msgstr "%s: помилка розбору на рядку %d: %s"
 
 #: libxyz/parser/regexp.py:76
 msgid "Unmatched line %d: %s"
-msgstr "Строка несоответствия %d: %s"
+msgstr "рядок невідповідності %d: %s"
 
 #: libxyz/parser/sourcedata.py:48
 msgid "Source string"
-msgstr "Исходная строка"
+msgstr "Вихідний рядок"
 
 #: libxyz/ui/box_error.py:27 plugins/vfs/vfsutils/main.py:138
 msgid "Error"
-msgstr "Ошибка"
+msgstr "Помилка"
 
 #: libxyz/ui/box_input.py:48
 msgid "Press ENTER to submit value. ESCAPE to quit"
-msgstr "Нажмите ENTER чтобы ввести значение. ESCAPE - чтобы выйти"
+msgstr "Натисніть ENTER, щоб ввести значення. ESCAPE - щоб вийти"
 
 #: libxyz/ui/box_yesno.py:28 plugins/vfs/vfsutils/main.py:107
 #: plugins/vfs/vfsutils/main.py:194
 msgid "Yes"
-msgstr "Да"
+msgstr "Так"
 
 #: libxyz/ui/box_yesno.py:29 plugins/vfs/vfsutils/main.py:108
 msgid "No"
-msgstr "Нет"
+msgstr "Ні"
 
 #: libxyz/ui/cmd.py:119
 msgid "Unable to open history data file: %s"
-msgstr "Невозможно открыть файл-историю: %s"
+msgstr "Неможливо відкрити файл-історію: %s"
 
 #: libxyz/ui/cmd.py:161
 msgid "Command line plugin"
-msgstr "Командная строка"
+msgstr "Командний рядок"
 
 #: libxyz/ui/cmd.py:162
 msgid "Command line plugin. It allows to enter, edit and execute commands."
 msgstr ""
-"Модуль командной строки. Позволяет вводить, редактировать и выполнять "
-"команды посредством системной оболочки."
+"Модуль командного рядку. Дозволяє вводити, редагувати та виконувати "
+"команди системної оболонки."
 
 #: libxyz/ui/cmd.py:165
 msgid ""
@@ -524,77 +523,77 @@ msgid ""
 "history_depth - Specifies how many entered commands to keep. Default - 50\n"
 "prompt - Command line prompt. Default - '$ '"
 msgstr ""
-"Параметры конфигурации:\n"
-"undo_depth - Размер буфера отмены. По-умолчанию - 10\n"
-"history_depth - Размер буфера введённых команд. По-умолчанию - 50\n"
-"prompt - Приглашение командной строки. По-умолчанию - '$ '"
+"Параметри конфігурації:\n"
+"undo_depth - Розмір буферу відміни. По замовчуванню - 10\n"
+"history_depth - Розмір буферу введених команд. По замовчуванню - 50\n"
+"prompt - Запрошення командного рядку. По замовчуванню - '$ '"
 
 #: libxyz/ui/cmd.py:615
 msgid "Unable to execute commands on non-local filesystems"
-msgstr "Невозможно выполнять команды на нелокальных файловых системах"
+msgstr "Неможливо виконати команди на нелокальних файлових системах"
 
 #: libxyz/ui/cmd.py:638
 msgid "Error executing internal command %s: %s"
-msgstr "Ошибка выполнения внутренней команды %s: %s"
+msgstr "Помилка виконання внутрішньої команди %s: %s"
 
 #: libxyz/ui/cmd.py:674
 msgid "Invalid alias type: %s"
-msgstr "Неверный тип алиаса: %s"
+msgstr "Неправильний тип псевдоніму: %s"
 
 #: libxyz/ui/cmd.py:682
 msgid "Unable to replace an alias %s: %s"
-msgstr "Невозможно заменить алиас %s: %s"
+msgstr "Неможливо замінити псевдонім %s: %s"
 
 #: libxyz/ui/cmd.py:787
 msgid "History"
-msgstr "История"
+msgstr "Історія"
 
 #: libxyz/ui/colors.py:34
 msgid "Invalid %s color: %s"
-msgstr "Неверный цвет %s: %s"
+msgstr "Неправильний колір %s: %s"
 
 #: libxyz/ui/colors.py:256
 msgid "Invalid argument type %s, libxyz.ui.color.Foreground instance expected."
-msgstr "Неверный тип аргумента: %s, ожидается libxyz.color.Foreground"
+msgstr "Неправильний тип аргументу: %s, очікується libxyz.color.Foreground"
 
 #: libxyz/ui/colors.py:271
 msgid ""
 "Invalid argument type %s, libxyz.ui.color.Background or instance expected."
-msgstr "Неверный тип аргумента: %s, ожидается libxyz.ui.color.Background"
+msgstr "Неправильний тип аргументу: %s, очікується libxyz.ui.color.Background"
 
 #: libxyz/ui/colors.py:288 libxyz/ui/colors.py:305
 msgid "Invalid argument type %s, libxyz.ui.color.Attribute instance expected."
-msgstr "Неверный тип аргумента: %s. Ожидается libxyz.ui.color.Attribute"
+msgstr "Неправильний тип аргументу: %s. Очікується libxyz.ui.color.Attribute"
 
 #: libxyz/ui/colors.py:320
 msgid ""
 "Invalid argument type %s, libxyz.ui.color.ForegroundHigh instance expected."
-msgstr "Неверный тип аргумента: %s, ожидается libxyz.ui.color.ForegroundHigh"
+msgstr "Неправильний тип аргументу: %s, очікується libxyz.ui.color.ForegroundHigh"
 
 #: libxyz/ui/colors.py:335
 msgid ""
 "Invalid argument type %s, libxyz.ui.color.BackgroundHigh instance expected."
-msgstr "Неверный тип аргумента: %s, ожидается libxyz.ui.color.BackgroundHigh"
+msgstr "Неправильний тип аргументу: %s, очікується libxyz.ui.color.BackgroundHigh"
 
 #: libxyz/ui/entry.py:118 plugins/core/pluginlist/entry.py:81
 msgid "Error in entry callback: %s"
-msgstr "Ошибка в вызове функции: %s"
+msgstr "Помилка у виклику функції: %s"
 
 #: libxyz/ui/panel.py:116
 msgid "Error compiling filter: %s"
-msgstr "Ошибка компиляции фильтра: %s"
+msgstr "Помилка компіляції фільтру: %s"
 
 #: libxyz/ui/panel.py:163
 msgid "Error executing bind (%s): %s"
-msgstr "Ошибка выполнения (%s): %s"
+msgstr "Помилка виконання (%s): %s"
 
 #: libxyz/ui/panel.py:197
 msgid "System runtime plugin"
-msgstr "Системный модуль"
+msgstr "Системний модуль"
 
 #: libxyz/ui/panel.py:246
 msgid "Panel plugin"
-msgstr "Навигационная панель"
+msgstr "Навігаційна панель"
 
 #: libxyz/ui/panel.py:248
 msgid ""
@@ -611,58 +610,58 @@ msgid ""
 " like cmp() or a list of those functions. If value is a list, each function\n"
 " applied sequentially. Default - []"
 msgstr ""
-"Параметры конфигурации:\n"
-"filters_enabled - Включить фильтры. По-умолчанию - False\n"
-"filters_policy - Политика фильтрации.\n"
-" Если True - отфильтровывать объекты, совпадающие с правилом.\n"
-" Если False - отфильтровывать объекты, не совпадающие с правилом.\n"
-" По-умолчанию - True.\n"
-"filters - Список фильтров.\n"
-" Фильтры последовательно применяются в указанном порядке. По-умолчанию - []\n"
-"sorting_policy - Название активного метода сортировки или None. По-умолчанию "
+"Параметри конфігурації:\n"
+"filters_enabled - Включити фільтри. По замовчуванню - False\n"
+"filters_policy - Політика фільтрації.\n"
+" Якщо True - відфільтрувати об'єкти, що співпадають з правилом.\n"
+" Якщо False - відфільтрувати об'єкти, що не співпадають з правилом.\n"
+" По замовчуванню - True.\n"
+"filters - Список фільтрів.\n"
+" Фільтри послідовно застосовуються у вказаному порядку. По замовчуванню - []\n"
+"sorting_policy - Назва активного методу сортування або None. По замовчуванню "
 "- None.\n"
-"sorting - Методы сортировки. Ключ - название метода\n"
-" а значение - либо функция от двух аргументов (VFSObject) работающая\n"
-" как cmp() либо список таких функций. Если значение список - \n"
-" каждая функция применяется последовательно. По-умолчанию - []."
+"sorting - Методи сортування. Ключ - назва методу,\n"
+" а значення - або функція від двох аргументів (VFSObject), що працює\n"
+" як cmp(), або ж список таких функцій. Якщо значення є списком - \n"
+" кожна функція використовується послідовно. По замовчуванню - []."
 
 #: libxyz/ui/panel.py:264
 msgid ""
 "Fires before switching to another tab. Arguments: Block instance and old tab "
 "index."
 msgstr ""
-"Запускается перед переключением на другую вкладку. Аргументы: Объект Block и "
-"индекс предыдущей вкладки."
+"Запускається перед перемиканням на іншу вкладку. Аргументи: Об'єкт Block та "
+"індекс попередньої вкладки."
 
 #: libxyz/ui/panel.py:268
 msgid ""
 "Fires when switching to another tab. Arguments: Block instance and new tab "
 "index."
 msgstr ""
-"Запускается после переключения на другую вкладку. Аргументы: Объект Block и "
-"индекс новой вкладки."
+"Запускається після перемикання на іншу вкладку. Аргументи: Об'єкт Block та "
+"індекс нової вкладки."
 
 #: libxyz/ui/panel.py:272
 msgid ""
 "Fires when new tab is added. Arguments: Block instance and new tab index."
 msgstr ""
-"Запускается при добавлении новой вкладки. Аргументы: Объект Block и индекс "
-"новой вкладки."
+"Запускається при додаванні нової вкладки. Аргументи: Об'єкт Block та індекс "
+"нової вкладки."
 
 #: libxyz/ui/panel.py:276
 msgid ""
 "Fires when tab is delete. Arguments: Block instance and deleted tab index."
 msgstr ""
-"Запускается когда вкладка удаляется. Аргументы: Объект Block и индекс "
-"удалённой вкладки."
+"Запускається при видаленні вкладки. Аргументи: Об'єкт Block та індекс "
+"видаленої вкладки."
 
 #: libxyz/ui/panel.py:293
 msgid "Really quit %s?"
-msgstr "Действительно выйти из %s?"
+msgstr "Дійсно вийти з %s?"
 
 #: libxyz/ui/panel.py:748
 msgid "Unable to find `%s` sorting policy"
-msgstr "Невозможно найти метод сортировки `%s`"
+msgstr "Неможливо знайти метод сортування `%s`"
 
 #: libxyz/ui/panel.py:1015
 msgid "%s bytes (%d)"
@@ -670,59 +669,59 @@ msgstr "%s байт (%d)"
 
 #: libxyz/ui/panel.py:1369
 msgid "Tag group"
-msgstr "Отметить группу"
+msgstr "Відмітити групу"
 
 #: libxyz/ui/panel.py:1371
 msgid "Untag group"
-msgstr "Снять отметку"
+msgstr "Зняти відмітку"
 
 #: libxyz/ui/panel.py:1374
 msgid "Type FS Rule"
-msgstr "Введите FS Rule"
+msgstr "Введіть FS Rule"
 
 #: libxyz/ui/panel.py:1498
 msgid "Action error: %s"
-msgstr "Ошибка: %s"
+msgstr "Помилка: %s"
 
 #: libxyz/ui/panel.py:1529 libxyz/ui/panel.py:1536
 msgid "Unable to chdir to %s: %s"
-msgstr "Невозможно перейти в %s: %s"
+msgstr "Неможливо перейти в %s: %s"
 
 #: libxyz/ui/panel.py:1616
 msgid "TAGGED"
-msgstr "ОТМЕТКА"
+msgstr "ВІДМІТКА"
 
 #: libxyz/ui/shortcut.py:30
 msgid "Only one of the arguments must be provided"
-msgstr "Необходимо предоставить только один из аргументов"
+msgstr "Необхідно надати тільки один з аргументів"
 
 #: libxyz/vfs/dispatcher.py:52
 msgid "Invalid class: %s. VFSObject derived expected."
-msgstr "Неверный класс: %s. Требуется дочерний от VFSObject"
+msgstr "Неправильний клас: %s. Вимагається дочірній від VFSObject"
 
 #: libxyz/vfs/dispatcher.py:68
 msgid "Invalid path: %s."
-msgstr "Неверный путь: %s."
+msgstr "Неправильний шлях: %s."
 
 #: libxyz/vfs/dispatcher.py:75
 msgid "Unable to find VFS handler for %s."
-msgstr "Невозможно найти обработчик для %s."
+msgstr "Неможливо знайти обробник для %s."
 
 #: libxyz/vfs/local.py:36
 msgid "Object must be opened before any operation"
-msgstr "Объект должен быть открыт до начала работы с ним"
+msgstr "Об'єкт має бути відкритим до початку роботи з ним"
 
 #: libxyz/vfs/local.py:61
 msgid "Unable to walk on %s"
-msgstr "Невозможно перейти в %s"
+msgstr "Неможливо перейти в %s"
 
 #: libxyz/vfs/local.py:99
 msgid "Unable to create directory inside %s object type"
-msgstr "Невозможно создать каталог внутри объекта типа %s"
+msgstr "Неможливо створити каталог всередині об'єкту типу %s"
 
 #: libxyz/vfs/local.py:314 libxyz/vfs/tar.py:205
 msgid "Name"
-msgstr "Имя"
+msgstr "Ім'я"
 
 #: libxyz/vfs/local.py:315 libxyz/vfs/tar.py:206
 msgid "Type"
@@ -730,31 +729,31 @@ msgstr "Тип"
 
 #: libxyz/vfs/local.py:316
 msgid "Access time"
-msgstr "Дата доступа"
+msgstr "Дата доступу"
 
 #: libxyz/vfs/local.py:317 libxyz/vfs/tar.py:207
 msgid "Modification time"
-msgstr "Дата изменения данных (mtime)"
+msgstr "Дата зміни даних (mtime)"
 
 #: libxyz/vfs/local.py:318
 msgid "Change time"
-msgstr "Дата изменения inode (ctime)"
+msgstr "Дата зміни inode (ctime)"
 
 #: libxyz/vfs/local.py:319 libxyz/vfs/tar.py:208
 msgid "Size in bytes"
-msgstr "Размер в байтах"
+msgstr "Розмір в байтах"
 
 #: libxyz/vfs/local.py:320 libxyz/vfs/tar.py:209
 msgid "Owner"
-msgstr "Владелец"
+msgstr "Власник"
 
 #: libxyz/vfs/local.py:321 libxyz/vfs/tar.py:210
 msgid "Group"
-msgstr "Группа"
+msgstr "Група"
 
 #: libxyz/vfs/local.py:322 libxyz/vfs/tar.py:211
 msgid "Access mode"
-msgstr "Режим доступа"
+msgstr "Режим доступу"
 
 #: libxyz/vfs/local.py:323
 msgid "Inode"
@@ -762,47 +761,47 @@ msgstr "Inode"
 
 #: libxyz/vfs/local.py:324 libxyz/vfs/tar.py:212
 msgid "Type-specific data"
-msgstr "Дополнительные данные"
+msgstr "Додаткові дані"
 
 #: libxyz/vfs/local.py:362
 msgid "Unable to stat file %s: %s"
-msgstr "Невозможно получить информацию о файле %s: %s"
+msgstr "Неможливо отримати інформацію про файл %s: %s"
 
 #: libxyz/vfs/local.py:388
 msgid "Error creating VFS object: %s"
-msgstr "Ошибка создания VFS объекта: %s"
+msgstr "Помилка створення VFS об'єкту: %s"
 
 #: libxyz/vfs/tar.py:461
 msgid "Unable to chown %s: %s"
-msgstr "Невозможно изменить владельца %s: %s"
+msgstr "Неможливо змінити власника %s: %s"
 
 #: libxyz/vfs/tar.py:467
 msgid "Unable to chmod %s: %s"
-msgstr "Невозможно изменить права доступа %s: %s"
+msgstr "Неможливо змінити права доступу %s: %s"
 
 #: libxyz/vfs/vfsobj.py:90
 msgid "Feature not implemented"
-msgstr "Данная функция не реализована"
+msgstr "Дана функція не реалізована"
 
 #: plugins/core/bindlist/main.py:18
 msgid "Show keybindings"
-msgstr "Комбинации клавиш"
+msgstr "Комбінації клавіш"
 
 #: plugins/core/bindlist/main.py:19
 msgid ""
 "Plugin is used to display all current keybindings along with corresponding "
 "contextes and methods"
 msgstr ""
-"Плагин предназначен для показа всех текущих привязок клавиш и "
-"соответствующих контекстов и методов"
+"Плагін призначений для показу всіх поточних прив'язок клавіш та "
+"відповідних контекстів і методів"
 
 #: plugins/core/bindlist/main.py:24
 msgid "Event is fired before showing dialog. Receives no arguments."
-msgstr "Запускается при показе диалога. Аргументы: Нет"
+msgstr "Запускається при показі діалогу. Аргументи: Немає"
 
 #: plugins/core/bindlist/main.py:51
 msgid "Bind"
-msgstr "Привязка"
+msgstr "Прив'язка"
 
 #: plugins/core/bindlist/main.py:51
 msgid "Context"
@@ -810,27 +809,27 @@ msgstr "Контекст"
 
 #: plugins/core/bindlist/main.py:52
 msgid "Method / Description"
-msgstr "Метод / Описание"
+msgstr "Метод / Опис"
 
 #: plugins/core/bindlist/main.py:69
 msgid "Keybindings"
-msgstr "Комбинации клавиш"
+msgstr "Комбінації клавіш"
 
 #: plugins/core/complete/main.py:60
 msgid "Error ininitalizing plugin: %s"
-msgstr "Ошибка инициализации плагина: %s"
+msgstr "Помилка ініціалізації плагіну: %s"
 
 #: plugins/core/complete/main.py:161
 msgid "Complete"
-msgstr "Дополнения"
+msgstr "Доповнення"
 
 #: plugins/core/console/main.py:31
 msgid "Interactive management console"
-msgstr "Консоль управления"
+msgstr "Консоль керування"
 
 #: plugins/core/console/main.py:32
 msgid "Provides interactive management console"
-msgstr "Интерактивная консоль управления"
+msgstr "Інтерактивна консоль керування"
 
 #: plugins/core/console/main.py:34
 msgid ""
@@ -838,32 +837,32 @@ msgid ""
 "history_depth - Specifies how many entered commands to keep. Default - 50\n"
 "prompt - Command line prompt. Default - '> '"
 msgstr ""
-"Параметры конфигурации:\n"
-"history_depth - Размер буфера введённых команд. По-умолчанию - 50\n"
-"prompt - Приглашение командной строки. По-умолчанию - '> '"
+"Параметри конфігурації:\n"
+"history_depth - Розмір буферу введених команд. По замовчуванню - 50\n"
+"prompt - Запрошення командного рядка. По замовчуванню - '> '"
 
 #: plugins/core/console/main.py:40
 msgid "Fires upon showing console. Arguments: No."
-msgstr "Запускается при показе консоли. Аргументы: Нет"
+msgstr "Запускається при показі консолі. Аргументи: Немає"
 
 #: plugins/core/console/main.py:42
 msgid ""
 "Fires when scrolling through history. Arguments: Current command from "
 "history buffer"
 msgstr ""
-"Запускается при переборе буфера команд. Аргументы: текущая команда из буфера"
+"Запускається при переборі буферу команд. Аргументи: поточна команда з буферу"
 
 #: plugins/core/console/main.py:45
 msgid "Fires when typed command is to be executed. Arguments: typed command"
-msgstr "Запускается перед выполнением команды. Аргументы: команда"
+msgstr "Запускається перед виконанням команди. Аргументи: команда"
 
 #: plugins/core/console/main.py:59
 msgid "Management console"
-msgstr "Консоль управления"
+msgstr "Консоль керування"
 
 #: plugins/core/keycodes/main.py:38
 msgid "Setup terminal keycodes"
-msgstr "Установка терминальных кодов"
+msgstr "Налаштування термінальних кодів"
 
 #: plugins/core/keycodes/main.py:40
 msgid ""
@@ -871,13 +870,13 @@ msgid ""
 "For each terminal type keycodes are stored independently. Terminal type "
 "determined by examining TERM environment variable."
 msgstr ""
-"Плагин предназначен для настройки терминальных кодов клавиатуры.\n"
-"Для каждого типа терминала коды сохраняются отдельно. Тип терминала "
-"определяется путём чтения переменной окружения TERM."
+"Плагін призначений для налаштування термінальних кодів клавіатури.\n"
+"Для кожного типу терміналу коди зберігаються окремо. Тип терміналу "
+"визначається читанням змінної середовища TERM."
 
 #: plugins/core/keycodes/main.py:49
 msgid "Fires upon showing dialog"
-msgstr "Запускается при показе диалога"
+msgstr "Запускається при показі діалогу"
 
 #: plugins/core/keycodes/main.py:120
 msgid ""
@@ -885,43 +884,43 @@ msgid ""
 "Press ENTER to skip key\n"
 "Press ESCAPE to quit dialog"
 msgstr ""
-"Пожалуйста нажмите клавишу %s\n"
-"Нажмите ENTER чтобы пропустить текущую клавишу\n"
-"Нажмите ESCAPE чтобы выйти"
+"Будь ласка, натисніть клавішу %s\n"
+"Натисніть ENTER, щоб пропустити поточну клавішу\n"
+"Натисніть ESCAPE, щоб вийти"
 
 #: plugins/core/keycodes/main.py:139
 msgid "Save learned keys?"
-msgstr "Сохранить данные?"
+msgstr "Зберегти дані?"
 
 #: plugins/core/keycodes/main.py:199
 msgid "Unable to open file: %s"
-msgstr "Невозможно открыть файл: %s"
+msgstr "Неможливо відкрити файл: %s"
 
 #: plugins/core/keycodes/main.py:205
 msgid "Unable to save learned data"
-msgstr "Невозможно сохранить данные"
+msgstr "Неможливо зберегти дані"
 
 #: plugins/core/pluginlist/main.py:35
 msgid "Show plugin list"
-msgstr "Список активных плагинов"
+msgstr "Список активних плагінів"
 
 #: plugins/core/pluginlist/main.py:36
 msgid "Show all currently loaded plugins and associated information"
-msgstr "Показать все текущие загруженные плагины"
+msgstr "Показати всі завантажені плагіни"
 
 #: plugins/core/pluginlist/main.py:41
 msgid "Fires upon showing dialog. Arguments: No"
-msgstr "Запускается при показе диалога. Аргументы: Нет"
+msgstr "Запускається при показі діалогу. Аргументи: Немає"
 
 #: plugins/core/pluginlist/main.py:43
 msgid "Fires when showing detailed plugin info.Arguments: Plugin object"
 msgstr ""
-"Запускается при показе детальной информации о плагине. Аргументы: Объект "
-"плагина"
+"Запускається при показі детальної інформації про плагін. Аргументи: Об'єкт "
+"плагіну"
 
 #: plugins/core/pluginlist/main.py:73
 msgid "Active plugins list"
-msgstr "Список активных плагинов"
+msgstr "Список активних плагінів"
 
 #: plugins/core/pluginlist/main.py:84
 msgid "Author: %s"
@@ -929,23 +928,23 @@ msgstr "Автор: %s"
 
 #: plugins/core/pluginlist/main.py:87
 msgid "Version: %s"
-msgstr "Версия: %s"
+msgstr "Версія: %s"
 
 #: plugins/core/pluginlist/main.py:90
 msgid "Minimal compatible version: %s"
-msgstr "Минимальная совместимая версия: %s"
+msgstr "Мінімальна сумісна версія: %s"
 
 #: plugins/core/pluginlist/main.py:94
 msgid "Homepage: %s"
-msgstr "Домашняя страничка: %s"
+msgstr "Домашня сторінка: %s"
 
 #: plugins/core/pluginlist/main.py:132
 msgid "Public data"
-msgstr "Данные"
+msgstr "дані"
 
 #: plugins/core/pluginlist/main.py:150
 msgid "Public methods"
-msgstr "Методы"
+msgstr "Методи"
 
 #: plugins/core/pluginlist/main.py:167
 msgid "N/A"
@@ -953,67 +952,67 @@ msgstr "Н/Д"
 
 #: plugins/core/pluginlist/main.py:198
 msgid "Plugin doc"
-msgstr "Документация"
+msgstr "Документація"
 
 #: plugins/core/pluginlist/main.py:205
 msgid "Plugin events"
-msgstr "События"
+msgstr "Події"
 
 #: plugins/core/pluginlist/main.py:221
 msgid "Plugin info %s"
-msgstr "Информация о плагине %s"
+msgstr "Інформація про плагін %s"
 
 #: plugins/core/shell/bash.py:45
 msgid "Error setting up bash: %s"
-msgstr "Ошибка настройки bash: %s"
+msgstr "Помилка налаштування bash: %s"
 
 #: plugins/core/shell/main.py:24
 msgid "Shell wrapper"
-msgstr "Обёртка для системной оболочки"
+msgstr "Обгортка для системної оболонки"
 
 #: plugins/core/shell/main.py:25
 msgid "Execute commands in external shell"
-msgstr "Выполнение команд во внешней оболочке"
+msgstr "Виконання команд у зовнішній оболонці"
 
 #: plugins/core/shell/main.py:36
 msgid "Fires before command execution. Arguments: a command to be executed"
-msgstr "Запускается перед выполнением команды. Аргументы: команда"
+msgstr "Запускається перед виконанням команди. Аргументи: команда"
 
 #: plugins/core/shell/main.py:178
 msgid "Press ENTER to continue..."
-msgstr "Нажмите ENTER для продолжения..."
+msgstr "Натисніть ENTER для продовження..."
 
 #: plugins/fsrules/magic/main.py:29
 msgid "Magic database FSRule"
-msgstr "FSRule для базы данных magic"
+msgstr "FSRule для бази даних magic"
 
 #: plugins/fsrules/magic/main.py:30
 msgid ""
 "Plugin extends FSRule functionality to match objects based on magic database "
 "description"
 msgstr ""
-"Плагин расширяет функциональность FSRule возможностью отмечать объекты в "
-"соответствии с базой magic"
+"Плагін розширює функціональність FSRule можливістю відмічати об'єкты у "
+"відповідності з базою magic"
 
 #: plugins/misc/about/main.py:20
 msgid "About plugin"
-msgstr "Плагин - 'О программе'"
+msgstr "Плагін - 'Про програму'"
 
 #: plugins/misc/where/main.py:19
 msgid "Save panels locations"
-msgstr "Сохранить расположения панелей"
+msgstr "Зберегти розташування панелей"
 
 #: plugins/misc/where/main.py:20
 msgid "When starting load previously saved locations"
-msgstr "При старте загружает ранее сохранённые позиции"
+msgstr "При старті завантажує збережені раніше позиції"
 
 #: plugins/misc/where/main.py:165
 msgid "Unable to open where data file: %s"
-msgstr "Невозможно открыть файл с данными: %s"
+msgstr "Неможливо відкрити файл з даними: %s"
 
 #: plugins/ui/bookmarks/main.py:37
 msgid "Frequently used directories"
-msgstr "Часто используемые каталоги"
+msgstr "Каталоги, що часто використовуються"
 
 #: plugins/ui/bookmarks/main.py:144
 msgid "Bookmarks"
@@ -1021,15 +1020,15 @@ msgstr "Закладки"
 
 #: plugins/ui/bookmarks/main.py:157
 msgid "Unable to open bookmarks file: %s"
-msgstr "Невозможно открыть файл закладок: %s"
+msgstr "Неможливо відкрити файл закладок: %s"
 
 #: plugins/ui/bookmarks/main.py:166
 msgid "Error parsing bookmarks file: %s"
-msgstr "Ошибка разбора файла закладок: %s"
+msgstr "Помилка розбору файлу закладок: %s"
 
 #: plugins/ui/testinput/main.py:19
 msgid "Test input"
-msgstr "Тест ввода"
+msgstr "Тест вводу"
 
 #: plugins/ui/testinput/main.py:20
 msgid ""
@@ -1038,91 +1037,91 @@ msgid ""
 "Raw is what low-level library emits to focus widget.\n"
 "If any keybinding currently exists for key it is shown on the bottom line"
 msgstr ""
-"Диалог показа нажатых клавиш.\n"
-"Shortcut - то, что XYZCommander ожидает увидеть в конфигурационных файлах.\n"
-"Raw - значение, передающееся драйвером отрисовки.\n"
-"Если к введённой комбинации клавиш привязана какая-либо функция, она "
-"отображается в нижней части окна"
+"Діалог показу натиснутих клавіш.\n"
+"Shortcut - те, що XYZCommander очікує побачити в конфігураційних файлах.\n"
+"Raw - значення, що передається драйвером відображення.\n"
+"Якщо до введеної комбінації клавіш прив'язана якась функція, вона "
+"відображається в нижній частині вікна"
 
 #: plugins/ui/testinput/main.py:49
 msgid "Press any key. Escape twice to quit."
-msgstr "Нажмите любую клавишу. Нажмите Escape дважды, чтобы выйти."
+msgstr "Натисніть будь-яку клавішу. Натисніть Escape двічі, щоб вийти."
 
 #: plugins/ui/testinput/main.py:56
 msgid "Input test"
-msgstr "Тест вводимых значений"
+msgstr "Тест введених значень"
 
 #: plugins/vfs/fileinfo/main.py:18
 msgid "Show VFS object information"
-msgstr "Информация о VFS объекте"
+msgstr "Інформація про об'єкт VFS"
 
 #: plugins/vfs/fileinfo/main.py:19
 msgid "Show detailed information provided by VFS layer"
-msgstr "Показать дополнительную информацию доступную через подсистему VFS"
+msgstr "Показати додаткову інформацію, доступну через підсистему VFS"
 
 #: plugins/vfs/fileinfo/main.py:25
 msgid ""
 "Event is fired upon showing file-info dialog.\n"
 "Arguments: Currently selected VFSObject instance"
 msgstr ""
-"Событие запускается при показе информации о файле.\n"
-"Аргументы: Выбранный объект VFSObject"
+"Подія запускається при показі інформації про файл.\n"
+"Аргументи: Обраний об'єкт VFSObject"
 
 #: plugins/vfs/fileinfo/main.py:59
 msgid "VFS Object Info"
-msgstr "Информация о VFS объекте"
+msgstr "Інформація про об'єкт VFS"
 
 #: plugins/vfs/vfsutils/box_copy.py:34
 msgid "Source:"
-msgstr "Источник:"
+msgstr "Джерело:"
 
 #: plugins/vfs/vfsutils/box_copy.py:36
 msgid "Destination:"
-msgstr "Назначение:"
+msgstr "Призначення:"
 
 #: plugins/vfs/vfsutils/box_copy.py:41
 msgid "Save attributes"
-msgstr "Сохранить атрибуты"
+msgstr "Зберегти атрибути"
 
 #: plugins/vfs/vfsutils/box_copy.py:43
 msgid "Follow links"
-msgstr "Следовать по ссылкам"
+msgstr "Переходити за посиланнями"
 
 #: plugins/vfs/vfsutils/box_copy.py:48
 msgid "TAB to cycle. ENTER to submit. ESCAPE to cancel"
-msgstr "TAB - переключение полей. ENTER - ввод значения. ESCAPE - отмена"
+msgstr "TAB - перемикання полів. ENTER - введення значення. ESCAPE - відмінити"
 
 #: plugins/vfs/vfsutils/main.py:23
 msgid "Useful VFS routines"
-msgstr "Полезные утилиты VFS"
+msgstr "Корисні утиліти VFS"
 
 #: plugins/vfs/vfsutils/main.py:24
 msgid "Dialogs for common VFS operations"
-msgstr "Диалоги для различных действий с VFS"
+msgstr "Діалоги для дій з VFS"
 
 #: plugins/vfs/vfsutils/main.py:51
 msgid "New directory name"
-msgstr "Название нового каталога"
+msgstr "Назва нового каталогу"
 
 #: plugins/vfs/vfsutils/main.py:52
 msgid "Create directory"
-msgstr "Создать каталог"
+msgstr "Створити каталог"
 
 #: plugins/vfs/vfsutils/main.py:64
 msgid "Unable to create directory: %s"
-msgstr "Невозможно создать каталог: %s"
+msgstr "Неможливо створити каталог: %s"
 
 #: plugins/vfs/vfsutils/main.py:86
 msgid "Really remove %d objects?"
-msgstr "Действительно удалить %d объектов?"
+msgstr "Справді видалити %d об'єктів?"
 
 #: plugins/vfs/vfsutils/main.py:89
 msgid "Really remove %s (%s)?"
-msgstr "Действительно удалить %s (%s)?"
+msgstr "Справді видалити %s (%s)?"
 
 #: plugins/vfs/vfsutils/main.py:93
 msgid "Remove object"
-msgstr "Удалить объект"
+msgstr "Видалити об'єкт"
 
 #: plugins/vfs/vfsutils/main.py:106 plugins/vfs/vfsutils/main.py:195
 msgid "All"
@@ -1131,79 +1130,79 @@ msgstr "Все"
 #: plugins/vfs/vfsutils/main.py:109 plugins/vfs/vfsutils/main.py:198
 #: plugins/vfs/vfsutils/main.py:225
 msgid "Abort"
-msgstr "Прервать"
+msgstr "Перервати"
 
 #: plugins/vfs/vfsutils/main.py:116
 msgid ""
 "Directory is not empty\n"
 "Remove it recursively?"
 msgstr ""
-"Каталог не пустой\n"
-"Удалить рекурсивно?"
+"Каталог не порожній\n"
+"Видалити рекурсивно?"
 
 #: plugins/vfs/vfsutils/main.py:118
 msgid "Remove %s"
-msgstr "Удалить %s"
+msgstr "Видалити %s"
 
 #: plugins/vfs/vfsutils/main.py:128
 msgid "Removing object: %s"
-msgstr "Удаление объекта: %s"
+msgstr "Видалення об'єкту: %s"
 
 #: plugins/vfs/vfsutils/main.py:130
 msgid "Removing"
-msgstr "Удаление"
+msgstr "Видалення"
 
 #: plugins/vfs/vfsutils/main.py:136
 msgid "Unable to remove object: %s"
-msgstr "Невозможно удалить объект: %s"
+msgstr "Неможливо видалити об'єкт: %s"
 
 #: plugins/vfs/vfsutils/main.py:139
 msgid "Error removing object: %s"
-msgstr "Ошибка удаления объекта: %s"
+msgstr "Помилка видалення об'єкту: %s"
 
 #: plugins/vfs/vfsutils/main.py:161
 msgid "%d objects"
-msgstr "%d объектов"
+msgstr "%d об'єктів"
 
 #: plugins/vfs/vfsutils/main.py:166
 msgid "Move"
-msgstr "Переместить"
+msgstr "Перемістити"
 
 #: plugins/vfs/vfsutils/main.py:167
 msgid "Moving object: %s"
-msgstr "Перемещение объекта: %s"
+msgstr "Переміщення об'єкту: %s"
 
 #: plugins/vfs/vfsutils/main.py:168
 msgid "Moving"
-msgstr "Перемещение"
+msgstr "Переміщення"
 
 #: plugins/vfs/vfsutils/main.py:169
 msgid "Unable to move object: %s"
-msgstr "Невозможно переместить объект: %s"
+msgstr "Неможливо перемістити об'єкт: %s"
 
 #: plugins/vfs/vfsutils/main.py:170
 msgid "Move error"
-msgstr "Ошибка перемещения"
+msgstr "Помилка переміщення"
 
 #: plugins/vfs/vfsutils/main.py:172
 msgid "Copy"
-msgstr "Копировать"
+msgstr "Копіювати"
 
 #: plugins/vfs/vfsutils/main.py:173
 msgid "Copying object: %s"
-msgstr "Копирование объекта: %s"
+msgstr "Копіювання об'єкту: %s"
 
 #: plugins/vfs/vfsutils/main.py:174
 msgid "Copying"
-msgstr "Копирование"
+msgstr "Копіювання"
 
 #: plugins/vfs/vfsutils/main.py:175
 msgid "Unable to copy object: %s"
-msgstr "Невозможно скопировать объект: %s"
+msgstr "Неможливо скопіювати об'єкт: %s"
 
 #: plugins/vfs/vfsutils/main.py:176 plugins/vfs/vfsutils/main.py:233
 msgid "Copy error"
-msgstr "Ошибка копирования"
+msgstr "Помилка копіювання"
 
 #: plugins/vfs/vfsutils/main.py:178
 msgid ""
@@ -1211,24 +1210,24 @@ msgid ""
 "ESCAPE to abort"
 msgstr ""
 "\n"
-"ESCAPE - прервать"
+"ESCAPE - перервати"
 
 #: plugins/vfs/vfsutils/main.py:196 plugins/vfs/vfsutils/main.py:223
 msgid "Skip"
-msgstr "Пропустить"
+msgstr "Пропустити"
 
 #: plugins/vfs/vfsutils/main.py:197 plugins/vfs/vfsutils/main.py:224
 msgid "Skip all"
-msgstr "Пропустить всё"
+msgstr "Пропустити все"
 
 #: plugins/vfs/vfsutils/main.py:206
 msgid "Object %s already exists. Really override?"
-msgstr "Объект %s уже существует. Перезаписать?"
+msgstr "Об'єкт %s вже існує. Перезаписати?"
 
 #: plugins/vfs/vfsutils/main.py:207
 msgid "Override %s"
-msgstr "Перезаписать %s"
+msgstr "Перезаписати %s"
 
 #: plugins/vfs/vfsutils/main.py:231
 msgid "An error occured %s: %s"
-msgstr "Произошла ошибка %s: %s"
+msgstr "Сталась помилка %s: %s"
