@@ -331,7 +331,7 @@ significant roles in overall system behaviour.
 ``:sys:panel``
 ++++++++++++++
 This plugin is a "face" of |XYZ|, it is responsible for drawing both navigation
-panels and interact with user.
+panels and interacting with user.
 
 Public methods:
 

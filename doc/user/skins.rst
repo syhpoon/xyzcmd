@@ -20,8 +20,8 @@ named file.
 
 Skins are defined using :func:`skin` DSL function (see :ref:`skin`).
 
-Filesystem types
-----------------
+Filesystem objects
+------------------
 File objects can be highlighted using FSRule descriptions.
 See :ref:`FSRule` for detailed information about syntax.
 

@@ -13,6 +13,8 @@ Plugins
 -------
 * New plugin - :ui:vixyz.
   Plugin allows to navigate through filesystem using vi-like keybindings.
+  To enable the plugin add the following to your ~/.xyzcmd/conf/keys.xyz:
+  load(":ui:vixyz"), or type it at the management console prompt in runtime.
 * New method :sys:cmd:get_attr_f
   Method returns current attibute function.
 * New method :sys:cmd:set_attr_f

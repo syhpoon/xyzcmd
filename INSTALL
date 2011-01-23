@@ -6,7 +6,7 @@ But Ubuntu and Debian (starting with python-2.6) tend to modify
 installation base from /usr to /usr/local thus making xyzcmd to crash at start.
 So advised way of installation on these systems is to use a binary deb packages
 available at http://code.google.com/p/xyzcmd/downloads/list or
-provide an additional flag to setup.py:
+to provide an additional flag to setup.py:
 
 # ./setup.py install --install-layout=deb
 
@@ -15,5 +15,4 @@ For Ubuntu it is also possible to use PPA repo
 
 1) sudo add-apt-repository ppa:syhpoon/xyzcmd
 2) sudo aptitude update && sudo aptitude install xyzcmd
-
 
