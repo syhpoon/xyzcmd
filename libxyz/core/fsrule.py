@@ -720,7 +720,7 @@ class Expression(object):
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         def _match_name(obj, arg):
-            if arg.search(obj.name) is None:
+            if arg.search(ustring(obj.name)) is None:
                 return False
             else:
                 return True
@@ -728,7 +728,7 @@ class Expression(object):
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         
         def _match_iname(obj, arg):
-            if arg.search(obj.name) is None:
+            if arg.search(ustring(obj.name)) is None:
                 return False
             else:
                 return True

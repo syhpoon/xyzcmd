@@ -52,6 +52,7 @@ class Launcher(object):
         """
         Initialization
         """
+
         self._path_sel = libxyz.PathSelector()
         gettext.install(u"xyzcmd", localedir=self._path_sel.get_locale_dir(),
                         unicode=True)
