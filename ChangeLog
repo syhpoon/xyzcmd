@@ -25,7 +25,12 @@ Configuration
 * New DSL method - unload().
   Unload plugin.
 
+I18N
+----
+* Added new Ukrainian translation (thanks to Vlad V. Teterya <vlad@vlad.uz.ua>)
+
 Version 0.0.5
+
 =============
 
 Overview
