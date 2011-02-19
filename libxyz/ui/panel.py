@@ -1800,6 +1800,7 @@ class TabBar(lowui.FlowWidget):
         self.xyz = xyz
         self.block = block
         self._attr = attr
+        self.term_width = lambda x: lowui.util.calc_width(x, 0, len(x))
 
         self._active_tab = 0
         self._tabs = []
@@ -1919,20 +1920,18 @@ class TabBar(lowui.FlowWidget):
             lowui.Text(text), self._attr(at)).render((maxcol,))
 
         canvases = []
-
         length = 0
 
         for idx in xrange(len(self._tabs)):
             tabname = self._gen_tab_name(self._tabs[idx], idx)
-            length += len(tabname)
+            length += self.term_width(tabname)
 
             if idx == self._active_tab:
                 canv = make_c(tabname, "tabact")
             else:
                 canv = make_c(tabname, "tabbar")
 
-            canvases.append((canv, None, False, len(tabname)))
-
+            canvases.append((canv, None, False, self.term_width(tabname)))
 
         if length < maxcol:
             canvases.append((make_c("", "tabbar"), None, False,

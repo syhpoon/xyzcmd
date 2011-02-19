@@ -58,7 +58,7 @@ class Border(lowui.BoxWidget):
         """
 
         if self.title is not None:
-            _len = len(self.title)
+            _len = lowui.util.calc_width(self.title, 0, len(self.title))
 
             if self.title_attr is not None:
                 self._title = lowui.AttrWrap(lowui.Text(" %s " % self.title,
