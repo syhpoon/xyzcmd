@@ -17,7 +17,7 @@
 import libxyz.ui as uilib
 
 from libxyz.ui import lowui
-from libxyz.core.utils import bstring
+from libxyz.core.utils import bstring, ustring
 
 class CopyBox(lowui.WidgetWrap):
     """
@@ -32,10 +32,11 @@ class CopyBox(lowui.WidgetWrap):
         self._keys = uilib.Keys()
 
         srclabel = lowui.Text(bstring(_(u"Source:")))
-        srctxt = lowui.Text(srctxt)
+        srctxt = lowui.Text(bstring(srctxt))
         dstlabel = lowui.Text(bstring(_(u"Destination:")))
 
-        self.dstw = lowui.AttrWrap(lowui.Edit(edit_text=dst, wrap='clip'),
+        self.dstw = lowui.AttrWrap(lowui.Edit(edit_text=ustring(dst),
+                                              wrap='clip'),
                                    self._attr("input"))
 
         self.save_attrw = lowui.CheckBox(bstring(_(u"Save attributes")),
