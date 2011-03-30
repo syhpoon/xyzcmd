@@ -121,6 +121,17 @@ class XYZPlugin(BasePlugin):
 
         #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+        def custom_cb(key, focusw):
+            _meth = self.xyz.km.process(key, self.ns.pfull)
+
+            if _meth is not None:
+                _meth(focusw.msg)
+                return False
+
+            return True
+
+        #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
         _bookmarks = self._load_data()
 
         if _bookmarks is None:
@@ -142,7 +153,7 @@ class XYZPlugin(BasePlugin):
         _ek = [self._keys.ENTER]
 
         XYZListBox(self.xyz, self.xyz.top, _walker, _(u"Bookmarks"),
-                   _dim).show(exit_keys=_ek)
+                   _dim).show(exit_keys=_ek, custom=custom_cb)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -52,7 +52,7 @@ class InputWrapper(object):
         Get input from screen and search if it matches any user-defined
         keycodes
 
-        @param allow_empty: If set return empty list if nothing was typed
+        @param allow_empty: If set, returns empty list if nothing was typed
         """
 
         _input = None
@@ -91,7 +91,7 @@ class InputWrapper(object):
 
     def _resized_get(self):
         rval = self._resized
-        
+
         if rval:
             self._resized = False
 

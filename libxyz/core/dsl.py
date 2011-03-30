@@ -103,7 +103,7 @@ class XYZ(object):
 
         # Else init singleton
         cls.xyz = xyz
-        cls._instance = cls
+        cls._instance = super(XYZ, cls).__new__(cls)
 
         cls._env = {"XYZ": cls}
         cls._env.update(dict([(ff, getattr(cls, ff)) for ff in cls.api]))
@@ -111,7 +111,8 @@ class XYZ(object):
         # Init macros
         cls.macros = {}
         cls.init_macros()
-        return cls
+
+        return cls._instance
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

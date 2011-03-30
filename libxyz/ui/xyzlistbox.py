@@ -61,9 +61,16 @@ class XYZListBox(lowui.WidgetWrap):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def show(self, dim=None, exit_keys=None):
+    def show(self, dim=None, exit_keys=None, custom=None):
         """
         Show list
+
+        @param custom: Function for custom key processing.
+                       Accepted arguments: key and NumEntry instance of focused
+                       entry.
+                       If returns True - continue with internal processing
+                       If returns False - next iteration
+                       If returns None - exit
         """
 
         exit_keys = exit_keys or []
@@ -81,6 +88,17 @@ class XYZListBox(lowui.WidgetWrap):
                 continue
                 
             if _i:
+                # Check if custom processing required
+                if callable(custom):
+                    (focus, _) = self.listbox.get_focus()
+
+                    r = custom(_i, focus)
+
+                    if r is None:
+                        return
+                    elif r == False:
+                        continue
+
                 for _k in _i:
                     if _k == self._keys.ESC:
                         return

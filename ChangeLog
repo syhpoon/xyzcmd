@@ -19,6 +19,8 @@ Plugins
   Method returns current attibute function.
 * New method :sys:cmd:set_attr_f
   Method sets attibute function.
+* Method :ui:bookmarks:del_bookmark is now bound to key DELETE in
+  :ui:bookmarks:show_bookmarks dialog context.
 
 Configuration
 -------------

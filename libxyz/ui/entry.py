@@ -90,6 +90,7 @@ class NumEntry(ListEntry):
         @param enter_cb: Callback to be executed upon ENTER pressed
         """
 
+        self.msg = msg
         self._num = []
 
         if callable(enter_cb):

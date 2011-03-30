@@ -47,6 +47,7 @@ bind(":sys:cmd:history_prev", kbd("META-p"))
 bind(":sys:cmd:history_next", kbd("META-n"))
 bind(":sys:cmd:del_char_left", kbd("BACKSPACE"))
 bind(":sys:cmd:del_char", kbd("CTRL-d"))
+bind(":sys:cmd:del_char", kbd("DELETE"))
 bind(":sys:cmd:del_word_left", kbd("META-u"))
 bind(":sys:cmd:del_word_right", kbd("META-k"))
 bind(":sys:cmd:clear", kbd("CTRL-p"))
@@ -159,6 +160,8 @@ bind(":ui:testinput:show_box", kbd("META-e"))
 bind(":ui:bookmarks:show_bookmarks", kbd("META-\\"))
 bind((lambda: call(":ui:bookmarks:add_bookmark", macro("ACT_CWD")),
       _(u"Add bookmark")), kbd("CTRL-x", "b"))
+bind((lambda x: call(":ui:bookmarks:del_bookmark", x),
+      _(u"Delete bookmark")), kbd("DELETE"), ":ui:bookmarks")
 
 bind(":vfs:fileinfo:fileinfo", kbd("F2"))
 bind(":vfs:vfsutils:copy", kbd("F5"))

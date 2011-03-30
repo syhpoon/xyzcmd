@@ -1488,7 +1488,6 @@ class Block(lowui.FlowWidget):
         """
 
         _selected = self.entries[self.selected]
-
         _action = self.xyz.am.match(_selected)
 
         if _action is not None:
