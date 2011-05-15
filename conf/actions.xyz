@@ -15,7 +15,7 @@ action(
     lambda obj: call(":sys:panel:chdir", obj.full_path))
 
 ## Multimedia
-action(r'iname{".*\\.(avi|wmv|mov|asf|mpg|flv|mkv|mp3|flac|ogg|m4a|m4v)$"}',
+action(r'iname{".*\\.(avi|wmv|mov|asf|mpg|flv|mkv|mp3|mp4|flac|ogg|m4a|m4v)$"}',
        lambda obj: shell("mplayer", "-fs", obj.path, wait=False))
 
 ## Documents
