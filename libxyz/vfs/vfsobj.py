@@ -17,7 +17,7 @@
 import os
 
 from libxyz.core.utils import bstring, ustring
-from libxyz.vfs import types
+from libxyz.vfs import types, util
 
 class VFSObject(object):
     """
@@ -283,13 +283,28 @@ class VFSObject(object):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    def in_dir(self, d, e):
+        """
+        Filter only those archive entries which exist in the same
+        directory level
+        """
+
+        if e.startswith(d.lstrip(os.sep)) and \
+           len(util.split_path(e)) == (len(util.split_path(d)) + 1):
+            return True
+        else:
+            return False
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
     def __repr__(self):
         return self.__str__()
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __unicode__(self):
-        return ustring(self.__str__)
+        return ustring(self.__str__())
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
