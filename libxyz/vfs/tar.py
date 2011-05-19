@@ -231,20 +231,6 @@ class TarVFSObject(vfsobj.VFSObject):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def in_dir(self, d, e):
-        """
-        Filter only those archive entries which exist in the same
-        directory level
-        """
-
-        if e.startswith(d.lstrip(os.sep)) and \
-           len(util.split_path(e)) == (len(util.split_path(d)) + 1):
-            return True
-        else:
-            return False
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     def _find_type(self):
         """
         Find out file type
@@ -306,7 +292,7 @@ class TarVFSObject(vfsobj.VFSObject):
         try:
             obj = self.members[path]
         except KeyError:
-             obj = self.members(path + os.sep)
+             obj = self.members[path + os.sep]
 
         return obj
 

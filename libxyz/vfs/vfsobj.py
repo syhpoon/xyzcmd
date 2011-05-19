@@ -84,9 +84,6 @@ class VFSObject(object):
         # List of significant attributes
         self.attributes = ()
 
-        # Run local constructor
-        self._prepare()
-
         self.__ni_msg = _(u"Feature not implemented")
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -305,11 +302,6 @@ class VFSObject(object):
 
     def __unicode__(self):
         return ustring(self.__str__())
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    def _prepare(self):
-        raise NotImplementedError(self.__ni_msg)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

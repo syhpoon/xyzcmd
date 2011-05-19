@@ -191,4 +191,3 @@ class BlockEntries(list):
             if _exp.match(item):
                 self.palettes[idx] = _attr.name
                 break
-

@@ -44,7 +44,31 @@ class LocalVFSObject(vfsobj.VFSObject):
     Local VFS object is used to access local filesystem
     """
 
-    ### Public API
+    def __init__(self, *args, **kwargs):
+        super(LocalVFSObject, self).__init__(*args, **kwargs)
+
+        self.ftype = self._find_type(self.path)
+        self.vtype = self.ftype.vtype
+
+        self._set_attributes()
+
+        _time = lambda x: ustring(time.ctime(x))
+
+        self.attributes = (
+            (_(u"Name"), ustring(self.name)),
+            (_(u"Type"), ustring(self.ftype)),
+            (_(u"Access time"), _time(self.atime)),
+            (_(u"Modification time"), _time(self.mtime)),
+            (_(u"Change time"), _time(self.ctime)),
+            (_(u"Size in bytes"), ustring(self.size)),
+            (_(u"Owner"), ustring(self._uid(self.uid))),
+            (_(u"Group"), ustring(self._gid(self.gid))),
+            (_(u"Access mode"), ustring(self.mode)),
+            (_(u"Inode"), ustring(self.inode)),
+            (_(u"Type-specific data"), self.data),
+            )
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def walk(self):
         """
@@ -301,30 +325,6 @@ class LocalVFSObject(vfsobj.VFSObject):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ## Internal stuff
-
-    def _prepare(self):
-        self.ftype = self._find_type(self.path)
-        self.vtype = self.ftype.vtype
-
-        self._set_attributes()
-
-        _time = lambda x: ustring(time.ctime(x))
-
-        self.attributes = (
-            (_(u"Name"), ustring(self.name)),
-            (_(u"Type"), ustring(self.ftype)),
-            (_(u"Access time"), _time(self.atime)),
-            (_(u"Modification time"), _time(self.mtime)),
-            (_(u"Change time"), _time(self.ctime)),
-            (_(u"Size in bytes"), ustring(self.size)),
-            (_(u"Owner"), ustring(self._uid(self.uid))),
-            (_(u"Group"), ustring(self._gid(self.gid))),
-            (_(u"Access mode"), ustring(self.mode)),
-            (_(u"Inode"), ustring(self.inode)),
-            (_(u"Type-specific data"), self.data),
-            )
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __str__(self):
         return "<LocalVFSObject object: %s>" % self.path

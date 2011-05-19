@@ -16,12 +16,53 @@
 
 import stat
 
-from libxyz.vfs import util
-
 class Mode(object):
     """
     A stat st_mode field representaion
     """
+
+    @classmethod
+    def string_to_raw(cls, str_mode):
+        """
+        Convert string mode to integer
+        """
+
+        usr_info = {"r": stat.S_IRUSR,
+                    "w": stat.S_IWUSR,
+                    "x": stat.S_IXUSR,
+                    "S": stat.S_ISUID,
+                    "s": stat.S_IXUSR | stat.S_ISUID,
+                    "-": 0
+                    }
+
+        grp_info = {"r": stat.S_IRGRP,
+                    "w": stat.S_IWGRP,
+                    "x": stat.S_IXGRP,
+                    "S": stat.S_ISGID,
+                    "s": stat.S_IXGRP | stat.S_ISGID,
+                    "-": 0
+                    }
+
+        oth_info = {"r": stat.S_IROTH,
+                    "w": stat.S_IWOTH,
+                    "x": stat.S_IXOTH,
+                    "T": stat.S_ISVTX,
+                    "t": stat.S_IXOTH | stat.S_ISVTX,
+                    "-": 0
+                    }
+        
+        return 0 \
+               | usr_info[str_mode[1]] \
+               | usr_info[str_mode[2]] \
+               | usr_info[str_mode[3]] \
+               | grp_info[str_mode[4]] \
+               | grp_info[str_mode[5]] \
+               | grp_info[str_mode[6]] \
+               | oth_info[str_mode[7]] \
+               | oth_info[str_mode[8]] \
+               | oth_info[str_mode[9]]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def __init__(self, st_mode, vfstype):
         """

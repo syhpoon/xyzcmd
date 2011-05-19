@@ -1,6 +1,5 @@
 # Plugins configuration file. Default settings. Do not edit.
 
-
 plugin_conf(":sys:cmd", {
     # Command line prompt
     "prompt": "$ ",

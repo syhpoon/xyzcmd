@@ -48,6 +48,9 @@ SKINS_DIR = u"skins"
 # Locale subdirectory
 LOCALE_DIR = u"locale"
 
+# External VFS drivers subdirectory
+VFS_DRIVERS_DIR = u"vfs"
+
 # Main configuration file name
 XYZ_CONF_FILE = u"main.xyz"
 

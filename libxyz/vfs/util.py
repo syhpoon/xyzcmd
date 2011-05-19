@@ -31,13 +31,26 @@ _types = (
           (stat.S_ISSOCK, vfstypes.VFSTypeSocket),
           )
 
+_types2 = {"d": vfstypes.VFSTypeDir,
+           "c": vfstypes.VFSTypeChar,
+           "b": vfstypes.VFSTypeBlock,
+           "-": vfstypes.VFSTypeFile,
+           "p": vfstypes.VFSTypeFifo,
+           "l": vfstypes.VFSTypeLink,
+           "s": vfstypes.VFSTypeSocket,
+          }
+
 def get_file_type(st_mode):
     """
     Find out file type
     @param st_mode: Raw st_mode obtained from os.stat()
+                    or one char string as the first char in ls -l output
     """
 
-    global _types
+    global _types, _types2
+
+    if isinstance(st_mode, basestring):
+        return _types2.get(st_mode, vfstypes.VFSTypeUnknown)()
 
     for _test, _type in _types:
         if _test(st_mode):

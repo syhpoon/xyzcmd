@@ -36,6 +36,7 @@ class PathSelector(object):
         self.skins_dir = const.SKINS_DIR
         self.plugins_dir = const.PLUGINS_DIR
         self.locale_dir = const.LOCALE_DIR
+        self.vfs_dir = const.VFS_DRIVERS_DIR
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -54,6 +55,15 @@ class PathSelector(object):
         """
 
         return self._get(self.skins_dir, skin)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def get_vfs_driver(self, driver):
+        """
+        Return tuple of (system_vfs_driver, user_vfs_driver)
+        """
+
+        return self._get(self.vfs_dir, driver)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

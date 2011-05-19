@@ -68,7 +68,7 @@ class VFSDispatcher(object):
             raise VFSError(_(u"Invalid path: %s.") % path)
 
         handler = None
-
+            
         for p, vfs in data:
             if vfs not in self._handlers:
                 raise VFSError(
