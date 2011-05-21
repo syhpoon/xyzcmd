@@ -70,6 +70,7 @@ class XYZ(object):
            "exec_file",
            "kbd",
            "action",
+           "vfs_action",
            "macro",
            "call",
            "env",
@@ -317,6 +318,23 @@ class XYZ(object):
             cls.xyz.am.register(rule, fn)
         except Exception, e:
             error(_(u"Unable to register action: %s") % unicode(e))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @classmethod
+    @instantiated
+    def vfs_action(cls, ext, driver):
+        """
+        A shorthand for setting VFS actions.
+        Equivalent for:
+          action(r'name{"\\.ext$"} and type{file_or_link2}',
+          lambda obj: call(":sys:panel:chdir", vfs_path(obj.full_path,driver)))
+        """
+
+        return cls.action(
+            r'name{"\\.%(ext)s$"} and type{file_or_link2}' % locals(),
+            lambda obj: call(":sys:panel:chdir",
+                             cls.vfs_path(obj.full_path, driver)))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

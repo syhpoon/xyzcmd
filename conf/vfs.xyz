@@ -6,6 +6,7 @@
 
 from libxyz.vfs.local import LocalVFSObject
 from libxyz.vfs.tar import TarVFSObject
+from libxyz.vfs.external import ExternalVFSObject
 
 # Empty prefix for local filesystem
 vfs(None, LocalVFSObject)
@@ -13,6 +14,7 @@ vfs(None, LocalVFSObject)
 vfs("tar", TarVFSObject)
 vfs("gztar", TarVFSObject)
 vfs("bz2tar", TarVFSObject)
+vfs("zip", ExternalVFSObject)
 
 # Set VFS cache time limit (in seconds)
 let("cache_time", 60, sect="vfs")

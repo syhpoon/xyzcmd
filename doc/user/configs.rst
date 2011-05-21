@@ -38,6 +38,7 @@ functions are available:
 * :ref:`kbd <kbd>`
 * :ref:`exec_file <exec_file>`
 * :ref:`action <action>`
+* :ref:`vfs_action <vfs_action>`
 * :ref:`macro <macro>`
 * :ref:`call <call>`
 * :ref:`env <env>`
@@ -167,6 +168,21 @@ Example - when action is pressed on executable file - run it::
   action(r'(type{file} and perm{+0111}) or '\
          r'(type{link} and link_type{file} and link_perm{+0111})',
          lambda obj: shell(obj.path))
+
+.. _vfs_action:
+
+vfs_action(extension, driver)
+++++++++++++++++
+A shorthand for VFS-related action.
+Example - when pressing action key on files with "zip" extension,
+init appropriate VFS subsystem with zip driver::
+
+  vfs_action("zip", "zip")
+
+This is equivalent to::
+
+  action(r'name{"\\.zip$"} and type{file_or_link2}',
+    lambda obj: call(":sys:panel:chdir", vfs_path(obj.full_path, "zip")))
 
 .. _macro:
 

@@ -30,7 +30,10 @@ from libxyz.vfs import util
 from libxyz.vfs import mode
 from libxyz.ui import BlockEntries
 
-DATETIME_PAT = r"(?P<dtime>\d{4}\/\d{2}\/\d{2}\s+"\
+#DATETIME_PAT = r"(?P<dtime>\d{4}\/\d{2}\/\d{2}\s+"\
+#               r"\d{1,2}:\d{1,2}(?:\:\d{1,2})?)"
+
+DATETIME_PAT = r"(?P<dtime>\d{2}\/\d{2}\/\d{4}\s+"\
                r"\d{1,2}:\d{1,2}(?:\:\d{1,2})?)"
 
 OBJ_PAT = re.compile(r"^" \
@@ -67,7 +70,7 @@ class ExternalVFSObject(vfsobj.VFSObject):
         # First time visit, we should run driver and build members list then
         if _cache is None:
             self.members = dict([self._parse_obj(x) for x in 
-                                 self._run_driver(self.ext_path,
+                                 self._run_driver(self.parent.full_path,
                                                   self.driver_cmd,
                                                   "list") if x])
 

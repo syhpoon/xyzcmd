@@ -26,6 +26,8 @@ Configuration
 -------------
 * New DSL method - unload().
   Unload plugin.
+* New DSL method - vfs_action(extension, driver).
+  A shorthand for VFS-related action.
 
 I18N
 ----
