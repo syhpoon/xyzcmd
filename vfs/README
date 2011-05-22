@@ -2,7 +2,9 @@ In this directory reside drivers used by External VFS subsystem.
 
 Commands:
 
-list [filepath] - List object entries
+* list [filepath]
+
+List object entries.
 Entry format:
 PERM LINKS OWNER GROUP SIZE DATETIME PATH [-> PATH]
 
@@ -18,7 +20,8 @@ DATETIME - Object mtime in the following format: YYYY-MM-DD hh:mm[:ss]
 PATH  - Object path from the VFS root without leading slash (/)
 [-> PATH] - Optional soft/hard link target
 
-copyout vfs srcobject dstobject
+* copyout vfs srcobject dstobject
+
 Copy object named srcobject from vfs to dstobject 
 
 copyin

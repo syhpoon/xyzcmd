@@ -30,11 +30,13 @@ from libxyz.vfs import util
 from libxyz.vfs import mode
 from libxyz.ui import BlockEntries
 
-#DATETIME_PAT = r"(?P<dtime>\d{4}\/\d{2}\/\d{2}\s+"\
-#               r"\d{1,2}:\d{1,2}(?:\:\d{1,2})?)"
+# [YY]YY/MM/DD hh:mm[:ss]
+DATETIME_PAT1 = r"(?:\d{2,4}\/\d{2}\/\d{2}\s+"\
+                r"\d{1,2}:\d{1,2}(?:\:\d{1,2})?)"
 
-DATETIME_PAT = r"(?P<dtime>\d{2}\/\d{2}\/\d{4}\s+"\
-               r"\d{1,2}:\d{1,2}(?:\:\d{1,2})?)"
+# MM/DD/YYYY hh:mm[:ss]
+DATETIME_PAT2 = r"(?:\d{2}\/\d{2}\/\d{4}\s+"\
+                r"\d{1,2}:\d{1,2}(?:\:\d{1,2})?)"
 
 OBJ_PAT = re.compile(r"^" \
                      r"(?P<mode>\S+)\s+" \
@@ -42,9 +44,10 @@ OBJ_PAT = re.compile(r"^" \
                      r"(?P<uid>\S+)\s+" \
                      r"(?P<gid>\S+)\s+" \
                      r"(?P<size>\d+)\s+" \
-                     r"%(DATETIME_PAT)s\s+" \
+                     r"(?P<dtime>%s)\s+" \
                      r"(?P<path>.+?)" \
-                     r"(?:\s+\-\>\s+(?P<link>.+?))?$" % locals(),
+                     r"(?:\s+\-\>\s+(?P<link>.+?))?$" %
+                     "|".join([DATETIME_PAT1, DATETIME_PAT2]),
                      re.UNICODE)
 
 class ExternalVFSObject(vfsobj.VFSObject):
@@ -70,9 +73,8 @@ class ExternalVFSObject(vfsobj.VFSObject):
         # First time visit, we should run driver and build members list then
         if _cache is None:
             self.members = dict([self._parse_obj(x) for x in 
-                                 self._run_driver(self.parent.full_path,
-                                                  self.driver_cmd,
-                                                  "list") if x])
+                                 self._run_driver("list",
+                                                  self.parent.full_path) if x])
 
             # Now cache the data for further use
             self.xyz.vfs.set_cache(self.parent.full_path, self.members)
@@ -87,13 +89,7 @@ class ExternalVFSObject(vfsobj.VFSObject):
         else:
             self.root = False
             self.path = self.path.lstrip(os.sep)
-
-            # Try to find info for this particular file
-            try:
-                self.obj = self.members[self.path]
-            except KeyError:
-                self.obj = self.members[self.path + os.sep]
-
+            self.obj = self._init_obj(self.path)
             self.ftype = self.obj["type"]
 
         self.vtype = self.ftype.vtype
@@ -134,7 +130,7 @@ class ExternalVFSObject(vfsobj.VFSObject):
 
         for x in self.members.values():
             if self.in_dir(self.path, x["path"]):
-                if x["type"] == vfstypes.VFSTypeDir:
+                if isinstance(x["type"], vfstypes.VFSTypeDir):
                     dirs.append(x)
                 else:
                     files.append(x)
@@ -157,18 +153,131 @@ class ExternalVFSObject(vfsobj.VFSObject):
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    def _run_driver(self, path, driver, cmd):
+    def copy(self, path, existcb=None, errorcb=None, save_attrs=True,
+             follow_links=False, cancel=None):
+
+        env = {
+            'override': 'abort',
+            'error': 'abort'
+            }
+
+        try:
+            if self.is_dir():
+                f = self._copy_dir
+            else:
+                f = self._copy_file
+
+            f(self.path, path, existcb, errorcb,
+              save_attrs, follow_links, env, cancel)
+        except XYZRuntimeError:
+            # Aborted
+            return False
+        else:
+            return True
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _copy_file(self, src, dst, existcb, errorcb, save_attrs,
+                   follow_links, env, cancel=None):
+        """
+        File-to-file copy
+        """
+
+        obj = self._init_obj(src)
+
+        if os.path.exists(dst) and os.path.isdir(dst):
+            dstto = os.path.join(dst, os.path.basename(src))
+        else:
+            dstto = dst
+
+        if os.path.exists(dstto):
+            if env['override'] not in ('override all', 'skip all'):
+                if existcb:
+                    try:
+                        env['override'] = existcb(
+                            self.xyz.vfs.dispatch(dstto))
+                    except Exception:
+                        env['override'] = 'abort'
+
+            if env['override'] == 'abort':
+                raise XYZRuntimeError()
+            elif env['override'] in ('skip', 'skip all'):
+                return False
+
+        try:
+            self._run_driver("copyout", self.parent.full_path, src, dstto)
+
+            if save_attrs:
+                self._copystat(obj, dstto)
+
+            return True
+        except Exception, e:
+            if env['error'] != 'skip all':
+                if errorcb:
+                    try:
+                        env['error'] = errorcb(
+                            self.xyz.vfs.dispatch(self.full_path), str(e))
+                    except Exception:
+                        env['error'] = 'abort'
+
+                if env['error'] == 'abort':
+                    raise XYZRuntimeError()
+
+        return False
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _copy_dir(self, src, dst, existcb, errorcb, save_attrs,
+                  follow_links, env, cancel=None):
+        """
+        Dir-to-dir copy
+        """
+
+        obj = self._init_obj(src)
+
+        if os.path.exists(dst) and os.path.isdir(dst) and \
+               os.path.basename(src) != os.path.basename(dst):
+            dst = os.path.join(dst, os.path.basename(src))
+
+        if isinstance(obj["type"], vfstypes.VFSTypeDir) \
+               and not os.path.exists(dst):
+            os.makedirs(dst)
+
+        files = [x for x in self.members.values() if self.in_dir(obj["path"],
+                                                                 x["path"])]
+
+        for f in files:
+            if cancel is not None and cancel.isSet():
+                raise StopIteration()
+
+            srcobj = f["path"]
+            dstobj = os.path.join(dst, self.get_name(f))
+
+            if isinstance(f["type"], vfstypes.VFSTypeDir):
+                fun = self._copy_dir
+            else:
+                fun = self._copy_file
+
+            fun(srcobj, dstobj, existcb, errorcb, save_attrs,
+                follow_links, env, cancel)
+
+        if isinstance(obj["type"], vfstypes.VFSTypeDir) and save_attrs:
+            self._copystat(obj, dst)
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _run_driver(self, cmd, *args):
         """
         Try to execute driver on archive
         """
 
         try:
             return subprocess.Popen(
-                [driver, cmd, path],
+                [self.driver_cmd, cmd] + list(args),
                 stdout=subprocess.PIPE).communicate()[0].split("\n")
         except Exception, e:
             raise XYZRuntimeError(_(u"Error executing VFS driver %s: %s") %
-                                  (driver, unicode(e)))
+                                  (self.driver_cmd, unicode(e)))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -232,8 +341,8 @@ class ExternalVFSObject(vfsobj.VFSObject):
                 {
                     "mode": parsed.group("mode"),
                     "links": int(parsed.group("links")),
-                    "uid": parsed.group("uid"),
-                    "gid": parsed.group("gid"),
+                    "uid": self._parse_id(parsed.group("uid")),
+                    "gid": self._parse_id(parsed.group("gid")),
                     "size": int(parsed.group("size")),
                     "datetime": parsed.group("dtime"),
                     "path": parsed.group("path"),
@@ -253,3 +362,42 @@ class ExternalVFSObject(vfsobj.VFSObject):
                 _(u"Driver for '%s' external VFS does not exist") % driver)
         else:
             return driver_cmd
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    def  _init_obj(self, path):
+        """
+        Try to find info for provided path
+        """
+
+        try:
+            return self.members[path]
+        except KeyError:
+            return self.members[path + os.sep]
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _copystat(self, obj, dst):
+        try:
+            os.chown(dst, obj["uid"], obj["gid"])
+        except Exception, e:
+            xyzlog.warning(_(u"Unable to chown %s: %s") %
+                           (ustring(dst), unicode(e)))
+
+        try:
+            os.chmod(dst, mode.Mode.string_to_raw(obj["mode"]))
+        except Exception, e:
+            xyzlog.warning(_(u"Unable to chmod %s: %s") %
+                           (ustring(dst), unicode(e)))
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    def _parse_id(self, id):
+        """
+        Try to parse provided id as either numeric ID or username/groupname
+        """
+
+        try:
+            return int(id)
+        except ValueError:
+            return id
