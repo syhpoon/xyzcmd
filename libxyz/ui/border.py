@@ -38,17 +38,15 @@ class Border(lowui.BoxWidget):
         self.attr = attr
         self._attr = self.attr
 
-        self.utf8decode = lowui.escape.utf8decode
+        self.tline = self._get_attr(lowui.Divider("─".decode("utf-8")))
+        self.bline = self._get_attr(lowui.Divider("─".decode("utf-8")))
+        self.lline = self._get_attr(lowui.SolidFill("│".decode("utf-8")))
+        self.rline = self._get_attr(lowui.SolidFill("│".decode("utf-8")))
 
-        self.tline = self._get_attr(lowui.Divider(self.utf8decode("─")))
-        self.bline = self._get_attr(lowui.Divider(self.utf8decode("─")))
-        self.lline = self._get_attr(lowui.SolidFill(self.utf8decode("│")))
-        self.rline = self._get_attr(lowui.SolidFill(self.utf8decode("│")))
-
-        self.tlcorner = self._get_attr(lowui.Text(self.utf8decode("┌")))
-        self.trcorner = self._get_attr(lowui.Text(self.utf8decode("┐")))
-        self.blcorner = self._get_attr(lowui.Text(self.utf8decode("└")))
-        self.brcorner = self._get_attr(lowui.Text(self.utf8decode("┘")))
+        self.tlcorner = self._get_attr(lowui.Text("┌".decode("utf-8")))
+        self.trcorner = self._get_attr(lowui.Text("┐".decode("utf-8")))
+        self.blcorner = self._get_attr(lowui.Text("└".decode("utf-8")))
+        self.brcorner = self._get_attr(lowui.Text("┘".decode("utf-8")))
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -39,7 +39,7 @@ class Separator(lowui.FlowWidget):
 
         self.set_text(title, title_attr)
 
-        self.div_char = lowui.escape.utf8decode("─")
+        self.div_char = "─".decode("utf-8")
         self.div_attr = div_attr
         self.top = top
         self.bottom = bottom
